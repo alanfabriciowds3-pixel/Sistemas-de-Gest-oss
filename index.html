@@ -32,20 +32,10 @@
     background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
     background-attachment: fixed;
   }
-  .dark body {
-    background: radial-gradient(circle at top right, #0f172a, #020617);
-  }
+  .dark body { background: radial-gradient(circle at top right, #0f172a, #020617); }
   
-  .glass { 
-    background: rgba(255, 255, 255, 0.75); 
-    backdrop-filter: blur(16px); 
-    -webkit-backdrop-filter: blur(16px); 
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-  }
-  .dark .glass { 
-    background: rgba(15, 23, 42, 0.75); 
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
+  .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.3); }
+  .dark .glass { background: rgba(15, 23, 42, 0.75); border-bottom: 1px solid rgba(255,255,255,0.05); }
   
   .field { width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); }
   .dark .field { background:#1e293b; border-color:#334155; color: white; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
@@ -168,10 +158,14 @@
 
   <!-- ================= VIEW: FINANCEIRO ================= -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        Novo Lançamento Manual
+        Novo Lançamento
+      </button>
+      <button onclick="openPendingModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        Contas a Pagar
       </button>
     </div>
 
@@ -213,33 +207,12 @@
     </div>
   </div>
 
-  <!-- ================= VIEW: CATÁLOGO ================= -->
-  <div id="view-catalog" class="hidden space-y-6 animate-in">
-    <div class="bg-gradient-to-r from-brand-600 to-indigo-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-      <div class="absolute -right-6 -top-6 opacity-10 text-9xl">🗂️</div>
-      <h2 class="text-xl font-black mb-1">Catálogo de Arquivos & Links</h2>
-      <p class="text-indigo-200 text-xs font-medium mb-4">Acesse rapidamente os documentos e links do Google Drive.</p>
-    </div>
-
-    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Documentos Vinculados</h2>
-        <input type="text" id="cat-search" oninput="renderCatalog()" placeholder="Buscar cliente ou pedido..." class="w-full md:w-56 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
-      </div>
-      <div id="catalog-list" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      <div id="catalog-empty" class="hidden py-16 text-center">
-        <div class="text-6xl mb-4 opacity-30">📁</div>
-        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Nenhum arquivo ou link vinculado ainda.<br>Adicione o link do Google Drive ao criar um pedido!</p>
-      </div>
-    </div>
-  </div>
-
   <!-- ================= VIEW: ADMINISTRAÇÃO ================= -->
   <div id="view-admin" class="hidden space-y-6 animate-in">
+    <!-- Resumo Geral -->
     <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl">📊</div>
       <h2 class="text-base font-bold mb-4">Resumo Geral do Negócio</h2>
-      
       <div class="grid grid-cols-2 gap-3 sm:gap-4">
         <div class="min-w-0">
           <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
@@ -252,28 +225,47 @@
       </div>
     </div>
 
-    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Detalhado de Pedidos</h2>
-        <p class="text-[11px] text-slate-500 mt-1">Todos os pedidos com data, hora, valores e lucro exato.</p>
-      </div>
-      <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
+    <!-- Abas Internas do Admin -->
+    <div class="flex bg-slate-200/60 dark:bg-slate-800 p-1 rounded-xl mb-4">
+      <button onclick="switchAdminTab('orders')" id="btn-adm-orders" class="flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition">Pedidos</button>
+      <button onclick="switchAdminTab('finance')" id="btn-adm-finance" class="flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition">Relatório Financeiro</button>
     </div>
 
-    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">🏆 Resumo por Cliente (Ranking)</h2>
+    <!-- Relatório de Pedidos -->
+    <div id="adm-view-orders" class="space-y-6">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Detalhado de Pedidos</h2>
+        </div>
+        <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
       </div>
-      <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
-        <thead class="bg-slate-50 dark:bg-slate-900/50 text-[10px] uppercase font-bold text-slate-400 border-b border-slate-200 dark:border-slate-700">
-          <tr>
-            <th class="px-4 py-3">Cliente</th>
-            <th class="px-4 py-3 text-center">Qtd</th>
-            <th class="px-4 py-3 text-right">Lucro Total</th>
-          </tr>
-        </thead>
-        <tbody id="adm-client-table" class="divide-y divide-slate-100 dark:divide-slate-700/50"></tbody>
-      </table>
+
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">🏆 Resumo por Cliente (Ranking)</h2>
+        </div>
+        <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+          <thead class="bg-slate-50 dark:bg-slate-900/50 text-[10px] uppercase font-bold text-slate-400 border-b border-slate-200 dark:border-slate-700">
+            <tr><th class="px-4 py-3">Cliente</th><th class="px-4 py-3 text-center">Qtd</th><th class="px-4 py-3 text-right">Lucro Total</th></tr>
+          </thead>
+          <tbody id="adm-client-table" class="divide-y divide-slate-100 dark:divide-slate-700/50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Relatório Financeiro -->
+    <div id="adm-view-finance" class="hidden space-y-6">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Extrato Geral (Entradas e Saídas)</h2>
+          <select id="adm-fin-filter" onchange="renderAdminFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs focus:outline-none">
+            <option value="all">Tudo</option>
+            <option value="income">Só Entradas</option>
+            <option value="expense">Só Saídas</option>
+          </select>
+        </div>
+        <div id="adm-fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
+      </div>
     </div>
   </div>
 
@@ -288,10 +280,6 @@
     <div id="nav-finance" onclick="switchTab('finance')" class="nav-item">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
       <span class="text-[9px] font-bold mt-1 uppercase tracking-wide">Finanças</span>
-    </div>
-    <div id="nav-catalog" onclick="switchTab('catalog')" class="nav-item">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-      <span class="text-[9px] font-bold mt-1 uppercase tracking-wide">Catálogo</span>
     </div>
     <div id="nav-admin" onclick="switchTab('admin')" class="nav-item">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
@@ -313,19 +301,17 @@
       <datalist id="list-cities"></datalist>
       <datalist id="list-carriers"></datalist>
 
-      <!-- CAMPO ANEXAR ARQUIVO / GOOGLE DRIVE -->
-      <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2">
-        <label class="lbl text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-          <span>📁</span> Anexar Arquivo / Google Drive
-        </label>
+      <!-- ANEXO -->
+      <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2">
+        <label class="lbl text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5"><span>📁</span> Anexar Arquivo / Link Drive</label>
         <div class="flex gap-2">
-          <input id="oDriveLink" type="url" placeholder="Cole o link do Google Drive aqui (https://...)" class="field text-sm bg-white dark:bg-slate-800">
+          <input id="oDriveLink" type="url" placeholder="Link (https://...)" class="field text-sm bg-white dark:bg-slate-800">
           <label class="bg-brand-600 hover:bg-brand-700 text-white px-4 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">
             📎 Arquivo
             <input type="file" id="input-doc" class="hidden" onchange="processDocFile(this)">
           </label>
         </div>
-        <p id="doc-filename" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate hidden">Arquivo carregado: <span class="font-bold"></span></p>
+        <p id="doc-filename" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate hidden">Anexo: <span class="font-bold"></span></p>
         <input type="hidden" id="oDocData">
         <input type="hidden" id="oDocName">
       </div>
@@ -338,34 +324,42 @@
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl">Valor (US$)</label>
-          <div class="relative">
-            <span class="absolute left-3 top-3.5 text-slate-400 font-bold">$</span>
-            <input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" class="field pl-8">
-          </div>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" class="field pl-8"></div>
         </div>
         <div>
           <label class="lbl">Cotação (R$)</label>
-          <div class="relative">
-            <span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span>
-            <input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" class="field pl-10">
-          </div>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" class="field pl-10"></div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl">Sua Margem (%)</label>
-          <div class="relative">
-            <span class="absolute right-3 top-3.5 text-indigo-400 font-bold">%</span>
-            <input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-8">
-          </div>
+          <div class="relative"><span class="absolute right-3 top-3.5 text-indigo-400 font-bold">%</span><input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-8"></div>
         </div>
         <div>
           <label class="lbl">Custo do Frete (R$)</label>
-          <div class="relative">
-            <span class="absolute left-3 top-3.5 text-rose-400 font-bold">R$</span>
-            <input id="oFrete" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0,00" oninput="updatePreview()" class="field pl-10">
-          </div>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-rose-400 font-bold">R$</span><input id="oFrete" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0,00" oninput="updatePreview()" class="field pl-10"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div>
+          <label class="lbl">Forma Pagto. (Receb.)</label>
+          <select id="oPaymentMethod" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0">
+            <option value="Pix">Pix</option>
+            <option value="Débito">Débito</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Boleto">Boleto</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Status do Frete</label>
+          <select id="oFreightStatus" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0">
+            <option value="paid">Já Pago</option>
+            <option value="pending">Conta a Pagar</option>
+          </select>
         </div>
       </div>
 
@@ -374,32 +368,25 @@
           <input type="checkbox" id="oPagoMerc" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500">
           <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu adiantei a Mercadoria?</span>
         </label>
-        <div id="wrapAccOutMerc" class="pl-8">
-          <select id="oAccOutMerc" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
-        </div>
+        <div id="wrapAccOutMerc" class="pl-8"><select id="oAccOutMerc" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
 
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
           <input type="checkbox" id="oPagoFrete" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
           <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei a Transportadora?</span>
         </label>
-        <div id="wrapAccOutFrete" class="pl-8">
-          <select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
-        </div>
+        <div id="wrapAccOutFrete" class="pl-8"><select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
 
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
           <input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
           <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Lançar Recebimento no Financeiro?</span>
         </label>
-        <div id="wrapAccIn" class="pl-8">
-          <select id="oAccIn" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
-        </div>
+        <div id="wrapAccIn" class="pl-8"><select id="oAccIn" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
       </div>
 
       <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50">
         <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white" id="prevBRL">R$ 0,00</b></div>
         <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400" id="prevMargem">R$ 0,00</b></div>
         <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>(-) Custo Frete (Meu)</span><b id="prevFrete">R$ 0,00</b></div>
-        
         <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-sm border border-emerald-100 dark:border-emerald-900/30">
           <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base" id="prevLucro">R$ 0,00</b>
         </div>
@@ -412,12 +399,10 @@
         <div><label class="lbl">Origem (Saída)</label><input id="oOrigem" type="text" list="list-cities" placeholder="Ex: Cidade Leste" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Data/Hora Saída <span class="btn-now" onclick="setNow('oSaida')">Agora</span></label><input id="oSaida" type="datetime-local" class="field"></div>
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         <div><label class="lbl">Transportadora</label><input id="oTransportadora" type="text" list="list-carriers" placeholder="Ex: Correios" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Subiu Transp. <span class="btn-now" onclick="setNow('oSubiu')">Agora</span></label><input id="oSubiu" type="datetime-local" class="field"></div>
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         <div><label class="lbl">1ª Cidade</label><input id="oC1" type="text" list="list-cities" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Hora <span class="btn-now" onclick="setNow('oC1H')">Agora</span></label><input id="oC1H" type="datetime-local" class="field"></div>
@@ -430,7 +415,6 @@
         <div><label class="lbl">3ª Cidade</label><input id="oC3" type="text" list="list-cities" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Hora <span class="btn-now" onclick="setNow('oC3H')">Agora</span></label><input id="oC3H" type="datetime-local" class="field"></div>
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         <div><label class="lbl flex items-center justify-between">Desceu SP <span class="btn-now" onclick="setNow('oSP')">Agora</span></label><input id="oSP" type="datetime-local" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Recebido <span class="btn-now" onclick="setNow('oRec')">Agora</span></label><input id="oRec" type="datetime-local" class="field"></div>
@@ -459,19 +443,50 @@
       <input type="hidden" id="fType" value="income">
       
       <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Venda avulsa" required class="field"></div>
+      
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl">Valor (R$)</label>
-          <div class="relative">
-            <span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span>
-            <input type="number" id="fAmount" step="0.01" placeholder="0,00" required class="field pl-10">
-          </div>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="fAmount" step="0.01" placeholder="0,00" required class="field pl-10"></div>
         </div>
         <div><label class="lbl">Data</label><input type="date" id="fDate" required class="field"></div>
       </div>
-      <div><label class="lbl">Conta</label><select id="fAccount" required class="field"></select></div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Conta</label><select id="fAccount" required class="field"></select></div>
+        <div>
+          <label class="lbl">Forma Pagto.</label>
+          <select id="fPaymentMethod" class="field text-sm">
+            <option value="Pix">Pix</option>
+            <option value="Débito">Débito</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Boleto">Boleto</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="lbl">Status</label>
+        <select id="fStatus" class="field text-sm">
+          <option value="paid">Pago / Recebido</option>
+          <option value="pending">Pendente (Conta a Pagar)</option>
+        </select>
+      </div>
+
       <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Lançamento</button>
     </form>
+  </div>
+</div>
+
+<!-- MODAL CONTAS A PAGAR -->
+<div id="pendingModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white">Contas a Pagar (Pendentes)</h3>
+      <button onclick="document.getElementById('pendingModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+    </div>
+    <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
   </div>
 </div>
 
@@ -487,10 +502,7 @@
       <div><label class="lbl">Para (Destino)</label><select id="tTo" required class="field font-semibold"></select></div>
       <div>
         <label class="lbl">Valor (R$)</label>
-        <div class="relative">
-          <span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span>
-          <input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" required class="field pl-10">
-        </div>
+        <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" required class="field pl-10"></div>
       </div>
       <div><label class="lbl">Data</label><input type="date" id="tDate" required class="field"></div>
       <button type="submit" class="w-full py-3 bg-slate-800 dark:bg-slate-700 text-white rounded-xl font-bold mt-2">Confirmar Transferência</button>
@@ -513,10 +525,7 @@
       </div>
       <div>
         <label class="lbl text-center block mb-2">Qual o saldo real agora?</label>
-        <div class="relative">
-          <span class="absolute left-3 top-3.5 text-brand-500 font-bold">R$</span>
-          <input type="number" id="editBalNew" step="0.01" required class="field pl-10 text-center text-xl font-bold text-brand-600 dark:text-indigo-400">
-        </div>
+        <div class="relative"><span class="absolute left-3 top-3.5 text-brand-500 font-bold">R$</span><input type="number" id="editBalNew" step="0.01" required class="field pl-10 text-center text-xl font-bold text-brand-600 dark:text-indigo-400"></div>
       </div>
       <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold">Salvar Ajuste</button>
     </form>
@@ -526,37 +535,31 @@
 <!-- MODAL RECIBOS -->
 <div id="receiptModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
   <div class="w-full max-w-md my-auto space-y-6 pb-10">
-    
     <div>
       <div class="no-print flex gap-2 mb-3">
         <button onclick="printReceipt('admin')" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Administrativo</button>
         <button onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
       </div>
-
       <div id="printAdminWrapper" class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
         <div class="text-center mb-4 border-b-2 border-slate-800 dark:border-slate-500 pb-3">
           <h2 class="text-xl font-black text-slate-900 dark:text-white">RECIBO ADMINISTRATIVO</h2>
           <p class="text-xs text-slate-500 font-mono mt-1">Pedido: <span id="recPedido" class="font-bold text-slate-700 dark:text-slate-300"></span></p>
         </div>
-        
         <div class="py-2 space-y-2 text-sm mb-3">
           <div class="flex justify-between"><span class="text-slate-500">Cliente:</span><span class="font-bold" id="recCliente"></span></div>
           <div class="flex justify-between"><span class="text-slate-500">Data Emissão:</span><span class="font-semibold" id="recData"></span></div>
         </div>
-
         <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-2 text-sm border border-slate-100 dark:border-slate-700">
           <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria:</span><span class="font-bold" id="recInv"></span></div>
           <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem Bruta:</span><span class="font-bold text-blue-600 dark:text-blue-400" id="recMargem"></span></div>
-          <div class="flex justify-between text-rose-600"><span>(-) Custo Frete (Meu):</span><span class="font-bold" id="recFreteAdmin"></span></div>
+          <div class="flex justify-between text-rose-600"><span>(-) Custo Frete:</span><span class="font-bold" id="recFreteAdmin"></span></div>
           <div class="flex justify-between border-t border-slate-300 dark:border-slate-600 pt-3 mt-2">
-            <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido Real:</span>
-            <span class="font-black text-lg" id="recLucro"></span>
+            <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido:</span><span class="font-black text-lg" id="recLucro"></span>
           </div>
           <div class="flex justify-between border-t border-slate-300 dark:border-slate-600 pt-2 mt-1 font-bold text-slate-800 dark:text-white text-base">
             <span>Total Faturado:</span><span id="recFat"></span>
           </div>
         </div>
-
         <div class="mt-5">
           <h4 class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider border-b border-slate-200 dark:border-slate-700 pb-1">Rastreio Detalhado</h4>
           <div class="space-y-2" id="recTrajetoAdmin"></div>
@@ -568,25 +571,21 @@
       <div class="no-print mb-3">
         <button onclick="printReceipt('client')" class="w-full py-3.5 rounded-xl font-bold text-sm text-white bg-emerald-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Recibo do Cliente</button>
       </div>
-
       <div id="printClientWrapper" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-2xl border-t-8 border-brand-600 relative">
         <div class="text-center mb-6">
           <h2 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-wide">Comprovante de Transporte</h2>
           <p class="text-xs text-slate-500 mt-1">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-brand-600 dark:text-indigo-400"></span></p>
         </div>
-
         <div class="border-y border-slate-200 dark:border-slate-700 py-3 space-y-1.5 text-sm mb-5 bg-slate-50/50 dark:bg-slate-900/30 px-3 rounded">
           <div class="flex justify-between items-center">
             <span class="text-slate-500 text-[10px] uppercase font-bold">Destinatário:</span>
             <span class="font-bold text-slate-800 dark:text-slate-200 text-base" id="recClienteCliente"></span>
           </div>
         </div>
-
         <div class="mb-5">
           <h4 class="text-[11px] uppercase font-bold text-slate-400 mb-4 tracking-wider">Trajeto da Entrega</h4>
           <div class="relative ml-2" id="recTrajetoCliente"></div>
         </div>
-
         <div class="receipt-edge bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-700 mt-6">
           <div class="flex justify-between items-center">
             <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Valor do Serviço:</span>
@@ -597,13 +596,11 @@
             <span class="text-[10px] font-black uppercase text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded" id="recStatusFrete">Incluso no Faturamento</span>
           </div>
         </div>
-
         <div class="text-center pt-8 text-[10px] text-slate-400">
           Documento gerado eletronicamente.<br>Obrigado pela preferência!
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -624,6 +621,7 @@ let orders = [];
 let txs = [];
 let historyData = { clients: [], cities: [], carriers: [] };
 let currentTab = 'orders';
+let currentAdminTab = 'orders';
 
 function pad(n){ return String(n).padStart(2,'0'); }
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -684,7 +682,7 @@ if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') 
 // NAVEGAÇÃO
 function switchTab(tab) {
   currentTab = tab;
-  ['orders', 'finance', 'catalog', 'admin'].forEach(t => {
+  ['orders', 'finance', 'admin'].forEach(t => {
     document.getElementById(`view-${t}`).classList.add('hidden');
     document.getElementById(`nav-${t}`).classList.remove('active');
   });
@@ -710,14 +708,32 @@ function switchTab(tab) {
     title.textContent = 'Painel Financeiro'; sub.textContent = 'Contas · Saldos · Lançamentos';
     icon.textContent = '💰'; icon.className = 'w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30';
     renderFinance();
-  } else if (tab === 'catalog') {
-    title.textContent = 'Catálogo de Arquivos'; sub.textContent = 'Links do Google Drive e Documentos';
-    icon.textContent = '🗂️'; icon.className = 'w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white text-xl shadow-lg shadow-purple-500/30';
-    renderCatalog();
   } else if (tab === 'admin') {
     title.textContent = 'Administração'; sub.textContent = 'Relatórios e Desempenho';
     icon.textContent = '📊'; icon.className = 'w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl shadow-lg shadow-slate-800/30';
-    renderAdmin();
+    switchAdminTab('orders'); // Sempre inicia em pedidos
+  }
+}
+
+function switchAdminTab(tab) {
+  currentAdminTab = tab;
+  const btnOrders = document.getElementById('btn-adm-orders');
+  const btnFinance = document.getElementById('btn-adm-finance');
+  const viewOrders = document.getElementById('adm-view-orders');
+  const viewFinance = document.getElementById('adm-view-finance');
+
+  if (tab === 'orders') {
+    btnOrders.className = 'flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition';
+    btnFinance.className = 'flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition';
+    viewOrders.classList.remove('hidden');
+    viewFinance.classList.add('hidden');
+    renderAdminOrders();
+  } else {
+    btnFinance.className = 'flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition';
+    btnOrders.className = 'flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition';
+    viewFinance.classList.remove('hidden');
+    viewOrders.classList.add('hidden');
+    renderAdminFinance();
   }
 }
 
@@ -830,9 +846,9 @@ function renderOrders() {
             <p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">${escapeHtml(o.cliente || 'Sem nome')}</p>
           </div>
           <div class="flex gap-1 shrink-0">
-            <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm" title="Recibo">🧾</button>
-            <button onclick="openModal('${o.id}')" class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm shadow-sm" title="Editar">✏️</button>
-            <button onclick="delOrder('${o.id}')" class="p-2 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-lg text-sm shadow-sm" title="Excluir">🗑️</button>
+            <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm">🧾</button>
+            <button onclick="openModal('${o.id}')" class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm shadow-sm">✏️</button>
+            <button onclick="delOrder('${o.id}')" class="p-2 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-lg text-sm shadow-sm">🗑️</button>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center">
@@ -848,7 +864,7 @@ function renderOrders() {
 function getAccountBalance(accId) {
   let bal = 0;
   txs.forEach(t => {
-    if (t.accountId === accId) {
+    if (t.accountId === accId && t.status !== 'pending') {
       if (t.type === 'income' || t.type === 'transfer_in') bal += t.amount;
       else if (t.type === 'expense' || t.type === 'transfer_out') bal -= t.amount;
     }
@@ -876,13 +892,15 @@ function renderFinance() {
   const m = todayISO().slice(0,7);
   
   txs.forEach(t => {
-    if (t.type === 'income' && !t.isAdjustment) totalBal += t.amount;
-    else if (t.type === 'expense' && !t.isAdjustment) totalBal -= t.amount;
+    if (t.status !== 'pending') {
+      if (t.type === 'income' && !t.isAdjustment) totalBal += t.amount;
+      else if (t.type === 'expense' && !t.isAdjustment) totalBal -= t.amount;
+    }
     
     if (t.cat === 'Vendas') totalProfit += t.amount;
     else if (t.cat === 'Fornecedores' || t.cat === 'Logística') totalProfit -= t.amount;
     
-    if (t.date.startsWith(m)) {
+    if (t.date.startsWith(m) && t.status !== 'pending') {
       if (t.type === 'income' && !t.isAdjustment) inc += t.amount;
       else if (t.type === 'expense' && !t.isAdjustment) exp += t.amount;
     }
@@ -905,6 +923,7 @@ function renderFinance() {
     const isInc = t.type === 'income' || t.type === 'transfer_in';
     const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
     const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const isPending = t.status === 'pending';
     
     let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
     let tagName = 'Outro';
@@ -917,6 +936,8 @@ function renderFinance() {
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
 
     return `
       <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
@@ -924,19 +945,56 @@ function renderFinance() {
           ${icon}
         </div>
         <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <div class="flex items-center gap-1 mb-1 flex-wrap">
             <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md ${tagColor}">${tagName}</span>
-            <span class="text-[10px] font-medium text-slate-400">${dateTimeStr}</span>
+            ${payMethodLabel}
+            ${pendingLabel}
           </div>
           <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
-          <p class="text-[11px] font-medium text-slate-500 mt-0.5">${accName}</p>
+          <p class="text-[11px] font-medium text-slate-500 mt-0.5">${dateTimeStr} · ${accName}</p>
         </div>
         <div class="text-right shrink-0">
-          <p class="font-black text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+          <p class="font-black text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')} ${isPending ? 'opacity-50 line-through' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
           <button onclick="delFinTx('${t.id}')" class="text-[10px] font-semibold text-slate-400 hover:text-rose-600 mt-1 underline decoration-transparent hover:decoration-rose-600 transition">excluir</button>
         </div>
       </div>`;
   }).join('');
+}
+
+// CONTAS A PAGAR
+function openPendingModal() {
+  document.getElementById('pendingModal').classList.remove('hidden');
+  const list = document.getElementById('pending-list');
+  const pendingTxs = txs.filter(t => t.status === 'pending' && t.type === 'expense');
+
+  if (!pendingTxs.length) {
+    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente no momento.</p>';
+    return;
+  }
+
+  list.innerHTML = pendingTxs.map(t => `
+    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+      <div class="min-w-0">
+        <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
+        <p class="text-[11px] text-slate-500">Vencimento: ${t.date.split('-').reverse().join('/')}</p>
+      </div>
+      <div class="text-right shrink-0">
+        <p class="font-black text-rose-600 text-sm mb-1">${money(t.amount)}</p>
+        <button onclick="payPending('${t.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Pagar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function payPending(id) {
+  const t = txs.find(x => x.id === id);
+  if (!t) return;
+  if (!confirm(`Confirmar o pagamento de ${money(t.amount)} para "${t.desc}"? O dinheiro sairá da conta ${ACCOUNTS.find(a=>a.id===t.accountId)?.name}.`)) return;
+  
+  t.status = 'paid';
+  saveAll();
+  document.getElementById('pendingModal').classList.add('hidden');
+  switchTab('finance');
 }
 
 function openEditBalance(accId) {
@@ -962,7 +1020,7 @@ function saveEditBalance(e) {
   const amount = Math.abs(diff);
   const desc = `Ajuste de Saldo`;
 
-  txs.unshift({ id: genId(), desc, amount, type, cat: 'Ajuste', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, isAdjustment: true });
+  txs.unshift({ id: genId(), desc, amount, type, cat: 'Ajuste', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, isAdjustment: true, status: 'paid' });
   saveAll();
   document.getElementById('editBalanceModal').classList.add('hidden');
   switchTab('finance');
@@ -972,67 +1030,8 @@ function delFinTx(id) {
   if (confirm('Apagar este lançamento do histórico?')) {
     txs = txs.filter(t => t.id !== id);
     saveAll();
-    switchTab('finance');
+    switchTab(currentTab);
   }
-}
-
-// RENDERIZAÇÃO: CATÁLOGO
-function renderCatalog() {
-  const list = document.getElementById('catalog-list');
-  const empty = document.getElementById('catalog-empty');
-  const q = document.getElementById('cat-search').value.toLowerCase().trim();
-  
-  const itemsWithDocs = orders.filter(o => {
-    if (!o.driveLink && !o.docData) return false;
-    if (!q) return true;
-    return (o.cliente || '').toLowerCase().includes(q) || (o.pedido || '').toLowerCase().includes(q);
-  }).sort((a,b) => (b.saida || '').localeCompare(a.saida || ''));
-
-  if (!itemsWithDocs.length) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-
-  list.innerHTML = itemsWithDocs.map(o => {
-    let actionBtn = '';
-    if (o.driveLink) {
-      actionBtn = `<a href="${escapeHtml(o.driveLink)}" target="_blank" class="w-full mt-2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1 transition">🔗 Abrir no Google Drive</a>`;
-    } else if (o.docData) {
-      actionBtn = `<button onclick="downloadDoc('${o.id}')" class="w-full mt-2 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1 transition">📥 Baixar Arquivo (${escapeHtml(o.docName || 'anexo')})</button>`;
-    }
-
-    return `
-      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start mb-2">
-            <div>
-              <p class="font-bold text-slate-900 dark:text-white text-sm">${escapeHtml(o.cliente || 'Cliente')}</p>
-              <p class="text-[10px] text-slate-400 font-mono">${escapeHtml(o.pedido || 'S/N')} · ${fmtData(o.saida)}</p>
-            </div>
-            <span class="text-xs bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded font-bold">📄 Doc</span>
-          </div>
-          ${o.driveLink ? `<p class="text-xs text-indigo-600 dark:text-indigo-400 truncate mt-2 bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-100 dark:border-slate-800">Drive: ${escapeHtml(o.driveLink)}</p>` : ''}
-          ${o.docName ? `<p class="text-xs text-slate-600 dark:text-slate-400 truncate mt-2 bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-100 dark:border-slate-800">Arquivo: ${escapeHtml(o.docName)}</p>` : ''}
-        </div>
-        <div class="mt-4">
-          ${actionBtn}
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function downloadDoc(id) {
-  const o = orders.find(x => x.id === id);
-  if (!o || !o.docData) return;
-  const a = document.createElement('a');
-  a.href = o.docData;
-  a.download = o.docName || 'documento';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
 }
 
 function processDocFile(input) {
@@ -1089,6 +1088,9 @@ function openModal(id){
     document.getElementById('oCot').value = o.cotacao;
     document.getElementById('oMargem').value = o.margem;
     document.getElementById('oFrete').value = o.frete;
+    document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
+    document.getElementById('oFreightStatus').value = o.freightStatus || 'paid';
+    
     document.getElementById('oOrigem').value = o.cidadeOrigem;
     document.getElementById('oSaida').value = o.saida;
     document.getElementById('oTransportadora').value = o.transportadora || '';
@@ -1123,6 +1125,8 @@ function openModal(id){
     document.getElementById('oCot').value = '5.40';
     document.getElementById('oMargem').value = '';
     document.getElementById('oFrete').value = '';
+    document.getElementById('oPaymentMethod').value = 'Pix';
+    document.getElementById('oFreightStatus').value = 'paid';
     document.getElementById('oOrigem').value = '';
     document.getElementById('oSaida').value = nowLocal();
     document.getElementById('oTransportadora').value = '';
@@ -1189,6 +1193,8 @@ function saveOrder(e){
     cotacao: parseFloat(document.getElementById('oCot').value) || 0,
     margem: parseFloat(document.getElementById('oMargem').value) || 0,
     frete: parseFloat(document.getElementById('oFrete').value) || 0,
+    paymentMethod: document.getElementById('oPaymentMethod').value,
+    freightStatus: document.getElementById('oFreightStatus').value,
     pagoMerc: document.getElementById('oPagoMerc').checked,
     pagoFrete: document.getElementById('oPagoFrete').checked,
     syncFin: document.getElementById('oSyncFin').checked,
@@ -1225,21 +1231,21 @@ function saveOrder(e){
     if (v.faturamento > 0) {
       txs.push({
         id: genId(), refId: data.id, desc: `Pedido ${data.pedido} - ${data.cliente}`, 
-        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccIn').value
+        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccIn').value, status: 'paid', paymentMethod: data.paymentMethod
       });
     }
 
     if (data.pagoMerc && v.meuCustoMerc > 0) {
       txs.push({
         id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
-        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value
+        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value, status: 'paid'
       });
     }
 
     if (data.pagoFrete && v.meuCustoFrete > 0) {
       txs.push({
         id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido}`, 
-        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value
+        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: data.freightStatus
       });
     }
   }
@@ -1285,8 +1291,10 @@ function saveFinTx(e) {
   const amount = parseFloat(document.getElementById('fAmount').value);
   const date = document.getElementById('fDate').value;
   const accId = document.getElementById('fAccount').value;
+  const paymentMethod = document.getElementById('fPaymentMethod').value;
+  const status = document.getElementById('fStatus').value;
   
-  txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId });
+  txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, paymentMethod, status });
   saveAll();
   document.getElementById('finModal').classList.add('hidden');
   switchTab('finance');
@@ -1314,11 +1322,11 @@ function saveTransfer(e) {
   
   txs.push({ 
     id: tId, desc: `Transf. para ${ACCOUNTS.find(a=>a.id===to).name}`, 
-    amount, type: 'transfer_out', date, createdAt, accountId: from, isTransfer: true 
+    amount, type: 'transfer_out', date, createdAt, accountId: from, isTransfer: true, status: 'paid'
   });
   txs.push({ 
     id: tId + '_in', desc: `Transf. de ${ACCOUNTS.find(a=>a.id===from).name}`, 
-    amount, type: 'transfer_in', date, createdAt, accountId: to, isTransfer: true 
+    amount, type: 'transfer_in', date, createdAt, accountId: to, isTransfer: true, status: 'paid'
   });
 
   saveAll();
@@ -1326,7 +1334,7 @@ function saveTransfer(e) {
   switchTab('finance');
 }
 
-function renderAdmin() {
+function renderAdminOrders() {
   let totalFat = 0, totalProfit = 0;
   const grouped = {};
 
@@ -1396,6 +1404,53 @@ function renderAdmin() {
       <td class="px-5 py-4 text-right text-sm font-black ${row.lucro >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'} truncate">${money(row.lucro)}</td>
     </tr>
   `).join('');
+}
+
+function renderAdminFinance() {
+  const filter = document.getElementById('adm-fin-filter').value;
+  const list = document.getElementById('adm-fin-list');
+  
+  let sorted = txs.slice().sort((a,b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    return (b.createdAt || '').localeCompare(a.createdAt || '');
+  });
+
+  if (filter === 'income') sorted = sorted.filter(t => t.type === 'income' || t.type === 'transfer_in');
+  else if (filter === 'expense') sorted = sorted.filter(t => t.type === 'expense' || t.type === 'transfer_out');
+
+  if (!sorted.length) {
+    list.innerHTML = '<p class="p-6 text-center text-slate-400 text-sm">Nenhum lançamento encontrado.</p>';
+    return;
+  }
+
+  list.innerHTML = sorted.map(t => {
+    const isInc = t.type === 'income' || t.type === 'transfer_in';
+    const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const isPending = t.status === 'pending';
+    
+    let icon = isInc ? '↑' : '↓';
+    if (isTransfer) icon = '↔️';
+
+    const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
+
+    return `
+      <div class="flex items-center gap-3 px-5 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isInc ? 'bg-emerald-50 text-emerald-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600')}">${icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1 flex-wrap mb-0.5">
+            ${payMethodLabel}
+            ${pendingLabel}
+          </div>
+          <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
+          <p class="text-[10px] text-slate-500">${dateTimeStr} · ${accName}</p>
+        </div>
+        <p class="font-black text-sm shrink-0 ${isInc ? 'text-emerald-600' : (isTransfer ? 'text-slate-700' : 'text-rose-600')} ${isPending ? 'opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+      </div>
+    `;
+  }).join('');
 }
 
 function openReceipt(id){
