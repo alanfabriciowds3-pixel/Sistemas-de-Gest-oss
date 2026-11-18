@@ -234,7 +234,7 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (COM BORDAS SUPERIORES COLORIDAS E MAIS ESPAÇO PARA OS NÚMEROS MAIORES) -->
+    <!-- SEÇÃO MINHAS CONTAS (COM BORDAS SUPERIORES COLORIDAS VISÍVEIS) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
@@ -243,17 +243,17 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- PAINEL FINANCEIRO -->
+    <!-- PAINEL FINANCEIRO (LADO A LADO COM PROPORÇÃO IGUAL) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-3">
         <div onclick="openPatrimonioModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-indigo-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
         </div>
         <div onclick="openPendingLucrosModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-amber-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-lg sm:text-2xl font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -752,13 +752,13 @@ const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
-// Cores explicitamente definidas para o topo dos cards de contas
+// Cores exatas aplicadas com border-top estilo inline ou classes dedicadas para aparecer perfeitamente
 const ACCOUNTS = [
-  { id: 'cash', name: 'Dinheiro em Caixa', border: 'border-t-8 border-emerald-500' },
-  { id: 'caixa', name: 'Caixa Econômica', border: 'border-t-8 border-blue-600' },
-  { id: 'nubank', name: 'Nubank', border: 'border-t-8 border-purple-600' },
-  { id: 'c6', name: 'C6 Bank', border: 'border-t-8 border-slate-700 dark:border-slate-500' },
-  { id: 'inter', name: 'Inter', border: 'border-t-8 border-orange-500' }
+  { id: 'cash', name: 'Dinheiro em Caixa', style: 'border-top: 6px solid #10b981;' },
+  { id: 'caixa', name: 'Caixa Econômica', style: 'border-top: 6px solid #2563eb;' },
+  { id: 'nubank', name: 'Nubank', style: 'border-top: 6px solid #9333ea;' },
+  { id: 'c6', name: 'C6 Bank', style: 'border-top: 6px solid #334155;' },
+  { id: 'inter', name: 'Inter', style: 'border-top: 6px solid #f97316;' }
 ];
 
 let orders = [];
@@ -1212,18 +1212,18 @@ function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   const totalBalGlobal = getTotalBankBalance();
 
-  // CARROSSEL COM BORDAS SUPERIORES ESPESSAS E NÚMEROS GRANDES COM AJUSTE DE TAMANHO PARA NÃO CORTAR
+  // CARROSSEL COM BORDAS COLORIDAS APLICADAS VIA INLINE STYLE PARA APARECER COM PRECISÃO
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl ${acc.border} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-48 h-36 flex flex-col justify-between">
+      <div style="${acc.style}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-48 h-36 flex flex-col justify-between">
         <div class="flex justify-between items-start gap-1">
           <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
         <div class="flex flex-col justify-end">
-          <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight tracking-tight break-all">${money(bal)}</h3>
+          <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight tracking-tight break-all">${money(bal)}</h3>
           <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
             <span class="text-[9px] text-slate-400 font-bold uppercase">Participação</span>
             <span class="text-[10px] font-extrabold text-brand-600 dark:text-indigo-400">${pct}%</span>
