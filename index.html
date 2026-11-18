@@ -1,27 +1,3 @@
-Perfeito, entendi a estrutura agora:
-
-· 1º código = modelo/aperfeiçoado (mostra as correções como referência visual)
-· 2º código (este) = código correto/base → é nele que aplico as correções
-
-Vou aplicar as correções de bug (sem adicionar features como notificações, filtro de 30 dias ou histórico mensal que são da versão aperfeiçoada, não correções). Segue o arquivo completo corrigido.
-
----
-
-Correções aplicadas
-
-# Onde O que foi feito
-1 saveOrder() Ao editar, preserva status e accountId dos lançamentos existentes (antes, dava baixa perdida) e atualiza em vez de recriar
-2 getTotalPendingLucros() Ignora pedidos com syncFin = false — não entram em "A Receber"
-3 openPendingLucrosModal() Mesmo filtro — pedidos sem sync não aparecem no modal
-4 fmtDateTimeTx() Parsing de data YYYY-MM-DD sem fuso (antes, exibia o dia anterior no Brasil)
-5 processDocFile() Valida tamanho (limite 2 MB) — evita estourar localStorage
-6 confirmPayPending() Avisa se o pagamento deixar a conta negativa
-7 saveFinTx() Avisa se despesa paga deixar a conta negativa
-8 saveTransfer() Avisa se a conta origem ficar negativa
-
----
-
-```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
 <head>
@@ -112,6 +88,24 @@ Correções aplicadas
       </div>
     </div>
     <div class="flex items-center gap-2">
+      <!-- Botão de Notificações Inteligente (Sininho) -->
+      <div class="relative">
+        <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition shadow-sm border border-slate-200/50 dark:border-slate-700 relative">
+          🔔
+          <span id="notification-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold shadow-sm" style="display: none;">0</span>
+        </button>
+        <!-- Painel Flutuante do Sininho -->
+        <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-72 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 animate-in">
+          <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 font-bold text-xs text-slate-700 dark:text-slate-200 flex justify-between items-center">
+            <span>Alertas e Vencimentos</span>
+            <span class="text-[10px] text-slate-400 font-normal">Próximos dias</span>
+          </div>
+          <div id="notification-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50">
+            <!-- Dinâmico -->
+          </div>
+        </div>
+      </div>
+
       <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition shadow-sm border border-slate-200/50 dark:border-slate-700">
         <svg id="icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
         <svg id="icon-moon" class="" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -248,8 +242,9 @@ Correções aplicadas
     <div id="adm-view-orders" class="space-y-6">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Detalhado de Pedidos</h2>
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Executivo de Pedidos</h2>
         </div>
+        <!-- AGORA PADRONIZADO EXATAMENTE IGUAL AO EXTRATO FINANCEIRO -->
         <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
       </div>
 
@@ -361,7 +356,6 @@ Correções aplicadas
           </label>
         </div>
         <p id="doc-filename" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate hidden">Anexo: <span class="font-bold"></span></p>
-        <p class="text-[10px] text-slate-400 dark:text-slate-500">Máx. 2 MB · Para arquivos maiores use o link do Drive.</p>
         <input type="hidden" id="oDocData">
         <input type="hidden" id="oDocName">
       </div>
@@ -688,7 +682,6 @@ Correções aplicadas
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
-const MAX_ATTACHMENT_SIZE = 2 * 1024 * 1024; // 2 MB (correção: limite de anexo)
 
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', color: 'border-emerald-500' },
@@ -712,22 +705,12 @@ function money(v){ return new Intl.NumberFormat('pt-BR',{style:'currency',curren
 function fmtDT(s){ if(!s || !s.includes('T')) return '—'; const [d,t]=s.split('T'); const [y,m,dd]=d.split('-'); return dd+'/'+m+'/'+y+' às '+t; }
 function fmtHora(s){ return s ? s.split('T')[1] : ''; }
 function fmtData(s){ if(!s) return ''; const [y,m,dd]=s.split('T')[0].split('-'); return dd+'/'+m; }
-
-// CORREÇÃO #4: parsing de data sem deslocamento de fuso.
-// 'YYYY-MM-DD' (sem T) NÃO deve ir para new Date() — no Brasil volta 1 dia antes.
 function fmtDateTimeTx(dtStr){ 
   if (!dtStr) return '—';
-  if (dtStr.includes('T')) {
-    const d = new Date(dtStr);
-    if (!isNaN(d.getTime())) {
-      return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-    }
-  }
-  const parts = dtStr.split('T')[0].split('-');
-  if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
-  return dtStr;
+  const d = new Date(dtStr);
+  if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
+  return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
-
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
@@ -738,12 +721,66 @@ function setNow(id){ document.getElementById(id).value = nowLocal(); }
 function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
 function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
 
+// SININHO / NOTIFICAÇÕES INTELIGENTES
+function toggleNotifications() {
+  const dropdown = document.getElementById('notification-dropdown');
+  dropdown.classList.toggle('hidden');
+}
+
+function checkNotifications() {
+  const badge = document.getElementById('notification-badge');
+  const list = document.getElementById('notification-list');
+  
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  
+  // Alerta contas pendentes para hoje ou com antecedência de até 3 dias
+  const pendingAlerts = txs.filter(t => {
+    if (t.status === 'paid' || t.type === 'income') return false;
+    const dueDate = new Date(t.date);
+    const diffTime = dueDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 3; // Avisa em até 3 dias antes ou vencidas
+  });
+
+  if (badge) {
+    if (pendingAlerts.length > 0) {
+      badge.style.display = 'block';
+      badge.textContent = pendingAlerts.length;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (list) {
+    if (pendingAlerts.length === 0) {
+      list.innerHTML = '<div class="p-4 text-center text-xs text-slate-400">Nenhum alerta pendente.</div>';
+    } else {
+      list.innerHTML = pendingAlerts.map(t => `
+        <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs">
+          <div>
+            <p class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(t.desc)}</p>
+            <p class="text-[10px] text-rose-500 mt-0.5">Vencimento: ${t.date.split('-').reverse().join('/')}</p>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-slate-700 dark:text-slate-300 block">${money(t.amount)}</span>
+            <button onclick="payPending('${t.id}')" class="text-[10px] bg-emerald-500 text-white px-2 py-0.5 rounded font-bold mt-1 shadow-sm">Pagar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
 document.addEventListener('click', e => {
   const m = document.getElementById('menu');
-  if (!m || m.classList.contains('hidden')) return;
-  if (e.target.closest('button[onclick*="toggleMenu"]')) return;
-  if (m.contains(e.target)) return;
-  closeMenu();
+  if (m && !m.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleMenu"]') && !m.contains(e.target)) {
+    closeMenu();
+  }
+  const notif = document.getElementById('notification-dropdown');
+  if (notif && !notif.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleNotifications"]') && !notif.contains(e.target)) {
+    notif.classList.add('hidden');
+  }
 });
 
 // DARK MODE
@@ -804,6 +841,7 @@ function switchTab(tab) {
     icon.textContent = '📊'; icon.className = 'w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl shadow-lg shadow-slate-800/30';
     switchAdminTab('orders');
   }
+  checkNotifications();
 }
 
 function switchAdminTab(tab) {
@@ -832,6 +870,7 @@ function switchAdminTab(tab) {
 function saveAll(){
   safeSet(STORAGE_ORDERS, JSON.stringify(orders));
   safeSet(STORAGE_FIN, JSON.stringify(txs));
+  checkNotifications();
 }
 
 function load(){
@@ -848,6 +887,7 @@ function load(){
   if (!historyData.carriers) historyData.carriers = [];
   renderDatalists();
   populateSelects();
+  checkNotifications();
 }
 
 function saveToHistory(order) {
@@ -969,11 +1009,9 @@ function getTotalBankBalance() {
   return total;
 }
 
-// CORREÇÃO #2: respeitar syncFin. Pedidos sem "Lançar no Financeiro" não entram em "A Receber".
 function getTotalPendingLucros() {
   let total = 0;
   orders.forEach(o => {
-    if (!o.syncFin) return;
     const linked = txs.find(t => t.refId === o.id && t.type === 'income');
     if (!linked || linked.status === 'pending') {
       const v = calcValores(o);
@@ -992,12 +1030,10 @@ function openPatrimonioModal() {
   document.getElementById('patrimonioModal').classList.remove('hidden');
 }
 
-// CORREÇÃO #3: mesmo filtro no modal (syncFin).
 function openPendingLucrosModal() {
   const modal = document.getElementById('pendingLucrosModal');
   const list = document.getElementById('pending-lucros-list');
   const pendingOrders = orders.filter(o => {
-    if (!o.syncFin) return false;
     const linked = txs.find(t => t.refId === o.id && t.type === 'income');
     return !linked || linked.status === 'pending';
   });
@@ -1124,7 +1160,7 @@ function renderFinance() {
   }).join('');
 }
 
-// CONTAS A PAGAR (APENAS LANÇAMENTOS MANUAIS)
+// CONTAS A PAGAR
 function openPendingModal() {
   document.getElementById('pendingModal').classList.remove('hidden');
   const list = document.getElementById('pending-list');
@@ -1160,19 +1196,17 @@ function payPending(id) {
   document.getElementById('payAccountModal').classList.remove('hidden');
 }
 
-// CORREÇÃO #6: aviso de saldo negativo ao confirmar pagamento.
 function confirmPayPending(e) {
   e.preventDefault();
   const id = document.getElementById('payTxId').value;
   const selectedAccount = document.getElementById('payAccountSelect').value;
   const t = txs.find(x => x.id === id);
   if (!t) return;
-
-  if (t.type === 'expense') {
-    const bal = getAccountBalance(selectedAccount);
-    if (bal - t.amount < 0) {
-      const accName = ACCOUNTS.find(a => a.id === selectedAccount)?.name || selectedAccount;
-      if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(bal - t.amount)}.\n\nDeseja continuar mesmo assim?`)) return;
+  
+  const currentBalance = getAccountBalance(selectedAccount);
+  if (t.type === 'expense' && currentBalance - t.amount < 0) {
+    if (!confirm("Aviso: Esta baixa deixará o saldo da conta selecionada negativo. Deseja prosseguir mesmo assim?")) {
+      return;
     }
   }
   
@@ -1222,12 +1256,13 @@ function delFinTx(id) {
   }
 }
 
-// CORREÇÃO #5: validação de tamanho do anexo (2 MB).
+// VALIDAÇÃO DE TAMANHO DE ANEXO (LIMITE 2MB)
 function processDocFile(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
-    if (file.size > MAX_ATTACHMENT_SIZE) {
-      alert(`Arquivo muito grande (${(file.size/1024/1024).toFixed(1)} MB).\n\nLimite: 2 MB.\nPara arquivos maiores, use o campo "Link (https://...)".`);
+    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+    if (file.size > MAX_SIZE) {
+      alert("Atenção: O arquivo excede o limite recomendado de 2 MB para armazenamento local.");
       input.value = '';
       return;
     }
@@ -1372,8 +1407,6 @@ function updatePreview(){
   elLucro.className = lucroLiq >= 0 ? 'text-emerald-700 dark:text-emerald-400 text-base' : 'text-rose-700 dark:text-rose-400 text-base';
 }
 
-// CORREÇÃO #1 (crítica): preservar status/conta dos lançamentos existentes ao editar.
-// Antes, dava baixa perdida (tx recriado como 'pending').
 function saveOrder(e){
   e.preventDefault();
   const id = document.getElementById('oId').value;
@@ -1410,6 +1443,16 @@ function saveOrder(e){
 
   if (!data.pedido && !data.cliente) return alert('Informe o nº do pedido ou cliente.');
 
+  // Preserva o status anterior (ex: 'paid' se já havia dado baixa) ao editar o pedido
+  let oldIncome = null;
+  if (id) {
+    const existingIndex = orders.findIndex(x => x.id === id);
+    if (existingIndex >= 0) {
+      const oldOrder = orders[existingIndex];
+      oldIncome = txs.find(t => t.refId === oldOrder.id && t.type === 'income');
+    }
+  }
+
   if (id) {
     const i = orders.findIndex(x => x.id === id);
     if (i >= 0) orders[i] = data;
@@ -1417,59 +1460,33 @@ function saveOrder(e){
     orders.unshift(data);
   }
 
-  // Captura txs existentes do pedido (para preservar status/conta)
-  const oldIncome  = txs.find(t => t.refId === data.id && t.type === 'income' && t.cat === 'Vendas');
-  const oldMerc    = txs.find(t => t.refId === data.id && t.type === 'expense' && t.cat === 'Fornecedores');
-  const oldFrete   = txs.find(t => t.refId === data.id && t.type === 'expense' && t.cat === 'Logística');
-
-  // Remove apenas txs vinculados a este pedido (serão recriados/atualizados abaixo)
-  txs = txs.filter(t => t.refId !== data.id);
+  txs = txs.filter(t => t.refId !== data.id); 
 
   if (data.syncFin) {
     const v = calcValores(data);
     const dateStr = data.saida ? data.saida.split('T')[0] : todayISO();
     const createdAtStr = data.saida ? data.saida + ':00' : new Date().toISOString();
+    const incomeStatus = oldIncome?.status === 'paid' ? 'paid' : 'pending';
     
-    // Income — preserva status e conta se já existia
     if (v.faturamento > 0) {
       txs.push({
-        id: oldIncome?.id || genId(),
-        refId: data.id,
-        desc: `Pedido ${data.pedido} - ${data.cliente}`, 
-        amount: v.faturamento, type: 'income', cat: 'Vendas',
-        date: oldIncome?.date || dateStr,
-        createdAt: oldIncome?.createdAt || createdAtStr,
-        accountId: oldIncome?.accountId || document.getElementById('oAccIn').value,
-        status: oldIncome?.status === 'paid' ? 'paid' : 'pending',
-        paymentMethod: data.paymentMethod
+        id: genId(), refId: data.id, desc: `Pedido ${data.pedido} - ${data.cliente}`, 
+        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, 
+        accountId: oldIncome?.accountId || document.getElementById('oAccIn').value, status: incomeStatus, paymentMethod: data.paymentMethod
       });
     }
 
-    // Despesa Mercadoria — preserva status (sempre 'paid' por design)
     if (data.pagoMerc && v.meuCustoMerc > 0) {
       txs.push({
-        id: oldMerc?.id || genId(),
-        refId: data.id,
-        desc: `Mercadoria - Pedido ${data.pedido}`, 
-        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores',
-        date: oldMerc?.date || dateStr,
-        createdAt: oldMerc?.createdAt || createdAtStr,
-        accountId: oldMerc?.accountId || document.getElementById('oAccOutMerc').value,
-        status: 'paid'
+        id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
+        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value, status: 'paid'
       });
     }
 
-    // Despesa Frete — preserva status
     if (data.pagoFrete && v.meuCustoFrete > 0) {
       txs.push({
-        id: oldFrete?.id || genId(),
-        refId: data.id,
-        desc: `Frete Adiantado - Pedido ${data.pedido}`, 
-        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística',
-        date: oldFrete?.date || dateStr,
-        createdAt: oldFrete?.createdAt || createdAtStr,
-        accountId: oldFrete?.accountId || document.getElementById('oAccOutFrete').value,
-        status: 'paid'
+        id: genId(), refId: data.id, desc: `Frete Adiantado - Pedido ${data.pedido}`, 
+        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: 'paid'
       });
     }
   }
@@ -1508,8 +1525,6 @@ function setFinType(type) {
     i.className = 'py-2.5 rounded-lg font-bold text-sm transition text-slate-500 hover:text-slate-700';
   }
 }
-
-// CORREÇÃO #7: aviso de saldo negativo ao salvar despesa já paga.
 function saveFinTx(e) {
   e.preventDefault();
   const type = document.getElementById('fType').value;
@@ -1519,15 +1534,14 @@ function saveFinTx(e) {
   const accId = document.getElementById('fAccount').value;
   const paymentMethod = document.getElementById('fPaymentMethod').value;
   const status = document.getElementById('fStatus').value;
-
-  if (type === 'expense' && status === 'paid') {
-    const bal = getAccountBalance(accId);
-    if (bal - amount < 0) {
-      const accName = ACCOUNTS.find(a => a.id === accId)?.name || accId;
-      if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(bal - amount)}.\n\nDeseja continuar?`)) return;
+  
+  const currentBalance = getAccountBalance(accId);
+  if (type === 'expense' && status === 'paid' && currentBalance - amount < 0) {
+    if (!confirm("Aviso: Esta despesa deixará o saldo da conta selecionada negativo. Deseja prosseguir mesmo assim?")) {
+      return;
     }
   }
-  
+
   txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, paymentMethod, status });
   saveAll();
   document.getElementById('finModal').classList.add('hidden');
@@ -1542,7 +1556,6 @@ function openTransferModal() {
   document.getElementById('tTo').value = 'cash';
 }
 
-// CORREÇÃO #8: aviso de saldo negativo na conta de origem.
 function saveTransfer(e) {
   e.preventDefault();
   const from = document.getElementById('tFrom').value;
@@ -1552,10 +1565,11 @@ function saveTransfer(e) {
 
   if (from === to) return alert('Escolha contas diferentes.');
 
-  const balFrom = getAccountBalance(from);
-  if (balFrom - amount < 0) {
-    const accName = ACCOUNTS.find(a => a.id === from)?.name || from;
-    if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(balFrom - amount)}.\n\nContinuar com a transferência?`)) return;
+  const currentBalance = getAccountBalance(from);
+  if (currentBalance - amount < 0) {
+    if (!confirm("Aviso: Esta transferência deixará o saldo da conta de origem negativo. Deseja prosseguir?")) {
+      return;
+    }
   }
 
   const tId = genId();
@@ -1575,6 +1589,7 @@ function saveTransfer(e) {
   switchTab('finance');
 }
 
+// RENDERIZAÇÃO DA ADMINISTRAÇÃO DE PEDIDOS (IGUAL AO EXTRATO FINANCEIRO)
 function renderAdminOrders() {
   let totalFat = 0, totalProfit = 0;
   const grouped = {};
@@ -1599,31 +1614,26 @@ function renderAdminOrders() {
   if(!sortedOrders.length) {
     detailList.innerHTML = '<p class="p-8 text-center text-slate-400 text-sm">Nenhum pedido registrado.</p>';
   } else {
+    // LAYOUT PADRONIZADO IGUAL AO EXTRATO FINANCEIRO (CARTÃO HORIZONTAL LIMPO)
     detailList.innerHTML = sortedOrders.map(o => {
       const v = calcValores(o);
+      const st = statusOf(o);
       return `
-        <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-          <div class="flex justify-between items-start mb-3">
-            <div class="min-w-0">
-              <p class="font-bold text-slate-900 dark:text-white text-sm truncate">${escapeHtml(o.pedido || 'S/N')} <span class="font-normal text-slate-400 mx-1">•</span> ${escapeHtml(o.cliente || '—')}</p>
-              <p class="text-[11px] font-medium text-slate-500 font-mono mt-0.5">${fmtDT(o.saida)}</p>
-            </div>
-            <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm shrink-0">🧾</button>
+        <div class="flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 shadow-sm">
+            📦
           </div>
-          
-          <div class="grid grid-cols-3 gap-2 mt-2">
-            <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-2.5 border border-slate-100 dark:border-slate-700 overflow-hidden">
-              <p class="text-[9px] font-bold text-slate-400 uppercase">Faturam.</p>
-              <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${money(v.faturamento)}</p>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${st.cls}">${st.label}</span>
+              <span class="text-xs text-slate-400 font-mono">${fmtDT(o.saida)}</span>
             </div>
-            <div class="bg-rose-50 dark:bg-rose-900/10 rounded-lg p-2.5 border border-rose-100 dark:border-rose-800/30 overflow-hidden">
-              <p class="text-[9px] font-bold text-rose-400 uppercase">Custos</p>
-              <p class="text-sm font-bold text-rose-700 dark:text-rose-400 truncate">${money(v.meuCustoMerc + v.meuCustoFrete)}</p>
-            </div>
-            <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-2.5 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden">
-              <p class="text-[9px] font-bold text-emerald-500 uppercase">Lucro Líq.</p>
-              <p class="text-sm font-bold text-emerald-700 dark:text-emerald-400 truncate">${money(v.lucroLiq)}</p>
-            </div>
+            <p class="font-bold text-sm text-slate-900 dark:text-white truncate">Pedido ${escapeHtml(o.pedido || 'S/N')} — ${escapeHtml(o.cliente || '—')}</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">Custos: ${money(v.meuCustoMerc + v.meuCustoFrete)} · Lucro: <b class="text-emerald-600">${money(v.lucroLiq)}</b></p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="font-black text-sm text-emerald-600 dark:text-emerald-400">+ ${money(v.faturamento)}</p>
+            <button onclick="openReceipt('${o.id}')" class="text-[10px] font-semibold text-brand-600 dark:text-indigo-400 mt-1 underline decoration-transparent hover:decoration-brand-600 transition">ver recibo</button>
           </div>
         </div>
       `;
@@ -1802,28 +1812,3 @@ switchTab('orders');
 </script>
 </body>
 </html>
-```
-
----
-
-Resumo do que mudou (para conferir no seu código)
-
-Em saveOrder() — o trecho txs = txs.filter(t => t.refId !== data.id) continuou existindo, mas agora é precedido da captura de oldIncome, oldMerc e oldFrete. Quando recria, usa oldIncome?.status === 'paid' ? 'paid' : 'pending' e mantém accountId, date e createdAt originais. Resultado: editar um pedido não desfaz mais a baixa.
-
-Em getTotalPendingLucros() — adicionei if (!o.syncFin) return; no topo do forEach.
-
-Em openPendingLucrosModal() — mesmo filtro aplicado no .filter().
-
-Em fmtDateTimeTx() — agora só chama new Date() quando há 'T' na string (ISO completo). Para 'YYYY-MM-DD' puro, faz split manual. Sem mais deslocamento de fuso.
-
-Em processDocFile() — MAX_ATTACHMENT_SIZE (2 MB) validado antes do FileReader. Adicionei também um aviso discreto no modal dizendo "Máx. 2 MB · Para arquivos maiores use o link do Drive".
-
-Em confirmPayPending() — antes de alterar t.status, checa se getAccountBalance(selectedAccount) - t.amount < 0 e pede confirmação.
-
-Em saveFinTx() — mesma checagem, mas só para despesa já paga (type === 'expense' && status === 'paid').
-
-Em saveTransfer() — checa o saldo da conta de origem antes de criar os dois lançamentos.
-
----
-
-Se quiser, num próximo passo eu aplico também as melhorias PWA reais (manifest.json + Service Worker) ou a migração de anexos para IndexedDB (que resolve de vez o limite de tamanho). Mas isso é evolução, não correção — por isso deixei fora desta entrega.
