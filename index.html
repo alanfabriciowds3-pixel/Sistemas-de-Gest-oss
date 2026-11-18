@@ -221,7 +221,7 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO -->
+  <!-- FINANCEIRO (Números Grandes nos Cards) -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -234,7 +234,7 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (Com Esfera Colorida de Porcentagem) -->
+    <!-- SEÇÃO MINHAS CONTAS (Com Esfera Colorida de Porcentagem e Números Maiores) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
@@ -243,17 +243,17 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- PAINEL FINANCEIRO (Tamanho Rigorosamente Padronizado com os Bancos) -->
+    <!-- PAINEL FINANCEIRO (Com Números Maiores e Destaque Visual) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
         <div onclick="openPatrimonioModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-indigo-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
         </div>
         <div onclick="openPendingLucrosModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-amber-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -752,7 +752,6 @@ const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
-// Contas com suas respectivas cores aplicadas na borda superior e na esfera de porcentagem
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', style: 'border-top: 6px solid #10b981;', badgeBg: 'background-color: rgba(16, 185, 129, 0.15); color: #10b981;' },
   { id: 'caixa', name: 'Caixa Econômica', style: 'border-top: 6px solid #2563eb;', badgeBg: 'background-color: rgba(37, 99, 235, 0.15); color: #2563eb;' },
@@ -1212,18 +1211,18 @@ function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   const totalBalGlobal = getTotalBankBalance();
 
-  // Renderiza os cards de bancos com a esfera/círculo colorido para a porcentagem
+  // Renderiza os cards de bancos com os números bem maiores e destacados para facilitar a visão
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
-      <div style="${acc.style}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-48 h-36 flex flex-col justify-between">
+      <div style="${acc.style}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-52 h-40 flex flex-col justify-between">
         <div class="flex justify-between items-start gap-1">
           <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
         <div class="flex flex-col justify-end">
-          <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight tracking-tight break-all">${money(bal)}</h3>
+          <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight tracking-tight break-all">${money(bal)}</h3>
           <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
             <span class="text-[9px] text-slate-400 font-bold uppercase">Participação</span>
             <span style="${acc.badgeBg}" class="text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center justify-center shadow-xs">${pct}%</span>
