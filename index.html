@@ -65,7 +65,6 @@
   .dark .receipt-edge, .dark .receipt-edge::after { background-color: #1e293b; }
   .dark .receipt-edge::after { background-image: radial-gradient(circle at 10px 0, transparent 10px, #1e293b 11px); }
 
-  /* ESTILO DE IMPRESSÃO TÉRMICA / TICKET */
   @media print {
     body { background: white !important; padding-bottom: 0; color: black !important; }
     body * { visibility: hidden; }
@@ -87,11 +86,12 @@
 
 <header class="glass sticky top-0 z-30 shadow-sm no-print">
   <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
-    <div class="flex items-center gap-3 min-w-0">
+    <div class="flex items-center gap-3 min-w-0 flex-1">
       <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0">📦</div>
-      <div class="min-w-0">
-        <h1 id="header-title" class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Gestão Premium</h1>
-        <p id="header-subtitle" class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Pedidos · Finanças · Inteligência</p>
+      <div class="min-w-0 flex-1 pr-2">
+        <!-- TÍTULO AMPLO SEM CORTES -->
+        <h1 id="header-title" class="text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Controle de Pedidos</h1>
+        <p id="header-subtitle" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Rastreio · Valores · Lucro</p>
       </div>
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
@@ -131,7 +131,7 @@
   </div>
 </header>
 
-<!-- MODAL DE NOTIFICAÇÕES CENTRALIZADO NA TELA -->
+<!-- NOTIFICAÇÕES CENTRALIZADAS -->
 <div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -154,7 +154,7 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
-  <!-- VIEW: PEDIDOS -->
+  <!-- PEDIDOS -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
@@ -196,7 +196,7 @@
     </div>
   </div>
 
-  <!-- VIEW: FINANCEIRO -->
+  <!-- FINANCEIRO -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -244,11 +244,15 @@
     </div>
   </div>
 
-  <!-- VIEW: ADMINISTRAÇÃO -->
+  <!-- ADMINISTRAÇÃO -->
   <div id="view-admin" class="hidden space-y-6 animate-in">
-    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700">
-      <div class="absolute -right-6 -top-6 opacity-10 text-9xl">📊</div>
-      <h2 class="text-base font-bold mb-4">Resumo Geral do Negócio</h2>
+    <!-- CARD CLICÁVEL DE RESUMO GERAL QUE ABRE OS GRÁFICOS -->
+    <div onclick="openChartsModal()" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
+      <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition">📊</div>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-base font-bold">Resumo Geral do Negócio</h2>
+        <span class="text-xs bg-brand-600/50 text-indigo-200 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30">Ver Gráficos 📈</span>
+      </div>
       <div class="grid grid-cols-2 gap-3 sm:gap-4">
         <div class="min-w-0">
           <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
@@ -321,6 +325,26 @@
     </div>
   </div>
 </nav>
+
+<!-- MODAL DE GRÁFICOS ANALÍTICOS (ABERTO AO CLICAR NO CARD DE RESUMO) -->
+<div id="chartsModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📊</span>
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Painel Analítico e Gráficos</h3>
+      </div>
+      <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="text-slate-400 text-2xl font-bold">×</button>
+    </div>
+    <div class="p-5 overflow-y-auto space-y-5">
+      <p class="text-xs text-slate-500 dark:text-slate-400">Visão gráfica completa e comparativa das operações, faturamento, custos e lucros do seu negócio.</p>
+      <div id="charts-container" class="space-y-4"></div>
+    </div>
+    <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
+      <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl text-sm font-bold shadow-md">Fechar Painel</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAIS -->
 <div id="patrimonioModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
@@ -627,7 +651,6 @@
 <div id="receiptModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
   <div class="w-full max-w-md my-auto space-y-6 pb-10">
     <div>
-      <!-- BOTÕES DE IMPRESSÃO SÓ APARECEM SE NÃO VIER DO ADMIN -->
       <div id="wrapper-print-admin-btn" class="no-print flex gap-2 mb-3">
         <button onclick="printReceipt('admin')" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Administrativo</button>
         <button onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
@@ -657,7 +680,6 @@
           <div class="space-y-2" id="recTrajetoAdmin"></div>
         </div>
       </div>
-      <!-- BOTÃO FECHAR CASO ESTEJA NO MODO VISUALIZAÇÃO ADMIN -->
       <div id="wrapper-close-admin-btn" class="no-print mt-3 hidden">
         <button onclick="closeReceipt()" class="w-full py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
       </div>
@@ -768,7 +790,6 @@ function matchPeriod(dateStr, period) {
   return true;
 }
 
-// TOGGLE NOTIFICAÇÕES CENTRALIZADO NA TELA
 function toggleNotifications() {
   const modal = document.getElementById('notification-modal');
   modal.classList.toggle('hidden');
@@ -1141,7 +1162,6 @@ function renderFinance() {
         </div>
         <div class="mt-2 flex items-center justify-between gap-1">
           <h3 class="text-xs sm:text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
-          <!-- 100% CENTRALIZADO NA ESFERA -->
           <div class="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 text-center leading-none">
             ${pct}%
           </div>
@@ -1751,7 +1771,77 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// CONTROLA SE OS BOTÕES DE IMPRESSÃO APARECEM OU NÃO (VIA ADMIN = TRUE)
+// GERAÇÃO DOS GRÁFICOS ANALÍTICOS AO CLICAR NO CARD DE RESUMO
+function openChartsModal() {
+  const container = document.getElementById('charts-container');
+  
+  let totalFat = 0, totalProfit = 0, totalExpenses = 0, totalCustosMerc = 0;
+  orders.forEach(o => {
+    const v = calcValores(o);
+    totalFat += v.faturamento;
+    totalProfit += v.lucroLiq;
+    totalCustosMerc += v.meuCustoMerc + v.meuCustoFrete;
+  });
+
+  txs.forEach(t => {
+    if (t.type === 'expense' && t.status !== 'pending' && !t.refId) {
+      totalExpenses += t.amount;
+    }
+  });
+
+  const maxVal = Math.max(totalFat, totalProfit, totalCustosMerc, totalExpenses, 1);
+  const pFat = Math.round((totalFat / maxVal) * 100);
+  const pProfit = Math.round((totalProfit / maxVal) * 100);
+  const pCustos = Math.round((totalCustosMerc / maxVal) * 100);
+  const pExp = Math.round((totalExpenses / maxVal) * 100);
+
+  container.innerHTML = `
+    <div class="space-y-4">
+      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span class="text-indigo-600 dark:text-indigo-400">💰 Faturamento Total</span>
+          <span class="text-slate-800 dark:text-white">${money(totalFat)}</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+          <div class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: ${pFat}%"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span class="text-emerald-600 dark:text-emerald-400">📈 Lucro Líquido Real</span>
+          <span class="text-slate-800 dark:text-white">${money(totalProfit)}</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+          <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: ${pProfit}%"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span class="text-amber-600 dark:text-amber-400">📦 Custos de Mercadorias e Fretes</span>
+          <span class="text-slate-800 dark:text-white">${money(totalCustosMerc)}</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+          <div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: ${pCustos}%"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span class="text-rose-600 dark:text-rose-400">💸 Despesas Operacionais Avulsas</span>
+          <span class="text-slate-800 dark:text-white">${money(totalExpenses)}</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+          <div class="bg-rose-500 h-full rounded-full transition-all duration-500" style="width: ${pExp}%"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('chartsModal').classList.remove('hidden');
+}
+
 function openReceipt(id, fromAdmin = false){
   const o = orders.find(x => x.id === id);
   if (!o) return;
@@ -1773,7 +1863,6 @@ function openReceipt(id, fromAdmin = false){
   document.getElementById('recClienteCliente').textContent = o.cliente || '—';
   document.getElementById('recFreteCliente').textContent = money(v.margemVal);
 
-  // OCULTA OU EXIBE OS BOTÕES DE IMPRESSÃO CONFORME SOLICITADO
   const printAdminBtn = document.getElementById('wrapper-print-admin-btn');
   const printClientBtn = document.getElementById('wrapper-print-client-btn');
   const closeAdminBtn = document.getElementById('wrapper-close-admin-btn');
