@@ -65,13 +65,20 @@
   .dark .receipt-edge, .dark .receipt-edge::after { background-color: #1e293b; }
   .dark .receipt-edge::after { background-image: radial-gradient(circle at 10px 0, transparent 10px, #1e293b 11px); }
 
+  /* ESTILO DE IMPRESSÃO TÉRMICA / TICKET */
   @media print {
-    body { background: white !important; padding-bottom: 0; }
+    body { background: white !important; padding-bottom: 0; color: black !important; }
     body * { visibility: hidden; }
+    
     body.printing-admin #printAdminWrapper, body.printing-admin #printAdminWrapper * { visibility: visible; }
-    body.printing-admin #printAdminWrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+    body.printing-admin #printAdminWrapper { 
+      position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important;
+    }
+
     body.printing-client #printClientWrapper, body.printing-client #printClientWrapper * { visibility: visible; }
-    body.printing-client #printClientWrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+    body.printing-client #printClientWrapper { 
+      position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important; border-top: none !important;
+    }
     .no-print { display: none !important; }
   }
 </style>
@@ -83,8 +90,8 @@
     <div class="flex items-center gap-3 min-w-0">
       <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0">📦</div>
       <div class="min-w-0">
-        <h1 id="header-title" class="text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Gestão Premium</h1>
-        <p id="header-subtitle" class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Pedidos · Finanças · Inteligência</p>
+        <h1 id="header-title" class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Gestão Premium</h1>
+        <p id="header-subtitle" class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Pedidos · Finanças · Inteligência</p>
       </div>
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
@@ -93,13 +100,6 @@
           🔔
           <span id="notification-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold shadow-sm" style="display: none;">0</span>
         </button>
-        <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-72 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 animate-in">
-          <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 font-bold text-xs text-slate-700 dark:text-slate-200 flex justify-between items-center">
-            <span>Alertas e Vencimentos</span>
-            <span class="text-[10px] text-slate-400 font-normal">Próximos 3 dias</span>
-          </div>
-          <div id="notification-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50"></div>
-        </div>
       </div>
 
       <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition shadow-sm border border-slate-200/50 dark:border-slate-700">
@@ -131,33 +131,54 @@
   </div>
 </header>
 
+<!-- MODAL DE NOTIFICAÇÕES CENTRALIZADO NA TELA -->
+<div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🔔</span>
+        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Alertas e Vencimentos</h3>
+      </div>
+      <button onclick="toggleNotifications()" class="text-slate-400 text-xl font-bold">×</button>
+    </div>
+    <div class="px-4 py-2 bg-slate-50/50 dark:bg-slate-900/30 text-[11px] text-slate-500 border-b border-slate-100 dark:border-slate-700/50 flex justify-between">
+      <span>Contas para os próximos 3 dias</span>
+      <span id="notification-count-label" class="font-bold text-rose-500">0 itens</span>
+    </div>
+    <div id="notification-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 p-2"></div>
+    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
+      <button onclick="toggleNotifications()" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
   <!-- VIEW: PEDIDOS -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Pedidos</p>
-        <h3 id="ord-count" class="text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">0</h3>
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Pedidos</p>
+        <h3 id="ord-count" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">0</h3>
       </div>
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Investimento</p>
-        <h3 id="ord-inv" class="text-lg font-extrabold text-slate-700 dark:text-slate-300 mt-1 truncate">R$ 0</h3>
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Investimento</p>
+        <h3 id="ord-inv" class="text-sm sm:text-lg font-extrabold text-slate-700 dark:text-slate-300 mt-1 truncate">R$ 0</h3>
       </div>
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-        <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider">Faturamento</p>
-        <h3 id="ord-fat" class="text-lg font-extrabold text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+        <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider truncate">Faturamento</p>
+        <h3 id="ord-fat" class="text-sm sm:text-lg font-extrabold text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
       </div>
-      <div class="bg-gradient-to-br from-white/90 to-emerald-50/90 dark:from-slate-800/90 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm relative overflow-hidden">
+      <div class="bg-gradient-to-br from-white/90 to-emerald-50/90 dark:from-slate-800/90 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm relative overflow-hidden min-w-0">
         <div class="absolute -right-2 -bottom-2 text-4xl opacity-10">📈</div>
-        <p class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider">Lucro Líq.</p>
-        <h3 id="ord-profit" class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
+        <p class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider truncate">Lucro Líq.</p>
+        <h3 id="ord-profit" class="text-sm sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
       </div>
     </div>
 
     <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
       <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white w-full md:w-auto">Histórico de Pedidos</h2>
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white w-full md:w-auto truncate">Histórico de Pedidos</h2>
         <div class="flex gap-2 w-full md:w-auto">
           <select id="ord-period-filter" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
             <option value="30d" selected>Últimos 30 dias</option>
@@ -201,11 +222,11 @@
       <div class="grid grid-cols-2 gap-3">
         <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-sm sm:text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
         </div>
         <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-sm sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -231,11 +252,11 @@
       <div class="grid grid-cols-2 gap-3 sm:gap-4">
         <div class="min-w-0">
           <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
-          <p id="adm-total-profit" class="text-lg sm:text-2xl font-black mt-1 text-emerald-400 truncate">R$ 0,00</p>
+          <p id="adm-total-profit" class="text-base sm:text-2xl font-black mt-1 text-emerald-400 truncate">R$ 0,00</p>
         </div>
         <div class="min-w-0">
           <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p>
-          <p id="adm-total-fat" class="text-lg sm:text-2xl font-black mt-1 text-white truncate">R$ 0,00</p>
+          <p id="adm-total-fat" class="text-base sm:text-2xl font-black mt-1 text-white truncate">R$ 0,00</p>
         </div>
       </div>
     </div>
@@ -306,7 +327,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white text-sm">Detalhamento do Patrimônio</h3>
-      <button onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+      <button onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <div class="p-5 space-y-3 text-sm">
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
@@ -330,7 +351,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white">Lucros a Receber (Pendentes)</h3>
-      <button onclick="document.getElementById('pendingLucrosModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+      <button onclick="document.getElementById('pendingLucrosModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <div id="pending-lucros-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
   </div>
@@ -486,7 +507,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white">Novo Lançamento</h3>
-      <button onclick="document.getElementById('finModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+      <button onclick="document.getElementById('finModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <form onsubmit="saveFinTx(event)" class="p-5 space-y-4">
       <div class="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
@@ -536,7 +557,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white">Contas a Pagar (Pendentes)</h3>
-      <button onclick="document.getElementById('pendingModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+      <button onclick="document.getElementById('pendingModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
   </div>
@@ -546,7 +567,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white text-sm">Efetuar Pagamento / Baixa</h3>
-      <button onclick="document.getElementById('payAccountModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+      <button onclick="document.getElementById('payAccountModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <form onsubmit="confirmPayPending(event)" class="p-5 space-y-4">
       <input type="hidden" id="payTxId">
@@ -567,7 +588,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white">Transferir entre Contas</h3>
-      <button onclick="document.getElementById('transferModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+      <button onclick="document.getElementById('transferModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <form onsubmit="saveTransfer(event)" class="p-5 space-y-4">
       <div><label class="lbl">De (Origem)</label><select id="tFrom" required class="field font-semibold"></select></div>
@@ -586,7 +607,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
       <h3 class="font-bold text-slate-900 dark:text-white text-sm" id="editBalTitle">Ajustar Saldo</h3>
-      <button onclick="document.getElementById('editBalanceModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+      <button onclick="document.getElementById('editBalanceModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <form onsubmit="saveEditBalance(event)" class="p-5 space-y-4">
       <input type="hidden" id="editBalAccId">
@@ -606,7 +627,8 @@
 <div id="receiptModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
   <div class="w-full max-w-md my-auto space-y-6 pb-10">
     <div>
-      <div class="no-print flex gap-2 mb-3">
+      <!-- BOTÕES DE IMPRESSÃO SÓ APARECEM SE NÃO VIER DO ADMIN -->
+      <div id="wrapper-print-admin-btn" class="no-print flex gap-2 mb-3">
         <button onclick="printReceipt('admin')" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Administrativo</button>
         <button onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
       </div>
@@ -616,7 +638,7 @@
           <p class="text-xs text-slate-500 font-mono mt-1">Pedido: <span id="recPedido" class="font-bold text-slate-700 dark:text-slate-300"></span></p>
         </div>
         <div class="py-2 space-y-2 text-sm mb-3">
-          <div class="flex justify-between"><span class="text-slate-500">Cliente:</span><span class="font-bold" id="recCliente"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Cliente:</span><span class="font-bold truncate max-w-[200px]" id="recCliente"></span></div>
           <div class="flex justify-between"><span class="text-slate-500">Data Emissão:</span><span class="font-semibold" id="recData"></span></div>
         </div>
         <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-2 text-sm border border-slate-100 dark:border-slate-700">
@@ -635,10 +657,14 @@
           <div class="space-y-2" id="recTrajetoAdmin"></div>
         </div>
       </div>
+      <!-- BOTÃO FECHAR CASO ESTEJA NO MODO VISUALIZAÇÃO ADMIN -->
+      <div id="wrapper-close-admin-btn" class="no-print mt-3 hidden">
+        <button onclick="closeReceipt()" class="w-full py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
+      </div>
     </div>
 
     <div class="pt-4 border-t border-dashed border-slate-500/30">
-      <div class="no-print mb-3">
+      <div id="wrapper-print-client-btn" class="no-print mb-3">
         <button onclick="printReceipt('client')" class="w-full py-3.5 rounded-xl font-bold text-sm text-white bg-emerald-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Recibo do Cliente</button>
       </div>
       <div id="printClientWrapper" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-2xl border-t-8 border-brand-600 relative">
@@ -649,7 +675,7 @@
         <div class="border-y border-slate-200 dark:border-slate-700 py-3 space-y-1.5 text-sm mb-5 bg-slate-50/50 dark:bg-slate-900/30 px-3 rounded">
           <div class="flex justify-between items-center">
             <span class="text-slate-500 text-[10px] uppercase font-bold">Destinatário:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200 text-base" id="recClienteCliente"></span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 text-base truncate max-w-[200px]" id="recClienteCliente"></span>
           </div>
         </div>
         <div class="mb-5">
@@ -717,7 +743,6 @@ function setNow(id){ document.getElementById(id).value = nowLocal(); }
 function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
 function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
 
-// FUNÇÃO DE FILTRO POR PERÍODO (30 DIAS / MÊS ANTERIOR / TUDO)
 function matchPeriod(dateStr, period) {
   if (period === 'all' || !dateStr) return true;
   const cleanDate = dateStr.split('T')[0];
@@ -743,14 +768,19 @@ function matchPeriod(dateStr, period) {
   return true;
 }
 
+// TOGGLE NOTIFICAÇÕES CENTRALIZADO NA TELA
 function toggleNotifications() {
-  const dropdown = document.getElementById('notification-dropdown');
-  dropdown.classList.toggle('hidden');
+  const modal = document.getElementById('notification-modal');
+  modal.classList.toggle('hidden');
+  if (!modal.classList.contains('hidden')) {
+    checkNotifications();
+  }
 }
 
 function checkNotifications() {
   const badge = document.getElementById('notification-badge');
   const list = document.getElementById('notification-list');
+  const countLabel = document.getElementById('notification-count-label');
   
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -772,17 +802,21 @@ function checkNotifications() {
     }
   }
 
+  if (countLabel) {
+    countLabel.textContent = `${pendingAlerts.length} ${pendingAlerts.length === 1 ? 'item' : 'itens'}`;
+  }
+
   if (list) {
     if (pendingAlerts.length === 0) {
-      list.innerHTML = '<div class="p-4 text-center text-xs text-slate-400">Nenhum alerta pendente.</div>';
+      list.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Nenhum alerta pendente para os próximos 3 dias.</div>';
     } else {
       list.innerHTML = pendingAlerts.map(t => `
         <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs">
-          <div>
-            <p class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(t.desc)}</p>
+          <div class="min-w-0 pr-2">
+            <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
             <p class="text-[10px] text-rose-500 mt-0.5">Vencimento: ${t.date.split('-').reverse().join('/')}</p>
           </div>
-          <div class="text-right">
+          <div class="text-right shrink-0">
             <span class="font-bold text-slate-700 dark:text-slate-300 block">${money(t.amount)}</span>
             <button onclick="payPending('${t.id}')" class="text-[10px] bg-emerald-500 text-white px-2 py-0.5 rounded font-bold mt-1 shadow-sm">Pagar</button>
           </div>
@@ -796,10 +830,6 @@ document.addEventListener('click', e => {
   const m = document.getElementById('menu');
   if (m && !m.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleMenu"]') && !m.contains(e.target)) {
     closeMenu();
-  }
-  const notif = document.getElementById('notification-dropdown');
-  if (notif && !notif.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleNotifications"]') && !notif.contains(e.target)) {
-    notif.classList.add('hidden');
   }
 });
 
@@ -986,12 +1016,12 @@ function renderOrders() {
     return `
       <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
         <div class="flex items-start justify-between gap-3 mb-3">
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'S/N')} ${hasDoc}</h3>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate max-w-[180px]">${escapeHtml(o.pedido || 'S/N')} ${hasDoc}</h3>
               <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${st.cls}">${st.label}</span>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">${escapeHtml(o.cliente || 'Sem nome')}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">${escapeHtml(o.cliente || 'Sem nome')}</p>
           </div>
           <div class="flex gap-1 shrink-0">
             <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm">🧾</button>
@@ -1000,9 +1030,9 @@ function renderOrders() {
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center">
-          <div class="bg-slate-50 dark:bg-slate-900 rounded-lg py-1.5 border border-slate-100 dark:border-slate-800 overflow-hidden"><p class="text-[9px] uppercase font-bold text-slate-400">Fat.</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">${money(v.faturamento)}</p></div>
-          <div class="bg-rose-50 dark:bg-rose-900/10 rounded-lg py-1.5 border border-rose-100 dark:border-rose-900/30 overflow-hidden"><p class="text-[9px] uppercase font-bold text-rose-400 dark:text-rose-500">Custos</p><p class="text-xs font-bold text-rose-700 dark:text-rose-400 truncate">${money(v.meuCustoMerc + v.meuCustoFrete)}</p></div>
-          <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg py-1.5 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden"><p class="text-[9px] uppercase font-bold text-emerald-500 dark:text-emerald-600">Lucro</p><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400 truncate">${money(v.lucroLiq)}</p></div>
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-lg py-1.5 px-1 border border-slate-100 dark:border-slate-800 overflow-hidden"><p class="text-[9px] uppercase font-bold text-slate-400 truncate">Fat.</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">${money(v.faturamento)}</p></div>
+          <div class="bg-rose-50 dark:bg-rose-900/10 rounded-lg py-1.5 px-1 border border-rose-100 dark:border-rose-900/30 overflow-hidden"><p class="text-[9px] uppercase font-bold text-rose-400 dark:text-rose-500 truncate">Custos</p><p class="text-xs font-bold text-rose-700 dark:text-rose-400 truncate">${money(v.meuCustoMerc + v.meuCustoFrete)}</p></div>
+          <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg py-1.5 px-1 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden"><p class="text-[9px] uppercase font-bold text-emerald-500 dark:text-emerald-600 truncate">Lucro</p><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400 truncate">${money(v.lucroLiq)}</p></div>
         </div>
       </div>`;
   }).join('');
@@ -1062,10 +1092,10 @@ function openPendingLucrosModal() {
       const linked = txs.find(t => t.refId === o.id && t.type === 'income');
       const txId = linked ? linked.id : '';
       return `
-        <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-          <div class="min-w-0">
+        <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
+          <div class="min-w-0 flex-1">
             <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido || 'S/N')} — ${escapeHtml(o.cliente || 'Sem nome')}</p>
-            <p class="text-[11px] text-slate-500">Lucro: ${money(v.lucroLiq)} · Total: ${money(v.faturamento)}</p>
+            <p class="text-[11px] text-slate-500 truncate">Lucro: ${money(v.lucroLiq)} · Total: ${money(v.faturamento)}</p>
           </div>
           <div class="text-right shrink-0">
             <button onclick="receivePendingLucro('${o.id}', '${txId}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Recebido</button>
@@ -1105,13 +1135,14 @@ function renderFinance() {
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
       <div class="account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-2 ${acc.color} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
-        <div class="flex justify-between items-start mt-0.5">
-          <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate pr-2">${acc.name}</p>
+        <div class="flex justify-between items-start mt-0.5 gap-1">
+          <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
-        <div class="mt-2 flex items-end justify-between gap-2">
-          <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
-          <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+        <div class="mt-2 flex items-center justify-between gap-1">
+          <h3 class="text-xs sm:text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+          <!-- 100% CENTRALIZADO NA ESFERA -->
+          <div class="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 text-center leading-none">
             ${pct}%
           </div>
         </div>
@@ -1152,22 +1183,22 @@ function renderFinance() {
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
-    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
-    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-1 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
 
     return `
       <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${isInc ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:border-emerald-800' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-900/20 dark:border-rose-800')}">
           ${icon}
         </div>
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 mb-1 flex-wrap">
             <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md ${tagColor}">${tagName}</span>
             ${payMethodLabel}
             ${pendingLabel}
           </div>
           <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
-          <p class="text-[11px] font-medium text-slate-500 mt-0.5">${dateTimeStr} · ${accName}</p>
+          <p class="text-[11px] font-medium text-slate-500 mt-0.5 truncate">${dateTimeStr} · ${accName}</p>
         </div>
         <div class="text-right shrink-0">
           <p class="font-black text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')} ${isPending ? 'opacity-50 line-through' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
@@ -1188,10 +1219,10 @@ function openPendingModal() {
   }
 
   list.innerHTML = pendingTxs.map(t => `
-    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-      <div class="min-w-0">
+    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
+      <div class="min-w-0 flex-1">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[11px] text-slate-500">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type === 'income' ? 'Receita' : 'Despesa'}</p>
+        <p class="text-[11px] text-slate-500 truncate">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type === 'income' ? 'Receita' : 'Despesa'}</p>
       </div>
       <div class="text-right shrink-0">
         <p class="font-black text-emerald-600 text-sm mb-1">${money(t.amount)}</p>
@@ -1232,6 +1263,10 @@ function confirmPayPending(e) {
   saveAll();
   document.getElementById('payAccountModal').classList.add('hidden');
   document.getElementById('pendingModal').classList.add('hidden');
+  const notifModal = document.getElementById('notification-modal');
+  if (notifModal && !notifModal.classList.contains('hidden')) {
+    notifModal.classList.add('hidden');
+  }
   switchTab('finance');
 }
 
@@ -1635,17 +1670,17 @@ function renderAdminOrders() {
           <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 shadow-sm">
             📦
           </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
+          <div class="flex-1 min-w-0 pr-2">
+            <div class="flex items-center gap-2 mb-0.5 flex-wrap">
               <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${st.cls}">${st.label}</span>
               <span class="text-xs text-slate-400 font-mono">${fmtDT(o.saida)}</span>
             </div>
             <p class="font-bold text-sm text-slate-900 dark:text-white truncate">Pedido ${escapeHtml(o.pedido || 'S/N')} — ${escapeHtml(o.cliente || '—')}</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">Custos: ${money(v.meuCustoMerc + v.meuCustoFrete)} · Lucro: <b class="text-emerald-600">${money(v.lucroLiq)}</b></p>
+            <p class="text-[11px] text-slate-500 mt-0.5 truncate">Custos: ${money(v.meuCustoMerc + v.meuCustoFrete)} · Lucro: <b class="text-emerald-600">${money(v.lucroLiq)}</b></p>
           </div>
           <div class="text-right shrink-0">
             <p class="font-black text-sm text-emerald-600 dark:text-emerald-400">+ ${money(v.faturamento)}</p>
-            <button onclick="openReceipt('${o.id}')" class="text-[10px] font-semibold text-brand-600 dark:text-indigo-400 mt-1 underline decoration-transparent hover:decoration-brand-600 transition">ver recibo</button>
+            <button onclick="openReceipt('${o.id}', true)" class="text-[10px] font-semibold text-brand-600 dark:text-indigo-400 mt-1 underline decoration-transparent hover:decoration-brand-600 transition">ver recibo</button>
           </div>
         </div>
       `;
@@ -1696,19 +1731,19 @@ function renderAdminFinance() {
     if (isTransfer) icon = '↔️';
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
-    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
-    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-1 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
 
     return `
       <div class="flex items-center gap-3 px-5 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
         <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isInc ? 'bg-emerald-50 text-emerald-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600')}">${icon}</div>
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 flex-wrap mb-0.5">
             ${payMethodLabel}
             ${pendingLabel}
           </div>
           <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
-          <p class="text-[10px] text-slate-500">${dateTimeStr} · ${accName}</p>
+          <p class="text-[10px] text-slate-500 truncate">${dateTimeStr} · ${accName}</p>
         </div>
         <p class="font-black text-sm shrink-0 ${isInc ? 'text-emerald-600' : (isTransfer ? 'text-slate-700' : 'text-rose-600')} ${isPending ? 'opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
       </div>
@@ -1716,7 +1751,8 @@ function renderAdminFinance() {
   }).join('');
 }
 
-function openReceipt(id){
+// CONTROLA SE OS BOTÕES DE IMPRESSÃO APARECEM OU NÃO (VIA ADMIN = TRUE)
+function openReceipt(id, fromAdmin = false){
   const o = orders.find(x => x.id === id);
   if (!o) return;
   const v = calcValores(o);
@@ -1737,6 +1773,21 @@ function openReceipt(id){
   document.getElementById('recClienteCliente').textContent = o.cliente || '—';
   document.getElementById('recFreteCliente').textContent = money(v.margemVal);
 
+  // OCULTA OU EXIBE OS BOTÕES DE IMPRESSÃO CONFORME SOLICITADO
+  const printAdminBtn = document.getElementById('wrapper-print-admin-btn');
+  const printClientBtn = document.getElementById('wrapper-print-client-btn');
+  const closeAdminBtn = document.getElementById('wrapper-close-admin-btn');
+
+  if (fromAdmin) {
+    if (printAdminBtn) printAdminBtn.classList.add('hidden');
+    if (printClientBtn) printClientBtn.classList.add('hidden');
+    if (closeAdminBtn) closeAdminBtn.classList.remove('hidden');
+  } else {
+    if (printAdminBtn) printAdminBtn.classList.remove('hidden');
+    if (printClientBtn) printClientBtn.classList.remove('hidden');
+    if (closeAdminBtn) closeAdminBtn.classList.add('hidden');
+  }
+
   const stages = [
     {time: o.saida, label: `Saída de ${o.cidadeOrigem || 'Origem'}`, icon: '🚚'},
     {time: o.subiuTransp, label: o.transportadora || 'Transportadora', icon: '📦'},
@@ -1749,8 +1800,8 @@ function openReceipt(id){
 
   document.getElementById('recTrajetoAdmin').innerHTML = stages.map(s => `
     <div class="flex justify-between items-center text-xs py-1">
-      <div class="flex items-center gap-2 text-slate-700 dark:text-slate-300"><span>${s.icon}</span><span class="${s.sub?'italic':'font-semibold'}">${escapeHtml(s.label||'')}</span></div>
-      <div class="font-mono text-slate-500 text-[11px] text-right"><div>${fmtData(s.time)}</div><div>${fmtHora(s.time)}</div></div>
+      <div class="flex items-center gap-2 text-slate-700 dark:text-slate-300"><span>${s.icon}</span><span class="${s.sub?'italic':'font-semibold'} truncate max-w-[140px]">${escapeHtml(s.label||'')}</span></div>
+      <div class="font-mono text-slate-500 text-[11px] text-right shrink-0"><div>${fmtData(s.time)}</div><div>${fmtHora(s.time)}</div></div>
     </div>
   `).join('') || '<p class="text-xs text-slate-400">Sem rastreio.</p>';
 
