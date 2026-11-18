@@ -303,7 +303,7 @@
   </div>
 </div>
 
-<!-- MODAL A RECEBER / LUCROS PENDENTES (Mecânica Interativa Restaurada) -->
+<!-- MODAL A RECEBER / LUCROS PENDENTES -->
 <div id="pendingLucrosModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -398,9 +398,12 @@
 
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
           <input type="checkbox" id="oPagoFrete" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
-          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei a Transportadora?</span>
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei a Transportadora? (Frete Adiantado)</span>
         </label>
-        <div id="wrapAccOutFrete" class="pl-8"><select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
+        <div id="wrapAccOutFrete" class="pl-8 space-y-1">
+          <label class="text-[10px] uppercase font-bold text-slate-500">Conta de onde saiu o frete:</label>
+          <select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
+        </div>
 
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
           <input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
@@ -668,7 +671,7 @@ function fmtDateTimeTx(dtStr){
   if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
   return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;n'}[c])); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
@@ -1343,8 +1346,8 @@ function saveOrder(e){
 
     if (data.pagoFrete && v.meuCustoFrete > 0) {
       txs.push({
-        id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido}`, 
-        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: data.freightStatus
+        id: genId(), refId: data.id, desc: `Frete Adiantado - Pedido ${data.pedido}`, 
+        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: 'paid'
       });
     }
   }
