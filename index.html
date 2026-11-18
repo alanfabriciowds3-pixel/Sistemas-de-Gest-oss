@@ -1,196 +1,1636 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão Premium</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            }
-          }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sistema de Gestão Premium</title>
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Cpath d='M50 22 L78 36 L78 64 L50 78 L22 64 L22 36 Z' fill='white'/%3E%3Cpath d='M50 22 L78 36 L50 50 L22 36 Z' fill='%23a5b4fc'/%3E%3Cpath d='M50 50 L50 78 L22 64 L22 36 Z' fill='%23c7d2fe'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        colors: {
+          brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' }
         }
       }
     }
-  </script>
-  <style>
-    /* Ocultar barra de rolagem mantendo funcionalidade */
-    .scroll-x::-webkit-scrollbar {
-      display: none;
-    }
-    .scroll-x {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  </style>
-</head>
-<body class="bg-[#0b0f19] text-slate-100 font-sans antialiased pb-24">
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body { 
+    font-family: 'Inter', sans-serif; 
+    -webkit-tap-highlight-color: transparent; 
+    padding-bottom: 90px; 
+    transition: background-color 0.4s ease;
+    background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
+    background-attachment: fixed;
+  }
+  .dark body { background: radial-gradient(circle at top right, #0f172a, #020617); }
+  
+  .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.3); }
+  .dark .glass { background: rgba(15, 23, 42, 0.75); border-bottom: 1px solid rgba(255,255,255,0.05); }
+  
+  .field { width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); }
+  .dark .field { background:#1e293b; border-color:#334155; color: white; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
+  .field:focus { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15); background: white; }
+  .dark .field:focus { border-color:#818cf8; background: #0f172a; }
+  
+  .lbl { font-size:.65rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:.05em; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+  .dark .lbl { color:#94a3b8; }
+  
+  .btn-now { font-size: 10px; text-transform: uppercase; font-weight: 800; color: #4f46e5; background: #e0e7ff; padding: 3px 8px; border-radius: 6px; cursor: pointer; float: right; }
+  .dark .btn-now { background: #312e81; color: #a5b4fc; }
+  
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; color: #94a3b8; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+  .nav-item.active { color: #4f46e5; transform: translateY(-2px); }
+  .dark .nav-item.active { color: #818cf8; }
+  .nav-item.active svg { stroke-width: 2.5; filter: drop-shadow(0 4px 6px rgba(99,102,241,0.4)); }
+  
+  .scroll-x { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 10px; scrollbar-width: none; }
+  .scroll-x::-webkit-scrollbar { display: none; }
+  .account-card { min-width: 150px; flex-shrink: 0; }
 
-  <!-- Cabeçalho Principal -->
-  <header class="p-4 flex justify-between items-center bg-[#0b0f19]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800/60">
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+  .receipt-edge { position: relative; background: white; }
+  .receipt-edge::after { content: ''; position: absolute; bottom: -10px; left: 0; right: 0; height: 10px; background-size: 20px 20px; background-image: radial-gradient(circle at 10px 0, transparent 10px, white 11px); }
+  .dark .receipt-edge, .dark .receipt-edge::after { background-color: #1e293b; }
+  .dark .receipt-edge::after { background-image: radial-gradient(circle at 10px 0, transparent 10px, #1e293b 11px); }
+
+  @media print {
+    body { background: white !important; padding-bottom: 0; }
+    body * { visibility: hidden; }
+    body.printing-admin #printAdminWrapper, body.printing-admin #printAdminWrapper * { visibility: visible; }
+    body.printing-admin #printAdminWrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+    body.printing-client #printClientWrapper, body.printing-client #printClientWrapper * { visibility: visible; }
+    body.printing-client #printClientWrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; box-shadow: none; }
+    .no-print { display: none !important; }
+  }
+</style>
+</head>
+<body class="text-slate-800 dark:text-slate-200 min-h-screen flex flex-col">
+
+<header class="glass sticky top-0 z-30 shadow-sm no-print">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-xl">
-        💰
-      </div>
+      <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30">📦</div>
       <div>
-        <h1 class="text-base font-bold text-white tracking-tight leading-tight">Painel Financeiro</h1>
-        <p class="text-[11px] text-slate-400">Contas • Saldos • Lançamentos</p>
+        <h1 id="header-title" class="text-base font-extrabold text-slate-900 dark:text-white leading-tight">Gestão Premium</h1>
+        <p id="header-subtitle" class="text-xs text-slate-500 dark:text-slate-400 font-medium">Pedidos · Finanças · Inteligência</p>
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-white transition">
-        ⚙️
+      <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition shadow-sm border border-slate-200/50 dark:border-slate-700">
+        <svg id="icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg id="icon-moon" class="" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
-      <button onclick="openMenu()" class="w-9 h-9 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-white transition">
-        ⋮
+      
+      <button id="btn-new" onclick="openModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-brand-500/30 active:scale-95 transition">+ Pedido</button>
+      
+      <div class="relative">
+        <button onclick="toggleMenu(event)" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/50 dark:border-slate-700">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+        <div id="menu" class="hidden absolute right-0 mt-2 w-60 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 no-print animate-in">
+          <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 mb-1">
+            <p class="text-[10px] uppercase font-bold text-slate-400">Status do Sistema</p>
+            <p class="text-xs text-emerald-500 font-bold flex items-center gap-1 mt-0.5">☁️ Salvo Localmente</p>
+          </div>
+          <button onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">📥 Exportar Backup</button>
+          <label onclick="closeMenu()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center cursor-pointer">
+            📤 Importar Backup
+            <input type="file" accept=".json" onchange="importJSON(event)" class="hidden">
+          </label>
+          <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
+          <button onclick="resetData()" class="w-full text-left px-4 py-2.5 text-sm text-rose-600 font-medium hover:bg-rose-50 dark:hover:bg-rose-900/30">🔄 Restaurar Padrão</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
+
+  <!-- ================= VIEW: PEDIDOS ================= -->
+  <div id="view-orders" class="space-y-6 animate-in">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Pedidos</p>
+        <h3 id="ord-count" class="text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">0</h3>
+      </div>
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Investimento</p>
+        <h3 id="ord-inv" class="text-lg font-extrabold text-slate-700 dark:text-slate-300 mt-1 truncate">R$ 0</h3>
+      </div>
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+        <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider">Faturamento</p>
+        <h3 id="ord-fat" class="text-lg font-extrabold text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
+      </div>
+      <div class="bg-gradient-to-br from-white/90 to-emerald-50/90 dark:from-slate-800/90 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm relative overflow-hidden">
+        <div class="absolute -right-2 -bottom-2 text-4xl opacity-10">📈</div>
+        <p class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider">Lucro Líq.</p>
+        <h3 id="ord-profit" class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
+      </div>
+    </div>
+
+    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 bg-white/50 dark:bg-slate-800/50">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white w-full md:w-auto">Histórico de Pedidos</h2>
+        <div class="flex gap-2 w-full md:w-auto">
+          <input type="text" id="ord-search" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 md:w-56 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
+        </div>
+      </div>
+      <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
+      <div id="ord-empty" class="hidden py-16 text-center">
+        <div class="text-6xl mb-4 opacity-30">📦</div>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Nenhum pedido por aqui ainda.<br>Que tal cadastrar o primeiro?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW: FINANCEIRO ================= -->
+  <div id="view-finance" class="hidden space-y-6 animate-in">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Novo Lançamento
+      </button>
+      <button onclick="openPendingModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        Contas a Pagar
       </button>
     </div>
-  </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="max-w-md mx-auto p-4 space-y-6">
-
-    <!-- Botão Contas a Pagar (Destaque Original) -->
-    <button onclick="openPendingModal()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black py-3.5 px-4 rounded-2xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 text-sm transition active:scale-[0.98]">
-      <span>⏱️</span> Contas a Pagar
-    </button>
-
-    <!-- Minhas Contas -->
-    <section>
-      <div class="flex justify-between items-center mb-3 px-1">
-        <h2 class="text-xs font-black uppercase tracking-wider text-slate-400">Minhas Contas</h2>
-        <button onclick="openTransferModal()" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-          🔄 Transferir
-        </button>
+    <div>
+      <div class="flex justify-between items-end mb-2 px-1">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
+        <button onclick="openTransferModal()" class="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-400 px-3 py-1.5 rounded-lg transition hover:bg-brand-100">↔️ Transferir</button>
       </div>
+      <div class="scroll-x" id="accounts-container"></div>
+    </div>
+
+    <!-- Painel Financeiro (Modificado: Patrimônio e A Receber lado a lado) -->
+    <div>
+      <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition">
+          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Patrimônio Total ℹ️</p>
+          <h3 id="fin-patrimonio" class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+          <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider">A Receber (Lucros)</p>
+          <h3 id="fin-pending-lucro" class="text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Saldo em Caixa</p>
+          <h3 id="fin-balance" class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+        </div>
+        <div class="bg-gradient-to-br from-white/90 to-brand-50/90 dark:from-slate-800/90 dark:to-brand-900/20 backdrop-blur-md p-4 rounded-2xl border border-brand-200/60 dark:border-brand-800/50 shadow-sm">
+          <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider">Lucro Líquido</p>
+          <h3 id="fin-profit" class="text-lg font-black text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+          <p class="text-[10px] font-bold uppercase text-emerald-500 tracking-wider">Receitas Mês</p>
+          <h3 id="fin-income" class="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
+          <p class="text-[10px] font-bold uppercase text-rose-500 tracking-wider">Despesas Mês</p>
+          <h3 id="fin-expense" class="text-lg font-black text-rose-600 dark:text-rose-400 mt-1 truncate">R$ 0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Extrato e Lançamentos</h2>
+      </div>
+      <div id="fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[500px] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW: ADMINISTRAÇÃO ================= -->
+  <div id="view-admin" class="hidden space-y-6 animate-in">
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700">
+      <div class="absolute -right-6 -top-6 opacity-10 text-9xl">📊</div>
+      <h2 class="text-base font-bold mb-4">Resumo Geral do Negócio</h2>
+      <div class="grid grid-cols-2 gap-3 sm:gap-4">
+        <div class="min-w-0">
+          <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
+          <p id="adm-total-profit" class="text-lg sm:text-2xl font-black mt-1 text-emerald-400 truncate">R$ 0,00</p>
+        </div>
+        <div class="min-w-0">
+          <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p>
+          <p id="adm-total-fat" class="text-lg sm:text-2xl font-black mt-1 text-white truncate">R$ 0,00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex bg-slate-200/60 dark:bg-slate-800 p-1 rounded-xl mb-4">
+      <button onclick="switchAdminTab('orders')" id="btn-adm-orders" class="flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition">Pedidos</button>
+      <button onclick="switchAdminTab('finance')" id="btn-adm-finance" class="flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition">Relatório Financeiro</button>
+    </div>
+
+    <div id="adm-view-orders" class="space-y-6">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Detalhado de Pedidos</h2>
+        </div>
+        <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
+      </div>
+
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">🏆 Resumo por Cliente (Ranking)</h2>
+        </div>
+        <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+          <thead class="bg-slate-50 dark:bg-slate-900/50 text-[10px] uppercase font-bold text-slate-400 border-b border-slate-200 dark:border-slate-700">
+            <tr><th class="px-4 py-3">Cliente</th><th class="px-4 py-3 text-center">Qtd</th><th class="px-4 py-3 text-right">Lucro Total</th></tr>
+          </thead>
+          <tbody id="adm-client-table" class="divide-y divide-slate-100 dark:divide-slate-700/50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="adm-view-finance" class="hidden space-y-6">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Extrato Geral (Entradas e Saídas)</h2>
+          <select id="adm-fin-filter" onchange="renderAdminFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs focus:outline-none">
+            <option value="all">Tudo</option>
+            <option value="income">Só Entradas</option>
+            <option value="expense">Só Saídas</option>
+          </select>
+        </div>
+        <div id="adm-fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Barra de Navegação Inferior (Ícones Originais Restaurados) -->
+<nav class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)] no-print transition-colors duration-300">
+  <div class="max-w-5xl mx-auto flex">
+    <div id="nav-orders" onclick="switchTab('orders')" class="nav-item active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      <span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Pedidos</span>
+    </div>
+    <div id="nav-finance" onclick="switchTab('finance')" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      <span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Finanças</span>
+    </div>
+    <div id="nav-admin" onclick="switchTab('admin')" class="nav-item">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Admin</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MODAL PATRIMÔNIO DETALHADO -->
+<div id="patrimonioModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Detalhamento do Patrimônio</h3>
+      <button onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+    </div>
+    <div class="p-5 space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+        <span class="text-slate-500">Saldo Físico nas Contas:</span>
+        <b class="text-slate-800 dark:text-white" id="detSaldoBancos">R$ 0,00</b>
+      </div>
+      <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+        <span class="text-amber-600">Lucros a Receber:</span>
+        <b class="text-amber-600" id="detReceber">R$ 0,00</b>
+      </div>
+      <div class="flex justify-between py-2 font-black text-base pt-1">
+        <span>Patrimônio Total:</span>
+        <span class="text-brand-600 dark:text-indigo-400" id="detPatrimonioTotal">R$ 0,00</span>
+      </div>
+      <button onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold mt-3">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PEDIDO -->
+<div id="modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between shrink-0 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur">
+      <h3 id="modalTitle" class="font-extrabold text-slate-900 dark:text-white text-lg">Novo Pedido</h3>
+      <button type="button" onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 flex items-center justify-center hover:bg-slate-300 font-bold">×</button>
+    </div>
+    <form onsubmit="saveOrder(event)" class="p-4 space-y-4 overflow-y-auto">
+      <input type="hidden" id="oId">
+      <datalist id="list-clients"></datalist>
+      <datalist id="list-cities"></datalist>
+      <datalist id="list-carriers"></datalist>
+
+      <!-- ANEXO -->
+      <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2">
+        <label class="lbl text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5"><span>📁</span> Anexar Arquivo / Link Drive</label>
+        <div class="flex gap-2">
+          <input id="oDriveLink" type="url" placeholder="Link (https://...)" class="field text-sm bg-white dark:bg-slate-800">
+          <label class="bg-brand-600 hover:bg-brand-700 text-white px-4 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">
+            📎 Arquivo
+            <input type="file" id="input-doc" class="hidden" onchange="processDocFile(this)">
+          </label>
+        </div>
+        <p id="doc-filename" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate hidden">Anexo: <span class="font-bold"></span></p>
+        <input type="hidden" id="oDocData">
+        <input type="hidden" id="oDocName">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-001" class="field"></div>
+        <div><label class="lbl">Cliente</label><input id="oCliente" type="text" list="list-clients" maxlength="80" placeholder="Nome" class="field"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Valor (US$)</label>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" class="field pl-8"></div>
+        </div>
+        <div>
+          <label class="lbl">Cotação (R$)</label>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" class="field pl-10"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Sua Margem (%)</label>
+          <div class="relative"><span class="absolute right-3 top-3.5 text-indigo-400 font-bold">%</span><input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-8"></div>
+        </div>
+        <div>
+          <label class="lbl">Custo do Frete (R$)</label>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-rose-400 font-bold">R$</span><input id="oFrete" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0,00" oninput="updatePreview()" class="field pl-10"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div>
+          <label class="lbl">Forma Pagto. (Receb.)</label>
+          <select id="oPaymentMethod" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0">
+            <option value="Pix">Pix</option>
+            <option value="Débito">Débito</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Boleto">Boleto</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Status do Frete</label>
+          <select id="oFreightStatus" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0">
+            <option value="paid">Já Pago</option>
+            <option value="pending">Conta a Pagar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" id="oPagoMerc" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu adiantei a Mercadoria?</span>
+        </label>
+        <div id="wrapAccOutMerc" class="pl-8"><select id="oAccOutMerc" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
+
+        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
+          <input type="checkbox" id="oPagoFrete" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei a Transportadora?</span>
+        </label>
+        <div id="wrapAccOutFrete" class="pl-8"><select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select></div>
+
+        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
+          <input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Lançar Pedido / Baixa no Financeiro?</span>
+        </label>
+        <div id="wrapAccIn" class="pl-8 space-y-2">
+          <div>
+            <label class="text-[10px] uppercase font-bold text-slate-500">Conta para o Lucro / Baixa:</label>
+            <select id="oAccIn" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50">
+        <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white" id="prevBRL">R$ 0,00</b></div>
+        <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400" id="prevMargem">R$ 0,00</b></div>
+        <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>(-) Custo Frete (Meu)</span><b id="prevFrete">R$ 0,00</b></div>
+        <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-sm border border-emerald-100 dark:border-emerald-900/30">
+          <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base" id="prevLucro">R$ 0,00</b>
+        </div>
+        <div class="flex justify-between pt-1 font-bold"><span class="text-brand-800 dark:text-indigo-300">Total a Receber</span><b class="text-brand-900 dark:text-white text-base" id="prevFinal">R$ 0,00</b></div>
+      </div>
+
+      <h4 class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 pt-3 border-t border-slate-100 dark:border-slate-700">Rastreio</h4>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Origem (Saída)</label><input id="oOrigem" type="text" list="list-cities" placeholder="Ex: Cidade Leste" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Data/Hora Saída <span class="btn-now" onclick="setNow('oSaida')">Agora</span></label><input id="oSaida" type="datetime-local" class="field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Transportadora</label><input id="oTransportadora" type="text" list="list-carriers" placeholder="Ex: Correios" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Subiu Transp. <span class="btn-now" onclick="setNow('oSubiu')">Agora</span></label><input id="oSubiu" type="datetime-local" class="field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">1ª Cidade</label><input id="oC1" type="text" list="list-cities" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Hora <span class="btn-now" onclick="setNow('oC1H')">Agora</span></label><input id="oC1H" type="datetime-local" class="field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">2ª Cidade</label><input id="oC2" type="text" list="list-cities" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Hora <span class="btn-now" onclick="setNow('oC2H')">Agora</span></label><input id="oC2H" type="datetime-local" class="field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">3ª Cidade</label><input id="oC3" type="text" list="list-cities" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Hora <span class="btn-now" onclick="setNow('oC3H')">Agora</span></label><input id="oC3H" type="datetime-local" class="field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl flex items-center justify-between">Desceu SP <span class="btn-now" onclick="setNow('oSP')">Agora</span></label><input id="oSP" type="datetime-local" class="field"></div>
+        <div><label class="lbl flex items-center justify-between">Recebido <span class="btn-now" onclick="setNow('oRec')">Agora</span></label><input id="oRec" type="datetime-local" class="field"></div>
+      </div>
+
+      <div class="flex gap-2 pt-4 sticky bottom-0 bg-white dark:bg-slate-800 pb-2">
+        <button type="button" onclick="closeModal()" class="flex-1 py-3 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700">Cancelar</button>
+        <button type="submit" class="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-md">Salvar Pedido</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL FINANCEIRO -->
+<div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white">Novo Lançamento</h3>
+      <button onclick="document.getElementById('finModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+    </div>
+    <form onsubmit="saveFinTx(event)" class="p-5 space-y-4">
+      <div class="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
+        <button type="button" id="fBtnInc" onclick="setFinType('income')" class="py-2.5 rounded-lg font-bold text-sm transition">💰 Receita</button>
+        <button type="button" id="fBtnExp" onclick="setFinType('expense')" class="py-2.5 rounded-lg font-bold text-sm transition text-slate-500">💸 Despesa</button>
+      </div>
+      <input type="hidden" id="fType" value="income">
       
-      <!-- Container com Scroll Horizontal e Bordas Originais -->
-      <div class="flex gap-3 overflow-x-auto scroll-x pb-2" id="accounts-container">
-        
-        <!-- Card Conta 1: Dinheiro em Caixa -->
-        <div class="min-w-[210px] flex-1 bg-slate-900/90 border-t-2 border-emerald-400 p-4 rounded-2xl relative shadow-sm flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dinheiro em Caixa</span>
-            <button onclick="editAccount('dinheiro')" class="text-slate-400 hover:text-white text-xs">✏️</button>
-          </div>
-          <div class="mt-4 flex items-end justify-between">
-            <h3 class="text-xl font-black text-white" id="acc-dinheiro">R$ 0,00</h3>
-            <!-- Anel Circular de Porcentagem (Pequeno e Legível) -->
-            <div class="w-7 h-7 rounded-full border-2 border-slate-700 flex items-center justify-center text-[9px] font-bold text-slate-400">
-              0%
-            </div>
-          </div>
-        </div>
-
-        <!-- Card Conta 2: Caixa Econômica -->
-        <div class="min-w-[210px] flex-1 bg-slate-900/90 border-t-2 border-indigo-500 p-4 rounded-2xl relative shadow-sm flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Caixa Econômica</span>
-            <button onclick="editAccount('caixa')" class="text-slate-400 hover:text-white text-xs">✏️</button>
-          </div>
-          <div class="mt-4 flex items-end justify-between">
-            <h3 class="text-xl font-black text-white" id="acc-caixa">R$ 10.000,00</h3>
-            <!-- Anel Circular de Porcentagem (Pequeno e Legível com destaque sutil) -->
-            <div class="w-7 h-7 rounded-full border-2 border-indigo-500 flex items-center justify-center text-[9px] font-bold text-indigo-400">
-              100%
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Painel Financeiro: Dois painéis menores lado a lado -->
-    <section class="space-y-3">
-      <h2 class="text-xs font-black uppercase tracking-wider text-slate-400 px-1">Painel Financeiro</h2>
+      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Venda avulsa" required class="field"></div>
       
       <div class="grid grid-cols-2 gap-3">
-        <!-- Patrimônio Total -->
-        <div onclick="openPatrimonioModal()" class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-sm cursor-pointer hover:border-slate-700 transition">
-          <p class="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider flex items-center gap-1">
-            Patrimônio Total ℹ️
-          </p>
-          <h3 id="fin-patrimonio" class="text-lg font-black text-white mt-2 truncate">R$ 17.564,71</h3>
+        <div>
+          <label class="lbl">Valor (R$)</label>
+          <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="fAmount" step="0.01" placeholder="0,00" required class="field pl-10"></div>
         </div>
+        <div><label class="lbl">Data</label><input type="date" id="fDate" required class="field"></div>
+      </div>
 
-        <!-- A Receber (Lucros) -->
-        <div onclick="openPendingLucrosModal()" class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-sm cursor-pointer hover:border-slate-700 transition">
-          <p class="text-[10px] font-extrabold uppercase text-amber-500 tracking-wider flex items-center gap-1">
-            A Receber ℹ️
-          </p>
-          <h3 id="fin-pending-lucro" class="text-lg font-black text-amber-400 mt-2 truncate">R$ 7.564,71</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Conta</label><select id="fAccount" required class="field"></select></div>
+        <div>
+          <label class="lbl">Forma Pagto.</label>
+          <select id="fPaymentMethod" class="field text-sm">
+            <option value="Pix">Pix</option>
+            <option value="Débito">Débito</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Boleto">Boleto</option>
+          </select>
         </div>
       </div>
-    </section>
 
-    <!-- Extrato e Lançamentos -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-      <div class="p-4 border-b border-slate-800/80 flex justify-between items-center">
-        <h2 class="text-xs font-black uppercase tracking-wider text-slate-300">Extrato e Lançamentos</h2>
-        <span class="text-[10px] font-bold text-slate-500">Recentes</span>
+      <div>
+        <label class="lbl">Status</label>
+        <select id="fStatus" class="field text-sm">
+          <option value="paid">Pago / Recebido</option>
+          <option value="pending">Pendente (Conta a Pagar)</option>
+        </select>
       </div>
-      
-      <div id="fin-list" class="divide-y divide-slate-800/60">
-        <!-- Item de Exemplo do Extrato -->
-        <div class="p-4 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-teal-950/60 border border-teal-800/50 flex items-center justify-center text-teal-400 text-sm">
-              ⚖️
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800/50">AJUSTE</span>
-              </div>
-              <h4 class="text-sm font-bold text-white mt-0.5">Ajuste de Saldo</h4>
-              <p class="text-[11px] text-slate-400">17/11/2026 às 23:46 • Caixa Econômica</p>
-            </div>
+
+      <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Lançamento</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL CONTAS A PAGAR -->
+<div id="pendingModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white">Contas a Pagar (Pendentes)</h3>
+      <button onclick="document.getElementById('pendingModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+    </div>
+    <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+  </div>
+</div>
+
+<!-- MODAL TRANSFERÊNCIA -->
+<div id="transferModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white">Transferir entre Contas</h3>
+      <button onclick="document.getElementById('transferModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none">×</button>
+    </div>
+    <form onsubmit="saveTransfer(event)" class="p-5 space-y-4">
+      <div><label class="lbl">De (Origem)</label><select id="tFrom" required class="field font-semibold"></select></div>
+      <div><label class="lbl">Para (Destino)</label><select id="tTo" required class="field font-semibold"></select></div>
+      <div>
+        <label class="lbl">Valor (R$)</label>
+        <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" required class="field pl-10"></div>
+      </div>
+      <div><label class="lbl">Data</label><input type="date" id="tDate" required class="field"></div>
+      <button type="submit" class="w-full py-3 bg-slate-800 dark:bg-slate-700 text-white rounded-xl font-bold mt-2">Confirmar Transferência</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL EDITAR SALDO -->
+<div id="editBalanceModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm" id="editBalTitle">Ajustar Saldo</h3>
+      <button onclick="document.getElementById('editBalanceModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+    </div>
+    <form onsubmit="saveEditBalance(event)" class="p-5 space-y-4">
+      <input type="hidden" id="editBalAccId">
+      <div class="text-center bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+        <p class="text-[10px] text-slate-500 uppercase font-bold">Saldo Atual no App</p>
+        <p class="text-xl font-bold text-slate-800 dark:text-white" id="editBalCurrent">R$ 0,00</p>
+      </div>
+      <div>
+        <label class="lbl text-center block mb-2">Qual o saldo real agora?</label>
+        <div class="relative"><span class="absolute left-3 top-3.5 text-brand-500 font-bold">R$</span><input type="number" id="editBalNew" step="0.01" required class="field pl-10 text-center text-xl font-bold text-brand-600 dark:text-indigo-400"></div>
+      </div>
+      <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold">Salvar Ajuste</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL RECIBOS -->
+<div id="receiptModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
+  <div class="w-full max-w-md my-auto space-y-6 pb-10">
+    <div>
+      <div class="no-print flex gap-2 mb-3">
+        <button onclick="printReceipt('admin')" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Administrativo</button>
+        <button onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-bold text-sm text-slate-700 bg-white shadow-lg">Fechar</button>
+      </div>
+      <div id="printAdminWrapper" class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+        <div class="text-center mb-4 border-b-2 border-slate-800 dark:border-slate-500 pb-3">
+          <h2 class="text-xl font-black text-slate-900 dark:text-white">RECIBO ADMINISTRATIVO</h2>
+          <p class="text-xs text-slate-500 font-mono mt-1">Pedido: <span id="recPedido" class="font-bold text-slate-700 dark:text-slate-300"></span></p>
+        </div>
+        <div class="py-2 space-y-2 text-sm mb-3">
+          <div class="flex justify-between"><span class="text-slate-500">Cliente:</span><span class="font-bold" id="recCliente"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Data Emissão:</span><span class="font-semibold" id="recData"></span></div>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-2 text-sm border border-slate-100 dark:border-slate-700">
+          <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria:</span><span class="font-bold" id="recInv"></span></div>
+          <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem Bruta:</span><span class="font-bold text-blue-600 dark:text-blue-400" id="recMargem"></span></div>
+          <div class="flex justify-between text-rose-600"><span>(-) Custo Frete:</span><span class="font-bold" id="recFreteAdmin"></span></div>
+          <div class="flex justify-between border-t border-slate-300 dark:border-slate-600 pt-3 mt-2">
+            <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido:</span><span class="font-black text-lg" id="recLucro"></span>
           </div>
-          <div class="text-right">
-            <span class="text-sm font-black text-emerald-400">+ R$ 10.000,00</span>
-            <button class="block text-[10px] text-slate-500 hover:text-red-400 mt-0.5 ml-auto">excluir</button>
+          <div class="flex justify-between border-t border-slate-300 dark:border-slate-600 pt-2 mt-1 font-bold text-slate-800 dark:text-white text-base">
+            <span>Total Faturado:</span><span id="recFat"></span>
           </div>
         </div>
+        <div class="mt-5">
+          <h4 class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider border-b border-slate-200 dark:border-slate-700 pb-1">Rastreio Detalhado</h4>
+          <div class="space-y-2" id="recTrajetoAdmin"></div>
+        </div>
       </div>
-    </section>
+    </div>
 
-  </main>
+    <div class="pt-4 border-t border-dashed border-slate-500/30">
+      <div class="no-print mb-3">
+        <button onclick="printReceipt('client')" class="w-full py-3.5 rounded-xl font-bold text-sm text-white bg-emerald-600 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">🖨️ Imprimir Recibo do Cliente</button>
+      </div>
+      <div id="printClientWrapper" class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-2xl border-t-8 border-brand-600 relative">
+        <div class="text-center mb-6">
+          <h2 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-wide">Comprovante de Transporte</h2>
+          <p class="text-xs text-slate-500 mt-1">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-brand-600 dark:text-indigo-400"></span></p>
+        </div>
+        <div class="border-y border-slate-200 dark:border-slate-700 py-3 space-y-1.5 text-sm mb-5 bg-slate-50/50 dark:bg-slate-900/30 px-3 rounded">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 text-[10px] uppercase font-bold">Destinatário:</span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 text-base" id="recClienteCliente"></span>
+          </div>
+        </div>
+        <div class="mb-5">
+          <h4 class="text-[11px] uppercase font-bold text-slate-400 mb-4 tracking-wider">Trajeto da Entrega</h4>
+          <div class="relative ml-2" id="recTrajetoCliente"></div>
+        </div>
+        <div class="receipt-edge bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-700 mt-6">
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Valor do Serviço:</span>
+            <span class="text-xl font-black text-slate-900 dark:text-white" id="recFreteCliente">R$ 0,00</span>
+          </div>
+          <div class="flex justify-between items-center mt-1">
+            <span class="text-xs text-slate-500">Status:</span>
+            <span class="text-[10px] font-black uppercase text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded" id="recStatusFrete">Incluso no Faturamento</span>
+          </div>
+        </div>
+        <div class="text-center pt-8 text-[10px] text-slate-400">
+          Documento gerado eletronicamente.<br>Obrigado pela preferência!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- Barra de Navegação Inferior -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-[#0b0f19]/90 backdrop-blur-lg border-t border-slate-800/80 px-6 py-3 flex justify-around items-center z-50">
-    <button onclick="switchTab('pedidos')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
-      <span class="text-lg">⬡</span>
-      <span class="text-[10px] font-bold tracking-wider">PEDIDOS</span>
-    </button>
-    <button onclick="switchTab('financas')" class="flex flex-col items-center gap-1 text-brand-500 transition">
-      <span class="text-lg">$</span>
-      <span class="text-[10px] font-bold tracking-wider">FINANÇAS</span>
-    </button>
-    <button onclick="switchTab('admin')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
-      <span class="text-lg">📊</span>
-      <span class="text-[10px] font-bold tracking-wider">ADMIN</span>
-    </button>
-  </nav>
+<script>
+const STORAGE_ORDERS = 'pedidos_v1';
+const STORAGE_FIN = 'fin_txs_v2';
+const HISTORY_KEY = 'pedidos_history_v1';
 
-  <script>
-    // Funções de navegação e modais mantidas intactas para preservar a mecânica
-    function switchTab(tab) {
-      console.log('Navegando para aba:', tab);
+const ACCOUNTS = [
+  { id: 'cash', name: 'Dinheiro em Caixa', color: 'border-emerald-500' },
+  { id: 'caixa', name: 'Caixa Econômica', color: 'border-blue-600' },
+  { id: 'nubank', name: 'Nubank', color: 'border-purple-600' },
+  { id: 'c6', name: 'C6 Bank', color: 'border-slate-800 dark:border-slate-600' },
+  { id: 'inter', name: 'Inter', color: 'border-orange-500' }
+];
+
+let orders = [];
+let txs = [];
+let historyData = { clients: [], cities: [], carriers: [] };
+let currentTab = 'orders';
+let currentAdminTab = 'orders';
+
+function pad(n){ return String(n).padStart(2,'0'); }
+function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function nowLocal(){ const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes()); }
+function genId(){ return '_' + Math.random().toString(36).slice(2,10); }
+function money(v){ return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v)||0); }
+function fmtDT(s){ if(!s || !s.includes('T')) return '—'; const [d,t]=s.split('T'); const [y,m,dd]=d.split('-'); return dd+'/'+m+'/'+y+' às '+t; }
+function fmtHora(s){ return s ? s.split('T')[1] : ''; }
+function fmtData(s){ if(!s) return ''; const [y,m,dd]=s.split('T')[0].split('-'); return dd+'/'+m; }
+function fmtDateTimeTx(dtStr){ 
+  if (!dtStr) return '—';
+  const d = new Date(dtStr);
+  if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
+  return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
+function safeRemove(k){ try { localStorage.removeItem(k); } catch(e){} }
+
+function setNow(id){ document.getElementById(id).value = nowLocal(); }
+function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
+function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
+
+document.addEventListener('click', e => {
+  const m = document.getElementById('menu');
+  if (!m || m.classList.contains('hidden')) return;
+  if (e.target.closest('button[onclick*="toggleMenu"]')) return;
+  if (m.contains(e.target)) return;
+  closeMenu();
+});
+
+// DARK MODE
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const iconSun = document.getElementById('icon-sun');
+  const iconMoon = document.getElementById('icon-moon');
+  
+  if (html.classList.contains('dark')) {
+    html.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    iconSun.classList.add('hidden');
+    iconMoon.classList.remove('hidden');
+  } else {
+    html.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    iconSun.classList.remove('hidden');
+    iconMoon.classList.add('hidden');
+  }
+}
+if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.documentElement.classList.add('dark');
+  document.getElementById('icon-sun').classList.remove('hidden');
+  document.getElementById('icon-moon').classList.add('hidden');
+}
+
+// NAVEGAÇÃO
+function switchTab(tab) {
+  currentTab = tab;
+  ['orders', 'finance', 'admin'].forEach(t => {
+    document.getElementById(`view-${t}`).classList.add('hidden');
+    document.getElementById(`nav-${t}`).classList.remove('active');
+  });
+  
+  const viewEl = document.getElementById(`view-${tab}`);
+  viewEl.classList.remove('hidden');
+  viewEl.classList.remove('animate-in');
+  void viewEl.offsetWidth; 
+  viewEl.classList.add('animate-in');
+  
+  document.getElementById(`nav-${tab}`).classList.add('active');
+  document.getElementById('btn-new').classList.toggle('hidden', tab !== 'orders');
+
+  const title = document.getElementById('header-title');
+  const sub = document.getElementById('header-subtitle');
+  const icon = document.getElementById('header-icon');
+
+  if (tab === 'orders') {
+    title.textContent = 'Controle de Pedidos'; sub.textContent = 'Rastreio · Valores · Lucro';
+    icon.textContent = '📦'; icon.className = 'w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30';
+    renderOrders();
+  } else if (tab === 'finance') {
+    title.textContent = 'Painel Financeiro'; sub.textContent = 'Contas · Saldos · Lançamentos';
+    icon.textContent = '💰'; icon.className = 'w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30';
+    renderFinance();
+  } else if (tab === 'admin') {
+    title.textContent = 'Administração'; sub.textContent = 'Relatórios e Desempenho';
+    icon.textContent = '📊'; icon.className = 'w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl shadow-lg shadow-slate-800/30';
+    switchAdminTab('orders');
+  }
+}
+
+function switchAdminTab(tab) {
+  currentAdminTab = tab;
+  const btnOrders = document.getElementById('btn-adm-orders');
+  const btnFinance = document.getElementById('btn-adm-finance');
+  const viewOrders = document.getElementById('adm-view-orders');
+  const viewFinance = document.getElementById('adm-view-finance');
+
+  if (tab === 'orders') {
+    btnOrders.className = 'flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition';
+    btnFinance.className = 'flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition';
+    viewOrders.classList.remove('hidden');
+    viewFinance.classList.add('hidden');
+    renderAdminOrders();
+  } else {
+    btnFinance.className = 'flex-1 py-2 text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-sm rounded-lg transition';
+    btnOrders.className = 'flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg transition';
+    viewFinance.classList.remove('hidden');
+    viewOrders.classList.add('hidden');
+    renderAdminFinance();
+  }
+}
+
+// PERSISTÊNCIA
+function saveAll(){
+  safeSet(STORAGE_ORDERS, JSON.stringify(orders));
+  safeSet(STORAGE_FIN, JSON.stringify(txs));
+}
+
+function load(){
+  const rawOrders = safeGet(STORAGE_ORDERS);
+  if (rawOrders) { try { orders = JSON.parse(rawOrders) || []; } catch(e){} }
+  
+  const rawFin = safeGet(STORAGE_FIN);
+  if (rawFin) { try { txs = JSON.parse(rawFin) || []; } catch(e){} }
+
+  const rawHist = safeGet(HISTORY_KEY);
+  if (rawHist) { try { historyData = JSON.parse(rawHist); } catch(e){} }
+  if (!historyData.clients) historyData.clients = [];
+  if (!historyData.cities) historyData.cities = [];
+  if (!historyData.carriers) historyData.carriers = [];
+  renderDatalists();
+  populateSelects();
+}
+
+function saveToHistory(order) {
+  let changed = false;
+  const add = (arr, v) => { if(v && v.trim() && !arr.includes(v.trim())){ arr.push(v.trim()); changed = true; } };
+  add(historyData.clients, order.cliente);
+  add(historyData.cities, order.cidadeOrigem);
+  add(historyData.cities, order.cidade1);
+  add(historyData.cities, order.cidade2);
+  add(historyData.cities, order.cidade3);
+  add(historyData.carriers, order.transportadora);
+  if (changed) { safeSet(HISTORY_KEY, JSON.stringify(historyData)); renderDatalists(); }
+}
+
+function renderDatalists() {
+  document.getElementById('list-clients').innerHTML = historyData.clients.map(c => `<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-cities').innerHTML = historyData.cities.map(c => `<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-carriers').innerHTML = historyData.carriers.map(c => `<option value="${escapeHtml(c)}">`).join('');
+}
+
+function populateSelects() {
+  const opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'tFrom', 'tTo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = opts;
+  });
+  document.getElementById('oAccIn').value = 'nubank';
+  document.getElementById('oAccOutMerc').value = 'c6';
+  document.getElementById('oAccOutFrete').value = 'cash';
+  document.getElementById('tTo').value = 'cash';
+}
+
+// CÁLCULOS
+function calcValores(o) {
+  const inv = o.valorUSD * o.cotacao;
+  const margemVal = inv * (o.margem / 100);
+  const meuCustoMerc = o.pagoMerc ? inv : 0;
+  const meuCustoFrete = o.pagoFrete ? o.frete : 0;
+  
+  const faturamento = margemVal + meuCustoMerc;
+  const lucroLiq = faturamento - meuCustoMerc - meuCustoFrete;
+
+  return { inv, margemVal, lucroLiq, faturamento, meuCustoMerc, meuCustoFrete };
+}
+
+function statusOf(o){
+  if (o.clienteRecebeu) return {key:'entregue', label:'Entregue', cls:'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'};
+  if (o.desceuSP) return {key:'sp', label:'Em SP', cls:'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'};
+  if (o.subiuTransp) return {key:'transito', label:'Em trânsito', cls:'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'};
+  if (o.saida) return {key:'saiu', label:'Saiu', cls:'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'};
+  return {key:'pendente', label:'Pendente', cls:'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'};
+}
+
+// RENDERIZAÇÃO: PEDIDOS
+function renderOrders() {
+  let inv = 0, fat = 0, lucro = 0;
+  orders.forEach(o => { const v = calcValores(o); inv += v.inv; fat += v.faturamento; lucro += v.lucroLiq; });
+  document.getElementById('ord-count').textContent = orders.length;
+  document.getElementById('ord-inv').textContent = money(inv);
+  document.getElementById('ord-fat').textContent = money(fat);
+  document.getElementById('ord-profit').textContent = money(lucro);
+
+  const q = document.getElementById('ord-search').value.toLowerCase().trim();
+  const list = document.getElementById('ord-list');
+  const empty = document.getElementById('ord-empty');
+
+  const items = orders.filter(o => {
+    if (!q) return true;
+    return (o.pedido || '').toLowerCase().includes(q) || (o.cliente || '').toLowerCase().includes(q);
+  }).sort((a, b) => (b.saida || '').localeCompare(a.saida || ''));
+
+  if (!items.length) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  list.innerHTML = items.map(o => {
+    const st = statusOf(o);
+    const v = calcValores(o);
+    const hasDoc = (o.driveLink || o.docData) ? '<span class="text-xs ml-1" title="Arquivo/Drive Vinculado">📎</span>' : '';
+    return `
+      <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'S/N')} ${hasDoc}</h3>
+              <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${st.cls}">${st.label}</span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">${escapeHtml(o.cliente || 'Sem nome')}</p>
+          </div>
+          <div class="flex gap-1 shrink-0">
+            <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm">🧾</button>
+            <button onclick="openModal('${o.id}')" class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm shadow-sm">✏️</button>
+            <button onclick="delOrder('${o.id}')" class="p-2 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-lg text-sm shadow-sm">🗑️</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-lg py-1.5 border border-slate-100 dark:border-slate-800 overflow-hidden"><p class="text-[9px] uppercase font-bold text-slate-400">Fat.</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">${money(v.faturamento)}</p></div>
+          <div class="bg-rose-50 dark:bg-rose-900/10 rounded-lg py-1.5 border border-rose-100 dark:border-rose-900/30 overflow-hidden"><p class="text-[9px] uppercase font-bold text-rose-400 dark:text-rose-500">Custos</p><p class="text-xs font-bold text-rose-700 dark:text-rose-400 truncate">${money(v.meuCustoMerc + v.meuCustoFrete)}</p></div>
+          <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg py-1.5 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden"><p class="text-[9px] uppercase font-bold text-emerald-500 dark:text-emerald-600">Lucro</p><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400 truncate">${money(v.lucroLiq)}</p></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// RENDERIZAÇÃO: FINANCEIRO
+function getAccountBalance(accId) {
+  let bal = 0;
+  txs.forEach(t => {
+    if (t.accountId === accId && t.status !== 'pending') {
+      if (t.type === 'income' || t.type === 'transfer_in') bal += t.amount;
+      else if (t.type === 'expense' || t.type === 'transfer_out') bal -= t.amount;
     }
-    function openPendingModal() { console.log('Abrir Contas a Pagar'); }
-    function openTransferModal() { console.log('Abrir Transferência'); }
-    function openPatrimonioModal() { console.log('Abrir Patrimônio'); }
-    function openPendingLucrosModal() { console.log('Abrir Lucros Pendentes'); }
-    function editAccount(acc) { console.log('Editar conta:', acc); }
-  </script>
+  });
+  return bal;
+}
 
+function getTotalBankBalance() {
+  let total = 0;
+  ACCOUNTS.forEach(acc => { total += getAccountBalance(acc.id); });
+  return total;
+}
+
+function getTotalPendingLucros() {
+  let total = 0;
+  orders.forEach(o => {
+    const linked = txs.find(t => t.refId === o.id && t.type === 'income');
+    if (!linked || linked.status === 'pending') {
+      const v = calcValores(o);
+      total += v.lucroLiq;
+    }
+  });
+  return total;
+}
+
+function openPatrimonioModal() {
+  const bancos = getTotalBankBalance();
+  const receber = getTotalPendingLucros();
+  document.getElementById('detSaldoBancos').textContent = money(bancos);
+  document.getElementById('detReceber').textContent = money(receber);
+  document.getElementById('detPatrimonioTotal').textContent = money(bancos + receber);
+  document.getElementById('patrimonioModal').classList.remove('hidden');
+}
+
+function renderFinance() {
+  const accContainer = document.getElementById('accounts-container');
+  const totalBalGlobal = getTotalBankBalance();
+
+  accContainer.innerHTML = ACCOUNTS.map(acc => {
+    const bal = getAccountBalance(acc.id);
+    const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
+    return `
+      <div class="account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-2 ${acc.color} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+        <div class="flex justify-between items-start mt-0.5">
+          <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate pr-2">${acc.name}</p>
+          <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
+        </div>
+        <div class="mt-2 flex items-end justify-between">
+          <h3 class="text-lg font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+          <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 ml-1">
+            ${pct}%
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  let totalBal = totalBalGlobal;
+  let totalPendingLucros = getTotalPendingLucros();
+  let patrimonioTotal = totalBal + totalPendingLucros;
+
+  let inc = 0, exp = 0, totalProfit = 0;
+  const m = todayISO().slice(0,7);
+  
+  txs.forEach(t => {
+    if (t.cat === 'Vendas') totalProfit += t.amount;
+    else if (t.cat === 'Fornecedores' || t.cat === 'Logística') totalProfit -= t.amount;
+    
+    if (t.date.startsWith(m) && t.status !== 'pending') {
+      if (t.type === 'income' && !t.isAdjustment) inc += t.amount;
+      else if (t.type === 'expense' && !t.isAdjustment) exp += t.amount;
+    }
+  });
+
+  document.getElementById('fin-patrimonio').textContent = money(patrimonioTotal);
+  document.getElementById('fin-pending-lucro').textContent = money(totalPendingLucros);
+  document.getElementById('fin-balance').textContent = money(totalBal);
+  document.getElementById('fin-profit').textContent = money(totalProfit);
+  document.getElementById('fin-income').textContent = money(inc);
+  document.getElementById('fin-expense').textContent = money(exp);
+
+  const list = document.getElementById('fin-list');
+  const sorted = txs.slice().sort((a,b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    return (b.createdAt || '').localeCompare(a.createdAt || '');
+  }).slice(0, 100);
+  
+  if (!sorted.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento registrado.</p>'; return; }
+
+  list.innerHTML = sorted.map(t => {
+    const isInc = t.type === 'income' || t.type === 'transfer_in';
+    const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const isPending = t.status === 'pending';
+    
+    let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
+    let tagName = 'Outro';
+    let icon = isInc ? '↑' : '↓';
+    
+    if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-200'; tagName = 'Transfer'; icon = '↔️'; }
+    else if (t.cat === 'Vendas') { tagColor = 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300'; tagName = 'Venda'; icon = '💰'; }
+    else if (t.cat === 'Fornecedores') { tagColor = 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'; tagName = 'Custo'; icon = '📦'; }
+    else if (t.cat === 'Logística') { tagColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'; tagName = 'Frete'; icon = '🚚'; }
+    else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
+
+    const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
+
+    return `
+      <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${isInc ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:border-emerald-800' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-900/20 dark:border-rose-800')}">
+          ${icon}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1 mb-1 flex-wrap">
+            <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md ${tagColor}">${tagName}</span>
+            ${payMethodLabel}
+            ${pendingLabel}
+          </div>
+          <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
+          <p class="text-[11px] font-medium text-slate-500 mt-0.5">${dateTimeStr} · ${accName}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="font-black text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')} ${isPending ? 'opacity-50 line-through' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+          <button onclick="delFinTx('${t.id}')" class="text-[10px] font-semibold text-slate-400 hover:text-rose-600 mt-1 underline decoration-transparent hover:decoration-rose-600 transition">excluir</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// CONTAS A PAGAR
+function openPendingModal() {
+  document.getElementById('pendingModal').classList.remove('hidden');
+  const list = document.getElementById('pending-list');
+  const pendingTxs = txs.filter(t => t.status === 'pending');
+
+  if (!pendingTxs.length) {
+    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente no momento.</p>';
+    return;
+  }
+
+  list.innerHTML = pendingTxs.map(t => `
+    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+      <div class="min-w-0">
+        <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
+        <p class="text-[11px] text-slate-500">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type}</p>
+      </div>
+      <div class="text-right shrink-0">
+        <p class="font-black text-emerald-600 text-sm mb-1">${money(t.amount)}</p>
+        <button onclick="payPending('${t.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Baixar / Receber</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function payPending(id) {
+  const t = txs.find(x => x.id === id);
+  if (!t) return;
+  if (!confirm(`Confirmar recebimento/pagamento de ${money(t.amount)} para "${t.desc}" na conta ${ACCOUNTS.find(a=>a.id===t.accountId)?.name}?`)) return;
+  
+  t.status = 'paid';
+  saveAll();
+  document.getElementById('pendingModal').classList.add('hidden');
+  switchTab('finance');
+}
+
+function openEditBalance(accId) {
+  const acc = ACCOUNTS.find(a => a.id === accId);
+  const currentBal = getAccountBalance(accId);
+  document.getElementById('editBalAccId').value = accId;
+  document.getElementById('editBalTitle').textContent = `Ajustar ${acc.name}`;
+  document.getElementById('editBalCurrent').textContent = money(currentBal);
+  document.getElementById('editBalNew').value = currentBal.toFixed(2);
+  document.getElementById('editBalanceModal').classList.remove('hidden');
+}
+
+function saveEditBalance(e) {
+  e.preventDefault();
+  const accId = document.getElementById('editBalAccId').value;
+  const newBal = parseFloat(document.getElementById('editBalNew').value);
+  const currentBal = getAccountBalance(accId);
+  const diff = newBal - currentBal;
+  
+  if (diff === 0) { document.getElementById('editBalanceModal').classList.add('hidden'); return; }
+
+  const type = diff > 0 ? 'income' : 'expense';
+  const amount = Math.abs(diff);
+  const desc = `Ajuste de Saldo`;
+
+  txs.unshift({ id: genId(), desc, amount, type, cat: 'Ajuste', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, isAdjustment: true, status: 'paid' });
+  saveAll();
+  document.getElementById('editBalanceModal').classList.add('hidden');
+  switchTab('finance');
+}
+
+function delFinTx(id) {
+  if (confirm('Apagar este lançamento do histórico?')) {
+    txs = txs.filter(t => t.id !== id);
+    saveAll();
+    switchTab(currentTab);
+  }
+}
+
+function processDocFile(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('oDocData').value = e.target.result;
+      document.getElementById('oDocName').value = file.name;
+      const fnEl = document.getElementById('doc-filename');
+      fnEl.querySelector('span').textContent = file.name;
+      fnEl.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function togglePaymentOptions() {
+  document.getElementById('wrapAccOutMerc').style.opacity = document.getElementById('oPagoMerc').checked ? '1' : '0.3';
+  document.getElementById('oAccOutMerc').disabled = !document.getElementById('oPagoMerc').checked;
+  document.getElementById('wrapAccOutFrete').style.opacity = document.getElementById('oPagoFrete').checked ? '1' : '0.3';
+  document.getElementById('oAccOutFrete').disabled = !document.getElementById('oPagoFrete').checked;
+  document.getElementById('wrapAccIn').style.opacity = document.getElementById('oSyncFin').checked ? '1' : '0.3';
+  document.getElementById('oAccIn').disabled = !document.getElementById('oSyncFin').checked;
+  updatePreview();
+}
+
+function openModal(id){
+  const modal = document.getElementById('modal');
+  document.getElementById('input-doc').value = '';
+  document.getElementById('oDocData').value = '';
+  document.getElementById('oDocName').value = '';
+  document.getElementById('oDriveLink').value = '';
+  document.getElementById('doc-filename').classList.add('hidden');
+  
+  if (id) {
+    const o = orders.find(x => x.id === id);
+    if (!o) return;
+    document.getElementById('modalTitle').textContent = 'Editar Pedido';
+    document.getElementById('oId').value = o.id;
+    document.getElementById('oPedido').value = o.pedido;
+    document.getElementById('oCliente').value = o.cliente;
+    document.getElementById('oDriveLink').value = o.driveLink || '';
+    document.getElementById('oDocData').value = o.docData || '';
+    document.getElementById('oDocName').value = o.docName || '';
+    
+    if (o.docName) {
+      const fnEl = document.getElementById('doc-filename');
+      fnEl.querySelector('span').textContent = o.docName;
+      fnEl.classList.remove('hidden');
+    }
+
+    document.getElementById('oUSD').value = o.valorUSD;
+    document.getElementById('oCot').value = o.cotacao;
+    document.getElementById('oMargem').value = o.margem;
+    document.getElementById('oFrete').value = o.frete;
+    document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
+    document.getElementById('oFreightStatus').value = o.freightStatus || 'paid';
+    
+    document.getElementById('oOrigem').value = o.cidadeOrigem;
+    document.getElementById('oSaida').value = o.saida;
+    document.getElementById('oTransportadora').value = o.transportadora || '';
+    document.getElementById('oSubiu').value = o.subiuTransp;
+    document.getElementById('oC1').value = o.cidade1;
+    document.getElementById('oC1H').value = o.cidade1Hora;
+    document.getElementById('oC2').value = o.cidade2;
+    document.getElementById('oC2H').value = o.cidade2Hora;
+    document.getElementById('oC3').value = o.cidade3;
+    document.getElementById('oC3H').value = o.cidade3Hora;
+    document.getElementById('oSP').value = o.desceuSP;
+    document.getElementById('oRec').value = o.clienteRecebeu;
+    
+    document.getElementById('oPagoMerc').checked = o.pagoMerc;
+    document.getElementById('oPagoFrete').checked = o.pagoFrete;
+    document.getElementById('oSyncFin').checked = o.syncFin;
+    
+    const linked = txs.find(t => t.refId === o.id && t.type === 'income');
+    if (linked) {
+      document.getElementById('oAccIn').value = linked.accountId || 'nubank';
+      const linkedOut = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Fornecedores');
+      if (linkedOut) document.getElementById('oAccOutMerc').value = linkedOut.accountId;
+      const linkedFrete = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Logística');
+      if (linkedFrete) document.getElementById('oAccOutFrete').value = linkedFrete.accountId;
+    }
+  } else {
+    document.getElementById('modalTitle').textContent = 'Novo Pedido';
+    document.getElementById('oId').value = '';
+    document.getElementById('oPedido').value = '';
+    document.getElementById('oCliente').value = '';
+    document.getElementById('oUSD').value = '';
+    document.getElementById('oCot').value = '5.40';
+    document.getElementById('oMargem').value = '';
+    document.getElementById('oFrete').value = '';
+    document.getElementById('oPaymentMethod').value = 'Pix';
+    document.getElementById('oFreightStatus').value = 'paid';
+    document.getElementById('oOrigem').value = '';
+    document.getElementById('oSaida').value = nowLocal();
+    document.getElementById('oTransportadora').value = '';
+    document.getElementById('oSubiu').value = '';
+    document.getElementById('oC1').value = '';
+    document.getElementById('oC1H').value = '';
+    document.getElementById('oC2').value = '';
+    document.getElementById('oC2H').value = '';
+    document.getElementById('oC3').value = '';
+    document.getElementById('oC3H').value = '';
+    document.getElementById('oSP').value = '';
+    document.getElementById('oRec').value = '';
+    
+    document.getElementById('oPagoMerc').checked = true;
+    document.getElementById('oPagoFrete').checked = true;
+    document.getElementById('oSyncFin').checked = true;
+  }
+  togglePaymentOptions();
+  modal.classList.remove('hidden');
+}
+function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+function updatePreview(){
+  const usd = parseFloat(document.getElementById('oUSD').value) || 0;
+  const cot = parseFloat(document.getElementById('oCot').value) || 0;
+  const margem = parseFloat(document.getElementById('oMargem').value) || 0;
+  const frete = parseFloat(document.getElementById('oFrete').value) || 0;
+  
+  const pagoMerc = document.getElementById('oPagoMerc').checked;
+  const pagoFrete = document.getElementById('oPagoFrete').checked;
+
+  const inv = usd * cot;
+  const margemVal = inv * (margem / 100);
+  
+  const meuCustoMerc = pagoMerc ? inv : 0;
+  const meuCustoFrete = pagoFrete ? frete : 0;
+  
+  const faturamento = margemVal + meuCustoMerc;
+  const lucroLiq = faturamento - meuCustoMerc - meuCustoFrete;
+
+  document.getElementById('prevBRL').textContent = money(inv);
+  document.getElementById('prevMargem').textContent = money(margemVal);
+  document.getElementById('prevFrete').textContent = money(meuCustoFrete);
+  document.getElementById('prevFinal').textContent = money(faturamento);
+  
+  const elLucro = document.getElementById('prevLucro');
+  elLucro.textContent = money(lucroLiq);
+  elLucro.className = lucroLiq >= 0 ? 'text-emerald-700 dark:text-emerald-400 text-base' : 'text-rose-700 dark:text-rose-400 text-base';
+}
+
+function saveOrder(e){
+  e.preventDefault();
+  const id = document.getElementById('oId').value;
+  
+  const data = {
+    id: id || genId(),
+    pedido: document.getElementById('oPedido').value.trim(),
+    cliente: document.getElementById('oCliente').value.trim(),
+    driveLink: document.getElementById('oDriveLink').value.trim(),
+    docData: document.getElementById('oDocData').value,
+    docName: document.getElementById('oDocName').value,
+    valorUSD: parseFloat(document.getElementById('oUSD').value) || 0,
+    cotacao: parseFloat(document.getElementById('oCot').value) || 0,
+    margem: parseFloat(document.getElementById('oMargem').value) || 0,
+    frete: parseFloat(document.getElementById('oFrete').value) || 0,
+    paymentMethod: document.getElementById('oPaymentMethod').value,
+    freightStatus: document.getElementById('oFreightStatus').value,
+    pagoMerc: document.getElementById('oPagoMerc').checked,
+    pagoFrete: document.getElementById('oPagoFrete').checked,
+    syncFin: document.getElementById('oSyncFin').checked,
+    cidadeOrigem: document.getElementById('oOrigem').value.trim(),
+    saida: document.getElementById('oSaida').value,
+    transportadora: document.getElementById('oTransportadora').value.trim(),
+    subiuTransp: document.getElementById('oSubiu').value,
+    cidade1: document.getElementById('oC1').value.trim(),
+    cidade1Hora: document.getElementById('oC1H').value,
+    cidade2: document.getElementById('oC2').value.trim(),
+    cidade2Hora: document.getElementById('oC2H').value,
+    cidade3: document.getElementById('oC3').value.trim(),
+    cidade3Hora: document.getElementById('oC3H').value,
+    desceuSP: document.getElementById('oSP').value,
+    clienteRecebeu: document.getElementById('oRec').value,
+  };
+
+  if (!data.pedido && !data.cliente) return alert('Informe o nº do pedido ou cliente.');
+
+  if (id) {
+    const i = orders.findIndex(x => x.id === id);
+    if (i >= 0) orders[i] = data;
+  } else {
+    orders.unshift(data);
+  }
+
+  txs = txs.filter(t => t.refId !== data.id); 
+
+  if (data.syncFin) {
+    const v = calcValores(data);
+    const dateStr = data.saida ? data.saida.split('T')[0] : todayISO();
+    const createdAtStr = data.saida ? data.saida + ':00' : new Date().toISOString();
+    
+    if (v.faturamento > 0) {
+      txs.push({
+        id: genId(), refId: data.id, desc: `Pedido ${data.pedido} - ${data.cliente}`, 
+        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccIn').value, status: 'pending', paymentMethod: data.paymentMethod
+      });
+    }
+
+    if (data.pagoMerc && v.meuCustoMerc > 0) {
+      txs.push({
+        id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
+        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value, status: 'paid'
+      });
+    }
+
+    if (data.pagoFrete && v.meuCustoFrete > 0) {
+      txs.push({
+        id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido}`, 
+        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: data.freightStatus
+      });
+    }
+  }
+
+  saveToHistory(data);
+  saveAll();
+  closeModal();
+  switchTab('orders');
+}
+
+function delOrder(id){
+  if (confirm('Excluir este pedido? (Os lançamentos financeiros vinculados também serão apagados).')) {
+    orders = orders.filter(o => o.id !== id);
+    txs = txs.filter(t => t.refId !== id);
+    saveAll();
+    switchTab('orders');
+  }
+}
+
+function openFinModal() {
+  document.getElementById('finModal').classList.remove('hidden');
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fDate').value = todayISO();
+  setFinType('income');
+}
+function setFinType(type) {
+  document.getElementById('fType').value = type;
+  const i = document.getElementById('fBtnInc');
+  const e = document.getElementById('fBtnExp');
+  if (type === 'income') {
+    i.className = 'py-2.5 rounded-lg font-bold text-sm transition bg-white dark:bg-slate-800 text-emerald-600 shadow-sm';
+    e.className = 'py-2.5 rounded-lg font-bold text-sm transition text-slate-500 hover:text-slate-700';
+  } else {
+    e.className = 'py-2.5 rounded-lg font-bold text-sm transition bg-white dark:bg-slate-800 text-rose-600 shadow-sm';
+    i.className = 'py-2.5 rounded-lg font-bold text-sm transition text-slate-500 hover:text-slate-700';
+  }
+}
+function saveFinTx(e) {
+  e.preventDefault();
+  const type = document.getElementById('fType').value;
+  const desc = document.getElementById('fDesc').value;
+  const amount = parseFloat(document.getElementById('fAmount').value);
+  const date = document.getElementById('fDate').value;
+  const accId = document.getElementById('fAccount').value;
+  const paymentMethod = document.getElementById('fPaymentMethod').value;
+  const status = document.getElementById('fStatus').value;
+  
+  txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, paymentMethod, status });
+  saveAll();
+  document.getElementById('finModal').classList.add('hidden');
+  switchTab('finance');
+}
+
+function openTransferModal() {
+  document.getElementById('transferModal').classList.remove('hidden');
+  document.getElementById('tAmount').value = '';
+  document.getElementById('tDate').value = todayISO();
+  document.getElementById('tFrom').value = 'c6';
+  document.getElementById('tTo').value = 'cash';
+}
+
+function saveTransfer(e) {
+  e.preventDefault();
+  const from = document.getElementById('tFrom').value;
+  const to = document.getElementById('tTo').value;
+  const amount = parseFloat(document.getElementById('tAmount').value);
+  const date = document.getElementById('tDate').value;
+
+  if (from === to) return alert('Escolha contas diferentes.');
+
+  const tId = genId();
+  const createdAt = new Date().toISOString();
+  
+  txs.push({ 
+    id: tId, desc: `Transf. para ${ACCOUNTS.find(a=>a.id===to).name}`, 
+    amount, type: 'transfer_out', date, createdAt, accountId: from, isTransfer: true, status: 'paid'
+  });
+  txs.push({ 
+    id: tId + '_in', desc: `Transf. de ${ACCOUNTS.find(a=>a.id===from).name}`, 
+    amount, type: 'transfer_in', date, createdAt, accountId: to, isTransfer: true, status: 'paid'
+  });
+
+  saveAll();
+  document.getElementById('transferModal').classList.add('hidden');
+  switchTab('finance');
+}
+
+function renderAdminOrders() {
+  let totalFat = 0, totalProfit = 0;
+  const grouped = {};
+
+  orders.forEach(o => {
+    const v = calcValores(o);
+    totalFat += v.faturamento;
+    totalProfit += v.lucroLiq;
+    const c = o.cliente || 'Sem Nome';
+    if (!grouped[c]) grouped[c] = { pedidos: 0, fat: 0, lucro: 0 };
+    grouped[c].pedidos += 1;
+    grouped[c].fat += v.faturamento;
+    grouped[c].lucro += v.lucroLiq;
+  });
+
+  document.getElementById('adm-total-profit').textContent = money(totalProfit);
+  document.getElementById('adm-total-fat').textContent = money(totalFat);
+
+  const sortedOrders = orders.slice().sort((a,b) => (b.saida || '').localeCompare(a.saida || ''));
+  const detailList = document.getElementById('adm-detailed-list');
+
+  if(!sortedOrders.length) {
+    detailList.innerHTML = '<p class="p-8 text-center text-slate-400 text-sm">Nenhum pedido registrado.</p>';
+  } else {
+    detailList.innerHTML = sortedOrders.map(o => {
+      const v = calcValores(o);
+      return `
+        <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+          <div class="flex justify-between items-start mb-3">
+            <div class="min-w-0">
+              <p class="font-bold text-slate-900 dark:text-white text-sm truncate">${escapeHtml(o.pedido || 'S/N')} <span class="font-normal text-slate-400 mx-1">•</span> ${escapeHtml(o.cliente || '—')}</p>
+              <p class="text-[11px] font-medium text-slate-500 font-mono mt-0.5">${fmtDT(o.saida)}</p>
+            </div>
+            <button onclick="openReceipt('${o.id}')" class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-brand-600 dark:text-indigo-400 rounded-lg text-sm shadow-sm shrink-0">🧾</button>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2 mt-2">
+            <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-2.5 border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <p class="text-[9px] font-bold text-slate-400 uppercase">Faturam.</p>
+              <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${money(v.faturamento)}</p>
+            </div>
+            <div class="bg-rose-50 dark:bg-rose-900/10 rounded-lg p-2.5 border border-rose-100 dark:border-rose-800/30 overflow-hidden">
+              <p class="text-[9px] font-bold text-rose-400 uppercase">Custos</p>
+              <p class="text-sm font-bold text-rose-700 dark:text-rose-400 truncate">${money(v.meuCustoMerc + v.meuCustoFrete)}</p>
+            </div>
+            <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-2.5 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden">
+              <p class="text-[9px] font-bold text-emerald-500 uppercase">Lucro Líq.</p>
+              <p class="text-sm font-bold text-emerald-700 dark:text-emerald-400 truncate">${money(v.lucroLiq)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const arr = Object.keys(grouped).map(k => ({ cliente: k, ...grouped[k] })).sort((a,b) => b.lucro - a.lucro);
+  const tbody = document.getElementById('adm-client-table');
+
+  if(!arr.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-8 text-center text-slate-400">Nenhum pedido.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = arr.map(row => `
+    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
+      <td class="px-5 py-4 font-bold text-slate-800 dark:text-slate-200 text-sm truncate max-w-[150px]">${escapeHtml(row.cliente)}</td>
+      <td class="px-5 py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/20">${row.pedidos}</td>
+      <td class="px-5 py-4 text-right text-sm font-black ${row.lucro >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'} truncate">${money(row.lucro)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderAdminFinance() {
+  const filter = document.getElementById('adm-fin-filter').value;
+  const list = document.getElementById('adm-fin-list');
+  
+  let sorted = txs.slice().sort((a,b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    return (b.createdAt || '').localeCompare(a.createdAt || '');
+  });
+
+  if (filter === 'income') sorted = sorted.filter(t => t.type === 'income' || t.type === 'transfer_in');
+  else if (filter === 'expense') sorted = sorted.filter(t => t.type === 'expense' || t.type === 'transfer_out');
+
+  if (!sorted.length) {
+    list.innerHTML = '<p class="p-6 text-center text-slate-400 text-sm">Nenhum lançamento encontrado.</p>';
+    return;
+  }
+
+  list.innerHTML = sorted.map(t => {
+    const isInc = t.type === 'income' || t.type === 'transfer_in';
+    const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const isPending = t.status === 'pending';
+    
+    let icon = isInc ? '↑' : '↓';
+    if (isTransfer) icon = '↔️';
+
+    const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
+    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
+
+    return `
+      <div class="flex items-center gap-3 px-5 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isInc ? 'bg-emerald-50 text-emerald-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600')}">${icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1 flex-wrap mb-0.5">
+            ${payMethodLabel}
+            ${pendingLabel}
+          </div>
+          <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
+          <p class="text-[10px] text-slate-500">${dateTimeStr} · ${accName}</p>
+        </div>
+        <p class="font-black text-sm shrink-0 ${isInc ? 'text-emerald-600' : (isTransfer ? 'text-slate-700' : 'text-rose-600')} ${isPending ? 'opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+      </div>
+    `;
+  }).join('');
+}
+
+function openReceipt(id){
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  const v = calcValores(o);
+  
+  document.getElementById('recPedido').textContent = o.pedido || 'S/N';
+  document.getElementById('recCliente').textContent = o.cliente || '—';
+  document.getElementById('recData').textContent = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR').slice(0,5);
+  document.getElementById('recInv').textContent = money(v.inv);
+  document.getElementById('recMargem').textContent = money(v.margemVal);
+  document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
+  document.getElementById('recFat').textContent = money(v.faturamento);
+  
+  const elLucroAdmin = document.getElementById('recLucro');
+  elLucroAdmin.textContent = money(v.lucroLiq);
+  elLucroAdmin.className = v.lucroLiq >= 0 ? 'font-black text-emerald-600 dark:text-emerald-400' : 'font-black text-rose-600 dark:text-rose-400';
+
+  document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
+  document.getElementById('recClienteCliente').textContent = o.cliente || '—';
+  document.getElementById('recFreteCliente').textContent = money(v.margemVal);
+
+  const stages = [
+    {time: o.saida, label: `Saída de ${o.cidadeOrigem || 'Origem'}`, icon: '🚚'},
+    {time: o.subiuTransp, label: o.transportadora || 'Transportadora', icon: '📦'},
+    {time: o.cidade1Hora, label: o.cidade1, icon: '📍', sub: true},
+    {time: o.cidade2Hora, label: o.cidade2, icon: '📍', sub: true},
+    {time: o.cidade3Hora, label: o.cidade3, icon: '📍', sub: true},
+    {time: o.desceuSP, label: 'Centro SP', icon: '🏙️'},
+    {time: o.clienteRecebeu, label: 'Entregue ao Destinatário', icon: '✅'}
+  ].filter(s => s.time);
+
+  document.getElementById('recTrajetoAdmin').innerHTML = stages.map(s => `
+    <div class="flex justify-between items-center text-xs py-1">
+      <div class="flex items-center gap-2 text-slate-700 dark:text-slate-300"><span>${s.icon}</span><span class="${s.sub?'italic':'font-semibold'}">${escapeHtml(s.label||'')}</span></div>
+      <div class="font-mono text-slate-500 text-[11px] text-right"><div>${fmtData(s.time)}</div><div>${fmtHora(s.time)}</div></div>
+    </div>
+  `).join('') || '<p class="text-xs text-slate-400">Sem rastreio.</p>';
+
+  document.getElementById('recTrajetoCliente').innerHTML = stages.map((s, index) => `
+    <div class="relative pl-8 pb-6 last:pb-0">
+      ${index !== stages.length - 1 ? '<div class="absolute left-[11px] top-6 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-700"></div>' : ''}
+      <div class="absolute left-0 top-0 w-6 h-6 flex items-center justify-center bg-white dark:bg-slate-800 text-base">${s.icon}</div>
+      <div>
+        <p class="text-sm font-bold text-slate-800 dark:text-slate-200 ${s.sub ? 'font-medium italic' : ''}">${escapeHtml(s.label||'')}</p>
+        <p class="text-[11px] font-medium text-slate-500 mt-0.5">${fmtDT(s.time)}</p>
+      </div>
+    </div>
+  `).join('') || '<p class="text-xs text-slate-400">Sem rastreio.</p>';
+
+  document.getElementById('receiptModal').classList.remove('hidden');
+}
+
+function closeReceipt(){ document.getElementById('receiptModal').classList.add('hidden'); }
+document.getElementById('receiptModal').addEventListener('click', e => { if (e.target.id === 'receiptModal') closeReceipt(); });
+
+function printReceipt(type) {
+  if (type === 'admin') {
+    document.body.classList.add('printing-admin');
+  } else {
+    document.body.classList.add('printing-client');
+  }
+  window.print();
+  setTimeout(() => {
+    document.body.classList.remove('printing-admin');
+    document.body.classList.remove('printing-client');
+  }, 1000);
+}
+
+function exportJSON(){
+  closeMenu();
+  const data = { orders, txs, historyData };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_gestao_manual.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function importJSON(e){
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.orders) orders = data.orders;
+      if (data.txs) txs = data.txs;
+      if (data.historyData) historyData = data.historyData;
+      saveAll();
+      safeSet(HISTORY_KEY, JSON.stringify(historyData));
+      renderDatalists();
+      alert('Importado com sucesso!');
+      switchTab('orders');
+    } catch(err) { alert('Erro ao importar.'); }
+  };
+  r.readAsText(file);
+}
+
+function resetData(){
+  closeMenu();
+  if (!confirm('Apagar TODOS os dados?')) return;
+  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(HISTORY_KEY);
+  location.reload();
+}
+
+load();
+switchTab('orders');
+</script>
 </body>
 </html>
