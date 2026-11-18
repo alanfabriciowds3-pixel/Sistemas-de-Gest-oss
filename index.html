@@ -523,6 +523,28 @@
   </div>
 </div>
 
+<!-- MODAL SELECIONAR CONTA NA HORA DO PAGAMENTO -->
+<div id="payAccountModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Efetuar Pagamento / Baixa</h3>
+      <button onclick="document.getElementById('payAccountModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+    </div>
+    <form onsubmit="confirmPayPending(event)" class="p-5 space-y-4">
+      <input type="hidden" id="payTxId">
+      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+        <p class="text-[10px] text-slate-500 uppercase font-bold">Valor a baixar</p>
+        <p class="text-lg font-black text-emerald-600" id="payTxAmountDesc">R$ 0,00</p>
+      </div>
+      <div>
+        <label class="lbl">De qual conta vai sair o dinheiro?</label>
+        <select id="payAccountSelect" required class="field font-semibold"></select>
+      </div>
+      <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold shadow-md">Confirmar Pagamento</button>
+    </form>
+  </div>
+</div>
+
 <!-- MODAL TRANSFERÊNCIA -->
 <div id="transferModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
@@ -812,7 +834,7 @@ function renderDatalists() {
 
 function populateSelects() {
   const opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'tFrom', 'tTo'].forEach(id => {
+  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'tFrom', 'tTo', 'payAccountSelect'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = opts;
   });
@@ -1062,12 +1084,10 @@ function renderFinance() {
   }).join('');
 }
 
-// CONTAS A PAGAR (APENAS LANÇAMENTOS MANUAIS - ISOLADO DOS PEDIDOS)
+// CONTAS A PAGAR (APENAS LANÇAMENTOS MANUAIS)
 function openPendingModal() {
   document.getElementById('pendingModal').classList.remove('hidden');
   const list = document.getElementById('pending-list');
-  
-  // Filtro corrigido: exibe apenas transações manuais pendentes (ignora completamente os pedidos)
   const pendingTxs = txs.filter(t => t.status === 'pending' && !t.refId);
 
   if (!pendingTxs.length) {
@@ -1092,10 +1112,26 @@ function openPendingModal() {
 function payPending(id) {
   const t = txs.find(x => x.id === id);
   if (!t) return;
-  if (!confirm(`Confirmar baixa de ${money(t.amount)} para "${t.desc}" na conta ${ACCOUNTS.find(a=>a.id===t.accountId)?.name}?`)) return;
+  document.getElementById('payTxId').value = t.id;
+  document.getElementById('payTxAmountDesc').textContent = money(t.amount);
+  if (t.accountId) {
+    document.getElementById('payAccountSelect').value = t.accountId;
+  }
+  document.getElementById('payAccountModal').classList.remove('hidden');
+}
+
+function confirmPayPending(e) {
+  e.preventDefault();
+  const id = document.getElementById('payTxId').value;
+  const selectedAccount = document.getElementById('payAccountSelect').value;
+  const t = txs.find(x => x.id === id);
+  if (!t) return;
   
   t.status = 'paid';
+  t.accountId = selectedAccount;
+  
   saveAll();
+  document.getElementById('payAccountModal').classList.add('hidden');
   document.getElementById('pendingModal').classList.add('hidden');
   switchTab('finance');
 }
