@@ -177,7 +177,6 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- Painel Financeiro: Apenas Patrimônio Total e A Receber Lado a Lado -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
@@ -260,7 +259,7 @@
 
 </main>
 
-<!-- Barra de Navegação Inferior Original -->
+<!-- Barra de Navegação Inferior -->
 <nav class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)] no-print transition-colors duration-300">
   <div class="max-w-5xl mx-auto flex">
     <div id="nav-orders" onclick="switchTab('orders')" class="nav-item active">
@@ -476,7 +475,7 @@
       </div>
       <input type="hidden" id="fType" value="income">
       
-      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Venda avulsa" required class="field"></div>
+      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Cartão de Crédito" required class="field"></div>
       
       <div class="grid grid-cols-2 gap-3">
         <div>
@@ -504,7 +503,7 @@
         <label class="lbl">Status</label>
         <select id="fStatus" class="field text-sm">
           <option value="paid">Pago / Recebido</option>
-          <option value="pending">Pendente (Conta a Pagar)</option>
+          <option value="pending">Pendente (Conta a Pagar / Agenda)</option>
         </select>
       </div>
 
@@ -1063,14 +1062,16 @@ function renderFinance() {
   }).join('');
 }
 
-// CONTAS A PAGAR
+// CONTAS A PAGAR (APENAS LANÇAMENTOS MANUAIS - ISOLADO DOS PEDIDOS)
 function openPendingModal() {
   document.getElementById('pendingModal').classList.remove('hidden');
   const list = document.getElementById('pending-list');
-  const pendingTxs = txs.filter(t => t.status === 'pending');
+  
+  // Filtro corrigido: exibe apenas transações manuais pendentes (ignora completamente os pedidos)
+  const pendingTxs = txs.filter(t => t.status === 'pending' && !t.refId);
 
   if (!pendingTxs.length) {
-    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente no momento.</p>';
+    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente na agenda.</p>';
     return;
   }
 
@@ -1078,11 +1079,11 @@ function openPendingModal() {
     <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
       <div class="min-w-0">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[11px] text-slate-500">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type}</p>
+        <p class="text-[11px] text-slate-500">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type === 'income' ? 'Receita' : 'Despesa'}</p>
       </div>
       <div class="text-right shrink-0">
         <p class="font-black text-emerald-600 text-sm mb-1">${money(t.amount)}</p>
-        <button onclick="payPending('${t.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Baixar / Receber</button>
+        <button onclick="payPending('${t.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Baixar / Pagar</button>
       </div>
     </div>
   `).join('');
@@ -1091,7 +1092,7 @@ function openPendingModal() {
 function payPending(id) {
   const t = txs.find(x => x.id === id);
   if (!t) return;
-  if (!confirm(`Confirmar recebimento/pagamento de ${money(t.amount)} para "${t.desc}" na conta ${ACCOUNTS.find(a=>a.id===t.accountId)?.name}?`)) return;
+  if (!confirm(`Confirmar baixa de ${money(t.amount)} para "${t.desc}" na conta ${ACCOUNTS.find(a=>a.id===t.accountId)?.name}?`)) return;
   
   t.status = 'paid';
   saveAll();
