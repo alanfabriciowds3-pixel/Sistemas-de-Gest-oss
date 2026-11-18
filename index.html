@@ -41,6 +41,8 @@
   .dark .field { background:#1e293b; border-color:#334155; color: white; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
   .field:focus { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15); background: white; }
   .dark .field:focus { border-color:#818cf8; background: #0f172a; }
+  .field:disabled { opacity: 0.65; cursor: not-allowed; background: #e2e8f0; }
+  .dark .field:disabled { background: #0f172a; }
   
   .lbl { font-size:.65rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:.05em; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
   .dark .lbl { color:#94a3b8; }
@@ -167,7 +169,7 @@
       <button onclick="toggleNotifications()" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <div class="px-4 py-2 bg-slate-50/50 dark:bg-slate-900/30 text-[11px] text-slate-500 border-b border-slate-100 dark:border-slate-700/50 flex justify-between">
-      <span>Contas para os próximos 3 dias</span>
+      <span>Contas e Cartões para os próximos 3 dias</span>
       <span id="notification-count-label" class="font-bold text-rose-500">0 itens</span>
     </div>
     <div id="notification-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 p-2"></div>
@@ -241,6 +243,15 @@
         <button onclick="openTransferModal()" class="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-400 px-3 py-1.5 rounded-lg transition hover:bg-brand-100">↔️ Transferir</button>
       </div>
       <div class="scroll-x" id="accounts-container"></div>
+    </div>
+
+    <!-- SEÇÃO CARTÕES DE CRÉDITO -->
+    <div>
+      <div class="flex justify-between items-end mb-2 px-1">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Cartões de Crédito (4 Cartões)</h2>
+        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg">🔒 Vencimentos Fixos</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="cards-container"></div>
     </div>
 
     <!-- PAINEL FINANCEIRO -->
@@ -351,6 +362,60 @@
   </div>
 </nav>
 
+<!-- MODAL DE AJUSTE DE LIMITE E FATURA (DATA DE VENCIMENTO TRAVADA) -->
+<div id="cardModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm" id="cardModalTitle">Ajustar Limite / Fatura</h3>
+      <button onclick="document.getElementById('cardModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
+    </div>
+    <form onsubmit="saveCardConfig(event)" class="p-5 space-y-4">
+      <input type="hidden" id="cardId">
+      <div>
+        <label class="lbl">Cartão</label>
+        <input type="text" id="cardName" disabled class="field font-bold">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Limite Total (R$)</label>
+          <input type="number" id="cardLimit" step="0.01" required class="field font-bold text-emerald-600 dark:text-emerald-400">
+        </div>
+        <div>
+          <label class="lbl">Vencimento (Fixo 🔒)</label>
+          <input type="text" id="cardDueDay" disabled class="field text-center font-bold">
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Fatura Atual / Aberta (R$)</label>
+        <input type="number" id="cardCurrentBill" step="0.01" required class="field font-bold text-purple-600 dark:text-purple-400">
+      </div>
+      <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md">Salvar Ajuste</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL DE PAGAMENTO DE FATURA -->
+<div id="payCardModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Pagar Fatura do Cartão</h3>
+      <button onclick="document.getElementById('payCardModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
+    </div>
+    <form onsubmit="confirmPayCard(event)" class="p-5 space-y-4">
+      <input type="hidden" id="payCardId">
+      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+        <p class="text-[10px] text-slate-500 uppercase font-bold" id="payCardNameDesc">Cartão</p>
+        <p class="text-xl font-black text-purple-600" id="payCardAmountDesc">R$ 0,00</p>
+      </div>
+      <div>
+        <label class="lbl">De qual conta vai sair o dinheiro para pagar?</label>
+        <select id="payCardAccount" required class="field font-semibold"></select>
+      </div>
+      <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold shadow-md">Confirmar Pagamento</button>
+    </form>
+  </div>
+</div>
+
 <!-- PAINEL DE GRÁFICOS -->
 <div id="chartsModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
@@ -424,8 +489,6 @@
           <a id="btnTestDrive" href="#" target="_blank" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">Abrir</a>
         </div>
         <p class="text-[10px] text-slate-500 dark:text-slate-400">Dica: Cole o link compartilhável do arquivo da nota salvo no seu Google Drive.</p>
-        <input type="hidden" id="oDocData">
-        <input type="hidden" id="oDocName">
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -561,7 +624,7 @@
       </div>
       <input type="hidden" id="fType" value="income">
       
-      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Cartão de Crédito" required class="field"></div>
+      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Compra no Shopping" required class="field"></div>
       
       <div class="grid grid-cols-2 gap-3">
         <div>
@@ -572,25 +635,14 @@
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl">Conta</label><select id="fAccount" required class="field"></select></div>
+        <div><label class="lbl">Forma / Pagador</label><select id="fAccount" required class="field"></select></div>
         <div>
-          <label class="lbl">Forma Pagto.</label>
-          <select id="fPaymentMethod" class="field text-sm">
-            <option value="Pix">Pix</option>
-            <option value="Débito">Débito</option>
-            <option value="Crédito">Crédito</option>
-            <option value="Dinheiro">Dinheiro</option>
-            <option value="Boleto">Boleto</option>
+          <label class="lbl">Tipo de Lançamento</label>
+          <select id="fStatus" class="field text-sm">
+            <option value="paid">Efetivado (Pago/Recebido)</option>
+            <option value="pending">Pendente (Conta a Pagar)</option>
           </select>
         </div>
-      </div>
-
-      <div>
-        <label class="lbl">Status</label>
-        <select id="fStatus" class="field text-sm">
-          <option value="paid">Pago / Recebido</option>
-          <option value="pending">Pendente (Conta a Pagar / Agenda)</option>
-        </select>
       </div>
 
       <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Lançamento</button>
@@ -746,6 +798,7 @@
 <script>
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
+const STORAGE_CARDS = 'credit_cards_v3';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
@@ -759,6 +812,13 @@ const ACCOUNTS = [
 
 let orders = [];
 let txs = [];
+// Cartões configurados conforme os prints e datas fixas
+let creditCards = [
+  { id: 'riachuelo', name: 'Riachuelo (Mastercard)', limit: 2057.12, currentBill: 144.60, dueDay: 23 },
+  { id: 'htn', name: 'HTN Card (Loja)', limit: 850.00, currentBill: 35.70, dueDay: 25 },
+  { id: 'neon', name: 'NEON (Visa)', limit: 1800.00, currentBill: 0.00, dueDay: 25 },
+  { id: 'pernambucanas', name: 'Pernambucanas / Loja', limit: 100.00, currentBill: 0.00, dueDay: 25 }
+];
 let historyData = { clients: [], cities: [], carriers: [] };
 let userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
 let currentTab = 'orders';
@@ -812,9 +872,7 @@ function saveProfile(e) {
 
 function updateMenuUserDisplay() {
   const el = document.getElementById('menu-user-name');
-  if (el) {
-    el.textContent = `👤 ${userProfile.name || 'Meu Perfil'}`;
-  }
+  if (el) el.textContent = `👤 ${userProfile.name || 'Meu Perfil'}`;
 }
 
 function matchPeriod(dateStr, period) {
@@ -857,6 +915,7 @@ function checkNotifications() {
   
   const today = new Date();
   today.setHours(0,0,0,0);
+  const currentDay = today.getDate();
   
   const pendingAlerts = txs.filter(t => {
     if (t.status === 'paid' || t.type === 'income') return false;
@@ -864,6 +923,23 @@ function checkNotifications() {
     const diffTime = dueDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays <= 3;
+  });
+
+  creditCards.forEach(c => {
+    if (c.currentBill > 0) {
+      let diffDays = c.dueDay - currentDay;
+      if (diffDays < 0) diffDays += 30;
+      if (diffDays <= 5) {
+        pendingAlerts.push({
+          id: 'card_' + c.id,
+          desc: `Fatura Cartão ${c.name}`,
+          amount: c.currentBill,
+          date: 'Vencimento fixo dia ' + c.dueDay,
+          isCard: true,
+          cardId: c.id
+        });
+      }
+    }
   });
 
   if (badge) {
@@ -881,9 +957,20 @@ function checkNotifications() {
 
   if (list) {
     if (pendingAlerts.length === 0) {
-      list.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Nenhum alerta pendente para os próximos 3 dias.</div>';
+      list.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Nenhum alerta pendente para os próximos dias.</div>';
     } else {
-      list.innerHTML = pendingAlerts.map(t => `
+      list.innerHTML = pendingAlerts.map(t => t.isCard ? `
+        <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs">
+          <div class="min-w-0 pr-2">
+            <p class="font-bold text-purple-600 dark:text-purple-400 truncate">${escapeHtml(t.desc)}</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">${t.date}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="font-bold text-slate-700 dark:text-slate-300 block">${money(t.amount)}</span>
+            <button onclick="openPayCardModal('${t.cardId}')" class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded font-bold mt-1 shadow-sm">Pagar Fatura</button>
+          </div>
+        </div>
+      ` : `
         <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs">
           <div class="min-w-0 pr-2">
             <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
@@ -954,7 +1041,7 @@ function switchTab(tab) {
     icon.textContent = '📦'; icon.className = 'w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0';
     renderOrders();
   } else if (tab === 'finance') {
-    title.textContent = 'Painel Financeiro'; sub.textContent = 'Contas · Saldos · Lançamentos';
+    title.textContent = 'Painel Financeiro'; sub.textContent = 'Contas · Cartões · Lançamentos';
     icon.textContent = '💰'; icon.className = 'w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30 shrink-0';
     renderFinance();
   } else if (tab === 'admin') {
@@ -990,6 +1077,7 @@ function switchAdminTab(tab) {
 function saveAll(){
   safeSet(STORAGE_ORDERS, JSON.stringify(orders));
   safeSet(STORAGE_FIN, JSON.stringify(txs));
+  safeSet(STORAGE_CARDS, JSON.stringify(creditCards));
   checkNotifications();
 }
 
@@ -999,6 +1087,9 @@ function load(){
   
   const rawFin = safeGet(STORAGE_FIN);
   if (rawFin) { try { txs = JSON.parse(rawFin) || []; } catch(e){} }
+
+  const rawCards = safeGet(STORAGE_CARDS);
+  if (rawCards) { try { creditCards = JSON.parse(rawCards) || []; } catch(e){} }
 
   const rawHist = safeGet(HISTORY_KEY);
   if (rawHist) { try { historyData = JSON.parse(rawHist); } catch(e){} }
@@ -1034,8 +1125,12 @@ function renderDatalists() {
 }
 
 function populateSelects() {
-  const opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'tFrom', 'tTo', 'payAccountSelect'].forEach(id => {
+  let opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  creditCards.forEach(c => {
+    opts += `<option value="card_${c.id}">Cartão: ${c.name}</option>`;
+  });
+
+  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'tFrom', 'tTo', 'payAccountSelect', 'payCardAccount'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = opts;
   });
@@ -1205,8 +1300,81 @@ function receivePendingLucro(orderId, txId) {
   renderFinance();
 }
 
+function openCardModal(cardId) {
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c) return;
+  document.getElementById('cardModalTitle').textContent = `Ajustar ${c.name}`;
+  document.getElementById('cardId').value = c.id;
+  document.getElementById('cardName').value = c.name;
+  document.getElementById('cardLimit').value = c.limit.toFixed(2);
+  document.getElementById('cardDueDay').value = `Dia ${c.dueDay}`;
+  document.getElementById('cardCurrentBill').value = c.currentBill.toFixed(2);
+  document.getElementById('cardModal').classList.remove('hidden');
+}
+
+function saveCardConfig(e) {
+  e.preventDefault();
+  const id = document.getElementById('cardId').value;
+  const limit = parseFloat(document.getElementById('cardLimit').value) || 0;
+  const currentBill = parseFloat(document.getElementById('cardCurrentBill').value) || 0;
+
+  const c = creditCards.find(x => x.id === id);
+  if (c) {
+    c.limit = limit;
+    c.currentBill = currentBill;
+  }
+
+  saveAll();
+  document.getElementById('cardModal').classList.add('hidden');
+  populateSelects();
+  renderFinance();
+}
+
+function openPayCardModal(cardId) {
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c) return;
+  document.getElementById('payCardId').value = c.id;
+  document.getElementById('payCardNameDesc').textContent = `Fatura: ${c.name}`;
+  document.getElementById('payCardAmountDesc').textContent = money(c.currentBill);
+  document.getElementById('payCardModal').classList.remove('hidden');
+}
+
+function confirmPayCard(e) {
+  e.preventDefault();
+  const cardId = document.getElementById('payCardId').value;
+  const accId = document.getElementById('payCardAccount').value;
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c || c.currentBill <= 0) return;
+
+  const currentBal = getAccountBalance(accId);
+  if (currentBal - c.currentBill < 0) {
+    if (!confirm("Aviso: O pagamento desta fatura deixará o saldo da conta selecionada negativo. Deseja prosseguir?")) {
+      return;
+    }
+  }
+
+  txs.unshift({
+    id: genId(),
+    desc: `Pagamento Fatura ${c.name}`,
+    amount: c.currentBill,
+    type: 'expense',
+    cat: 'Cartão de Crédito',
+    date: todayISO(),
+    createdAt: new Date().toISOString(),
+    accountId: accId,
+    status: 'paid'
+  });
+
+  c.currentBill = 0;
+
+  saveAll();
+  document.getElementById('payCardModal').classList.add('hidden');
+  renderFinance();
+}
+
 function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
+  const cardsContainer = document.getElementById('cards-container');
   const totalBalGlobal = getTotalBankBalance();
 
   accContainer.innerHTML = ACCOUNTS.map(acc => {
@@ -1224,6 +1392,38 @@ function renderFinance() {
             <span class="text-[9px] text-slate-400 font-bold uppercase">Participação</span>
             <span style="${acc.badgeBg}" class="text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center justify-center shadow-xs">${pct}%</span>
           </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  cardsContainer.innerHTML = creditCards.map(c => {
+    const availableLimit = Math.max(0, c.limit - c.currentBill);
+    const usagePct = c.limit > 0 ? Math.min(100, Math.round((c.currentBill / c.limit) * 100)) : 0;
+    return `
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-purple-600 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between h-44">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-[9px] font-extrabold uppercase bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 px-2 py-0.5 rounded">Limite: ${money(c.limit)}</span>
+            <h3 class="font-extrabold text-sm text-slate-900 dark:text-white mt-1 truncate max-w-[200px]">${escapeHtml(c.name)}</h3>
+          </div>
+          <div class="flex gap-1">
+            <button onclick="openCardModal('${c.id}')" title="Ajustar Limite ou Fatura" class="text-slate-400 hover:text-purple-600 p-1 text-sm">✏️</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 my-2">
+          <div class="bg-slate-50 dark:bg-slate-900 p-2 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p class="text-[9px] uppercase font-bold text-slate-400">Fatura Atual</p>
+            <p class="text-sm font-black text-purple-600 dark:text-purple-400 truncate">${money(c.currentBill)}</p>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900 p-2 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p class="text-[9px] uppercase font-bold text-slate-400">Limite Disp.</p>
+            <p class="text-sm font-black text-emerald-600 truncate">${money(availableLimit)}</p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-700/50">
+          <span class="text-[10px] text-slate-500 font-medium">Vencimento Fixo: <b>Dia ${c.dueDay}</b> (${usagePct}%)</span>
+          ${c.currentBill > 0 ? `<button onclick="openPayCardModal('${c.id}')" class="text-[10px] font-bold bg-purple-600 hover:bg-purple-700 text-white px-2.5 py-1 rounded-lg shadow-sm">Pagar Fatura</button>` : `<span class="text-[10px] font-bold text-emerald-600">Quitado</span>`}
         </div>
       </div>
     `;
@@ -1248,7 +1448,7 @@ function renderFinance() {
   list.innerHTML = sorted.map(t => {
     const isInc = t.type === 'income' || t.type === 'transfer_in';
     const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
-    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || creditCards.find(c => 'card_'+c.id === t.accountId)?.name || '?';
     const isPending = t.status === 'pending';
     
     let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
@@ -1257,13 +1457,11 @@ function renderFinance() {
     
     if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-200'; tagName = 'Transfer'; icon = '↔️'; }
     else if (t.cat === 'Vendas') { tagColor = 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300'; tagName = 'Venda'; icon = '💰'; }
-    else if (t.cat === 'Fornecedores') { tagColor = 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'; tagName = 'Custo'; icon = '📦'; }
-    else if (t.cat === 'Logística') { tagColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'; tagName = 'Frete'; icon = '🚚'; }
+    else if (t.cat === 'Cartão de Crédito') { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Cartão'; icon = '💳'; }
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
     const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
-    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-1 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
 
     return `
       <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
@@ -1273,7 +1471,6 @@ function renderFinance() {
         <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 mb-1 flex-wrap">
             <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md ${tagColor}">${tagName}</span>
-            ${payMethodLabel}
             ${pendingLabel}
           </div>
           <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
@@ -1477,7 +1674,6 @@ function openModal(id){
     document.getElementById('oSyncFin').checked = true;
   }
   
-  // Listener para o input do link para exibir o botão de teste rápido
   const linkInput = document.getElementById('oDriveLink');
   linkInput.oninput = function() {
     const val = this.value.trim();
@@ -1591,17 +1787,31 @@ function saveOrder(e){
     }
 
     if (data.pagoMerc && v.meuCustoMerc > 0) {
-      txs.push({
-        id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
-        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value, status: 'paid'
-      });
+      const accOut = document.getElementById('oAccOutMerc').value;
+      if (accOut.startsWith('card_')) {
+        const cId = accOut.replace('card_', '');
+        const cardObj = creditCards.find(x => x.id === cId);
+        if (cardObj) cardObj.currentBill += v.meuCustoMerc;
+      } else {
+        txs.push({
+          id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
+          amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: accOut, status: 'paid'
+        });
+      }
     }
 
     if (data.pagoFrete && v.meuCustoFrete > 0) {
-      txs.push({
-        id: genId(), refId: data.id, desc: `Frete Adiantado - Pedido ${data.pedido}`, 
-        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: 'paid'
-      });
+      const accOutFrete = document.getElementById('oAccOutFrete').value;
+      if (accOutFrete.startsWith('card_')) {
+        const cId = accOutFrete.replace('card_', '');
+        const cardObj = creditCards.find(x => x.id === cId);
+        if (cardObj) cardObj.currentBill += v.meuCustoFrete;
+      } else {
+        txs.push({
+          id: genId(), refId: data.id, desc: `Frete Adiantado - Pedido ${data.pedido}`, 
+          amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid'
+        });
+      }
     }
   }
 
@@ -1646,17 +1856,22 @@ function saveFinTx(e) {
   const amount = parseFloat(document.getElementById('fAmount').value);
   const date = document.getElementById('fDate').value;
   const accId = document.getElementById('fAccount').value;
-  const paymentMethod = document.getElementById('fPaymentMethod').value;
   const status = document.getElementById('fStatus').value;
   
-  const currentBalance = getAccountBalance(accId);
-  if (type === 'expense' && status === 'paid' && currentBalance - amount < 0) {
-    if (!confirm("Aviso: Esta despesa deixará o saldo da conta selecionada negativo. Deseja prosseguir mesmo assim?")) {
-      return;
+  if (accId.startsWith('card_') && type === 'expense' && status === 'paid') {
+    const cId = accId.replace('card_', '');
+    const cardObj = creditCards.find(x => x.id === cId);
+    if (cardObj) cardObj.currentBill += amount;
+  } else {
+    const currentBalance = getAccountBalance(accId);
+    if (type === 'expense' && status === 'paid' && currentBalance - amount < 0) {
+      if (!confirm("Aviso: Esta despesa deixará o saldo da conta selecionada negativo. Deseja prosseguir mesmo assim?")) {
+        return;
+      }
     }
+    txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, status });
   }
 
-  txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, paymentMethod, status });
   saveAll();
   document.getElementById('finModal').classList.add('hidden');
   switchTab('finance');
@@ -1690,11 +1905,11 @@ function saveTransfer(e) {
   const createdAt = new Date().toISOString();
   
   txs.push({ 
-    id: tId, desc: `Transf. para ${ACCOUNTS.find(a=>a.id===to).name}`, 
+    id: tId, desc: `Transf. para ${ACCOUNTS.find(a=>a.id===to)?.name || to}`, 
     amount, type: 'transfer_out', date, createdAt, accountId: from, isTransfer: true, status: 'paid'
   });
   txs.push({ 
-    id: tId + '_in', desc: `Transf. de ${ACCOUNTS.find(a=>a.id===from).name}`, 
+    id: tId + '_in', desc: `Transf. de ${ACCOUNTS.find(a=>a.id===from)?.name || from}`, 
     amount, type: 'transfer_in', date, createdAt, accountId: to, isTransfer: true, status: 'paid'
   });
 
@@ -1789,7 +2004,7 @@ function renderAdminFinance() {
   list.innerHTML = sorted.map(t => {
     const isInc = t.type === 'income' || t.type === 'transfer_in';
     const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
-    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || creditCards.find(c => 'card_'+c.id === t.accountId)?.name || '?';
     const isPending = t.status === 'pending';
     
     let icon = isInc ? '↑' : '↓';
@@ -1797,14 +2012,12 @@ function renderAdminFinance() {
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
     const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
-    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-1 border border-slate-200 dark:border-slate-600 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
 
     return `
       <div class="flex items-center gap-3 px-5 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
         <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isInc ? 'bg-emerald-50 text-emerald-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600')}">${icon}</div>
         <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 flex-wrap mb-0.5">
-            ${payMethodLabel}
             ${pendingLabel}
           </div>
           <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
@@ -1818,13 +2031,7 @@ function renderAdminFinance() {
 
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
-  
-  const weeks = { 
-    '1ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
-    '2ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
-    '3ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
-    '4ª Sem+': {lucro:0, mov:0, desp:0, saldo:0} 
-  };
+  const weeks = { '1ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, '2ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, '3ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, '4ª Sem+': {lucro:0, mov:0, desp:0, saldo:0} };
   
   orders.forEach(o => {
     if (!o.saida) return;
@@ -1834,7 +2041,6 @@ function openChartsModal() {
     if (day <= 7) key = '1ª Sem';
     else if (day <= 14) key = '2ª Sem';
     else if (day <= 21) key = '3ª Sem';
-    
     weeks[key].lucro += v.lucroLiq;
     weeks[key].mov += v.faturamento;
   });
@@ -1846,18 +2052,13 @@ function openChartsModal() {
     if (day <= 7) key = '1ª Sem';
     else if (day <= 14) key = '2ª Sem';
     else if (day <= 21) key = '3ª Sem';
-
-    if (t.type === 'expense') {
-      weeks[key].desp += t.amount;
-    } else if (t.type === 'income') {
-      weeks[key].saldo += t.amount;
-    }
+    if (t.type === 'expense') weeks[key].desp += t.amount;
+    else if (t.type === 'income') weeks[key].saldo += t.amount;
   });
 
   function renderChartBox(title, colorClass, dataKey, barColor) {
     let max = 1;
     Object.keys(weeks).forEach(k => { if (weeks[k][dataKey] > max) max = weeks[k][dataKey]; });
-    
     return `
       <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
         <div class="flex justify-between items-center text-xs font-bold">
@@ -1962,11 +2163,8 @@ function closeReceipt(){ document.getElementById('receiptModal').classList.add('
 document.getElementById('receiptModal').addEventListener('click', e => { if (e.target.id === 'receiptModal') closeReceipt(); });
 
 function printReceipt(type) {
-  if (type === 'admin') {
-    document.body.classList.add('printing-admin');
-  } else {
-    document.body.classList.add('printing-client');
-  }
+  if (type === 'admin') document.body.classList.add('printing-admin');
+  else document.body.classList.add('printing-client');
   window.print();
   setTimeout(() => {
     document.body.classList.remove('printing-admin');
@@ -1974,15 +2172,13 @@ function printReceipt(type) {
   }, 1000);
 }
 
-// BACKUP COM COMPARTILHAMENTO NATIVO DO ANDROID (WhatsApp, E-mail, Drive, Arquivos, etc.)
 async function exportJSON(){
   closeMenu();
-  const data = { userProfile, orders, txs, historyData };
+  const data = { userProfile, orders, txs, creditCards, historyData };
   const jsonStr = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonStr], {type:'application/json'});
   const file = new File([blob], 'backup_dados_gestao.json', {type: 'application/json'});
 
-  // Se o celular suportar compartilhamento nativo, abre o menu com todas as opções (WhatsApp, E-mail, etc.)
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({
@@ -1992,21 +2188,15 @@ async function exportJSON(){
       });
       return;
     } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.log('Compartilhamento cancelado ou falhou, usando método padrão.');
-      } else {
-        return;
-      }
+      if (err.name !== 'AbortError') console.log('Compartilhamento cancelado.');
+      else return;
     }
   }
 
-  // Fallback padrão se o navegador não suportar compartilhamento direto de arquivo
   const a = document.createElement('a'); 
   a.href = URL.createObjectURL(blob); 
   a.download = 'backup_dados_gestao.json';
-  document.body.appendChild(a); 
-  a.click(); 
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
 function exportSystemCode() {
@@ -2016,9 +2206,7 @@ function exportSystemCode() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'sistema_gestao_completo.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
 function importJSON(e){
@@ -2031,6 +2219,7 @@ function importJSON(e){
       if (data.userProfile) { userProfile = data.userProfile; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); }
       if (data.orders) orders = data.orders;
       if (data.txs) txs = data.txs;
+      if (data.creditCards) creditCards = data.creditCards;
       if (data.historyData) historyData = data.historyData;
       saveAll();
       safeSet(HISTORY_KEY, JSON.stringify(historyData));
@@ -2046,7 +2235,7 @@ function importJSON(e){
 function resetData(){
   closeMenu();
   if (!confirm('Apagar TODOS os dados e perfil?')) return;
-  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
+  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(STORAGE_CARDS); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
   location.reload();
 }
 
