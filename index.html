@@ -179,12 +179,12 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
-  <!-- PEDIDOS -->
+  <!-- PEDIDOS (Número "4" Reduzido e Proporcional) -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-32 flex flex-col justify-between">
         <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Pedidos</p>
-        <h3 id="ord-count" class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white truncate">0</h3>
+        <h3 id="ord-count" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white truncate">0</h3>
       </div>
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-32 flex flex-col justify-between">
         <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Investimento</p>
@@ -234,7 +234,7 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (COM BORDAS SUPERIORES COLORIDAS VISÍVEIS) -->
+    <!-- SEÇÃO MINHAS CONTAS (Com Esfera Colorida de Porcentagem) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
@@ -243,17 +243,17 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- PAINEL FINANCEIRO (LADO A LADO COM PROPORÇÃO IGUAL) -->
+    <!-- PAINEL FINANCEIRO (Tamanho Rigorosamente Padronizado com os Bancos) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
         <div onclick="openPatrimonioModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-indigo-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
         </div>
         <div onclick="openPendingLucrosModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-amber-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-36 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-lg sm:text-2xl font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -752,13 +752,13 @@ const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
-// Cores exatas aplicadas com border-top estilo inline ou classes dedicadas para aparecer perfeitamente
+// Contas com suas respectivas cores aplicadas na borda superior e na esfera de porcentagem
 const ACCOUNTS = [
-  { id: 'cash', name: 'Dinheiro em Caixa', style: 'border-top: 6px solid #10b981;' },
-  { id: 'caixa', name: 'Caixa Econômica', style: 'border-top: 6px solid #2563eb;' },
-  { id: 'nubank', name: 'Nubank', style: 'border-top: 6px solid #9333ea;' },
-  { id: 'c6', name: 'C6 Bank', style: 'border-top: 6px solid #334155;' },
-  { id: 'inter', name: 'Inter', style: 'border-top: 6px solid #f97316;' }
+  { id: 'cash', name: 'Dinheiro em Caixa', style: 'border-top: 6px solid #10b981;', badgeBg: 'background-color: rgba(16, 185, 129, 0.15); color: #10b981;' },
+  { id: 'caixa', name: 'Caixa Econômica', style: 'border-top: 6px solid #2563eb;', badgeBg: 'background-color: rgba(37, 99, 235, 0.15); color: #2563eb;' },
+  { id: 'nubank', name: 'Nubank', style: 'border-top: 6px solid #9333ea;', badgeBg: 'background-color: rgba(147, 51, 234, 0.15); color: #9333ea;' },
+  { id: 'c6', name: 'C6 Bank', style: 'border-top: 6px solid #334155;', badgeBg: 'background-color: rgba(51, 65, 85, 0.15); color: #64748b;' },
+  { id: 'inter', name: 'Inter', style: 'border-top: 6px solid #f97316;', badgeBg: 'background-color: rgba(249, 115, 22, 0.15); color: #f97316;' }
 ];
 
 let orders = [];
@@ -1212,7 +1212,7 @@ function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   const totalBalGlobal = getTotalBankBalance();
 
-  // CARROSSEL COM BORDAS COLORIDAS APLICADAS VIA INLINE STYLE PARA APARECER COM PRECISÃO
+  // Renderiza os cards de bancos com a esfera/círculo colorido para a porcentagem
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
@@ -1226,7 +1226,7 @@ function renderFinance() {
           <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight tracking-tight break-all">${money(bal)}</h3>
           <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
             <span class="text-[9px] text-slate-400 font-bold uppercase">Participação</span>
-            <span class="text-[10px] font-extrabold text-brand-600 dark:text-indigo-400">${pct}%</span>
+            <span style="${acc.badgeBg}" class="text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center justify-center shadow-xs">${pct}%</span>
           </div>
         </div>
       </div>
