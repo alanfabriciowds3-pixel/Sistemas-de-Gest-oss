@@ -1,3 +1,27 @@
+Perfeito, entendi a estrutura agora:
+
+· 1º código = modelo/aperfeiçoado (mostra as correções como referência visual)
+· 2º código (este) = código correto/base → é nele que aplico as correções
+
+Vou aplicar as correções de bug (sem adicionar features como notificações, filtro de 30 dias ou histórico mensal que são da versão aperfeiçoada, não correções). Segue o arquivo completo corrigido.
+
+---
+
+Correções aplicadas
+
+# Onde O que foi feito
+1 saveOrder() Ao editar, preserva status e accountId dos lançamentos existentes (antes, dava baixa perdida) e atualiza em vez de recriar
+2 getTotalPendingLucros() Ignora pedidos com syncFin = false — não entram em "A Receber"
+3 openPendingLucrosModal() Mesmo filtro — pedidos sem sync não aparecem no modal
+4 fmtDateTimeTx() Parsing de data YYYY-MM-DD sem fuso (antes, exibia o dia anterior no Brasil)
+5 processDocFile() Valida tamanho (limite 2 MB) — evita estourar localStorage
+6 confirmPayPending() Avisa se o pagamento deixar a conta negativa
+7 saveFinTx() Avisa se despesa paga deixar a conta negativa
+8 saveTransfer() Avisa se a conta origem ficar negativa
+
+---
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
 <head>
@@ -337,6 +361,7 @@
           </label>
         </div>
         <p id="doc-filename" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate hidden">Anexo: <span class="font-bold"></span></p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500">Máx. 2 MB · Para arquivos maiores use o link do Drive.</p>
         <input type="hidden" id="oDocData">
         <input type="hidden" id="oDocName">
       </div>
@@ -663,6 +688,7 @@
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
+const MAX_ATTACHMENT_SIZE = 2 * 1024 * 1024; // 2 MB (correção: limite de anexo)
 
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', color: 'border-emerald-500' },
@@ -686,12 +712,22 @@ function money(v){ return new Intl.NumberFormat('pt-BR',{style:'currency',curren
 function fmtDT(s){ if(!s || !s.includes('T')) return '—'; const [d,t]=s.split('T'); const [y,m,dd]=d.split('-'); return dd+'/'+m+'/'+y+' às '+t; }
 function fmtHora(s){ return s ? s.split('T')[1] : ''; }
 function fmtData(s){ if(!s) return ''; const [y,m,dd]=s.split('T')[0].split('-'); return dd+'/'+m; }
+
+// CORREÇÃO #4: parsing de data sem deslocamento de fuso.
+// 'YYYY-MM-DD' (sem T) NÃO deve ir para new Date() — no Brasil volta 1 dia antes.
 function fmtDateTimeTx(dtStr){ 
   if (!dtStr) return '—';
-  const d = new Date(dtStr);
-  if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
-  return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  if (dtStr.includes('T')) {
+    const d = new Date(dtStr);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
+  }
+  const parts = dtStr.split('T')[0].split('-');
+  if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+  return dtStr;
 }
+
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
@@ -933,9 +969,11 @@ function getTotalBankBalance() {
   return total;
 }
 
+// CORREÇÃO #2: respeitar syncFin. Pedidos sem "Lançar no Financeiro" não entram em "A Receber".
 function getTotalPendingLucros() {
   let total = 0;
   orders.forEach(o => {
+    if (!o.syncFin) return;
     const linked = txs.find(t => t.refId === o.id && t.type === 'income');
     if (!linked || linked.status === 'pending') {
       const v = calcValores(o);
@@ -954,10 +992,12 @@ function openPatrimonioModal() {
   document.getElementById('patrimonioModal').classList.remove('hidden');
 }
 
+// CORREÇÃO #3: mesmo filtro no modal (syncFin).
 function openPendingLucrosModal() {
   const modal = document.getElementById('pendingLucrosModal');
   const list = document.getElementById('pending-lucros-list');
   const pendingOrders = orders.filter(o => {
+    if (!o.syncFin) return false;
     const linked = txs.find(t => t.refId === o.id && t.type === 'income');
     return !linked || linked.status === 'pending';
   });
@@ -1120,12 +1160,21 @@ function payPending(id) {
   document.getElementById('payAccountModal').classList.remove('hidden');
 }
 
+// CORREÇÃO #6: aviso de saldo negativo ao confirmar pagamento.
 function confirmPayPending(e) {
   e.preventDefault();
   const id = document.getElementById('payTxId').value;
   const selectedAccount = document.getElementById('payAccountSelect').value;
   const t = txs.find(x => x.id === id);
   if (!t) return;
+
+  if (t.type === 'expense') {
+    const bal = getAccountBalance(selectedAccount);
+    if (bal - t.amount < 0) {
+      const accName = ACCOUNTS.find(a => a.id === selectedAccount)?.name || selectedAccount;
+      if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(bal - t.amount)}.\n\nDeseja continuar mesmo assim?`)) return;
+    }
+  }
   
   t.status = 'paid';
   t.accountId = selectedAccount;
@@ -1173,9 +1222,15 @@ function delFinTx(id) {
   }
 }
 
+// CORREÇÃO #5: validação de tamanho do anexo (2 MB).
 function processDocFile(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
+    if (file.size > MAX_ATTACHMENT_SIZE) {
+      alert(`Arquivo muito grande (${(file.size/1024/1024).toFixed(1)} MB).\n\nLimite: 2 MB.\nPara arquivos maiores, use o campo "Link (https://...)".`);
+      input.value = '';
+      return;
+    }
     const reader = new FileReader();
     reader.onload = function(e) {
       document.getElementById('oDocData').value = e.target.result;
@@ -1317,6 +1372,8 @@ function updatePreview(){
   elLucro.className = lucroLiq >= 0 ? 'text-emerald-700 dark:text-emerald-400 text-base' : 'text-rose-700 dark:text-rose-400 text-base';
 }
 
+// CORREÇÃO #1 (crítica): preservar status/conta dos lançamentos existentes ao editar.
+// Antes, dava baixa perdida (tx recriado como 'pending').
 function saveOrder(e){
   e.preventDefault();
   const id = document.getElementById('oId').value;
@@ -1360,31 +1417,59 @@ function saveOrder(e){
     orders.unshift(data);
   }
 
-  txs = txs.filter(t => t.refId !== data.id); 
+  // Captura txs existentes do pedido (para preservar status/conta)
+  const oldIncome  = txs.find(t => t.refId === data.id && t.type === 'income' && t.cat === 'Vendas');
+  const oldMerc    = txs.find(t => t.refId === data.id && t.type === 'expense' && t.cat === 'Fornecedores');
+  const oldFrete   = txs.find(t => t.refId === data.id && t.type === 'expense' && t.cat === 'Logística');
+
+  // Remove apenas txs vinculados a este pedido (serão recriados/atualizados abaixo)
+  txs = txs.filter(t => t.refId !== data.id);
 
   if (data.syncFin) {
     const v = calcValores(data);
     const dateStr = data.saida ? data.saida.split('T')[0] : todayISO();
     const createdAtStr = data.saida ? data.saida + ':00' : new Date().toISOString();
     
+    // Income — preserva status e conta se já existia
     if (v.faturamento > 0) {
       txs.push({
-        id: genId(), refId: data.id, desc: `Pedido ${data.pedido} - ${data.cliente}`, 
-        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccIn').value, status: 'pending', paymentMethod: data.paymentMethod
+        id: oldIncome?.id || genId(),
+        refId: data.id,
+        desc: `Pedido ${data.pedido} - ${data.cliente}`, 
+        amount: v.faturamento, type: 'income', cat: 'Vendas',
+        date: oldIncome?.date || dateStr,
+        createdAt: oldIncome?.createdAt || createdAtStr,
+        accountId: oldIncome?.accountId || document.getElementById('oAccIn').value,
+        status: oldIncome?.status === 'paid' ? 'paid' : 'pending',
+        paymentMethod: data.paymentMethod
       });
     }
 
+    // Despesa Mercadoria — preserva status (sempre 'paid' por design)
     if (data.pagoMerc && v.meuCustoMerc > 0) {
       txs.push({
-        id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
-        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutMerc').value, status: 'paid'
+        id: oldMerc?.id || genId(),
+        refId: data.id,
+        desc: `Mercadoria - Pedido ${data.pedido}`, 
+        amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores',
+        date: oldMerc?.date || dateStr,
+        createdAt: oldMerc?.createdAt || createdAtStr,
+        accountId: oldMerc?.accountId || document.getElementById('oAccOutMerc').value,
+        status: 'paid'
       });
     }
 
+    // Despesa Frete — preserva status
     if (data.pagoFrete && v.meuCustoFrete > 0) {
       txs.push({
-        id: genId(), refId: data.id, desc: `Frete Adiantado - Pedido ${data.pedido}`, 
-        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística', date: dateStr, createdAt: createdAtStr, accountId: document.getElementById('oAccOutFrete').value, status: 'paid'
+        id: oldFrete?.id || genId(),
+        refId: data.id,
+        desc: `Frete Adiantado - Pedido ${data.pedido}`, 
+        amount: v.meuCustoFrete, type: 'expense', cat: 'Logística',
+        date: oldFrete?.date || dateStr,
+        createdAt: oldFrete?.createdAt || createdAtStr,
+        accountId: oldFrete?.accountId || document.getElementById('oAccOutFrete').value,
+        status: 'paid'
       });
     }
   }
@@ -1423,6 +1508,8 @@ function setFinType(type) {
     i.className = 'py-2.5 rounded-lg font-bold text-sm transition text-slate-500 hover:text-slate-700';
   }
 }
+
+// CORREÇÃO #7: aviso de saldo negativo ao salvar despesa já paga.
 function saveFinTx(e) {
   e.preventDefault();
   const type = document.getElementById('fType').value;
@@ -1432,6 +1519,14 @@ function saveFinTx(e) {
   const accId = document.getElementById('fAccount').value;
   const paymentMethod = document.getElementById('fPaymentMethod').value;
   const status = document.getElementById('fStatus').value;
+
+  if (type === 'expense' && status === 'paid') {
+    const bal = getAccountBalance(accId);
+    if (bal - amount < 0) {
+      const accName = ACCOUNTS.find(a => a.id === accId)?.name || accId;
+      if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(bal - amount)}.\n\nDeseja continuar?`)) return;
+    }
+  }
   
   txs.unshift({ id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, paymentMethod, status });
   saveAll();
@@ -1447,6 +1542,7 @@ function openTransferModal() {
   document.getElementById('tTo').value = 'cash';
 }
 
+// CORREÇÃO #8: aviso de saldo negativo na conta de origem.
 function saveTransfer(e) {
   e.preventDefault();
   const from = document.getElementById('tFrom').value;
@@ -1455,6 +1551,12 @@ function saveTransfer(e) {
   const date = document.getElementById('tDate').value;
 
   if (from === to) return alert('Escolha contas diferentes.');
+
+  const balFrom = getAccountBalance(from);
+  if (balFrom - amount < 0) {
+    const accName = ACCOUNTS.find(a => a.id === from)?.name || from;
+    if (!confirm(`Atenção: a conta "${accName}" ficará com saldo NEGATIVO de ${money(balFrom - amount)}.\n\nContinuar com a transferência?`)) return;
+  }
 
   const tId = genId();
   const createdAt = new Date().toISOString();
@@ -1700,3 +1802,28 @@ switchTab('orders');
 </script>
 </body>
 </html>
+```
+
+---
+
+Resumo do que mudou (para conferir no seu código)
+
+Em saveOrder() — o trecho txs = txs.filter(t => t.refId !== data.id) continuou existindo, mas agora é precedido da captura de oldIncome, oldMerc e oldFrete. Quando recria, usa oldIncome?.status === 'paid' ? 'paid' : 'pending' e mantém accountId, date e createdAt originais. Resultado: editar um pedido não desfaz mais a baixa.
+
+Em getTotalPendingLucros() — adicionei if (!o.syncFin) return; no topo do forEach.
+
+Em openPendingLucrosModal() — mesmo filtro aplicado no .filter().
+
+Em fmtDateTimeTx() — agora só chama new Date() quando há 'T' na string (ISO completo). Para 'YYYY-MM-DD' puro, faz split manual. Sem mais deslocamento de fuso.
+
+Em processDocFile() — MAX_ATTACHMENT_SIZE (2 MB) validado antes do FileReader. Adicionei também um aviso discreto no modal dizendo "Máx. 2 MB · Para arquivos maiores use o link do Drive".
+
+Em confirmPayPending() — antes de alterar t.status, checa se getAccountBalance(selectedAccount) - t.amount < 0 e pede confirmação.
+
+Em saveFinTx() — mesma checagem, mas só para despesa já paga (type === 'expense' && status === 'paid').
+
+Em saveTransfer() — checa o saldo da conta de origem antes de criar os dois lançamentos.
+
+---
+
+Se quiser, num próximo passo eu aplico também as melhorias PWA reais (manifest.json + Service Worker) ou a migração de anexos para IndexedDB (que resolve de vez o limite de tamanho). Mas isso é evolução, não correção — por isso deixei fora desta entrega.
