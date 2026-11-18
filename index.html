@@ -112,13 +112,14 @@
         <button onclick="toggleMenu(event)" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/50 dark:border-slate-700">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
-        <div id="menu" class="hidden absolute right-0 mt-2 w-60 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 no-print animate-in">
+        <div id="menu" class="hidden absolute right-0 mt-2 w-64 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 no-print animate-in">
           <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 mb-1">
             <p class="text-[10px] uppercase font-bold text-slate-400">Status do Sistema</p>
-            <p class="text-xs text-emerald-500 font-bold flex items-center gap-1 mt-0.5">☁️ Salvo Localmente</p>
+            <p id="menu-user-name" class="text-xs text-brand-600 dark:text-indigo-400 font-extrabold truncate mt-0.5">👤 Usuário Padrão</p>
           </div>
-          <button onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">📥 Exportar Backup</button>
-          <label onclick="closeMenu()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center cursor-pointer">
+          <button onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">🆔 Meu Perfil e Dados</button>
+          <button onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">📥 Exportar Backup</button>
+          <label onclick="closeMenu()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center cursor-pointer gap-2">
             📤 Importar Backup
             <input type="file" accept=".json" onchange="importJSON(event)" class="hidden">
           </label>
@@ -129,6 +130,31 @@
     </div>
   </div>
 </header>
+
+<!-- MODAL DE PERFIL E DADOS PESSOAIS -->
+<div id="profileModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Meu Perfil e Dados Pessoais</h3>
+      <button onclick="closeProfileModal()" class="text-slate-400 text-xl font-bold">×</button>
+    </div>
+    <form onsubmit="saveProfile(event)" class="p-5 space-y-4 text-sm">
+      <div>
+        <label class="lbl">Nome Completo</label>
+        <input type="text" id="pName" placeholder="Seu Nome" required class="field">
+      </div>
+      <div>
+        <label class="lbl">CPF</label>
+        <input type="text" id="pCpf" placeholder="000.000.000-00" class="field">
+      </div>
+      <div>
+        <label class="lbl">RG</label>
+        <input type="text" id="pRg" placeholder="00.000.000-0" class="field">
+      </div>
+      <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Perfil</button>
+    </form>
+  </div>
+</div>
 
 <div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
@@ -152,24 +178,25 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
+  <!-- PEDIDOS (CARDS RIGOROSAMENTE PROPORCIONAIS) -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-24 flex flex-col justify-between">
         <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Pedidos</p>
-        <h3 id="ord-count" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1 truncate">0</h3>
+        <h3 id="ord-count" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white truncate">0</h3>
       </div>
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-24 flex flex-col justify-between">
         <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Investimento</p>
-        <h3 id="ord-inv" class="text-sm sm:text-lg font-extrabold text-slate-700 dark:text-slate-300 mt-1 truncate">R$ 0</h3>
+        <h3 id="ord-inv" class="text-sm sm:text-lg font-extrabold text-slate-700 dark:text-slate-300 truncate">R$ 0</h3>
       </div>
-      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-24 flex flex-col justify-between">
         <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider truncate">Faturamento</p>
-        <h3 id="ord-fat" class="text-sm sm:text-lg font-extrabold text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
+        <h3 id="ord-fat" class="text-sm sm:text-lg font-extrabold text-brand-600 dark:text-brand-400 truncate">R$ 0</h3>
       </div>
-      <div class="bg-gradient-to-br from-white/90 to-emerald-50/90 dark:from-slate-800/90 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm relative overflow-hidden min-w-0">
+      <div class="bg-gradient-to-br from-white/90 to-emerald-50/90 dark:from-slate-800/90 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm relative overflow-hidden min-w-0 h-24 flex flex-col justify-between">
         <div class="absolute -right-2 -bottom-2 text-4xl opacity-10">📈</div>
         <p class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider truncate">Lucro Líq.</p>
-        <h3 id="ord-profit" class="text-sm sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
+        <h3 id="ord-profit" class="text-sm sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400 truncate">R$ 0</h3>
       </div>
     </div>
 
@@ -193,6 +220,7 @@
     </div>
   </div>
 
+  <!-- FINANCEIRO (CARDS RIGOROSAMENTE PROPORCIONAIS) -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -215,15 +243,14 @@
 
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
-      <!-- CARD DE PROPORÇÃO IGUALADA AOS DEMAIS BLOCOS -->
       <div class="grid grid-cols-2 gap-3">
-        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
+        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-24 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-sm sm:text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-sm sm:text-lg font-black text-slate-900 dark:text-white truncate">R$ 0</h3>
         </div>
-        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
+        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-24 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-sm sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-sm sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -241,6 +268,7 @@
     </div>
   </div>
 
+  <!-- ADMINISTRAÇÃO -->
   <div id="view-admin" class="hidden space-y-6 animate-in">
     <div onclick="openChartsModal()" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition">📊</div>
@@ -320,20 +348,20 @@
   </div>
 </nav>
 
-<!-- PAINEL DE GRÁFICOS EM COLUNAS COMPARATIVAS (SEMANAS E MÊS) -->
+<!-- PAINEL COM 4 GRÁFICOS SEGMENTADOS EM COLUNAS COMPARATIVAS (SEMANAS E MÊS) -->
 <div id="chartsModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
       <div class="flex items-center gap-2">
         <span class="text-xl">📊</span>
-        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Evolução e Comparativo Temporal</h3>
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Painel Analítico de Gráficos (Mês Atual)</h3>
       </div>
       <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="text-slate-400 text-2xl font-bold">×</button>
     </div>
     <div class="p-5 overflow-y-auto space-y-6">
-      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo de desempenho financeiro por período (1ª Semana, 2ª Semana, 3ª Semana, 4ª Semana e Fechamento do Mês).</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo temporal por semanas (1ª, 2ª, 3ª e Fechamento do Mês) cobrindo Lucro, Movimentações, Despesas e Saldos.</p>
       
-      <!-- GRÁFICO DE COLUNAS COMPARATIVAS -->
+      <!-- 4 GRÁFICOS SEGMENTADOS -->
       <div id="column-charts-container" class="space-y-6"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
@@ -721,6 +749,7 @@
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const HISTORY_KEY = 'pedidos_history_v1';
+const PROFILE_KEY = 'user_profile_v1';
 
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', color: 'border-emerald-500' },
@@ -733,6 +762,7 @@ const ACCOUNTS = [
 let orders = [];
 let txs = [];
 let historyData = { clients: [], cities: [], carriers: [] };
+let userProfile = { name: 'Usuário Padrão', cpf: '', rg: '' };
 let currentTab = 'orders';
 let currentAdminTab = 'orders';
 
@@ -759,6 +789,35 @@ function safeRemove(k){ try { localStorage.removeItem(k); } catch(e){} }
 function setNow(id){ document.getElementById(id).value = nowLocal(); }
 function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
 function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
+
+function openProfileModal() {
+  closeMenu();
+  document.getElementById('pName').value = userProfile.name || '';
+  document.getElementById('pCpf').value = userProfile.cpf || '';
+  document.getElementById('pRg').value = userProfile.rg || '';
+  document.getElementById('profileModal').classList.remove('hidden');
+}
+function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+
+function saveProfile(e) {
+  e.preventDefault();
+  userProfile = {
+    name: document.getElementById('pName').value.trim(),
+    cpf: document.getElementById('pCpf').value.trim(),
+    rg: document.getElementById('pRg').value.trim()
+  };
+  safeSet(PROFILE_KEY, JSON.stringify(userProfile));
+  updateMenuUserDisplay();
+  closeProfileModal();
+  alert('Perfil e dados pessoais salvos com sucesso!');
+}
+
+function updateMenuUserDisplay() {
+  const el = document.getElementById('menu-user-name');
+  if (el) {
+    el.textContent = `👤 ${userProfile.name || 'Usuário Padrão'}`;
+  }
+}
 
 function matchPeriod(dateStr, period) {
   if (period === 'all' || !dateStr) return true;
@@ -948,6 +1007,11 @@ function load(){
   if (!historyData.clients) historyData.clients = [];
   if (!historyData.cities) historyData.cities = [];
   if (!historyData.carriers) historyData.carriers = [];
+
+  const rawProfile = safeGet(PROFILE_KEY);
+  if (rawProfile) { try { userProfile = JSON.parse(rawProfile); } catch(e){} }
+
+  updateMenuUserDisplay();
   renderDatalists();
   populateSelects();
   checkNotifications();
@@ -1766,12 +1830,16 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// GRÁFICO EM COLUNAS VERTICAIS COMPARATIVAS POR SEMANAS E MÊS
+// 4 GRÁFICOS SEGMENTADOS EM COLUNAS VERTICAIS COMPARATIVAS (SEMANAS E MÊS)
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
   
-  // Agrupar faturamento e lucro por semana do mês atual
-  const weeks = { '1ª Sem': {fat:0, lucro:0}, '2ª Sem': {fat:0, lucro:0}, '3ª Sem': {fat:0, lucro:0}, '4ª Sem+': {fat:0, lucro:0} };
+  const weeks = { 
+    '1ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
+    '2ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
+    '3ª Sem': {lucro:0, mov:0, desp:0, saldo:0}, 
+    '4ª Sem+': {lucro:0, mov:0, desp:0, saldo:0} 
+  };
   
   orders.forEach(o => {
     if (!o.saida) return;
@@ -1782,48 +1850,58 @@ function openChartsModal() {
     else if (day <= 14) key = '2ª Sem';
     else if (day <= 21) key = '3ª Sem';
     
-    weeks[key].fat += v.faturamento;
     weeks[key].lucro += v.lucroLiq;
+    weeks[key].mov += v.faturamento;
   });
 
-  let maxW = 1;
-  Object.values(weeks).forEach(w => {
-    if (w.fat > maxW) maxW = w.fat;
-    if (w.lucro > maxW) maxW = w.lucro;
+  txs.forEach(t => {
+    if (!t.date || t.status === 'pending') return;
+    const day = parseInt(t.date.split('-')[2]);
+    let key = '4ª Sem+';
+    if (day <= 7) key = '1ª Sem';
+    else if (day <= 14) key = '2ª Sem';
+    else if (day <= 21) key = '3ª Sem';
+
+    if (t.type === 'expense') {
+      weeks[key].desp += t.amount;
+    } else if (t.type === 'income') {
+      weeks[key].saldo += t.amount;
+    }
   });
 
-  const weekKeys = Object.keys(weeks);
-  
-  container.innerHTML = `
-    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
-      <div class="flex justify-between items-center text-xs font-bold">
-        <span class="text-indigo-600 dark:text-indigo-400">📊 Comparativo Semanal (Faturamento vs Lucro)</span>
-        <span class="text-slate-400 text-[10px]">Mês Atual</span>
-      </div>
-      
-      <!-- COLUNAS VERTICAIS COMPARATIVAS -->
-      <div class="grid grid-cols-4 gap-2 pt-6 pb-2 h-52 items-end border-b border-slate-200 dark:border-slate-700">
-        ${weekKeys.map(k => {
-          const w = weeks[k];
-          const hFat = Math.max(Math.round((w.fat / maxW) * 130), 8);
-          const hLucro = Math.max(Math.round((w.lucro / maxW) * 130), 8);
-          return `
-            <div class="flex flex-col items-center h-full justify-end gap-1 group">
-              <div class="flex items-end justify-center gap-1 w-full h-full">
-                <div title="Faturamento: ${money(w.fat)}" class="w-3.5 bg-indigo-600 rounded-t transition-all duration-500 hover:opacity-80" style="height: ${hFat}px;"></div>
-                <div title="Lucro: ${money(w.lucro)}" class="w-3.5 bg-emerald-500 rounded-t transition-all duration-500 hover:opacity-80" style="height: ${hLucro}px;"></div>
+  function renderChartBox(title, colorClass, dataKey, barColor) {
+    let max = 1;
+    Object.keys(weeks).forEach(k => { if (weeks[k][dataKey] > max) max = weeks[k][dataKey]; });
+    
+    return `
+      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span class="${colorClass}">${title}</span>
+          <span class="text-slate-400 text-[10px]">Mês Atual</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2 pt-6 pb-2 h-40 items-end border-b border-slate-200 dark:border-slate-700">
+          ${Object.keys(weeks).map(k => {
+            const val = weeks[k][dataKey];
+            const h = Math.max(Math.round((val / max) * 100), 8);
+            return `
+              <div class="flex flex-col items-center h-full justify-end gap-1 group">
+                <div class="flex items-end justify-center w-full h-full">
+                  <div title="${money(val)}" class="w-6 ${barColor} rounded-t transition-all duration-500 hover:opacity-80" style="height: ${h}px;"></div>
+                </div>
+                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300 mt-2">${k}</span>
               </div>
-              <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300 mt-2">${k}</span>
-            </div>
-          `;
-        }).join('')}
+            `;
+          }).join('')}
+        </div>
       </div>
+    `;
+  }
 
-      <div class="flex justify-center gap-6 pt-2 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-        <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-indigo-600 rounded"></span> Faturamento</div>
-        <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-500 rounded"></span> Lucro Líquido</div>
-      </div>
-    </div>
+  container.innerHTML = `
+    ${renderChartBox('📈 1. Gráfico de Lucros Líquidos', 'text-emerald-600 dark:text-emerald-400', 'lucro', 'bg-emerald-500')}
+    ${renderChartBox('🔄 2. Gráfico de Movimentações Financeiras', 'text-indigo-600 dark:text-indigo-400', 'mov', 'bg-indigo-600')}
+    ${renderChartBox('💸 3. Gráfico de Despesas Operacionais', 'text-rose-600 dark:text-rose-400', 'desp', 'bg-rose-500')}
+    ${renderChartBox('💰 4. Gráfico de Receitas e Fluxo de Caixas', 'text-blue-600 dark:text-blue-400', 'saldo', 'bg-blue-500')}
   `;
 
   document.getElementById('chartsModal').classList.remove('hidden');
@@ -1913,7 +1991,7 @@ function printReceipt(type) {
 
 function exportJSON(){
   closeMenu();
-  const data = { orders, txs, historyData };
+  const data = { userProfile, orders, txs, historyData };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_gestao_manual.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -1926,11 +2004,13 @@ function importJSON(e){
   r.onload = ev => {
     try {
       const data = JSON.parse(ev.target.result);
+      if (data.userProfile) { userProfile = data.userProfile; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); }
       if (data.orders) orders = data.orders;
       if (data.txs) txs = data.txs;
       if (data.historyData) historyData = data.historyData;
       saveAll();
       safeSet(HISTORY_KEY, JSON.stringify(historyData));
+      updateMenuUserDisplay();
       renderDatalists();
       alert('Importado com sucesso!');
       switchTab('orders');
@@ -1941,8 +2021,8 @@ function importJSON(e){
 
 function resetData(){
   closeMenu();
-  if (!confirm('Apagar TODOS os dados?')) return;
-  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(HISTORY_KEY);
+  if (!confirm('Apagar TODOS os dados e perfil?')) return;
+  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
   location.reload();
 }
 
