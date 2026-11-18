@@ -27,7 +27,7 @@ brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4
 body {
 font-family: 'Inter', sans-serif;
 -webkit-tap-highlight-color: transparent;
-padding-bottom: 80px;
+padding-bottom: 90px;
 transition: background-color 0.4s ease;
 background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
 background-attachment: fixed;
@@ -43,7 +43,7 @@ background-attachment: fixed;
 .dark .lbl { color:#94a3b8; }
 ​.btn-now { font-size: 10px; text-transform: uppercase; font-weight: 800; color: #4f46e5; background: #e0e7ff; padding: 3px 8px; border-radius: 6px; cursor: pointer; float: right; }
 .dark .btn-now { background: #312e81; color: #a5b4fc; }
-​.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; color: #94a3b8; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+​.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; color: #94a3b8; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .nav-item.active { color: #4f46e5; transform: translateY(-2px); }
 .dark .nav-item.active { color: #818cf8; }
 .nav-item.active svg { stroke-width: 2.5; filter: drop-shadow(0 4px 6px rgba(99,102,241,0.4)); }
@@ -162,30 +162,14 @@ Contas a Pagar
 </div>
 ​<div>
 <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
-<div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition">
 <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Patrimônio Total ℹ️</p>
-<h3 id="fin-patrimonio" class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+<h3 id="fin-patrimonio" class="text-xl font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
 </div>
-<div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-<p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider">A Receber (Lucros)</p>
-<h3 id="fin-pending-lucro" class="text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
-</div>
-<div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-<p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Saldo em Caixa</p>
-<h3 id="fin-balance" class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
-</div>
-<div class="bg-gradient-to-br from-white/90 to-brand-50/90 dark:from-slate-800/90 dark:to-brand-900/20 backdrop-blur-md p-4 rounded-2xl border border-brand-200/60 dark:border-brand-800/50 shadow-sm">
-<p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider">Lucro Líquido</p>
-<h3 id="fin-profit" class="text-lg font-black text-brand-600 dark:text-brand-400 mt-1 truncate">R$ 0</h3>
-</div>
-<div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-<p class="text-[10px] font-bold uppercase text-emerald-500 tracking-wider">Receitas Mês</p>
-<h3 id="fin-income" class="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 truncate">R$ 0</h3>
-</div>
-<div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
-<p class="text-[10px] font-bold uppercase text-rose-500 tracking-wider">Despesas Mês</p>
-<h3 id="fin-expense" class="text-lg font-black text-rose-600 dark:text-rose-400 mt-1 truncate">R$ 0</h3>
+<div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-amber-500 transition">
+<p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider">A Receber (Lucros) ℹ️</p>
+<h3 id="fin-pending-lucro" class="text-xl font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
 </div>
 </div>
 </div>
@@ -292,6 +276,16 @@ Contas a Pagar
 </div>
 <button onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold mt-3">Fechar</button>
 </div>
+</div>
+</div>
+​<!-- MODAL A RECEBER (PESSOAS QUE TÊM QUE PAGAR) -->
+<div id="pendingLucrosModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
+<div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
+<div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50 shrink-0">
+<h3 class="font-bold text-slate-900 dark:text-white text-sm">Valores a Receber (Por Cliente)</h3>
+<button onclick="document.getElementById('pendingLucrosModal').classList.add('hidden')" class="text-slate-400 text-xl">×</button>
+</div>
+<div id="pending-lucros-list" class="p-4 space-y-3 overflow-y-auto flex-1"></div>
 </div>
 </div>
 ​<!-- MODAL PEDIDO -->
@@ -830,6 +824,24 @@ document.getElementById('detReceber').textContent = money(receber);
 document.getElementById('detPatrimonioTotal').textContent = money(bancos + receber);
 document.getElementById('patrimonioModal').classList.remove('hidden');
 }
+​function openPendingLucrosModal() {
+const list = document.getElementById('pending-lucros-list');
+let pendingOrders = orders.filter(o => {
+const linked = txs.find(t => t.refId === o.id && t.type === 'income');
+return !linked || linked.status === 'pending';
+});
+​if (!pendingOrders.length) {
+list.innerHTML = '<p class="text-center text-sm text-slate-400 py-6">Nenhum valor a receber no momento.</p>';
+} else {
+list.innerHTML = pendingOrders.map(o => {
+const v = calcValores(o);
+const linked = txs.find(t => t.refId === o.id && t.type === 'income');
+const accName = ACCOUNTS.find(a => a.id === (linked?.accountId || 'nubank'))?.name || 'Conta';
+return <div class=\"bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center\"> <div class=\"min-w-0 pr-2\"> <p class=\"font-bold text-sm text-slate-900 dark:text-white truncate\">${escapeHtml(o.cliente || 'Sem Cliente')} <span class=\"text-xs font-normal text-slate-400\">(${escapeHtml(o.pedido || 'S/N')})</span></p> <p class=\"text-[11px] text-slate-500 mt-0.5\">Destino: ${accName} · Data: ${fmtDT(o.saida)}</p> </div> <div class=\"text-right shrink-0\"> <p class=\"font-black text-amber-600 dark:text-amber-400 text-sm mb-1.5\">${money(v.lucroLiq)}</p> ${linked ?<button onclick="payPending('${linked.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm">Receber / Baixar</button>: ''} </div> </div>;
+}).join('');
+}
+document.getElementById('pendingLucrosModal').classList.remove('hidden');
+}
 ​function renderFinance() {
 const accContainer = document.getElementById('accounts-container');
 accContainer.innerHTML = ACCOUNTS.map(acc => {
@@ -839,22 +851,8 @@ return <div class=\"account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-
 ​let totalBal = getTotalBankBalance();
 let totalPendingLucros = getTotalPendingLucros();
 let patrimonioTotal = totalBal + totalPendingLucros;
-​let inc = 0, exp = 0, totalProfit = 0;
-const m = todayISO().slice(0,7);
-​txs.forEach(t => {
-if (t.cat === 'Vendas') totalProfit += t.amount;
-else if (t.cat === 'Fornecedores' || t.cat === 'Logística') totalProfit -= t.amount;
-​if (t.date.startsWith(m) && t.status !== 'pending') {
-if (t.type === 'income' && !t.isAdjustment) inc += t.amount;
-else if (t.type === 'expense' && !t.isAdjustment) exp += t.amount;
-}
-});
 ​document.getElementById('fin-patrimonio').textContent = money(patrimonioTotal);
 document.getElementById('fin-pending-lucro').textContent = money(totalPendingLucros);
-document.getElementById('fin-balance').textContent = money(totalBal);
-document.getElementById('fin-profit').textContent = money(totalProfit);
-document.getElementById('fin-income').textContent = money(inc);
-document.getElementById('fin-expense').textContent = money(exp);
 ​const list = document.getElementById('fin-list');
 const sorted = txs.slice().sort((a,b) => {
 if (a.date !== b.date) return b.date.localeCompare(a.date);
@@ -898,6 +896,7 @@ if (!confirm(Confirmar recebimento/pagamento de ${money(t.amount)} para "${t.des
 ​t.status = 'paid';
 saveAll();
 document.getElementById('pendingModal').classList.add('hidden');
+document.getElementById('pendingLucrosModal').classList.add('hidden');
 switchTab('finance');
 }
 ​function openEditBalance(accId) {
