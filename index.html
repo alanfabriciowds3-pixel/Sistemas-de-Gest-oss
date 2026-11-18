@@ -645,7 +645,7 @@
   </div>
 </div>
 
-<!-- MODAL DE NOVO LANÇAMENTO (PADRÃO PESSOAL / PRÓ-LABORE) -->
+<!-- MODAL DE NOVO LANÇAMENTO -->
 <div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -859,7 +859,7 @@ let creditCards = [
 
 let historyData = { clients: [], cities: [], carriers: [] };
 let userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
-const PRO_LABORE_TETO = 4000.00; // Teto mensal padrão para alerta pessoal
+const PRO_LABORE_TETO = 4000.00;
 let currentTab = 'orders';
 let currentAdminTab = 'orders';
 
@@ -877,7 +877,7 @@ function fmtDateTimeTx(dtStr){
   if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
   return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;n'}[c])); }
 
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
@@ -964,7 +964,6 @@ function checkNotifications() {
     return diffDays <= 3;
   });
 
-  // Cálculo do Pró-Labore consumido no mês atual
   let totalPessoalMes = 0;
   const currentYearMonth = todayISO().slice(0, 7);
   txs.forEach(t => {
@@ -2130,7 +2129,7 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// PAINEL ANALÍTICO DE GRÁFICOS SEMANAIS
+// PAINEL ANALÍTICO DE GRÁFICOS SEMANAIS (CORRIGIDO PARA CARTÕES E DEMAIS)
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
   const weeks = { 
@@ -2152,6 +2151,7 @@ function openChartsModal() {
     weeks[key].mov += v.faturamento;
   });
 
+  // Varredura rigorosa das transações e faturas de cartões
   txs.forEach(t => {
     if (!t.date || t.status === 'pending') return;
     const day = parseInt(t.date.split('-')[2]);
@@ -2160,14 +2160,27 @@ function openChartsModal() {
     else if (day <= 14) key = '2ª Sem';
     else if (day <= 21) key = '3ª Sem';
     
-    if (t.isCardExpense || t.cat === 'Pagamento Cartão') {
+    if (t.isCardExpense || t.cat === 'Pagamento Cartão' || (t.accountId && t.accountId.startsWith('card_'))) {
       weeks[key].cartao += t.amount;
     } else if (t.cat === 'Pessoal') {
       weeks[key].pessoal += t.amount;
     } else if (t.type === 'expense') {
-      weeks[key].pessoal += t.amount; // Tudo que não for trabalho/pedido vira consumo pessoal por padrão
+      weeks[key].pessoal += t.amount;
     } else if (t.type === 'income') {
       weeks[key].saldo += t.amount;
+    }
+  });
+
+  // Soma também o valor atual da fatura aberta dos cartões na semana atual para refletir o uso real
+  const todayDay = new Date().getDate();
+  let currentWeekKey = '4ª Sem+';
+  if (todayDay <= 7) currentWeekKey = '1ª Sem';
+  else if (todayDay <= 14) currentWeekKey = '2ª Sem';
+  else if (todayDay <= 21) currentWeekKey = '3ª Sem';
+
+  creditCards.forEach(c => {
+    if (c.currentBill > 0) {
+      weeks[currentWeekKey].cartao += c.currentBill;
     }
   });
 
@@ -2186,7 +2199,7 @@ function openChartsModal() {
             const h = Math.max(Math.round((val / max) * 90), 8);
             return `
               <div class="flex flex-col items-center h-full justify-end gap-1 group">
-                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 truncate max-w-full">${val > 0 ? money(val).replace(',00','') : '—'}</span>
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 truncate max-w-full">${val > 0 ? money(val) : '—'}</span>
                 <div class="flex items-end justify-center w-full">
                   <div title="${money(val)}" class="w-6 ${barColor} rounded-t transition-all duration-500 hover:opacity-80" style="height: ${h}px;"></div>
                 </div>
