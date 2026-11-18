@@ -221,7 +221,7 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO (CARDS 100% PROPORCIONAIS E ALINHADOS) -->
+  <!-- FINANCEIRO (CARROSSEL HORIZONTAL ORIGINAL + NÚMEROS MAIORES + LINHAS COLORIDAS NO TOPO) -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -234,26 +234,26 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (GRID RIGOROSAMENTE ALINHADO IGUAL AOS PEDIDOS) -->
+    <!-- SEÇÃO MINHAS CONTAS (CARROSSEL HORIZONTAL ORIGINAL COM LINHA COLORIDA NO TOPO E NÚMEROS MAIORES) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
         <button onclick="openTransferModal()" class="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-400 px-3 py-1.5 rounded-lg transition hover:bg-brand-100">↔️ Transferir</button>
       </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="accounts-container"></div>
+      <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- PAINEL FINANCEIRO (CARDS PADRONIZADOS EM ALTURA E LARGURA) -->
+    <!-- PAINEL FINANCEIRO (COM OS 2 CARDS IGUAL ANTES) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
-        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-24 flex flex-col justify-between">
+        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-sm sm:text-lg font-black text-slate-900 dark:text-white truncate">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white truncate mt-2">R$ 0</h3>
         </div>
-        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-24 flex flex-col justify-between">
+        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-sm sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 truncate mt-2">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -755,11 +755,11 @@ const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
 const ACCOUNTS = [
-  { id: 'cash', name: 'Dinheiro em Caixa', color: 'border-emerald-500' },
-  { id: 'caixa', name: 'Caixa Econômica', color: 'border-blue-600' },
-  { id: 'nubank', name: 'Nubank', color: 'border-purple-600' },
-  { id: 'c6', name: 'C6 Bank', color: 'border-slate-800 dark:border-slate-600' },
-  { id: 'inter', name: 'Inter', color: 'border-orange-500' }
+  { id: 'cash', name: 'Dinheiro em Caixa', border: 'border-t-4 border-emerald-500' },
+  { id: 'caixa', name: 'Caixa Econômica', border: 'border-t-4 border-blue-600' },
+  { id: 'nubank', name: 'Nubank', border: 'border-t-4 border-purple-600' },
+  { id: 'c6', name: 'C6 Bank', border: 'border-t-4 border-slate-800 dark:border-slate-600' },
+  { id: 'inter', name: 'Inter', border: 'border-t-4 border-orange-500' }
 ];
 
 let orders = [];
@@ -1213,17 +1213,18 @@ function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   const totalBalGlobal = getTotalBankBalance();
 
+  // CARROSSEL HORIZONTAL ORIGINAL COM LINHAS COLORIDAS NO TOPO E NÚMEROS MAIORES
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-2 ${acc.color} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden min-w-0 h-24 flex flex-col justify-between">
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl ${acc.border} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-44 h-28 flex flex-col justify-between">
         <div class="flex justify-between items-start gap-1">
           <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
-        <div class="flex items-center justify-between gap-1">
-          <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+        <div class="flex items-end justify-between gap-1">
+          <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
           <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 text-center leading-none">
             ${pct}%
           </div>
