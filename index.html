@@ -131,7 +131,7 @@
   </div>
 </header>
 
-<!-- MODAL DE PERFIL (DADOS SENSÍVEIS PRIVADOS) -->
+<!-- MODAL DE PERFIL -->
 <div id="profileModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
@@ -179,7 +179,7 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
-  <!-- PEDIDOS (CARDS RIGOROSAMENTE PROPORCIONAIS) -->
+  <!-- PEDIDOS -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0 h-24 flex flex-col justify-between">
@@ -221,7 +221,7 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO (CARROSSEL HORIZONTAL ORIGINAL + NÚMEROS MAIORES + LINHAS COLORIDAS NO TOPO) -->
+  <!-- FINANCEIRO (CARROSSEL COM AS CORES NO TOPO + PAINEL FINANCEIRO COM CARDS EXATAMENTE NA MESMA PROPORÇÃO) -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -234,7 +234,7 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (CARROSSEL HORIZONTAL ORIGINAL COM LINHA COLORIDA NO TOPO E NÚMEROS MAIORES) -->
+    <!-- SEÇÃO MINHAS CONTAS (CARROSSEL COM AS CORES NO TOPO EXPLICITAS E TAMANHO CORRETO) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
@@ -243,17 +243,17 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- PAINEL FINANCEIRO (COM OS 2 CARDS IGUAL ANTES) -->
+    <!-- PAINEL FINANCEIRO (COM OS 2 CARDS NA MESMA ALTURA E LARGURA PROPORCIONAL DOS BANCOS) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
-        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
+        <div onclick="openPatrimonioModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-indigo-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-32 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white truncate mt-2">R$ 0</h3>
+          <h3 id="fin-patrimonio" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white truncate mt-1">R$ 0</h3>
         </div>
-        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
+        <div onclick="openPendingLucrosModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-4 border-amber-500 border-x border-b border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0 h-32 flex flex-col justify-between">
           <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 truncate mt-2">R$ 0</h3>
+          <h3 id="fin-pending-lucro" class="text-lg sm:text-2xl font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0</h3>
         </div>
       </div>
     </div>
@@ -351,7 +351,7 @@
   </div>
 </nav>
 
-<!-- PAINEL COM 4 GRÁFICOS SEGMENTADOS EM COLUNAS COMPARATIVAS (SEMANAS E MÊS) -->
+<!-- PAINEL DE GRÁFICOS -->
 <div id="chartsModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -362,9 +362,7 @@
       <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="text-slate-400 text-2xl font-bold">×</button>
     </div>
     <div class="p-5 overflow-y-auto space-y-6">
-      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo temporal por semanas (1ª, 2ª, 3ª e Fechamento do Mês) cobrindo Lucro, Movimentações, Despesas e Saldos.</p>
-      
-      <!-- 4 GRÁFICOS SEGMENTADOS -->
+      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo temporal por semanas cobrindo Lucro, Movimentações, Despesas e Saldos.</p>
       <div id="column-charts-container" class="space-y-6"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
@@ -1213,12 +1211,12 @@ function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   const totalBalGlobal = getTotalBankBalance();
 
-  // CARROSSEL HORIZONTAL ORIGINAL COM LINHAS COLORIDAS NO TOPO E NÚMEROS MAIORES
+  // CARROSSEL HORIZONTAL COM CORES EXPLICITAS NO TOPO E ALTURA CORRETA (h-32)
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl ${acc.border} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-44 h-28 flex flex-col justify-between">
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl ${acc.border} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden shrink-0 w-44 h-32 flex flex-col justify-between">
         <div class="flex justify-between items-start gap-1">
           <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
