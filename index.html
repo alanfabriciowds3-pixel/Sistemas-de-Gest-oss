@@ -55,7 +55,6 @@
   
   .scroll-x { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 10px; scrollbar-width: none; }
   .scroll-x::-webkit-scrollbar { display: none; }
-  .account-card { min-width: 165px; flex-shrink: 0; }
 
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   .animate-in { animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -114,11 +113,12 @@
         </button>
         <div id="menu" class="hidden absolute right-0 mt-2 w-64 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 no-print animate-in">
           <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 mb-1">
-            <p class="text-[10px] uppercase font-bold text-slate-400">Status do Sistema</p>
-            <p id="menu-user-name" class="text-xs text-brand-600 dark:text-indigo-400 font-extrabold truncate mt-0.5">👤 Usuário Padrão</p>
+            <p class="text-[10px] uppercase font-bold text-slate-400">Perfil Ativo</p>
+            <p id="menu-user-name" class="text-xs text-brand-600 dark:text-indigo-400 font-extrabold truncate mt-0.5">👤 Usuário</p>
           </div>
-          <button onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">🆔 Meu Perfil e Dados</button>
-          <button onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">📥 Exportar Backup</button>
+          <button onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">🆔 Configurar Meu Perfil</button>
+          <button onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">📥 Exportar Dados (Backup JSON)</button>
+          <button onclick="exportSystemCode()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-brand-600 dark:text-indigo-400 font-bold">💾 Baixar Sistema Completo (.html)</button>
           <label onclick="closeMenu()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center cursor-pointer gap-2">
             📤 Importar Backup
             <input type="file" accept=".json" onchange="importJSON(event)" class="hidden">
@@ -131,24 +131,25 @@
   </div>
 </header>
 
-<!-- MODAL DE PERFIL E DADOS PESSOAIS -->
+<!-- MODAL DE PERFIL (DADOS SENSÍVEIS PRIVADOS) -->
 <div id="profileModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
-      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Meu Perfil e Dados Pessoais</h3>
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Meu Perfil (Uso Privado)</h3>
       <button onclick="closeProfileModal()" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <form onsubmit="saveProfile(event)" class="p-5 space-y-4 text-sm">
+      <p class="text-[11px] text-slate-500">Estes dados (CPF e RG) ficam salvos de forma segura apenas para seu controle e não aparecem publicamente na tela.</p>
       <div>
-        <label class="lbl">Nome Completo</label>
+        <label class="lbl">Nome / Apelido</label>
         <input type="text" id="pName" placeholder="Seu Nome" required class="field">
       </div>
       <div>
-        <label class="lbl">CPF</label>
+        <label class="lbl">CPF (Privado)</label>
         <input type="text" id="pCpf" placeholder="000.000.000-00" class="field">
       </div>
       <div>
-        <label class="lbl">RG</label>
+        <label class="lbl">RG (Privado)</label>
         <input type="text" id="pRg" placeholder="00.000.000-0" class="field">
       </div>
       <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Perfil</button>
@@ -220,7 +221,7 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO (CARDS RIGOROSAMENTE PROPORCIONAIS) -->
+  <!-- FINANCEIRO (CARDS 100% PROPORCIONAIS E ALINHADOS) -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -233,14 +234,16 @@
       </button>
     </div>
 
+    <!-- SEÇÃO MINHAS CONTAS (GRID RIGOROSAMENTE ALINHADO IGUAL AOS PEDIDOS) -->
     <div>
       <div class="flex justify-between items-end mb-2 px-1">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Minhas Contas</h2>
         <button onclick="openTransferModal()" class="text-xs font-bold text-brand-600 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-400 px-3 py-1.5 rounded-lg transition hover:bg-brand-100">↔️ Transferir</button>
       </div>
-      <div class="scroll-x" id="accounts-container"></div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="accounts-container"></div>
     </div>
 
+    <!-- PAINEL FINANCEIRO (CARDS PADRONIZADOS EM ALTURA E LARGURA) -->
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
@@ -762,7 +765,7 @@ const ACCOUNTS = [
 let orders = [];
 let txs = [];
 let historyData = { clients: [], cities: [], carriers: [] };
-let userProfile = { name: 'Usuário Padrão', cpf: '', rg: '' };
+let userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
 let currentTab = 'orders';
 let currentAdminTab = 'orders';
 
@@ -792,7 +795,7 @@ function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
 
 function openProfileModal() {
   closeMenu();
-  document.getElementById('pName').value = userProfile.name || '';
+  document.getElementById('pName').value = userProfile.name === 'Meu Perfil' ? '' : userProfile.name;
   document.getElementById('pCpf').value = userProfile.cpf || '';
   document.getElementById('pRg').value = userProfile.rg || '';
   document.getElementById('profileModal').classList.remove('hidden');
@@ -802,20 +805,20 @@ function closeProfileModal() { document.getElementById('profileModal').classList
 function saveProfile(e) {
   e.preventDefault();
   userProfile = {
-    name: document.getElementById('pName').value.trim(),
+    name: document.getElementById('pName').value.trim() || 'Meu Perfil',
     cpf: document.getElementById('pCpf').value.trim(),
     rg: document.getElementById('pRg').value.trim()
   };
   safeSet(PROFILE_KEY, JSON.stringify(userProfile));
   updateMenuUserDisplay();
   closeProfileModal();
-  alert('Perfil e dados pessoais salvos com sucesso!');
+  alert('Perfil salvo com sucesso!');
 }
 
 function updateMenuUserDisplay() {
   const el = document.getElementById('menu-user-name');
   if (el) {
-    el.textContent = `👤 ${userProfile.name || 'Usuário Padrão'}`;
+    el.textContent = `👤 ${userProfile.name || 'Meu Perfil'}`;
   }
 }
 
@@ -1214,14 +1217,14 @@ function renderFinance() {
     const bal = getAccountBalance(acc.id);
     const pct = totalBalGlobal > 0 ? Math.round((bal / totalBalGlobal) * 100) : 0;
     return `
-      <div class="account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-2 ${acc.color} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
-        <div class="flex justify-between items-start mt-0.5 gap-1">
-          <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">${acc.name}</p>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-4 rounded-2xl border-t-2 ${acc.color} border-x border-b border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden min-w-0 h-24 flex flex-col justify-between">
+        <div class="flex justify-between items-start gap-1">
+          <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
-        <div class="mt-2 flex items-center justify-between gap-1">
-          <h3 class="text-xs sm:text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
-          <div class="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 text-center leading-none">
+        <div class="flex items-center justify-between gap-1">
+          <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+          <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 text-center leading-none">
             ${pct}%
           </div>
         </div>
@@ -1830,7 +1833,6 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// 4 GRÁFICOS SEGMENTADOS EM COLUNAS VERTICAIS COMPARATIVAS (SEMANAS E MÊS)
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
   
@@ -1993,8 +1995,20 @@ function exportJSON(){
   closeMenu();
   const data = { userProfile, orders, txs, historyData };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_gestao_manual.json';
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_dados_gestao.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function exportSystemCode() {
+  closeMenu();
+  const htmlContent = document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sistema_gestao_completo.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 function importJSON(e){
