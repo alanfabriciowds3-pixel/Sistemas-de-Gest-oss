@@ -89,7 +89,6 @@
     <div class="flex items-center gap-3 min-w-0 flex-1">
       <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0">📦</div>
       <div class="min-w-0 flex-1 pr-2">
-        <!-- TÍTULO AMPLO SEM CORTES -->
         <h1 id="header-title" class="text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Controle de Pedidos</h1>
         <p id="header-subtitle" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Rastreio · Valores · Lucro</p>
       </div>
@@ -131,7 +130,6 @@
   </div>
 </header>
 
-<!-- NOTIFICAÇÕES CENTRALIZADAS -->
 <div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -154,7 +152,6 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
-  <!-- PEDIDOS -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm min-w-0">
@@ -196,7 +193,6 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -219,6 +215,7 @@
 
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
+      <!-- CARD DE PROPORÇÃO IGUALADA AOS DEMAIS BLOCOS -->
       <div class="grid grid-cols-2 gap-3">
         <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
           <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
@@ -244,9 +241,7 @@
     </div>
   </div>
 
-  <!-- ADMINISTRAÇÃO -->
   <div id="view-admin" class="hidden space-y-6 animate-in">
-    <!-- CARD CLICÁVEL DE RESUMO GERAL QUE ABRE OS GRÁFICOS -->
     <div onclick="openChartsModal()" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition">📊</div>
       <div class="flex justify-between items-center mb-4">
@@ -308,7 +303,6 @@
 
 </main>
 
-<!-- Barra de Navegação Inferior -->
 <nav class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)] no-print transition-colors duration-300">
   <div class="max-w-5xl mx-auto flex">
     <div id="nav-orders" onclick="switchTab('orders')" class="nav-item active">
@@ -326,19 +320,21 @@
   </div>
 </nav>
 
-<!-- MODAL DE GRÁFICOS ANALÍTICOS (ABERTO AO CLICAR NO CARD DE RESUMO) -->
+<!-- PAINEL DE GRÁFICOS EM COLUNAS COMPARATIVAS (SEMANAS E MÊS) -->
 <div id="chartsModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
       <div class="flex items-center gap-2">
         <span class="text-xl">📊</span>
-        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Painel Analítico e Gráficos</h3>
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Evolução e Comparativo Temporal</h3>
       </div>
       <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="text-slate-400 text-2xl font-bold">×</button>
     </div>
-    <div class="p-5 overflow-y-auto space-y-5">
-      <p class="text-xs text-slate-500 dark:text-slate-400">Visão gráfica completa e comparativa das operações, faturamento, custos e lucros do seu negócio.</p>
-      <div id="charts-container" class="space-y-4"></div>
+    <div class="p-5 overflow-y-auto space-y-6">
+      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo de desempenho financeiro por período (1ª Semana, 2ª Semana, 3ª Semana, 4ª Semana e Fechamento do Mês).</p>
+      
+      <!-- GRÁFICO DE COLUNAS COMPARATIVAS -->
+      <div id="column-charts-container" class="space-y-6"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
       <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl text-sm font-bold shadow-md">Fechar Painel</button>
@@ -346,7 +342,6 @@
   </div>
 </div>
 
-<!-- MODAIS -->
 <div id="patrimonioModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
@@ -1771,70 +1766,62 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// GERAÇÃO DOS GRÁFICOS ANALÍTICOS AO CLICAR NO CARD DE RESUMO
+// GRÁFICO EM COLUNAS VERTICAIS COMPARATIVAS POR SEMANAS E MÊS
 function openChartsModal() {
-  const container = document.getElementById('charts-container');
+  const container = document.getElementById('column-charts-container');
   
-  let totalFat = 0, totalProfit = 0, totalExpenses = 0, totalCustosMerc = 0;
+  // Agrupar faturamento e lucro por semana do mês atual
+  const weeks = { '1ª Sem': {fat:0, lucro:0}, '2ª Sem': {fat:0, lucro:0}, '3ª Sem': {fat:0, lucro:0}, '4ª Sem+': {fat:0, lucro:0} };
+  
   orders.forEach(o => {
+    if (!o.saida) return;
+    const day = parseInt(o.saida.split('T')[0].split('-')[2]);
     const v = calcValores(o);
-    totalFat += v.faturamento;
-    totalProfit += v.lucroLiq;
-    totalCustosMerc += v.meuCustoMerc + v.meuCustoFrete;
+    let key = '4ª Sem+';
+    if (day <= 7) key = '1ª Sem';
+    else if (day <= 14) key = '2ª Sem';
+    else if (day <= 21) key = '3ª Sem';
+    
+    weeks[key].fat += v.faturamento;
+    weeks[key].lucro += v.lucroLiq;
   });
 
-  txs.forEach(t => {
-    if (t.type === 'expense' && t.status !== 'pending' && !t.refId) {
-      totalExpenses += t.amount;
-    }
+  let maxW = 1;
+  Object.values(weeks).forEach(w => {
+    if (w.fat > maxW) maxW = w.fat;
+    if (w.lucro > maxW) maxW = w.lucro;
   });
 
-  const maxVal = Math.max(totalFat, totalProfit, totalCustosMerc, totalExpenses, 1);
-  const pFat = Math.round((totalFat / maxVal) * 100);
-  const pProfit = Math.round((totalProfit / maxVal) * 100);
-  const pCustos = Math.round((totalCustosMerc / maxVal) * 100);
-  const pExp = Math.round((totalExpenses / maxVal) * 100);
-
+  const weekKeys = Object.keys(weeks);
+  
   container.innerHTML = `
-    <div class="space-y-4">
-      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
-        <div class="flex justify-between items-center text-xs font-bold">
-          <span class="text-indigo-600 dark:text-indigo-400">💰 Faturamento Total</span>
-          <span class="text-slate-800 dark:text-white">${money(totalFat)}</span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
-          <div class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: ${pFat}%"></div>
-        </div>
+    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+      <div class="flex justify-between items-center text-xs font-bold">
+        <span class="text-indigo-600 dark:text-indigo-400">📊 Comparativo Semanal (Faturamento vs Lucro)</span>
+        <span class="text-slate-400 text-[10px]">Mês Atual</span>
+      </div>
+      
+      <!-- COLUNAS VERTICAIS COMPARATIVAS -->
+      <div class="grid grid-cols-4 gap-2 pt-6 pb-2 h-52 items-end border-b border-slate-200 dark:border-slate-700">
+        ${weekKeys.map(k => {
+          const w = weeks[k];
+          const hFat = Math.max(Math.round((w.fat / maxW) * 130), 8);
+          const hLucro = Math.max(Math.round((w.lucro / maxW) * 130), 8);
+          return `
+            <div class="flex flex-col items-center h-full justify-end gap-1 group">
+              <div class="flex items-end justify-center gap-1 w-full h-full">
+                <div title="Faturamento: ${money(w.fat)}" class="w-3.5 bg-indigo-600 rounded-t transition-all duration-500 hover:opacity-80" style="height: ${hFat}px;"></div>
+                <div title="Lucro: ${money(w.lucro)}" class="w-3.5 bg-emerald-500 rounded-t transition-all duration-500 hover:opacity-80" style="height: ${hLucro}px;"></div>
+              </div>
+              <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300 mt-2">${k}</span>
+            </div>
+          `;
+        }).join('')}
       </div>
 
-      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
-        <div class="flex justify-between items-center text-xs font-bold">
-          <span class="text-emerald-600 dark:text-emerald-400">📈 Lucro Líquido Real</span>
-          <span class="text-slate-800 dark:text-white">${money(totalProfit)}</span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
-          <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: ${pProfit}%"></div>
-        </div>
-      </div>
-
-      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
-        <div class="flex justify-between items-center text-xs font-bold">
-          <span class="text-amber-600 dark:text-amber-400">📦 Custos de Mercadorias e Fretes</span>
-          <span class="text-slate-800 dark:text-white">${money(totalCustosMerc)}</span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
-          <div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: ${pCustos}%"></div>
-        </div>
-      </div>
-
-      <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
-        <div class="flex justify-between items-center text-xs font-bold">
-          <span class="text-rose-600 dark:text-rose-400">💸 Despesas Operacionais Avulsas</span>
-          <span class="text-slate-800 dark:text-white">${money(totalExpenses)}</span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
-          <div class="bg-rose-500 h-full rounded-full transition-all duration-500" style="width: ${pExp}%"></div>
-        </div>
+      <div class="flex justify-center gap-6 pt-2 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-indigo-600 rounded"></span> Faturamento</div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-500 rounded"></span> Lucro Líquido</div>
       </div>
     </div>
   `;
