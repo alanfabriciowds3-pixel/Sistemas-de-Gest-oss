@@ -55,7 +55,7 @@
   
   .scroll-x { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 10px; scrollbar-width: none; }
   .scroll-x::-webkit-scrollbar { display: none; }
-  .account-card { min-width: 150px; flex-shrink: 0; }
+  .account-card { min-width: 165px; flex-shrink: 0; }
 
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   .animate-in { animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -79,30 +79,26 @@
 <body class="text-slate-800 dark:text-slate-200 min-h-screen flex flex-col">
 
 <header class="glass sticky top-0 z-30 shadow-sm no-print">
-  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30">📦</div>
-      <div>
-        <h1 id="header-title" class="text-base font-extrabold text-slate-900 dark:text-white leading-tight">Gestão Premium</h1>
-        <p id="header-subtitle" class="text-xs text-slate-500 dark:text-slate-400 font-medium">Pedidos · Finanças · Inteligência</p>
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
+    <div class="flex items-center gap-3 min-w-0">
+      <div id="header-icon" class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0">📦</div>
+      <div class="min-w-0">
+        <h1 id="header-title" class="text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Gestão Premium</h1>
+        <p id="header-subtitle" class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Pedidos · Finanças · Inteligência</p>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <!-- Botão de Notificações Inteligente (Sininho) -->
+    <div class="flex items-center gap-1.5 shrink-0">
       <div class="relative">
         <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition shadow-sm border border-slate-200/50 dark:border-slate-700 relative">
           🔔
           <span id="notification-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold shadow-sm" style="display: none;">0</span>
         </button>
-        <!-- Painel Flutuante do Sininho -->
         <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-72 glass rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-50 animate-in">
           <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 font-bold text-xs text-slate-700 dark:text-slate-200 flex justify-between items-center">
             <span>Alertas e Vencimentos</span>
-            <span class="text-[10px] text-slate-400 font-normal">Próximos dias</span>
+            <span class="text-[10px] text-slate-400 font-normal">Próximos 3 dias</span>
           </div>
-          <div id="notification-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50">
-            <!-- Dinâmico -->
-          </div>
+          <div id="notification-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50"></div>
         </div>
       </div>
 
@@ -111,7 +107,7 @@
         <svg id="icon-moon" class="" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       
-      <button id="btn-new" onclick="openModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-brand-500/30 active:scale-95 transition">+ Pedido</button>
+      <button id="btn-new" onclick="openModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-brand-500/30 active:scale-95 transition">+ Pedido</button>
       
       <div class="relative">
         <button onclick="toggleMenu(event)" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200/50 dark:border-slate-700">
@@ -137,7 +133,7 @@
 
 <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6 no-print">
 
-  <!-- ================= VIEW: PEDIDOS ================= -->
+  <!-- VIEW: PEDIDOS -->
   <div id="view-orders" class="space-y-6 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm">
@@ -163,18 +159,23 @@
       <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 bg-white/50 dark:bg-slate-800/50">
         <h2 class="text-sm font-extrabold text-slate-900 dark:text-white w-full md:w-auto">Histórico de Pedidos</h2>
         <div class="flex gap-2 w-full md:w-auto">
-          <input type="text" id="ord-search" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 md:w-56 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
+          <select id="ord-period-filter" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
+            <option value="30d" selected>Últimos 30 dias</option>
+            <option value="prev_month">Mês Anterior</option>
+            <option value="all">Ver Tudo</option>
+          </select>
+          <input type="text" id="ord-search" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 md:w-48 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
         </div>
       </div>
       <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
       <div id="ord-empty" class="hidden py-16 text-center">
         <div class="text-6xl mb-4 opacity-30">📦</div>
-        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Nenhum pedido por aqui ainda.<br>Que tal cadastrar o primeiro?</p>
+        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Nenhum pedido encontrado neste período.</p>
       </div>
     </div>
   </div>
 
-  <!-- ================= VIEW: FINANCEIRO ================= -->
+  <!-- VIEW: FINANCEIRO -->
   <div id="view-finance" class="hidden space-y-6 animate-in">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-4 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 text-sm transition active:scale-95">
@@ -198,26 +199,31 @@
     <div>
       <h2 class="text-sm font-extrabold text-slate-900 dark:text-white px-1 mb-2">Painel Financeiro</h2>
       <div class="grid grid-cols-2 gap-3">
-        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition">
-          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Patrimônio Total ℹ️</p>
-          <h3 id="fin-patrimonio" class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
+        <div onclick="openPatrimonioModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
+          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
+          <h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-1 truncate">R$ 0</h3>
         </div>
-        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition">
-          <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider">A Receber (Lucros) ℹ️</p>
-          <h3 id="fin-pending-lucro" class="text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
+        <div onclick="openPendingLucrosModal()" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm cursor-pointer hover:border-brand-500 transition min-w-0">
+          <p class="text-[10px] font-bold uppercase text-amber-500 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
+          <h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-1 truncate">R$ 0</h3>
         </div>
       </div>
     </div>
 
     <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">Extrato e Lançamentos</h2>
+      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center gap-2">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Extrato e Lançamentos</h2>
+        <select id="fin-period-filter" onchange="renderFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500 shrink-0">
+          <option value="30d" selected>Últimos 30 dias</option>
+          <option value="prev_month">Mês Anterior</option>
+          <option value="all">Ver Tudo</option>
+        </select>
       </div>
       <div id="fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[500px] overflow-y-auto"></div>
     </div>
   </div>
 
-  <!-- ================= VIEW: ADMINISTRAÇÃO ================= -->
+  <!-- VIEW: ADMINISTRAÇÃO -->
   <div id="view-admin" class="hidden space-y-6 animate-in">
     <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden border border-slate-700">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl">📊</div>
@@ -244,7 +250,6 @@
         <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
           <h2 class="text-sm font-extrabold text-slate-900 dark:text-white">📋 Relatório Executivo de Pedidos</h2>
         </div>
-        <!-- AGORA PADRONIZADO EXATAMENTE IGUAL AO EXTRATO FINANCEIRO -->
         <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
       </div>
 
@@ -296,7 +301,7 @@
   </div>
 </nav>
 
-<!-- MODAL PATRIMÔNIO DETALHADO -->
+<!-- MODAIS -->
 <div id="patrimonioModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
@@ -321,7 +326,6 @@
   </div>
 </div>
 
-<!-- MODAL A RECEBER / LUCROS PENDENTES -->
 <div id="pendingLucrosModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -332,7 +336,6 @@
   </div>
 </div>
 
-<!-- MODAL PEDIDO -->
 <div id="modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between shrink-0 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur">
@@ -345,7 +348,6 @@
       <datalist id="list-cities"></datalist>
       <datalist id="list-carriers"></datalist>
 
-      <!-- ANEXO -->
       <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2">
         <label class="lbl text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5"><span>📁</span> Anexar Arquivo / Link Drive</label>
         <div class="flex gap-2">
@@ -480,7 +482,6 @@
   </div>
 </div>
 
-<!-- MODAL FINANCEIRO -->
 <div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -531,7 +532,6 @@
   </div>
 </div>
 
-<!-- MODAL CONTAS A PAGAR -->
 <div id="pendingModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -542,7 +542,6 @@
   </div>
 </div>
 
-<!-- MODAL SELECIONAR CONTA NA HORA DO PAGAMENTO -->
 <div id="payAccountModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
@@ -564,7 +563,6 @@
   </div>
 </div>
 
-<!-- MODAL TRANSFERÊNCIA -->
 <div id="transferModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -584,7 +582,6 @@
   </div>
 </div>
 
-<!-- MODAL EDITAR SALDO -->
 <div id="editBalanceModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50 dark:bg-slate-800/50">
@@ -606,7 +603,6 @@
   </div>
 </div>
 
-<!-- MODAL RECIBOS -->
 <div id="receiptModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
   <div class="w-full max-w-md my-auto space-y-6 pb-10">
     <div>
@@ -721,7 +717,32 @@ function setNow(id){ document.getElementById(id).value = nowLocal(); }
 function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
 function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
 
-// SININHO / NOTIFICAÇÕES INTELIGENTES
+// FUNÇÃO DE FILTRO POR PERÍODO (30 DIAS / MÊS ANTERIOR / TUDO)
+function matchPeriod(dateStr, period) {
+  if (period === 'all' || !dateStr) return true;
+  const cleanDate = dateStr.split('T')[0];
+  const parts = cleanDate.split('-');
+  if (parts.length < 3) return true;
+  
+  const itemDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (period === '30d') {
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    return itemDate >= thirtyDaysAgo;
+  }
+  
+  if (period === 'prev_month') {
+    const prevMonth = today.getMonth() === 0 ? 11 : today.getMonth() - 1;
+    const prevYear = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
+    return itemDate.getMonth() === prevMonth && itemDate.getFullYear() === prevYear;
+  }
+
+  return true;
+}
+
 function toggleNotifications() {
   const dropdown = document.getElementById('notification-dropdown');
   dropdown.classList.toggle('hidden');
@@ -734,13 +755,12 @@ function checkNotifications() {
   const today = new Date();
   today.setHours(0,0,0,0);
   
-  // Alerta contas pendentes para hoje ou com antecedência de até 3 dias
   const pendingAlerts = txs.filter(t => {
     if (t.status === 'paid' || t.type === 'income') return false;
     const dueDate = new Date(t.date);
     const diffTime = dueDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 3; // Avisa em até 3 dias antes ou vencidas
+    return diffDays <= 3;
   });
 
   if (badge) {
@@ -783,7 +803,6 @@ document.addEventListener('click', e => {
   }
 });
 
-// DARK MODE
 function toggleDarkMode() {
   const html = document.documentElement;
   const iconSun = document.getElementById('icon-sun');
@@ -807,7 +826,6 @@ if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') 
   document.getElementById('icon-moon').classList.add('hidden');
 }
 
-// NAVEGAÇÃO
 function switchTab(tab) {
   currentTab = tab;
   ['orders', 'finance', 'admin'].forEach(t => {
@@ -830,15 +848,15 @@ function switchTab(tab) {
 
   if (tab === 'orders') {
     title.textContent = 'Controle de Pedidos'; sub.textContent = 'Rastreio · Valores · Lucro';
-    icon.textContent = '📦'; icon.className = 'w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30';
+    icon.textContent = '📦'; icon.className = 'w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30 shrink-0';
     renderOrders();
   } else if (tab === 'finance') {
     title.textContent = 'Painel Financeiro'; sub.textContent = 'Contas · Saldos · Lançamentos';
-    icon.textContent = '💰'; icon.className = 'w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30';
+    icon.textContent = '💰'; icon.className = 'w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl shadow-lg shadow-emerald-500/30 shrink-0';
     renderFinance();
   } else if (tab === 'admin') {
     title.textContent = 'Administração'; sub.textContent = 'Relatórios e Desempenho';
-    icon.textContent = '📊'; icon.className = 'w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl shadow-lg shadow-slate-800/30';
+    icon.textContent = '📊'; icon.className = 'w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white text-xl shadow-lg shadow-slate-800/30 shrink-0';
     switchAdminTab('orders');
   }
   checkNotifications();
@@ -866,7 +884,6 @@ function switchAdminTab(tab) {
   }
 }
 
-// PERSISTÊNCIA
 function saveAll(){
   safeSet(STORAGE_ORDERS, JSON.stringify(orders));
   safeSet(STORAGE_FIN, JSON.stringify(txs));
@@ -920,7 +937,6 @@ function populateSelects() {
   document.getElementById('tTo').value = 'cash';
 }
 
-// CÁLCULOS
 function calcValores(o) {
   const inv = o.valorUSD * o.cotacao;
   const margemVal = inv * (o.margem / 100);
@@ -941,7 +957,6 @@ function statusOf(o){
   return {key:'pendente', label:'Pendente', cls:'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'};
 }
 
-// RENDERIZAÇÃO: PEDIDOS
 function renderOrders() {
   let inv = 0, fat = 0, lucro = 0;
   orders.forEach(o => { const v = calcValores(o); inv += v.inv; fat += v.faturamento; lucro += v.lucroLiq; });
@@ -951,12 +966,14 @@ function renderOrders() {
   document.getElementById('ord-profit').textContent = money(lucro);
 
   const q = document.getElementById('ord-search').value.toLowerCase().trim();
+  const period = document.getElementById('ord-period-filter')?.value || '30d';
   const list = document.getElementById('ord-list');
   const empty = document.getElementById('ord-empty');
 
   const items = orders.filter(o => {
-    if (!q) return true;
-    return (o.pedido || '').toLowerCase().includes(q) || (o.cliente || '').toLowerCase().includes(q);
+    const matchText = !q || (o.pedido || '').toLowerCase().includes(q) || (o.cliente || '').toLowerCase().includes(q);
+    const matchTime = matchPeriod(o.saida, period);
+    return matchText && matchTime;
   }).sort((a, b) => (b.saida || '').localeCompare(a.saida || ''));
 
   if (!items.length) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
@@ -991,7 +1008,6 @@ function renderOrders() {
   }).join('');
 }
 
-// RENDERIZAÇÃO: FINANCEIRO
 function getAccountBalance(accId) {
   let bal = 0;
   txs.forEach(t => {
@@ -1093,9 +1109,9 @@ function renderFinance() {
           <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate pr-2">${acc.name}</p>
           <button onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm shrink-0">✏️</button>
         </div>
-        <div class="mt-2 flex items-end justify-between">
-          <h3 class="text-lg font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
-          <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0 ml-1">
+        <div class="mt-2 flex items-end justify-between gap-2">
+          <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+          <div class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center text-[9px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
             ${pct}%
           </div>
         </div>
@@ -1110,13 +1126,14 @@ function renderFinance() {
   document.getElementById('fin-patrimonio').textContent = money(patrimonioTotal);
   document.getElementById('fin-pending-lucro').textContent = money(totalPendingLucros);
 
+  const period = document.getElementById('fin-period-filter')?.value || '30d';
   const list = document.getElementById('fin-list');
-  const sorted = txs.slice().sort((a,b) => {
+  const sorted = txs.filter(t => matchPeriod(t.date, period)).sort((a,b) => {
     if (a.date !== b.date) return b.date.localeCompare(a.date);
     return (b.createdAt || '').localeCompare(a.createdAt || '');
-  }).slice(0, 100);
+  });
   
-  if (!sorted.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento registrado.</p>'; return; }
+  if (!sorted.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento encontrado neste período.</p>'; return; }
 
   list.innerHTML = sorted.map(t => {
     const isInc = t.type === 'income' || t.type === 'transfer_in';
@@ -1160,7 +1177,6 @@ function renderFinance() {
   }).join('');
 }
 
-// CONTAS A PAGAR
 function openPendingModal() {
   document.getElementById('pendingModal').classList.remove('hidden');
   const list = document.getElementById('pending-list');
@@ -1256,11 +1272,10 @@ function delFinTx(id) {
   }
 }
 
-// VALIDAÇÃO DE TAMANHO DE ANEXO (LIMITE 2MB)
 function processDocFile(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
-    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+    const MAX_SIZE = 2 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       alert("Atenção: O arquivo excede o limite recomendado de 2 MB para armazenamento local.");
       input.value = '';
@@ -1443,7 +1458,6 @@ function saveOrder(e){
 
   if (!data.pedido && !data.cliente) return alert('Informe o nº do pedido ou cliente.');
 
-  // Preserva o status anterior (ex: 'paid' se já havia dado baixa) ao editar o pedido
   let oldIncome = null;
   if (id) {
     const existingIndex = orders.findIndex(x => x.id === id);
@@ -1589,7 +1603,6 @@ function saveTransfer(e) {
   switchTab('finance');
 }
 
-// RENDERIZAÇÃO DA ADMINISTRAÇÃO DE PEDIDOS (IGUAL AO EXTRATO FINANCEIRO)
 function renderAdminOrders() {
   let totalFat = 0, totalProfit = 0;
   const grouped = {};
@@ -1614,7 +1627,6 @@ function renderAdminOrders() {
   if(!sortedOrders.length) {
     detailList.innerHTML = '<p class="p-8 text-center text-slate-400 text-sm">Nenhum pedido registrado.</p>';
   } else {
-    // LAYOUT PADRONIZADO IGUAL AO EXTRATO FINANCEIRO (CARTÃO HORIZONTAL LIMPO)
     detailList.innerHTML = sortedOrders.map(o => {
       const v = calcValores(o);
       const st = statusOf(o);
