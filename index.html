@@ -37,10 +37,10 @@
   .glass { background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.3); }
   .dark .glass { background: rgba(15, 23, 42, 0.82); border-bottom: 1px solid rgba(255,255,255,0.05); }
   
-  .field { width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); }
-  .dark .field { background:#1e293b; border-color:#334155; color: white; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
-  .field:focus { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15); background: white; }
-  .dark .field:focus { border-color:#818cf8; background: #0f17a; }
+  .field { width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); color: #0f172a; }
+  .dark .field { background:#1e293b; border-color:#334155; color: #f8fafc; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
+  .field:focus { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15); background: #ffffff; color: #0f172a; }
+  .dark .field:focus { border-color:#818cf8; background: #0f172a; color: #ffffff; }
   .field:disabled { opacity: 0.65; cursor: not-allowed; background: #e2e8f0; }
   .dark .field:disabled { background: #0f172a; }
   
@@ -159,7 +159,7 @@
   </div>
 </div>
 
-<!-- CENTRAL DE NOTIFICAÇÕES (APENAS AVISOS POR JANELA: 5 DIAS / 2 DIAS) -->
+<!-- CENTRAL DE NOTIFICAÇÕES -->
 <div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -708,7 +708,7 @@
   </div>
 </div>
 
-<!-- MODAL DE NOVO LANÇAMENTO (RECEITA ↑ OU DESPESA ↓ + SITUAÇÃO DO PAGAMENTO) -->
+<!-- MODAL DE NOVO LANÇAMENTO -->
 <div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -717,11 +717,13 @@
     </div>
     <form onsubmit="saveFinTx(event)" class="p-5 space-y-4">
       <div class="grid grid-cols-2 gap-2">
-        <button type="button" id="btn-type-income" onclick="setFinType('income')" class="py-2.5 px-3 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
-          <span>↑</span> Receita
+        <button type="button" id="btn-type-income" onclick="setFinType('income')" class="py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
+          <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm shrink-0">💰</span>
+          <span>Receita</span>
         </button>
-        <button type="button" id="btn-type-expense" onclick="setFinType('expense')" class="py-2.5 px-3 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
-          <span>↓</span> Despesa
+        <button type="button" id="btn-type-expense" onclick="setFinType('expense')" class="py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
+          <span class="w-6 h-6 rounded-lg bg-amber-500/25 text-amber-400 flex items-center justify-center text-sm shrink-0">💸</span>
+          <span>Despesa</span>
         </button>
       </div>
       <input type="hidden" id="fType" value="expense">
@@ -743,7 +745,7 @@
 
       <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
         <label class="lbl">Situação do Pagamento</label>
-        <select id="fStatus" class="field bg-white dark:bg-slate-800 text-sm font-bold">
+        <select id="fStatus" class="field text-sm font-bold">
           <option value="paid">Pago agora</option>
           <option value="pending">Agendar pagamento / Conta a Pagar</option>
         </select>
@@ -1753,7 +1755,7 @@ function renderFinance() {
       ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
       : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400';
     let tagName = isInc ? 'Receita' : 'Despesa';
-    let icon = isInc ? '↑' : '↓';
+    let icon = isInc ? '💰' : '💸';
     
     if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-200'; tagName = 'Transfer'; icon = '↔️'; }
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
@@ -1763,7 +1765,7 @@ function renderFinance() {
 
     return `
       <div class="flex items-start gap-3 px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs font-bold ${isInc ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:border-emerald-800' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-900/20 dark:border-rose-800')}">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs text-base ${isInc ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-amber-500/15 text-amber-400 border border-amber-500/25')}">
           ${icon}
         </div>
         <div class="flex-1 min-w-0 pr-2">
@@ -2143,11 +2145,11 @@ function setFinType(type) {
   const btnExp = document.getElementById('btn-type-expense');
 
   if (type === 'income') {
-    btnInc.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center justify-center gap-1.5 transition';
-    btnExp.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
+    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center justify-center gap-1.5 transition';
+    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
   } else {
-    btnExp.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 flex items-center justify-center gap-1.5 transition';
-    btnInc.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
+    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-amber-500 bg-amber-50 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 flex items-center justify-center gap-1.5 transition';
+    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
   }
 }
 
@@ -2333,7 +2335,7 @@ function renderAdminFinance() {
     const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || creditCards.find(c => 'card_'+c.id === t.accountId)?.name || '?';
     const isPending = t.status === 'pending';
     
-    let icon = isInc ? '↑' : '↓';
+    let icon = isInc ? '💰' : '💸';
     if (isTransfer) icon = '↔️';
     if (t.isCardExpense) icon = '💳';
 
@@ -2342,7 +2344,7 @@ function renderAdminFinance() {
 
     return `
       <div class="flex items-center gap-3 px-4 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold ${isInc ? 'bg-emerald-50 text-emerald-600' : (t.isCardExpense ? 'bg-purple-50 text-purple-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600'))}">${icon}</div>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm ${isInc ? 'bg-emerald-500/15 text-emerald-400' : (t.isCardExpense ? 'bg-purple-50 text-purple-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-amber-500/15 text-amber-400'))}">${icon}</div>
         <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 flex-wrap mb-0.5">${pendingLabel}</div>
           <p class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
