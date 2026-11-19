@@ -159,7 +159,7 @@
   </div>
 </div>
 
-<!-- CENTRAL DE NOTIFICAÇÕES (APENAS AVISOS) -->
+<!-- CENTRAL DE NOTIFICAÇÕES (APENAS AVISOS POR JANELA: 5 DIAS / 2 DIAS) -->
 <div id="notification-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -170,8 +170,8 @@
       <button onclick="toggleNotifications()" class="text-slate-400 text-xl font-bold">×</button>
     </div>
     <div class="px-4 py-2 bg-slate-50/50 dark:bg-slate-900/30 text-[11px] text-slate-500 border-b border-slate-100 dark:border-slate-700/50 flex justify-between">
-      <span>Avisos de Vencimento (1 a 2 dias)</span>
-      <span id="notification-count-label" class="font-bold text-slate-700 dark:text-slate-300">0 itens</span>
+      <span>Avisos: 5 dias e 2 dias antes do vencimento</span>
+      <span id="notification-count-label" class="font-bold text-slate-700 dark:text-slate-300">0 avisos</span>
     </div>
     <div id="notification-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 p-2"></div>
     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
@@ -367,7 +367,7 @@
   </div>
 </nav>
 
-<!-- MODAL DE PATRIMÔNIO / BENS PESSOAIS (NÃO CONTÁBEIS) -->
+<!-- MODAL DE PATRIMÔNIO / BENS PESSOAIS -->
 <div id="patrimonioBensModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
@@ -387,7 +387,6 @@
         <button onclick="openAddBemForm()" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs">+ Adicionar Bem</button>
       </div>
 
-      <!-- Formulário de cadastro de novo bem (escondido por padrão) -->
       <div id="formAddBem" class="hidden bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
         <h4 id="bemFormTitle" class="text-xs font-bold text-slate-800 dark:text-slate-200">Novo Bem / Investimento</h4>
         <input type="hidden" id="bemId">
@@ -449,7 +448,7 @@
         </div>
         <div class="flex justify-between py-1.5">
           <span class="text-slate-500">Vencimento Fixo:</span>
-          <b id="detCardDue" class="text-slate-700 dark:text-slate-300">Dia 25</b>
+          <b id="detCardDue" class="text-slate-700 dark:text-slate-300">Dia 23</b>
         </div>
       </div>
 
@@ -526,7 +525,7 @@
       <button onclick="document.getElementById('chartsModal').classList.add('hidden')" class="text-slate-400 text-2xl font-bold">×</button>
     </div>
     <div class="p-5 overflow-y-auto space-y-5">
-      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo semana a semana cobrindo Cartões, Lucro Pessoal/Operacional, Movimentações e Despesas.</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400">Comparativo semana a semana cobrindo Cartões, Lucros, Movimentações e Despesas.</p>
       <div id="column-charts-container" class="space-y-5"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center">
@@ -646,10 +645,10 @@
 
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700">
           <input type="checkbox" id="oPagoFrete" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded">
-          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei o Frete (ex: Henrique)?</span>
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei o Frete?</span>
         </label>
         <div id="wrapAccOutFrete" class="pl-8 space-y-1">
-          <label class="text-[10px] uppercase font-bold text-slate-500">De onde saiu o pagamento do frete:</label>
+          <label class="text-[10px] uppercase font-bold text-slate-500">Conta do pagamento do frete:</label>
           <select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-10 py-0"></select>
         </div>
 
@@ -668,7 +667,7 @@
       <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50">
         <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white" id="prevBRL">R$ 0,00</b></div>
         <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400" id="prevMargem">R$ 0,00</b></div>
-        <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>(-) Custo Frete (Trabalho)</span><b id="prevFrete">R$ 0,00</b></div>
+        <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>(-) Custo Frete</span><b id="prevFrete">R$ 0,00</b></div>
         <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-xs border border-emerald-100 dark:border-emerald-900/30">
           <span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base" id="prevLucro">R$ 0,00</b>
         </div>
@@ -682,7 +681,7 @@
         <div><label class="lbl flex items-center justify-between">Data/Hora Saída <span class="btn-now" onclick="setNow('oSaida')">Agora</span></label><input id="oSaida" type="datetime-local" class="field"></div>
       </div>
       <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl">Transportadora / Henrique</label><input id="oTransportadora" type="text" list="list-carriers" placeholder="Ex: Correios / Henrique" class="field"></div>
+        <div><label class="lbl">Transportadora</label><input id="oTransportadora" type="text" list="list-carriers" placeholder="Ex: Correios" class="field"></div>
         <div><label class="lbl flex items-center justify-between">Subiu Transp. <span class="btn-now" onclick="setNow('oSubiu')">Agora</span></label><input id="oSubiu" type="datetime-local" class="field"></div>
       </div>
       <div class="grid grid-cols-2 gap-3">
@@ -710,38 +709,48 @@
   </div>
 </div>
 
-<!-- MODAL DE NOVO LANÇAMENTO -->
+<!-- MODAL DE NOVO LANÇAMENTO (DIRETO, SEM RÓTULO FORÇADO DE PESSOAL) -->
 <div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
-      <h3 class="font-bold text-slate-900 dark:text-white">Novo Lançamento (Gasto Pessoal por padrão)</h3>
+      <h3 class="font-bold text-slate-900 dark:text-white">Novo Lançamento</h3>
       <button onclick="document.getElementById('finModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <form onsubmit="saveFinTx(event)" class="p-5 space-y-4">
       <input type="hidden" id="fType" value="expense">
       
-      <div><label class="lbl">Descrição (Ex: Padaria, Farmácia, Mercado...)</label><input type="text" id="fDesc" placeholder="Ex: Mercado" required class="field"></div>
+      <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Frete, Conta..." required class="field"></div>
       
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl">Valor (R$)</label>
           <div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="fAmount" step="0.01" placeholder="0,00" required class="field pl-10"></div>
         </div>
-        <div><label class="lbl">Data</label><input type="date" id="fDate" required class="field"></div>
+        <div><label class="lbl">Data / Vencimento</label><input type="date" id="fDate" required class="field"></div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl">Conta / Cartão Usado</label><select id="fAccount" required class="field"></select></div>
+        <div><label class="lbl">Conta / Cartão</label><select id="fAccount" required class="field"></select></div>
         <div>
-          <label class="lbl">Categoria do Gasto</label>
-          <select id="fCat" class="field text-sm font-bold text-brand-600">
-            <option value="Pessoal" selected>👤 Custo de Vida (Pró-Labore)</option>
-            <option value="Trabalho">💼 Despesa do Trabalho (Frete/Outros)</option>
+          <label class="lbl">Tipo / Categoria</label>
+          <select id="fCat" class="field text-sm font-semibold">
+            <option value="Conta">Conta / Despesa</option>
+            <option value="Agendamento">Agendamento / Aluguel</option>
+            <option value="Frete">Frete</option>
+            <option value="Outros">Outros</option>
           </select>
         </div>
       </div>
 
-      <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Registrar Gasto</button>
+      <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+        <label class="lbl">Situação do Lançamento</label>
+        <select id="fStatus" class="field bg-white dark:bg-slate-800 text-sm font-bold">
+          <option value="paid">Pago agora (desconta da conta)</option>
+          <option value="pending">Agendar / Conta a Pagar (vai para Contas a Pagar)</option>
+        </select>
+      </div>
+
+      <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold mt-2 shadow-md">Salvar Lançamento</button>
     </form>
   </div>
 </div>
@@ -750,7 +759,7 @@
 <div id="pendingModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
-      <h3 class="font-bold text-slate-900 dark:text-white">Contas a Pagar (Pendentes)</h3>
+      <h3 class="font-bold text-slate-900 dark:text-white">Contas a Pagar</h3>
       <button onclick="document.getElementById('pendingModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
@@ -903,6 +912,7 @@ const STORAGE_CARDS = 'credit_cards_final_v1';
 const STORAGE_BENS = 'patrimonio_bens_v1';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
+const SEEN_NOTIF_KEY = 'seen_notifications_v1';
 
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', style: 'border-top: 5px solid #10b981;', badgeBg: 'background-color: rgba(16, 185, 129, 0.15); color: #10b981;' },
@@ -922,15 +932,15 @@ let patrimonioBens = [
 ];
 
 let creditCards = [
-  { id: 'riachuelo', name: 'Riachuelo', limit: 2057.12, currentBill: 144.60, dueDay: 23, color: '#059669' },
+  { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
   { id: 'htn', name: 'HTN Card', limit: 850.00, currentBill: 35.70, dueDay: 25, color: '#16a34a' },
-  { id: 'neon', name: 'NEON', limit: 1800.00, currentBill: 0.00, dueDay: 25, color: '#0284c7' },
+  { id: 'neon', name: 'NEON', limit: 2137.00, currentBill: 0.00, dueDay: 23, color: '#0284c7' },
   { id: 'pernambucanas', name: 'Pernambucanas', limit: 100.00, currentBill: 0.00, dueDay: 25, color: '#1d4ed8' }
 ];
 
 let historyData = { clients: [], cities: [], carriers: [] };
 let userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
-const PRO_LABORE_TETO = 4000.00;
+let seenNotifications = {};
 let currentTab = 'orders';
 let currentAdminTab = 'orders';
 
@@ -1010,107 +1020,157 @@ function matchPeriod(dateStr, period) {
   return true;
 }
 
-function toggleNotifications() {
-  const modal = document.getElementById('notification-modal');
-  modal.classList.toggle('hidden');
-  if (!modal.classList.contains('hidden')) {
-    checkNotifications();
+function loadSeenNotifications() {
+  const raw = safeGet(SEEN_NOTIF_KEY);
+  if (raw) {
+    try { seenNotifications = JSON.parse(raw) || {}; } catch (e) { seenNotifications = {}; }
   }
 }
 
-function checkNotifications() {
-  const badge = document.getElementById('notification-badge');
-  const list = document.getElementById('notification-list');
-  const countLabel = document.getElementById('notification-count-label');
-  
+function saveSeenNotifications() {
+  safeSet(SEEN_NOTIF_KEY, JSON.stringify(seenNotifications));
+}
+
+function daysUntilDueDay(dueDay) {
   const today = new Date();
-  today.setHours(0,0,0,0);
-  const currentDay = today.getDate();
-  
-  const pendingAlerts = [];
-
-  // Contas a pagar pendentes (agendadas)
-  txs.forEach(t => {
-    if (t.status === 'paid' || t.type === 'income') return;
-    const dueDate = new Date(t.date);
-    const diffTime = dueDate - today;
-    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-    // Notifica se vencer em até 2 dias ou se já venceu
-    if (diffDays <= 2) {
-      pendingAlerts.push({
-        desc: t.desc,
-        meta: `Vencimento: ${t.date.split('-').reverse().join('/')}`,
-        amount: money(t.amount),
-        type: 'Despesa'
-      });
-    }
-  });
-
-  // Alerta de Teto de Pró-Labore se ultrapassar 80%
-  let totalPessoalMes = 0;
-  const currentYearMonth = todayISO().slice(0, 7);
-  txs.forEach(t => {
-    if (t.cat === 'Pessoal' && t.date.startsWith(currentYearMonth)) {
-      totalPessoalMes += t.amount;
-    }
-  });
-  const pctProLabore = Math.round((totalPessoalMes / PRO_LABORE_TETO) * 100);
-  if (pctProLabore >= 80) {
-    pendingAlerts.unshift({
-      desc: `⚠️ Teto de Pró-Labore (${pctProLabore}%)`,
-      meta: `Gasto atual de ${money(totalPessoalMes)}`,
-      amount: '',
-      type: 'Aviso'
-    });
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  let target = new Date(today.getFullYear(), today.getMonth(), dueDay);
+  if (target < start) {
+    target = new Date(today.getFullYear(), today.getMonth() + 1, dueDay);
   }
+  return Math.round((target - start) / (1000 * 60 * 60 * 24));
+}
 
-  // Faturas de Cartão (1 a 2 dias antes do vencimento)
-  creditCards.forEach(c => {
-    if (c.currentBill > 0) {
-      let diffDays = c.dueDay - currentDay;
-      if (diffDays < 0) diffDays += 30;
-      if (diffDays <= 2) {
-        pendingAlerts.push({
-          desc: `Fatura Cartão ${c.name}`,
-          meta: `Vencimento dia ${c.dueDay}`,
-          amount: money(c.currentBill),
-          type: 'Cartão'
-        });
-      }
-    }
+// Janela 1: 5 a 3 dias antes | Janela 2: 2 dias antes até vencido
+function getNotificationStage(daysLeft) {
+  if (daysLeft <= 2) return 'stage2';
+  if (daysLeft <= 5) return 'stage1';
+  return null;
+}
+
+function getActiveNotifications() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const alerts = [];
+
+  // Contas agendadas / a pagar pendentes
+  txs.forEach(t => {
+    if (t.status !== 'pending' || t.type === 'income' || !t.date) return;
+    const parts = t.date.split('-');
+    if (parts.length < 3) return;
+    const dueDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    const daysLeft = Math.round((dueDate - today) / (1000 * 60 * 60 * 24));
+    const stage = getNotificationStage(daysLeft);
+    if (!stage) return;
+
+    const notifKey = `tx_${t.id}_${t.date}_${stage}`;
+    alerts.push({
+      key: notifKey,
+      seen: !!seenNotifications[notifKey],
+      desc: t.desc,
+      meta: daysLeft < 0
+        ? `Vencida em ${t.date.split('-').reverse().join('/')}`
+        : daysLeft === 0
+          ? `Vence hoje (${t.date.split('-').reverse().join('/')})`
+          : `Vence em ${daysLeft} ${daysLeft === 1 ? 'dia' : 'dias'} (${t.date.split('-').reverse().join('/')})`,
+      amount: money(t.amount),
+      type: 'Agendada'
+    });
   });
+
+  // Cartões de crédito com fatura aberta
+  creditCards.forEach(c => {
+    if (c.currentBill <= 0) return;
+    const daysLeft = daysUntilDueDay(c.dueDay);
+    const stage = getNotificationStage(daysLeft);
+    if (!stage) return;
+
+    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    let target = new Date(today.getFullYear(), today.getMonth(), c.dueDay);
+    if (target < start) target = new Date(today.getFullYear(), today.getMonth() + 1, c.dueDay);
+    const cycleId = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(c.dueDay)}`;
+
+    const notifKey = `card_${c.id}_${cycleId}_${stage}`;
+    alerts.push({
+      key: notifKey,
+      seen: !!seenNotifications[notifKey],
+      desc: `Fatura Cartão ${c.name}`,
+      meta: daysLeft === 0
+        ? `Vence hoje (Dia ${c.dueDay})`
+        : `Vence em ${daysLeft} ${daysLeft === 1 ? 'dia' : 'dias'} (Dia ${c.dueDay})`,
+      amount: money(c.currentBill),
+      type: 'Cartão'
+    });
+  });
+
+  return alerts;
+}
+
+function updateNotificationBadge(alertsList) {
+  const badge = document.getElementById('notification-badge');
+  const countLabel = document.getElementById('notification-count-label');
+  const unreadCount = alertsList.filter(a => !a.seen).length;
 
   if (badge) {
-    if (pendingAlerts.length > 0) {
+    if (unreadCount > 0) {
       badge.style.display = 'block';
-      badge.textContent = pendingAlerts.length;
+      badge.textContent = unreadCount;
     } else {
       badge.style.display = 'none';
     }
   }
 
   if (countLabel) {
-    countLabel.textContent = `${pendingAlerts.length} ${pendingAlerts.length === 1 ? 'item' : 'itens'}`;
+    countLabel.textContent = `${alertsList.length} ${alertsList.length === 1 ? 'aviso' : 'avisos'}`;
+  }
+}
+
+function renderNotificationsList(alerts) {
+  const list = document.getElementById('notification-list');
+  if (!list) return;
+
+  if (!alerts.length) {
+    list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhuma conta ou cartão na janela de aviso (5 dias ou 2 dias antes).</p>';
+    return;
   }
 
-  if (list) {
-    if (pendingAlerts.length === 0) {
-      list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum vencimento próximo (1 a 2 dias).</p>';
-    } else {
-      list.innerHTML = pendingAlerts.map(item => `
-        <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs">
-          <div class="min-w-0 pr-2">
-            <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.desc)}</p>
-            <p class="text-[10px] text-slate-500 mt-0.5">${escapeHtml(item.meta)}</p>
-          </div>
-          <div class="text-right shrink-0">
-            <span class="font-black text-slate-700 dark:text-slate-300 block">${item.amount}</span>
-            <span class="text-[9px] uppercase font-bold text-slate-400 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">${item.type}</span>
-          </div>
+  list.innerHTML = alerts.map(item => `
+    <div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center text-xs ${item.seen ? 'opacity-70' : ''}">
+      <div class="min-w-0 pr-2">
+        <div class="flex items-center gap-1.5">
+          ${!item.seen ? '<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>' : ''}
+          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.desc)}</p>
         </div>
-      `).join('');
-    }
+        <p class="text-[10px] text-slate-500 mt-0.5">${escapeHtml(item.meta)}</p>
+      </div>
+      <div class="text-right shrink-0">
+        <span class="font-black text-slate-700 dark:text-slate-300 block">${item.amount}</span>
+        <span class="text-[9px] uppercase font-bold text-slate-400 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">${item.type}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleNotifications() {
+  const modal = document.getElementById('notification-modal');
+  const willOpen = modal.classList.contains('hidden');
+  modal.classList.toggle('hidden');
+
+  if (willOpen) {
+    const currentAlerts = getActiveNotifications();
+    renderNotificationsList(currentAlerts);
+    currentAlerts.forEach(a => { seenNotifications[a.key] = true; });
+    saveSeenNotifications();
+    updateNotificationBadge(currentAlerts);
+  } else {
+    checkNotifications();
   }
+}
+
+function checkNotifications() {
+  loadSeenNotifications();
+  const alerts = getActiveNotifications();
+  updateNotificationBadge(alerts);
 }
 
 document.addEventListener('click', e => {
@@ -1206,6 +1266,7 @@ function saveAll(){
   safeSet(STORAGE_FIN, JSON.stringify(txs));
   safeSet(STORAGE_CARDS, JSON.stringify(creditCards));
   safeSet(STORAGE_BENS, JSON.stringify(patrimonioBens));
+  saveSeenNotifications();
   checkNotifications();
 }
 
@@ -1231,6 +1292,7 @@ function load(){
   const rawProfile = safeGet(PROFILE_KEY);
   if (rawProfile) { try { userProfile = JSON.parse(rawProfile); } catch(e){} }
 
+  loadSeenNotifications();
   updateMenuUserDisplay();
   renderDatalists();
   populateSelects();
@@ -1376,7 +1438,6 @@ function getTotalPendingLucros() {
   return total;
 }
 
-// GESTÃO DOS BENS E PATRIMÔNIO NÃO CONTÁBEIS
 function openPatrimonioBensModal() {
   renderPatrimonioBensList();
   document.getElementById('formAddBem').classList.add('hidden');
@@ -1693,18 +1754,18 @@ function renderFinance() {
     const isPending = t.status === 'pending';
     
     let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
-    let tagName = 'Outro';
+    let tagName = t.cat || 'Conta';
     let icon = isInc ? '↑' : '↓';
     
     if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-200'; tagName = 'Transfer'; icon = '↔️'; }
     else if (t.cat === 'Vendas') { tagColor = 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300'; tagName = 'Venda'; icon = '💰'; }
     else if (t.cat === 'Pagamento Cartão') { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Fatura Cartão'; icon = '💳'; }
-    else if (t.cat === 'Pessoal') { tagColor = 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'; tagName = '👤 Pessoal'; icon = '🍔'; }
-    else if (t.cat === 'Trabalho') { tagColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'; tagName = '💼 Trabalho'; icon = '🔨'; }
+    else if (t.cat === 'Frete') { tagColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'; tagName = 'Frete'; icon = '🚚'; }
+    else if (t.cat === 'Agendamento') { tagColor = 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300'; tagName = 'Agendamento'; icon = '📅'; }
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
 
-    const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
-    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
+    const dateTimeStr = isPending ? `Venc. ${t.date.split('-').reverse().join('/')}` : fmtDateTimeTx(t.createdAt || t.date);
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-amber-500 text-white px-1.5 py-0.5 rounded ml-1">A PAGAR</span>' : '';
 
     return `
       <div class="flex items-start gap-3 px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
@@ -1713,14 +1774,14 @@ function renderFinance() {
         </div>
         <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 mb-0.5 flex-wrap">
-            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${tagColor}">${tagName}</span>
+            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${tagColor}">${escapeHtml(tagName)}</span>
             ${pendingLabel}
           </div>
           <p class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
           <p class="text-[10px] font-medium text-slate-500 mt-0.5 truncate">${dateTimeStr} · ${accName}</p>
         </div>
         <div class="text-right shrink-0">
-          <p class="font-black text-xs sm:text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')} ${isPending ? 'opacity-50 line-through' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+          <p class="font-black text-xs sm:text-sm ${isInc ? 'text-emerald-600 dark:text-emerald-400' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600 dark:text-rose-400')} ${isPending ? 'opacity-75' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
           <button onclick="delFinTx('${t.id}')" class="text-[10px] font-semibold text-slate-400 hover:text-rose-600 mt-1 underline decoration-transparent hover:decoration-rose-600 transition">excluir</button>
         </div>
       </div>`;
@@ -1733,7 +1794,7 @@ function openPendingModal() {
   const pendingTxs = txs.filter(t => t.status === 'pending' && !t.refId);
 
   if (!pendingTxs.length) {
-    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente na agenda.</p>';
+    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta a pagar pendente no momento.</p>';
     return;
   }
 
@@ -1741,7 +1802,7 @@ function openPendingModal() {
     <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
       <div class="min-w-0 flex-1">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[11px] text-slate-500 truncate">Data: ${t.date.split('-').reverse().join('/')} · Tipo: ${t.type === 'income' ? 'Receita' : 'Despesa'}</p>
+        <p class="text-[11px] text-slate-500 truncate">Vencimento: ${t.date.split('-').reverse().join('/')} · ${escapeHtml(t.cat || 'Conta')}</p>
       </div>
       <div class="text-right shrink-0">
         <p class="font-black text-emerald-600 text-sm mb-1">${money(t.amount)}</p>
@@ -1778,6 +1839,7 @@ function confirmPayPending(e) {
   
   t.status = 'paid';
   t.accountId = selectedAccount;
+  t.createdAt = new Date().toISOString();
   
   saveAll();
   document.getElementById('payAccountModal').classList.add('hidden');
@@ -1885,7 +1947,7 @@ function openModal(id){
       document.getElementById('oAccIn').value = linked.accountId || 'nubank';
       const linkedOut = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Fornecedores');
       if (linkedOut) document.getElementById('oAccOutMerc').value = linkedOut.accountId;
-      const linkedFrete = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Logística');
+      const linkedFrete = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Frete');
       if (linkedFrete) document.getElementById('oAccOutFrete').value = linkedFrete.accountId;
     }
   } else {
@@ -2059,8 +2121,8 @@ function saveOrder(e){
         });
       } else {
         txs.push({
-          id: genId(), refId: data.id, desc: `Frete (Trabalho) - Pedido ${data.pedido}`, 
-          amount: v.meuCustoFrete, type: 'expense', cat: 'Trabalho', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid'
+          id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido}`, 
+          amount: v.meuCustoFrete, type: 'expense', cat: 'Frete', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid'
         });
       }
     }
@@ -2086,43 +2148,47 @@ function openFinModal() {
   document.getElementById('fDesc').value = '';
   document.getElementById('fAmount').value = '';
   document.getElementById('fDate').value = todayISO();
-  document.getElementById('fCat').value = 'Pessoal';
+  document.getElementById('fCat').value = 'Conta';
+  document.getElementById('fStatus').value = 'paid';
 }
 
 function saveFinTx(e) {
   e.preventDefault();
-  const desc = document.getElementById('fDesc').value;
+  const desc = document.getElementById('fDesc').value.trim();
   const amount = parseFloat(document.getElementById('fAmount').value);
   const date = document.getElementById('fDate').value;
   const accId = document.getElementById('fAccount').value;
   const cat = document.getElementById('fCat').value;
+  const status = document.getElementById('fStatus').value;
   
   if (accId.startsWith('card_')) {
     const cId = accId.replace('card_', '');
     const cardObj = creditCards.find(x => x.id === cId);
-    if (cardObj) {
+    if (cardObj && status !== 'pending') {
       cardObj.currentBill += amount;
-      txs.unshift({ 
-        id: genId(), 
-        desc: `${desc} (${cardObj.name})`, 
-        amount, 
-        type: 'expense', 
-        cat: cat, 
-        date, 
-        createdAt: new Date().toISOString(), 
-        accountId: accId, 
-        status: 'paid',
-        isCardExpense: true 
-      });
     }
+    txs.unshift({ 
+      id: genId(), 
+      desc: `${desc} (${cardObj?.name || 'Cartão'})`, 
+      amount, 
+      type: 'expense', 
+      cat: status === 'pending' ? 'Agendamento' : cat, 
+      date, 
+      createdAt: new Date().toISOString(), 
+      accountId: accId, 
+      status,
+      isCardExpense: status !== 'pending'
+    });
   } else {
-    const currentBalance = getAccountBalance(accId);
-    if (currentBalance - amount < 0) {
-      if (!confirm("Aviso: Esta despesa deixará o saldo da conta selecionada negativo. Deseja prosseguir mesmo assim?")) {
-        return;
+    if (status !== 'pending') {
+      const currentBalance = getAccountBalance(accId);
+      if (currentBalance - amount < 0) {
+        if (!confirm("Aviso: Este lançamento deixará o saldo da conta selecionada negativo. Deseja prosseguir?")) {
+          return;
+        }
       }
     }
-    txs.unshift({ id: genId(), desc, amount, type: 'expense', cat: cat, date, createdAt: new Date().toISOString(), accountId: accId, status: 'paid' });
+    txs.unshift({ id: genId(), desc, amount, type: 'expense', cat, date, createdAt: new Date().toISOString(), accountId: accId, status });
   }
 
   saveAll();
@@ -2263,7 +2329,7 @@ function renderAdminFinance() {
     if (t.isCardExpense) icon = '💳';
 
     const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
-    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-1">PENDENTE</span>' : '';
+    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-amber-500 text-white px-1.5 py-0.5 rounded ml-1">A PAGAR</span>' : '';
 
     return `
       <div class="flex items-center gap-3 px-4 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
@@ -2273,7 +2339,7 @@ function renderAdminFinance() {
           <p class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
           <p class="text-[10px] text-slate-500 truncate">${dateTimeStr} · ${accName}</p>
         </div>
-        <p class="font-black text-xs sm:text-sm shrink-0 ${isInc ? 'text-emerald-600' : (t.isCardExpense ? 'text-purple-600' : (isTransfer ? 'text-slate-700' : 'text-rose-600'))} ${isPending ? 'opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
+        <p class="font-black text-xs sm:text-sm shrink-0 ${isInc ? 'text-emerald-600' : (t.isCardExpense ? 'text-purple-600' : (isTransfer ? 'text-slate-700' : 'text-rose-600'))} ${isPending ? 'opacity-75' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
       </div>
     `;
   }).join('');
@@ -2282,10 +2348,10 @@ function renderAdminFinance() {
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
   const weeks = { 
-    '1ª Sem': {lucro:0, mov:0, pessoal:0, saldo:0, cartao:0}, 
-    '2ª Sem': {lucro:0, mov:0, pessoal:0, saldo:0, cartao:0}, 
-    '3ª Sem': {lucro:0, mov:0, pessoal:0, saldo:0, cartao:0}, 
-    '4ª Sem+': {lucro:0, mov:0, pessoal:0, saldo:0, cartao:0} 
+    '1ª Sem': {lucro:0, mov:0, despesas:0, saldo:0, cartao:0}, 
+    '2ª Sem': {lucro:0, mov:0, despesas:0, saldo:0, cartao:0}, 
+    '3ª Sem': {lucro:0, mov:0, despesas:0, saldo:0, cartao:0}, 
+    '4ª Sem+': {lucro:0, mov:0, despesas:0, saldo:0, cartao:0} 
   };
   
   orders.forEach(o => {
@@ -2310,10 +2376,8 @@ function openChartsModal() {
     
     if (t.isCardExpense || t.cat === 'Pagamento Cartão' || (t.accountId && t.accountId.startsWith('card_'))) {
       weeks[key].cartao += t.amount;
-    } else if (t.cat === 'Pessoal') {
-      weeks[key].pessoal += t.amount;
     } else if (t.type === 'expense') {
-      weeks[key].pessoal += t.amount;
+      weeks[key].despesas += t.amount;
     } else if (t.type === 'income') {
       weeks[key].saldo += t.amount;
     }
@@ -2361,7 +2425,7 @@ function openChartsModal() {
 
   container.innerHTML = `
     ${renderChartBox('💳 1. Uso e Faturas de Cartões de Crédito', 'text-purple-600 dark:text-purple-400', 'cartao', 'bg-purple-600')}
-    ${renderChartBox('👤 2. Consumo Pessoal / Pró-Labore Semanal', 'text-blue-600 dark:text-blue-400', 'pessoal', 'bg-blue-600')}
+    ${renderChartBox('💸 2. Despesas e Contas Semanais', 'text-blue-600 dark:text-blue-400', 'despesas', 'bg-blue-600')}
     ${renderChartBox('📈 3. Lucros Líquidos Comerciais', 'text-emerald-600 dark:text-emerald-400', 'lucro', 'bg-emerald-500')}
     ${renderChartBox('🔄 4. Movimentações Financeiras', 'text-indigo-600 dark:text-indigo-400', 'mov', 'bg-indigo-600')}
   `;
@@ -2406,7 +2470,7 @@ function openReceipt(id, fromAdmin = false){
 
   const stages = [
     {time: o.saida, label: `Saída de ${o.cidadeOrigem || 'Origem'}`, icon: '🚚'},
-    {time: o.subiuTransp, label: o.transportadora || 'Transportadora / Henrique', icon: '📦'},
+    {time: o.subiuTransp, label: o.transportadora || 'Transportadora', icon: '📦'},
     {time: o.cidade1Hora, label: o.cidade1, icon: '📍', sub: true},
     {time: o.cidade2Hora, label: o.cidade2, icon: '📍', sub: true},
     {time: o.cidade3Hora, label: o.cidade3, icon: '📍', sub: true},
@@ -2450,7 +2514,7 @@ function printReceipt(type) {
 
 async function exportJSON(){
   closeMenu();
-  const data = { userProfile, orders, txs, creditCards, patrimonioBens, historyData };
+  const data = { userProfile, orders, txs, creditCards, patrimonioBens, historyData, seenNotifications };
   const jsonStr = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonStr], {type:'application/json'});
   const file = new File([blob], 'backup_dados_gestao.json', {type: 'application/json'});
@@ -2498,6 +2562,7 @@ function importJSON(e){
       if (data.creditCards) creditCards = data.creditCards;
       if (data.patrimonioBens) patrimonioBens = data.patrimonioBens;
       if (data.historyData) historyData = data.historyData;
+      if (data.seenNotifications) seenNotifications = data.seenNotifications;
       saveAll();
       safeSet(HISTORY_KEY, JSON.stringify(historyData));
       updateMenuUserDisplay();
@@ -2512,7 +2577,7 @@ function importJSON(e){
 function resetData(){
   closeMenu();
   if (!confirm('Apagar TODOS os dados e perfil?')) return;
-  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(STORAGE_CARDS); safeRemove(STORAGE_BENS); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
+  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(STORAGE_CARDS); safeRemove(STORAGE_BENS); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY); safeRemove(SEEN_NOTIF_KEY);
   location.reload();
 }
 
