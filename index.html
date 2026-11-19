@@ -358,13 +358,13 @@
       <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-200/70 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 tracking-wider truncate">Lucro Líq.</p><h3 id="ord-profit" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-400 truncate">R$ 0</h3></div>
     </div>
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
-      <div class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Histórico de Pedidos</h2>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto min-w-0">
-          <select id="ord-period-filter" aria-label="Filtrar pedidos por período" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
+      <div class="p-3 sm:p-4 border-b border-slate-100 dark:border-slate-700 flex flex-row items-center justify-between gap-2 bg-white/50 dark:bg-slate-800/50">
+        <h2 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white shrink-0">Histórico de Pedidos</h2>
+        <div class="flex flex-row items-center gap-1.5 sm:gap-2 min-w-0 flex-1 justify-end max-w-[330px] sm:max-w-[380px]">
+          <select id="ord-period-filter" aria-label="Filtrar pedidos por período" onchange="renderOrders()" class="w-28 sm:w-32 shrink-0 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1.5 h-9 text-[11px] font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
             <option value="30d" selected>Últimos 30 dias</option><option value="prev_month">Mês Anterior</option><option value="all">Ver Tudo</option>
           </select>
-          <input type="text" id="ord-search" aria-label="Buscar pedido ou cliente" oninput="handleOrdersSearchInput(this.value)" placeholder="Buscar pedido ou cliente..." class="flex-1 min-w-0 md:w-52 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
+          <input type="text" id="ord-search" aria-label="Buscar pedido ou cliente" oninput="handleOrdersSearchInput(this.value)" placeholder="Buscar pedido..." class="flex-1 min-w-0 h-9 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-brand-500">
         </div>
       </div>
       <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 num-align"></div>
@@ -374,7 +374,6 @@
 
   <!-- Aba 3: Finanças -->
   <div id="view-finance" class="hidden space-y-5 animate-in">
-    <!-- Banner prioritário quando há busca ativa -->
     <div id="fin-search-banner" class="hidden bg-brand-50/90 dark:bg-indigo-950/50 border border-brand-200 dark:border-indigo-800/70 rounded-2xl p-3.5 shadow-xs space-y-2.5 num-align">
       <div class="flex items-center justify-between gap-2">
         <div class="min-w-0">
@@ -476,7 +475,7 @@
       <div>
         <p class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-0.5">CONTROLE DE TETO</p>
         <h2 id="qrTetoModalTitle" class="text-lg font-black text-slate-900 dark:text-white">Teto de Gasto</h2>
-        <p id="qrTetoCicloInfo" class="text-[11px] text-slate-500 dark:text-slate-400">Ciclo ativo — despesas lançadas neste ciclo</p>
+        <p id="qrTetoCicloInfo" class="text-[11px] text-slate-500 dark:text-slate-400">Ciclo ativo — despesas contabilizadas neste ciclo</p>
       </div>
       <button type="button" onclick="qrFecharModalTeto()" aria-label="Fechar controle de teto" class="w-8 h-8 rounded-xl qr-pill text-sm font-bold flex items-center justify-center cursor-pointer shrink-0">✕</button>
     </div>
@@ -520,7 +519,7 @@
 <!-- Demais Modais -->
 <div id="patrimonioBensModal" role="dialog" aria-modal="true" aria-labelledby="bensModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0"><div><h3 id="bensModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Inventário de Bens e Patrimônio</h3><p class="text-[11px] text-slate-500 dark:text-slate-400">Imóveis, terrenos e investimentos por fora (Visualização pura)</p></div><button type="button" onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" aria-label="Fechar inventário de bens" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0"><div><h3 id="bensModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Inventário de Bens e Patrimônio</h3><p class="text-[11px] text-slate-500 dark:text-slate-400">Imóveis, terrenos e investimentos externos (Não afetam o caixa)</p></div><button type="button" onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" aria-label="Fechar inventário de bens" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
     <div class="p-4 overflow-y-auto space-y-4 flex-1 num-align">
       <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex justify-between items-center gap-2"><div><p class="text-[10px] uppercase font-bold text-indigo-700 dark:text-indigo-300">Total em Bens Cadastrados</p><p id="patrimonioBensTotal" class="text-lg font-black text-slate-900 dark:text-white">R$ 0,00</p></div><button type="button" onclick="openAddBemForm()" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer shrink-0">+ Adicionar Bem</button></div>
       <div id="formAddBem" class="hidden bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
@@ -1092,16 +1091,13 @@ function switchTab(tab) {
   const fab = document.getElementById('qrPctFab'); if (fab) fab.classList.toggle('hidden', tab !== 'quick');
   updateHeaderTabIcon(tab);
   const title = document.getElementById('header-title'); const sub = document.getElementById('header-subtitle');
-  if (tab === 'quick') { if (title) title.textContent = 'Busca Rápida'; if (sub) sub.textContent = 'Busca · Operação · Cliente · Despesa'; }
+  if (tab === 'quick') { if (title) title.textContent = 'Busca Rápida'; if (sub) sub.textContent = 'Busca · Operação · Cliente · Despesa'; recalcularConsumidoTeto(); }
   else if (tab === 'orders') { if (title) title.textContent = 'Controle de Pedidos'; if (sub) sub.textContent = 'Rastreio · Valores · Lucro'; renderOrders(); }
   else if (tab === 'finance') { if (title) title.textContent = 'Painel Financeiro'; if (sub) sub.textContent = 'Contas · Cartões · Lançamentos'; renderFinance(); }
   else if (tab === 'admin') { if (title) title.textContent = 'Administração'; if (sub) sub.textContent = 'Relatórios e Gráficos'; switchAdminTab('orders'); }
   checkNotifications();
 }
 
-/* =========================================================================
-   PRIORIDADE DA TELA DE FINANCEIRO AO FAZER BUSCA
-   ========================================================================= */
 function isClientQuickCommand(rawText) {
   return /^(clint|cliente|cli)(\s+|$|-|—)/i.test(String(rawText || '').trim());
 }
@@ -1204,13 +1200,6 @@ function switchAdminTab(tab) {
   }
 }
 
-/* =========================================================================
-   MECÂNICA DO TETO DE GASTO (CONTÍNUO NO CICLO ATIVO):
-   - Teto inicia zerado (0) e editável pelo lápis.
-   - Contabiliza apenas despesas pagas (type === 'expense' && status === 'paid')
-     criadas a partir de quickState.tetoCicloInicio.
-   - Exclui despesas operacionais, transferências e pagamentos de fatura.
-   ========================================================================= */
 function isLancamentoOperacional(tx) {
   if (!tx || tx.type !== 'expense') return false;
   const cat = String(tx.cat || '').trim().toLowerCase();
@@ -1233,13 +1222,12 @@ function getTxTimestampMs(tx) {
 }
 
 function isDespesaNoTeto(tx) {
-  if (!tx || tx.type !== 'expense' || tx.status !== 'paid') return false;
+  if (!tx || tx.type !== 'expense') return false;
   if (isLancamentoOperacional(tx)) return false;
   const cat = String(tx.cat || '').trim().toLowerCase();
   const desc = String(tx.desc || '').trim().toLowerCase();
-  if (cat === 'transferência' || cat === 'transferencia' || cat === 'cartão' || cat === 'cartao') return false;
+  if (cat === 'transferência' || cat === 'transferencia') return false;
   if (/^(transferência|transferencia)\s+(para|de)\s+/i.test(desc)) return false;
-  if (/^pagamento\s+fatura\s+/i.test(desc)) return false;
   if (quickState.tetoCicloInicio) {
     const cicloMs = new Date(quickState.tetoCicloInicio).getTime();
     if (Number.isFinite(cicloMs) && getTxTimestampMs(tx) < cicloMs) return false;
@@ -1349,12 +1337,9 @@ function qrAtualizarPercentualFab(overrideTeto) {
   const tetoEfetivo = getValorTetoAtivo(overrideTeto);
   const pct = tetoEfetivo > 0 ? Math.round((quickState.consumido / tetoEfetivo) * 100) : 0;
   fab.textContent = `${pct}%`;
-  fab.style.background = pct < 60 ? '#10b981' : (pct < 85 ? '#f59e0b' : '#e11d48');
+  fab.style.background = pct === 0 ? '#10b981' : (pct < 60 ? '#10b981' : (pct < 85 ? '#f59e0b' : '#e11d48'));
 }
 
-/* =========================================================================
-   DUAS CAIXINHAS DE SELEÇÃO ÚNICAS (FORMA DE PAGAMENTO + INSTITUIÇÃO/CONTA)
-   ========================================================================= */
 function qrResolverSelecaoPagamento(contexto) {
   const metodo = quickState.metodos[contexto] || 'Pix';
   if (metodo === 'Dinheiro') {
@@ -1654,7 +1639,7 @@ function qrRenderListaDespesasTeto() {
   if (cicloInfoEl) {
     cicloInfoEl.textContent = quickState.tetoCicloInicio
       ? `Ciclo iniciado em ${fmtDateTimeTx(quickState.tetoCicloInicio)}`
-      : 'Ciclo ativo — despesas contabilizadas neste ciclo';
+      : 'Ciclo ativo — todas as despesas abatidas contabilizadas';
   }
 
   if (!itens.length) {
@@ -1665,7 +1650,7 @@ function qrRenderListaDespesasTeto() {
   listEl.innerHTML = itens.map(t => `
     <div class="py-2 flex items-center justify-between gap-2">
       <div class="min-w-0">
-        <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
+        <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)} ${t.status === 'pending' ? '<span class="text-[9px] text-amber-500 font-extrabold">(Agendada)</span>' : ''}</p>
         <p class="text-[10px] text-slate-500 truncate">${escapeHtml(t.paymentMethod ? `${t.paymentMethod} · ` : '')}${escapeHtml(getAccountLabel(t.accountId))} · ${fmtDateTimeTx(t.createdAt || t.date)}</p>
       </div>
       <span class="font-black text-amber-600 dark:text-amber-400 shrink-0">${money(t.amount)}</span>
@@ -1772,7 +1757,7 @@ function qrTratarTeclaInline(event) {
 async function qrZerarCicloTeto() {
   const ok = await requestConfirm(
     'Zerar ciclo do teto?',
-    'O teto voltará para R$ 0,00 e o consumo do ciclo será zerado (os lançamentos do extrato financeiro continuam salvos).',
+    'O teto voltará para R$ 0,00 e o consumo do ciclo será zerado a partir de agora (os lançamentos do extrato financeiro continuam salvos).',
     'Zerar Ciclo'
   );
   if (!ok) return;
@@ -1835,9 +1820,6 @@ function populateSelects() {
   const d = document.getElementById('tTo'); if (d) d.value = 'cash';
 }
 
-/* =========================================================================
-   FRETE, DESCONTO COM O CLIENTE E OPERADOR (OP HENRIQUE / OP ELIANA)
-   ========================================================================= */
 function calcValores(o) {
   const inv = (Number(o.valorUSD) || 0) * (Number(o.cotacao) || 0);
   const margemVal = inv * ((Number(o.margem) || 0) / 100);
@@ -2326,173 +2308,202 @@ function openReceipt(orderId) {
   const steps = [
     { icon: '🚚', label: o.cidadeOrigem ? `Saída de ${o.cidadeOrigem}` : 'Saída', dt: o.saida, italic: false },
     { icon: '📦', label: o.transportadora || 'Transportadora', dt: o.subiuTransp, italic: false },
-    { icon: '📍', label: o.cidade1 || '1ª Cidade', dt: o.cidade1Hora, italic: true },
-    { icon: '📍', label: o.cidade2 || '2ª Cidade', dt: o.cidade2Hora, italic: true },
-    { icon: '📍', label: o.cidade3 || '3ª Cidade', dt: o.cidade3Hora, italic: true },
-    { icon: '🏙️', label: 'Centro SP', dt: o.desceuSP, italic: false },
-    { icon: '✅', label: 'Entregue ao Destinatário', dt: o.clienteRecebeu, italic: false }
-  ].filter(s => s.dt);
+    { icon: '📍', label: o.cidade1 || '1ª Cidade', dt: o.cidade1Hora, italic: !o.cidade1 },
+    { icon: '📍', label: o.cidade2 || '2ª Cidade', dt: o.cidade2Hora, italic: !o.cidade2 },
+    { icon: '📍', label: o.cidade3 || '3ª Cidade', dt: o.cidade3Hora, italic: !o.cidade3 },
+    { icon: '🏁', label: 'Desceu em SP', dt: o.desceuSP, italic: false },
+    { icon: '✅', label: 'Recebido pelo Cliente', dt: o.clienteRecebeu, italic: false }
+  ];
 
-  document.getElementById('recTrajetoAdmin').innerHTML = steps.map(s => {
-    const shortParts = fmtShortDT(s.dt).split(' ');
-    const datePart = shortParts[0] || '';
-    const timePart = shortParts[1] || '';
-    return `
-      <div class="flex items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <span class="text-base shrink-0">${s.icon}</span>
-          <span class="font-bold text-slate-100 truncate ${s.italic ? 'italic text-slate-300' : ''}">${escapeHtml(s.label)}</span>
-        </div>
-        <div class="text-right shrink-0 leading-tight">
-          <div class="font-bold text-slate-200">${escapeHtml(datePart)}</div>
-          <div class="text-[11px] text-slate-400">${escapeHtml(timePart)}</div>
-        </div>
-      </div>`;
-  }).join('') || '<p class="text-xs text-slate-400">Sem marcos de rastreio preenchidos.</p>';
+  document.getElementById('recTrajetoAdmin').innerHTML = steps.map(s => `
+    <div class="flex items-start gap-2.5 text-xs ${s.italic ? 'italic text-slate-400' : 'text-slate-200'}">
+      <span class="shrink-0 mt-0.5">${s.icon}</span>
+      <div class="leading-snug"><b class="font-bold text-white">${escapeHtml(s.label)}</b><span class="text-slate-400"> — ${fmtShortDT(s.dt)}</span></div>
+    </div>`).join('');
 
   document.getElementById('recTrajetoCliente').innerHTML = steps.map((s, idx) => {
     const isLast = idx === steps.length - 1;
-    const isFirst = idx === 0;
-    const dotClass = isLast ? 'bg-[#10b981]' : (isFirst ? 'bg-[#818cf8]' : 'bg-[#64748b]');
-    const badgeClass = isLast ? 'bg-[#064e3b] text-[#34d399]' : 'bg-[#263248] text-slate-200';
     return `
-      <div class="relative flex items-start justify-between gap-3 ${!isLast ? 'pb-4' : ''}">
-        ${!isLast ? '<span class="absolute left-[5px] top-3 bottom-0 w-[2px] bg-[#334155]"></span>' : ''}
-        <div class="flex items-start gap-3 min-w-0">
-          <span class="relative z-10 mt-1 w-3 h-3 rounded-full ${dotClass} shrink-0 ring-4 ring-[#1e283c]"></span>
-          <span class="text-sm font-bold text-white leading-snug ${s.italic ? 'italic text-slate-200' : ''}">${escapeHtml(s.label)}</span>
+      <div class="flex items-start gap-3.5 relative ${isLast ? '' : 'pb-4'}">
+        ${!isLast ? '<span aria-hidden="true" class="absolute left-[13px] top-7 bottom-0 w-[2px] bg-[#334155]"></span>' : ''}
+        <span class="w-7 h-7 rounded-full bg-[#243049] border border-[#3b4b6b] flex items-center justify-center text-xs shrink-0 relative z-10">${s.icon}</span>
+        <div class="pt-0.5 leading-snug min-w-0">
+          <p class="text-sm font-bold ${s.italic ? 'italic text-slate-400' : 'text-white'} truncate">${escapeHtml(s.label)}</p>
+          <p class="text-xs text-slate-400 mt-0.5">${fmtShortDT(s.dt)}</p>
         </div>
-        <span class="text-[11px] font-bold px-2.5 py-1 rounded-md shrink-0 ${badgeClass}">${escapeHtml(fmtShortDT(s.dt))}</span>
       </div>`;
-  }).join('') || '<p class="text-xs text-slate-400">Sem marcos de rastreio preenchidos.</p>';
+  }).join('');
 
   document.getElementById('receiptModal').classList.remove('hidden');
 }
-function closeReceipt() { activeReceiptOrderId = null; document.getElementById('receiptModal').classList.add('hidden'); }
-function printReceipt(type) { document.body.classList.remove('printing-admin','printing-client'); if (type==='admin') document.body.classList.add('printing-admin'); else if (type==='client') document.body.classList.add('printing-client'); window.print(); setTimeout(()=>document.body.classList.remove('printing-admin','printing-client'), 300); }
+function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
+function printReceipt(mode) { document.body.classList.remove('printing-admin','printing-client'); document.body.classList.add(mode==='admin'?'printing-admin':'printing-client'); window.print(); setTimeout(() => { document.body.classList.remove('printing-admin','printing-client'); }, 500); }
 
 function buildBackupPayload() {
   return {
-    version: 3,
-    exportedAt: new Date().toISOString(),
-    orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile
+    savedAt: new Date().toISOString(),
+    orders,
+    txs,
+    creditCards,
+    patrimonioBens,
+    quickState,
+    historyData,
+    userProfile,
+    seenNotifications
   };
 }
-function salvarAutoBackup() {
+
+function executarAutoBackup() {
   try {
-    safeSet(AUTO_BACKUP_KEY, JSON.stringify(buildBackupPayload()));
+    const payload = buildBackupPayload();
+    safeSet(AUTO_BACKUP_KEY, JSON.stringify(payload));
   } catch (e) {}
 }
+
 async function restaurarAutoBackup() {
   closeMenu();
   const raw = safeGet(AUTO_BACKUP_KEY);
   if (!raw) {
-    showToast('Nenhum backup automático encontrado.', 'error');
+    showToast('Nenhum backup automático encontrado neste navegador.', 'error');
     return;
   }
-  const ok = await requestConfirm('Restaurar backup automático?', 'Isso substituirá os dados atuais pelos do último backup automático salvo.', 'Restaurar');
+  const ok = await requestConfirm('Restaurar backup automático?', 'Isso substituirá os dados atuais pelos do último backup automático.', 'Restaurar');
   if (!ok) return;
   try {
     const d = JSON.parse(raw);
-    orders = Array.isArray(d.orders) ? d.orders : [];
-    txs = Array.isArray(d.txs) ? d.txs : [];
-    if (Array.isArray(d.creditCards) && d.creditCards.length) creditCards = d.creditCards;
-    patrimonioBens = Array.isArray(d.patrimonioBens) ? d.patrimonioBens : [];
+    if (d.orders) orders = d.orders;
+    if (d.txs) txs = d.txs;
+    if (d.creditCards) creditCards = d.creditCards;
+    if (d.patrimonioBens) patrimonioBens = d.patrimonioBens;
     if (d.quickState) {
-      const tetoNum = Number(d.quickState.teto);
       quickState = {
         ...JSON.parse(JSON.stringify(quickDefaultState)),
         ...d.quickState,
-        teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
         tetoProgramado: 0,
-        tetoCicloInicio: d.quickState.tetoCicloInicio || null,
-        operadorPadrao: normalizeOperator(d.quickState.operadorPadrao)
+        operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
+        metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
+        bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
+        cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
       };
     }
     if (d.historyData) historyData = d.historyData;
     if (d.userProfile) userProfile = d.userProfile;
-    saveAll(); renderDatalists(); populateSelects(); updateMenuUserDisplay(); recalcularConsumidoTeto();
-    renderOrders(); renderFinance(); renderAdminOrders(); renderAdminFinance();
-    showToast('Backup automático restaurado!', 'success');
-  } catch (e) {
-    showToast('Erro ao ler backup automático.', 'error');
+    if (d.seenNotifications) seenNotifications = d.seenNotifications;
+    saveAll();
+    updateMenuUserDisplay();
+    renderDatalists();
+    populateSelects();
+    switchTab(currentTab);
+    showToast('Backup automático restaurado com sucesso!', 'success');
+  } catch (err) {
+    showToast('Falha ao restaurar o backup automático.', 'error');
   }
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 150);
 }
 
 async function exportJSON() {
   closeMenu();
-  salvarAutoBackup();
-  const data = JSON.stringify(buildBackupPayload(), null, 2);
-  const filename = `backup_gestao_${todayISO()}.json`;
-  const blob = new Blob([data], { type: 'application/json' });
-  const file = new File([blob], filename, { type: 'application/json' });
+  const dataStr = JSON.stringify(buildBackupPayload(), null, 2);
+  const fileName = `backup-sistema-gestao-${todayISO()}.json`;
 
-  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-    try {
-      await navigator.share({ title: 'Backup do Sistema de Gestão', files: [file] });
-      showToast('Backup compartilhado!', 'success');
+  try {
+    const file = new File([dataStr], fileName, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && typeof navigator.share === 'function') {
+      await navigator.share({
+        title: 'Backup Sistema de Gestão',
+        text: `Backup de dados (${todayISO()})`,
+        files: [file]
+      });
+      showToast('Backup compartilhado com sucesso!', 'success');
       return;
-    } catch (e) {
-      if (e && e.name === 'AbortError') return;
     }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return;
   }
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
-  showToast('Backup JSON baixado!', 'success');
+
+  downloadFile(dataStr, fileName, 'application/json');
+  showToast('Arquivo de backup JSON baixado.', 'success');
+}
+
+function exportSystemCode() {
+  closeMenu();
+  const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const fileName = `sistema-gestao-${todayISO()}.html`;
+  downloadFile(fullHtml, fileName, 'text/html;charset=utf-8');
+  showToast('Sistema completo (.html) baixado!', 'success');
 }
 
 function importJSON(e) {
   const file = e.target.files[0]; if (!file) return;
-  const r = new FileReader();
-  r.onload = async () => {
+  const reader = new FileReader();
+  reader.onload = async function(ev) {
     try {
-      const d = JSON.parse(r.result);
-      const ok = await requestConfirm('Importar backup?', 'Os dados atuais serão substituídos pelos do arquivo selecionado.', 'Importar');
+      const d = JSON.parse(ev.target.result);
+      const ok = await requestConfirm('Importar backup?', 'Deseja substituir os dados atuais pelos dados do arquivo?', 'Importar');
       if (!ok) { e.target.value = ''; return; }
-      salvarAutoBackup();
-      orders = d.orders || []; txs = d.txs || [];
-      if (d.creditCards && d.creditCards.length) creditCards = d.creditCards;
-      patrimonioBens = d.patrimonioBens || [];
+      executarAutoBackup();
+      if (d.orders) orders = d.orders;
+      if (d.txs) txs = d.txs;
+      if (d.creditCards) creditCards = d.creditCards;
+      if (d.patrimonioBens) patrimonioBens = d.patrimonioBens;
       if (d.quickState) {
-        const tetoNum = Number(d.quickState.teto);
         quickState = {
           ...JSON.parse(JSON.stringify(quickDefaultState)),
           ...d.quickState,
-          teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
           tetoProgramado: 0,
-          tetoCicloInicio: d.quickState.tetoCicloInicio || null,
-          operadorPadrao: normalizeOperator(d.quickState.operadorPadrao)
+          operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
+          metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
+          bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
+          cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
         };
       }
       if (d.historyData) historyData = d.historyData;
       if (d.userProfile) userProfile = d.userProfile;
-      saveAll(); renderDatalists(); populateSelects(); updateMenuUserDisplay(); recalcularConsumidoTeto();
-      renderOrders(); renderFinance(); renderAdminOrders(); renderAdminFinance();
+      if (d.seenNotifications) seenNotifications = d.seenNotifications;
+      saveAll(); updateMenuUserDisplay(); renderDatalists(); populateSelects(); switchTab(currentTab);
       showToast('Backup importado com sucesso!', 'success');
-    } catch (err) {
-      showToast('Erro ao ler o arquivo JSON.', 'error');
-    } finally {
-      e.target.value = '';
-    }
+    } catch(err) { showToast('Erro ao importar arquivo JSON.', 'error'); }
+    e.target.value = '';
   };
-  r.readAsText(file);
+  reader.readAsText(file);
 }
-function exportSystemCode() { closeMenu(); const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML; const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click(); URL.revokeObjectURL(url); showToast('Arquivo index.html baixado!', 'success'); }
-
 async function resetData() {
   closeMenu();
-  const ok = await requestConfirm('Restaurar padrão?', 'Isso apagará todos os pedidos, lançamentos e configurações atuais.', 'Apagar e Restaurar');
+  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará todos os pedidos, lançamentos e configurações atuais.', 'Restaurar');
   if (!ok) return;
-  salvarAutoBackup();
-  [STORAGE_ORDERS,STORAGE_FIN,STORAGE_CARDS,STORAGE_BENS,STORAGE_QUICK,HISTORY_KEY,PROFILE_KEY,SEEN_NOTIF_KEY].forEach(k => localStorage.removeItem(k));
-  location.reload();
+  executarAutoBackup();
+  orders = []; txs = []; patrimonioBens = [];
+  creditCards = [
+    { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
+    { id: 'htn', name: 'HTN Card', limit: 850.00, currentBill: 35.70, dueDay: 25, color: '#16a34a' },
+    { id: 'neon', name: 'NEON', limit: 2137.00, currentBill: 0.00, dueDay: 23, color: '#0284c7' },
+    { id: 'pernambucanas', name: 'Pernambucanas', limit: 100.00, currentBill: 0.00, dueDay: 25, color: '#1d4ed8' }
+  ];
+  quickState = JSON.parse(JSON.stringify(quickDefaultState));
+  historyData = { clients: [], cities: [], carriers: [] };
+  seenNotifications = {};
+  safeSet(HISTORY_KEY, JSON.stringify(historyData));
+  saveAll(); renderDatalists(); populateSelects(); switchTab(currentTab);
+  showToast('Dados restaurados para o padrão.', 'info');
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  load();
-  salvarAutoBackup();
-});
+load();
+executarAutoBackup();
+setInterval(executarAutoBackup, 120000);
+window.addEventListener('beforeunload', executarAutoBackup);
 </script>
 </body>
 </html>
