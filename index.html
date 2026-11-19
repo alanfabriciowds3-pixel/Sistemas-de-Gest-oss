@@ -410,6 +410,31 @@
       <div class="flex justify-between items-center mb-2 px-1"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cartões de Crédito</h2><span class="text-[10px] font-bold text-purple-700 dark:text-purple-400">Toque no cartão para detalhes</span></div>
       <div class="scroll-x num-align" id="cards-container"></div>
     </div>
+    <!-- Grouped totals summary bar so expenses (e.g. R$ 700,00), income, net grouped total, and receivables/payables are immediately visible -->
+    <div id="fin-grouped-summary" class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-700 p-3.5 shadow-xs num-align">
+      <div class="flex items-center justify-between gap-2 mb-2.5">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Resumo Agrupado (Período / Filtro)</span>
+        <span id="fin-grp-count" class="text-[10px] font-bold text-slate-400">0 lançamentos</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div class="rounded-xl p-2.5 bg-emerald-50/80 dark:bg-emerald-950/35 border border-emerald-200/60 dark:border-emerald-800/40 min-w-0">
+          <p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 truncate">Entradas</p>
+          <p id="fin-grp-income" class="text-xs sm:text-sm font-black text-emerald-700 dark:text-emerald-400 truncate mt-0.5">R$ 0,00</p>
+        </div>
+        <div class="rounded-xl p-2.5 bg-rose-50/80 dark:bg-rose-950/35 border border-rose-200/60 dark:border-rose-800/40 min-w-0">
+          <p class="text-[10px] font-bold uppercase text-rose-700 dark:text-rose-400 truncate">Saídas (Despesas/Fretes)</p>
+          <p id="fin-grp-expense" class="text-xs sm:text-sm font-black text-rose-700 dark:text-rose-400 truncate mt-0.5">R$ 0,00</p>
+        </div>
+        <div class="rounded-xl p-2.5 bg-indigo-50/80 dark:bg-indigo-950/35 border border-indigo-200/60 dark:border-indigo-800/40 min-w-0">
+          <p class="text-[10px] font-bold uppercase text-indigo-700 dark:text-indigo-400 truncate">Agrupado Líquido</p>
+          <p id="fin-grp-net" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">R$ 0,00</p>
+        </div>
+        <div class="rounded-xl p-2.5 bg-amber-50/80 dark:bg-amber-950/35 border border-amber-200/60 dark:border-amber-800/40 min-w-0">
+          <p class="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-400 truncate">A Receber / A Pagar</p>
+          <p id="fin-grp-pending" class="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-400 truncate mt-0.5">R$ 0,00</p>
+        </div>
+      </div>
+    </div>
     <div class="grid grid-cols-2 gap-3 num-align">
       <div role="button" tabindex="0" onclick="openPatrimonioModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPatrimonioModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p><h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate mt-1">R$ 0,00</h3></div>
       <div role="button" tabindex="0" onclick="openPendingLucrosModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPendingLucrosModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 tracking-wider truncate">A Receber (Lucros) ℹ️</p><h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0,00</h3></div>
@@ -663,14 +688,14 @@
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
         <div><label class="lbl" for="oPaymentMethod">Forma Pagto. (Receb.)</label><select id="oPaymentMethod" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"><option value="Pix">Pix</option><option value="Débito">Débito</option><option value="Crédito">Crédito</option><option value="Dinheiro">Dinheiro</option><option value="Boleto">Boleto</option></select></div>
-        <div><label class="lbl" for="oFreightStatus">Status do Frete</label><select id="oFreightStatus" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"><option value="paid">Já Pago</option><option value="pending">Conta a Pagar</option></select></div>
+        <div><label class="lbl" for="oFreightStatus">Status do Frete</label><select id="oFreightStatus" onchange="handleFreightStatusChange()" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"><option value="paid">Já Pago</option><option value="pending">Conta a Pagar</option></select></div>
       </div>
       <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
-        <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" id="oPagoMerc" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu adiantei a Mercadoria?</span></label>
+        <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" id="oPagoMerc" checked onchange="togglePaymentOptions(); updatePreview();" class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu adiantei a Mercadoria?</span></label>
         <div id="wrapAccOutMerc" class="pl-8"><label class="sr-only" for="oAccOutMerc">Conta do adiantamento da mercadoria</label><select id="oAccOutMerc" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"></select></div>
-        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700"><input type="checkbox" id="oPagoFrete" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei o Frete?</span></label>
+        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700"><input type="checkbox" id="oPagoFrete" checked onchange="handlePagoFreteCheckboxChange()" class="w-5 h-5 text-brand-600 rounded"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Eu paguei o Frete?</span></label>
         <div id="wrapAccOutFrete" class="pl-8 space-y-1"><label class="text-[10px] uppercase font-bold text-slate-500" for="oAccOutFrete">Conta do pagamento do frete:</label><select id="oAccOutFrete" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"></select></div>
-        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700"><input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Lançar Pedido / Baixa no Financeiro?</span></label>
+        <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700"><input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions(); updatePreview();" class="w-5 h-5 text-brand-600 rounded"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Lançar Pedido / Baixa no Financeiro?</span></label>
         <div id="wrapAccIn" class="pl-8 space-y-2"><div><label class="text-[10px] uppercase font-bold text-slate-500" for="oAccIn">Conta para o Lucro / Baixa:</label><select id="oAccIn" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"></select></div></div>
       </div>
       <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50 num-align">
@@ -1888,12 +1913,13 @@ function calcValores(o) {
   const margemVal = inv * ((Number(o.margem) || 0) / 100);
   const freteVal = Number(o.frete) || 0;
   const comCliente = !!(o && o.clienteRecebeu);
-  const descontoFreteCliente = comCliente ? freteVal : 0;
+  const fretePagoOuLancado = !!(o && (o.pagoFrete || o.freightStatus === 'paid'));
+  const descontoFreteCliente = (comCliente || fretePagoOuLancado) ? freteVal : 0;
   const meuCustoMerc = o.pagoMerc ? inv : 0;
-  const meuCustoFrete = o.pagoFrete ? freteVal : 0;
+  const meuCustoFrete = (o.pagoFrete && o.freightStatus !== 'pending') ? freteVal : 0;
   const faturamento = margemVal + meuCustoMerc;
   const lucroLiq = margemVal - descontoFreteCliente;
-  return { inv, margemVal, lucroLiq, faturamento, meuCustoMerc, meuCustoFrete, freteVal, descontoFreteCliente, comCliente };
+  return { inv, margemVal, lucroLiq, faturamento, meuCustoMerc, meuCustoFrete, freteVal, descontoFreteCliente, comCliente, fretePagoOuLancado };
 }
 
 function statusOf(o){ if (o.clienteRecebeu) return {key:'entregue', label:'Entregue', cls:'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'}; if (o.desceuSP) return {key:'sp', label:'Em SP', cls:'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400'}; if (o.subiuTransp) return {key:'transito', label:'Em trânsito', cls:'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'}; if (o.saida) return {key:'saiu', label:'Saiu', cls:'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'}; return {key:'pendente', label:'Pendente', cls:'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'}; }
@@ -1942,18 +1968,47 @@ function updatePreview() {
   const margem = parseFloat(document.getElementById('oMargem').value) || 0;
   const frete = parseFloat(document.getElementById('oFrete').value) || 0;
   const comCliente = !!(document.getElementById('oRec') && document.getElementById('oRec').value);
+  const pagoFreteChecked = !!(document.getElementById('oPagoFrete') && document.getElementById('oPagoFrete').checked);
+  const freightStatusVal = document.getElementById('oFreightStatus') ? document.getElementById('oFreightStatus').value : 'paid';
+  const descontarFreteAgora = comCliente || (pagoFreteChecked && freightStatusVal !== 'pending');
   const inv = usd * cot;
   const margemVal = inv * (margem / 100);
-  const descontoFrete = comCliente ? frete : 0;
+  const descontoFrete = descontarFreteAgora ? frete : 0;
   const lucro = margemVal - descontoFrete;
   const total = inv + margemVal;
   document.getElementById('prevBRL').textContent = money(inv);
   document.getElementById('prevMargem').textContent = money(margemVal);
-  document.getElementById('prevFreteLabel').textContent = comCliente ? '(-) Frete c/ Cliente' : '(-) Custo Frete (pendente c/ cliente)';
+  if (freightStatusVal === 'pending' && !pagoFreteChecked) {
+    document.getElementById('prevFreteLabel').textContent = '(-) Custo Frete (Conta a Pagar / Futuro)';
+  } else if (descontarFreteAgora) {
+    document.getElementById('prevFreteLabel').textContent = '(-) Custo Frete (Abatido)';
+  } else {
+    document.getElementById('prevFreteLabel').textContent = '(-) Custo Frete (Pendente)';
+  }
   document.getElementById('prevFrete').textContent = money(descontoFrete);
   document.getElementById('prevLucro').textContent = money(lucro);
   document.getElementById('prevFinal').textContent = money(total);
   const btn = document.getElementById('btnTestDrive'); const link = document.getElementById('oDriveLink').value.trim(); if (link) { btn.href = link; btn.classList.remove('hidden'); } else btn.classList.add('hidden');
+}
+
+function handlePagoFreteCheckboxChange() {
+  const pfEl = document.getElementById('oPagoFrete');
+  const fsEl = document.getElementById('oFreightStatus');
+  if (pfEl && fsEl) {
+    fsEl.value = pfEl.checked ? 'paid' : 'pending';
+  }
+  togglePaymentOptions();
+  updatePreview();
+}
+
+function handleFreightStatusChange() {
+  const pfEl = document.getElementById('oPagoFrete');
+  const fsEl = document.getElementById('oFreightStatus');
+  if (pfEl && fsEl) {
+    pfEl.checked = fsEl.value === 'paid';
+  }
+  togglePaymentOptions();
+  updatePreview();
 }
 
 function openModal(orderId) {
@@ -1971,10 +2026,14 @@ function openModal(orderId) {
       document.getElementById('oMargem').value = o.margem || '';
       document.getElementById('oFrete').value = o.frete || '';
       document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
-      document.getElementById('oFreightStatus').value = o.freightStatus || 'paid';
-      document.getElementById('oPagoMerc').checked = !!o.pagoMerc;
-      document.getElementById('oPagoFrete').checked = !!o.pagoFrete;
-      document.getElementById('oSyncFin').checked = false;
+      const resolvedFreightStatus = o.freightStatus || (o.pagoFrete ? 'paid' : 'pending');
+      document.getElementById('oFreightStatus').value = resolvedFreightStatus;
+      document.getElementById('oPagoMerc').checked = o.pagoMerc !== undefined ? !!o.pagoMerc : true;
+      document.getElementById('oPagoFrete').checked = o.pagoFrete !== undefined ? !!o.pagoFrete : (resolvedFreightStatus === 'paid');
+      document.getElementById('oSyncFin').checked = o.syncFin !== undefined ? !!o.syncFin : true;
+      if (o.accOutMerc && document.getElementById('oAccOutMerc')) document.getElementById('oAccOutMerc').value = o.accOutMerc;
+      if (o.accOutFrete && document.getElementById('oAccOutFrete')) document.getElementById('oAccOutFrete').value = o.accOutFrete;
+      if (o.accIn && document.getElementById('oAccIn')) document.getElementById('oAccIn').value = o.accIn;
       document.getElementById('oOrigem').value = o.cidadeOrigem || '';
       document.getElementById('oSaida').value = o.saida || '';
       document.getElementById('oTransportadora').value = o.transportadora || '';
@@ -1993,6 +2052,7 @@ function openModal(orderId) {
   }
   document.getElementById('modalTitle').textContent = 'Novo Pedido'; document.getElementById('oId').value = '';
   ['oPedido','oCliente','oDriveLink','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('oFreightStatus').value = 'paid';
   document.getElementById('oPagoMerc').checked = true; document.getElementById('oPagoFrete').checked = true; document.getElementById('oSyncFin').checked = true;
   updatePreview(); togglePaymentOptions();
 }
@@ -2032,33 +2092,146 @@ function cleanupOrderTransactions(orderId, orderNumber, clientName, kindFilter =
   });
 }
 
-// Records immediate freight expense when paid, using a clean description without forced operator suffixes
-function registrarSaidaFreteImediata(order, accFreteId) {
+// Records immediate freight expense when paid, or keeps a pending payable when freight > 0 is scheduled for later
+function syncFreightFinancialEntry(order, accFreteId) {
   const freteVal = Number(order.frete) || 0;
   cleanupOrderTransactions(order.id, order.pedido, order.cliente, 'freight');
-  if (!order.pagoFrete || freteVal <= 0 || !accFreteId) return;
+  if (freteVal <= 0) return;
+
   const opLabel = normalizeOperator(order.operador || quickState.operadorPadrao);
-  const origemLabel = getAccountLabel(accFreteId);
+  const origemLabel = getAccountLabel(accFreteId || 'cash');
   const clienteLabel = order.cliente || 'Cliente';
-  txs.unshift({
-    id: genId(),
-    orderId: order.id,
-    isFreightOut: true,
-    isOp: true,
-    operador: opLabel,
-    origem: origemLabel,
-    desc: `Frete ${order.pedido} · ${clienteLabel}`,
-    amount: freteVal,
-    type: 'expense',
-    cat: 'Despesa Operacional',
-    date: todayISO(),
-    createdAt: new Date().toISOString(),
-    accountId: accFreteId,
-    status: 'paid'
-  });
-  if (accFreteId.startsWith('card_')) {
-    const card = creditCards.find(c => c.id === accFreteId.replace('card_', ''));
-    if (card) card.currentBill = (Number(card.currentBill) || 0) + freteVal;
+  const isPaidNow = !!order.pagoFrete && order.freightStatus !== 'pending';
+
+  if (isPaidNow) {
+    txs.unshift({
+      id: genId(),
+      orderId: order.id,
+      isFreightOut: true,
+      isOp: true,
+      operador: opLabel,
+      origem: origemLabel,
+      desc: `Frete ${order.pedido} · ${clienteLabel}`,
+      amount: freteVal,
+      type: 'expense',
+      cat: 'Despesa Operacional',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accFreteId || 'cash',
+      status: 'paid'
+    });
+    if (accFreteId && accFreteId.startsWith('card_')) {
+      const card = creditCards.find(c => c.id === accFreteId.replace('card_', ''));
+      if (card) card.currentBill = (Number(card.currentBill) || 0) + freteVal;
+    }
+  } else {
+    txs.unshift({
+      id: genId(),
+      orderId: order.id,
+      isFreightOut: true,
+      isOp: true,
+      operador: opLabel,
+      origem: origemLabel,
+      desc: `Frete a Pagar ${order.pedido} · ${clienteLabel}`,
+      amount: freteVal,
+      type: 'expense',
+      cat: 'Despesa Operacional',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accFreteId || 'cash',
+      status: 'pending'
+    });
+  }
+}
+
+// Saves an order, blocks duplicate order numbers, handles paid vs pending freight, and keeps profit pending until received
+function saveOrder(e) {
+  e.preventDefault();
+  try {
+    const id = document.getElementById('oId').value.trim();
+    const existingOrder = id ? orders.find(o => String(o.id) === String(id)) : null;
+    const rawPedido = document.getElementById('oPedido').value.trim();
+    const normalizedPedido = normalizeOrderNumber(rawPedido);
+
+    if (normalizedPedido && isDuplicateOrderNumber(normalizedPedido, existingOrder ? existingOrder.id : '')) {
+      showToast(`O número de pedido ${normalizedPedido} já existe e não pode ser repetido.`, 'error');
+      return;
+    }
+
+    const operador = normalizeOperator(existingOrder ? existingOrder.operador : quickState.operadorPadrao);
+    const accOutMercId = document.getElementById('oAccOutMerc').value || 'c6';
+    const accFreteId = document.getElementById('oAccOutFrete').value || 'cash';
+    const accInId = document.getElementById('oAccIn').value || 'nubank';
+    const pagoFreteChecked = !!document.getElementById('oPagoFrete').checked;
+    const freightStatusVal = document.getElementById('oFreightStatus').value || (pagoFreteChecked ? 'paid' : 'pending');
+
+    const order = {
+      id: existingOrder ? existingOrder.id : genId(),
+      pedido: normalizedPedido || rawPedido || `PED-${String(orders.length+1).padStart(3,'0')}`,
+      cliente: document.getElementById('oCliente').value.trim(),
+      operador,
+      driveLink: document.getElementById('oDriveLink').value.trim(),
+      valorUSD: parseFloat(document.getElementById('oUSD').value)||0,
+      cotacao: parseFloat(document.getElementById('oCot').value)||0,
+      margem: parseFloat(document.getElementById('oMargem').value)||0,
+      frete: parseFloat(document.getElementById('oFrete').value)||0,
+      paymentMethod: document.getElementById('oPaymentMethod').value,
+      freightStatus: freightStatusVal,
+      pagoMerc: !!document.getElementById('oPagoMerc').checked,
+      pagoFrete: pagoFreteChecked,
+      accOutMerc: accOutMercId,
+      accOutFrete: accFreteId,
+      accIn: accInId,
+      syncFin: !!document.getElementById('oSyncFin').checked,
+      cidadeOrigem: document.getElementById('oOrigem').value.trim(),
+      saida: document.getElementById('oSaida').value,
+      transportadora: document.getElementById('oTransportadora').value.trim(),
+      subiuTransp: document.getElementById('oSubiu').value,
+      cidade1: document.getElementById('oC1').value.trim(),
+      cidade1Hora: document.getElementById('oC1H').value,
+      cidade2: document.getElementById('oC2').value.trim(),
+      cidade2Hora: document.getElementById('oC2H').value,
+      cidade3: document.getElementById('oC3').value.trim(),
+      cidade3Hora: document.getElementById('oC3H').value,
+      desceuSP: document.getElementById('oSP').value,
+      clienteRecebeu: document.getElementById('oRec').value
+    };
+
+    if (existingOrder) {
+      const idx = orders.findIndex(o => String(o.id) === String(existingOrder.id));
+      if (idx >= 0) orders[idx] = order;
+      else orders.unshift(order);
+    } else {
+      orders.unshift(order);
+    }
+
+    syncFreightFinancialEntry(order, accFreteId);
+
+    if (order.syncFin) {
+      cleanupOrderTransactions(order.id, order.pedido, order.cliente, 'profit');
+      const v = calcValores(order);
+      if (v.lucroLiq > 0) {
+        const clienteDesc = order.cliente || 'Cliente';
+        const profitStatus = order.clienteRecebeu ? 'paid' : 'pending';
+        txs.unshift({
+          id: genId(),
+          orderId: order.id,
+          operador,
+          desc: `Lucro ${order.pedido} · ${clienteDesc}`,
+          amount: v.lucroLiq,
+          type: 'income',
+          cat: 'Receita',
+          date: todayISO(),
+          createdAt: new Date().toISOString(),
+          accountId: accInId,
+          status: profitStatus
+        });
+      }
+    }
+    saveToHistory(order); saveAll(); closeModal(); renderOrders(); renderFinance();
+    showToast(`Pedido ${order.pedido} salvo com sucesso!`, 'success');
+  } catch (err) {
+    showToast('Erro ao salvar pedido. Verifique os campos e tente novamente.', 'error');
   }
 }
 
@@ -2192,6 +2365,34 @@ function renderFinance() {
     );
   }
   items = items.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  // Update grouped totals so expenses (such as R$ 700,00) appear clearly in grouped summaries
+  const grpCountEl = document.getElementById('fin-grp-count');
+  const grpIncEl = document.getElementById('fin-grp-income');
+  const grpExpEl = document.getElementById('fin-grp-expense');
+  const grpNetEl = document.getElementById('fin-grp-net');
+  const grpPendEl = document.getElementById('fin-grp-pending');
+  let grpInc = 0, grpExp = 0, grpPendRec = 0, grpPendPay = 0;
+  items.forEach(t => {
+    const amt = Number(t.amount) || 0;
+    if (t.status === 'pending') {
+      if (t.type === 'income') grpPendRec += amt;
+      else grpPendPay += amt;
+    } else if (t.type === 'income') {
+      grpInc += amt;
+    } else if (t.type === 'expense') {
+      grpExp += amt;
+    }
+  });
+  const grpNet = grpInc - grpExp;
+  if (grpCountEl) grpCountEl.textContent = `${items.length} ${items.length === 1 ? 'lançamento' : 'lançamentos'}`;
+  if (grpIncEl) grpIncEl.textContent = money(grpInc);
+  if (grpExpEl) grpExpEl.textContent = money(grpExp);
+  if (grpNetEl) {
+    grpNetEl.textContent = money(grpNet);
+    grpNetEl.className = 'text-xs sm:text-sm font-black truncate mt-0.5 ' + (grpNet >= 0 ? 'text-indigo-700 dark:text-indigo-300' : 'text-rose-600 dark:text-rose-400');
+  }
+  if (grpPendEl) grpPendEl.textContent = `${money(grpPendRec)} / ${money(grpPendPay)}`;
 
   const orderMatches = searchLower
     ? orders.filter(o =>
