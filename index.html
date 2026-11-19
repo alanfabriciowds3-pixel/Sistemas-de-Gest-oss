@@ -410,30 +410,6 @@
       <div class="flex justify-between items-center mb-2 px-1"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cartões de Crédito</h2><span class="text-[10px] font-bold text-purple-700 dark:text-purple-400">Toque no cartão para detalhes</span></div>
       <div class="scroll-x num-align" id="cards-container"></div>
     </div>
-    <div id="fin-grouped-summary" class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-700 p-3.5 shadow-xs num-align">
-      <div class="flex items-center justify-between gap-2 mb-2.5">
-        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Resumo Agrupado (Período / Filtro)</span>
-        <span id="fin-grp-count" class="text-[10px] font-bold text-slate-400">0 lançamentos</span>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-        <div class="rounded-xl p-2.5 bg-emerald-50/80 dark:bg-emerald-950/35 border border-emerald-200/60 dark:border-emerald-800/40 min-w-0">
-          <p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 truncate">Entradas</p>
-          <p id="fin-grp-income" class="text-xs sm:text-sm font-black text-emerald-700 dark:text-emerald-400 truncate mt-0.5">R$ 0,00</p>
-        </div>
-        <div class="rounded-xl p-2.5 bg-rose-50/80 dark:bg-rose-950/35 border border-rose-200/60 dark:border-rose-800/40 min-w-0">
-          <p class="text-[10px] font-bold uppercase text-rose-700 dark:text-rose-400 truncate">Saídas (Despesas/Fretes)</p>
-          <p id="fin-grp-expense" class="text-xs sm:text-sm font-black text-rose-700 dark:text-rose-400 truncate mt-0.5">R$ 0,00</p>
-        </div>
-        <div class="rounded-xl p-2.5 bg-indigo-50/80 dark:bg-indigo-950/35 border border-indigo-200/60 dark:border-indigo-800/40 min-w-0">
-          <p class="text-[10px] font-bold uppercase text-indigo-700 dark:text-indigo-400 truncate">Agrupado Líquido</p>
-          <p id="fin-grp-net" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">R$ 0,00</p>
-        </div>
-        <div class="rounded-xl p-2.5 bg-amber-50/80 dark:bg-amber-950/35 border border-amber-200/60 dark:border-amber-800/40 min-w-0">
-          <p class="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-400 truncate">A Receber / A Pagar</p>
-          <p id="fin-grp-pending" class="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-400 truncate mt-0.5">R$ 0,00</p>
-        </div>
-      </div>
-    </div>
     <div class="grid grid-cols-2 gap-3 num-align">
       <div role="button" tabindex="0" onclick="openPatrimonioModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPatrimonioModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p><h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate mt-1">R$ 0,00</h3></div>
       <div role="button" tabindex="0" onclick="openPendingLucrosModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPendingLucrosModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 tracking-wider truncate">A Receber (Lucros) ℹ️</p><h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0,00</h3></div>
@@ -649,8 +625,7 @@
     <div class="p-5 space-y-3 text-sm num-align">
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-slate-500">Saldo Físico nas Contas:</span><b class="text-slate-800 dark:text-white" id="detSaldoBancos">R$ 0,00</b></div>
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-amber-600">Lucros a Receber:</span><b class="text-amber-600" id="detReceber">R$ 0,00</b></div>
-      <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-indigo-500">Inventário de Bens:</span><b class="text-indigo-600 dark:text-indigo-400" id="detBens">R$ 0,00</b></div>
-      <div class="flex justify-between py-2 font-black text-base pt-1"><span>Patrimônio Total:</span><span class="text-brand-600 dark:text-indigo-400" id="detPatrimonioTotal">R$ 0,00</span></div>
+      <div class="flex justify-between py-2 font-black text-base pt-1"><span>Patrimônio Financeiro Total:</span><span class="text-brand-600 dark:text-indigo-400" id="detPatrimonioTotal">R$ 0,00</span></div>
       <button type="button" onclick="document.getElementById('patrimonioModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold mt-3 cursor-pointer">Fechar</button>
     </div>
   </div>
@@ -2261,9 +2236,8 @@ function renderFinance() {
   if (acc) acc.innerHTML = ACCOUNTS.map(a => `<div class="min-w-[155px] flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-xs border border-slate-200/70 dark:border-slate-700" style="${a.style}"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 truncate">${a.name}</p><p class="text-sm font-black text-slate-900 dark:text-white mt-1">${money(getAccountBalance(a.id))}</p><button type="button" onclick="openEditBalance('${a.id}')" class="mt-1.5 text-[11px] text-brand-600 dark:text-brand-400 font-bold cursor-pointer">Ajustar</button></div>`).join('');
   const cards = document.getElementById('cards-container');
   if (cards) cards.innerHTML = creditCards.map(c => `<div role="button" tabindex="0" onclick="openCardDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="min-w-[175px] flex-shrink-0 rounded-xl p-3 shadow-xs text-white cursor-pointer" style="background:linear-gradient(135deg, ${c.color}, ${c.color}cc);"><p class="text-[10px] font-bold uppercase opacity-90 truncate">${c.name}</p><p class="text-sm font-black mt-1">${money(Math.max(0, c.limit - c.currentBill))}</p><p class="text-[10px] opacity-90 mt-0.5">Fatura: ${money(c.currentBill)}</p></div>`).join('');
-  const bensTotal = patrimonioBens.reduce((a,b) => a + (Number(b.amount)||0), 0);
   const pendLucroTotal = getPendingLucros().reduce((a,t)=>a+t.amount,0);
-  const patr = document.getElementById('fin-patrimonio'); if (patr) patr.textContent = money(getTotalBankBalance() + pendLucroTotal + bensTotal);
+  const patr = document.getElementById('fin-patrimonio'); if (patr) patr.textContent = money(getTotalBankBalance() + pendLucroTotal);
   const pend = document.getElementById('fin-pending-lucro'); if (pend) pend.textContent = money(pendLucroTotal);
   const list = document.getElementById('fin-list'); if (!list) return;
   const period = document.getElementById('fin-period-filter')?.value || '30d';
@@ -2281,33 +2255,6 @@ function renderFinance() {
     );
   }
   items = items.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-
-  const grpCountEl = document.getElementById('fin-grp-count');
-  const grpIncEl = document.getElementById('fin-grp-income');
-  const grpExpEl = document.getElementById('fin-grp-expense');
-  const grpNetEl = document.getElementById('fin-grp-net');
-  const grpPendEl = document.getElementById('fin-grp-pending');
-  let grpInc = 0, grpExp = 0, grpPendRec = 0, grpPendPay = 0;
-  items.forEach(t => {
-    const amt = Number(t.amount) || 0;
-    if (t.status === 'pending') {
-      if (t.type === 'income') grpPendRec += amt;
-      else grpPendPay += amt;
-    } else if (t.type === 'income') {
-      grpInc += amt;
-    } else if (t.type === 'expense') {
-      grpExp += amt;
-    }
-  });
-  const grpNet = grpInc - grpExp;
-  if (grpCountEl) grpCountEl.textContent = `${items.length} ${items.length === 1 ? 'lançamento' : 'lançamentos'}`;
-  if (grpIncEl) grpIncEl.textContent = money(grpInc);
-  if (grpExpEl) grpExpEl.textContent = money(grpExp);
-  if (grpNetEl) {
-    grpNetEl.textContent = money(grpNet);
-    grpNetEl.className = 'text-xs sm:text-sm font-black truncate mt-0.5 ' + (grpNet >= 0 ? 'text-indigo-700 dark:text-indigo-300' : 'text-rose-600 dark:text-rose-400');
-  }
-  if (grpPendEl) grpPendEl.textContent = `${money(grpPendRec)} / ${money(grpPendPay)}`;
 
   const orderMatches = searchLower
     ? orders.filter(o =>
@@ -2416,7 +2363,7 @@ function confirmPayCard(e) {
   showToast('Fatura paga com sucesso!', 'success');
 }
 
-function openPatrimonioModal() { const bens = patrimonioBens.reduce((a,b) => a + (Number(b.amount)||0), 0); const lp = getPendingLucros().reduce((a,t)=>a+t.amount,0); const s = getTotalBankBalance(); document.getElementById('detSaldoBancos').textContent = money(s); document.getElementById('detReceber').textContent = money(lp); document.getElementById('detBens').textContent = money(bens); document.getElementById('detPatrimonioTotal').textContent = money(s + lp + bens); document.getElementById('patrimonioModal').classList.remove('hidden'); }
+function openPatrimonioModal() { const lp = getPendingLucros().reduce((a,t)=>a+t.amount,0); const s = getTotalBankBalance(); document.getElementById('detSaldoBancos').textContent = money(s); document.getElementById('detReceber').textContent = money(lp); document.getElementById('detPatrimonioTotal').textContent = money(s + lp); document.getElementById('patrimonioModal').classList.remove('hidden'); }
 function openPendingLucrosModal() {
   const list = document.getElementById('pending-lucros-list');
   const p = getPendingLucros();
@@ -2448,163 +2395,176 @@ function renderAdminOrders() {
   orders.forEach(o => { const v = calcValores(o); fat+=v.faturamento; lucro+=v.lucroLiq; });
   document.getElementById('adm-total-fat').textContent = money(fat); document.getElementById('adm-total-profit').textContent = money(lucro);
   const det = document.getElementById('adm-detailed-list');
-  if (!orders.length) det.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido registrado.</p>';
-  else det.innerHTML = orders.map(o => { const v = calcValores(o); return `<div class="p-3.5 hover:bg-slate-50/70 dark:hover:bg-slate-800/50"><div class="flex justify-between items-start gap-2"><div><p class="font-bold text-slate-900 dark:text-white text-sm">${escapeHtml(o.pedido)} · ${escapeHtml(o.cliente)}</p><p class="text-[11px] text-slate-500">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)}</p></div><div class="text-right"><p class="text-sm font-black text-emerald-600">${money(v.lucroLiq)}</p><p class="text-[10px] text-slate-400">Fat: ${money(v.faturamento)}</p></div></div></div>`; }).join('');
-  const mapCli = {};
-  orders.forEach(o => { const c = (o.cliente||'Não informado').trim(); if (!mapCli[c]) mapCli[c] = {qty:0, profit:0}; mapCli[c].qty++; mapCli[c].profit += calcValores(o).lucroLiq; });
-  const ranked = Object.entries(mapCli).sort((a,b)=>b[1].profit-a[1].profit);
-  const tbl = document.getElementById('adm-client-table');
-  if (!ranked.length) tbl.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Nenhum cliente encontrado.</td></tr>';
-  else tbl.innerHTML = ranked.map(([c,d],i) => `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40"><td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${i+1}. ${escapeHtml(c)}</td><td class="px-4 py-3 text-center font-semibold">${d.qty}</td><td class="px-4 py-3 text-right font-black text-emerald-600">${money(d.profit)}</td></tr>`).join('');
+  if (!orders.length) det.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido.</p>';
+  else det.innerHTML = orders.map(o => {
+    const v = calcValores(o);
+    const opLabel = normalizeOperator(o.operador);
+    return `<div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer" onclick="openReceipt('${o.id}')"><div class="flex justify-between items-center gap-2"><p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido)} · ${escapeHtml(o.cliente||'—')} · ${escapeHtml(opLabel)}</p><b class="text-xs text-emerald-600 shrink-0">${money(v.lucroLiq)}</b></div><p class="text-[10px] text-slate-500 mt-0.5">${fmtDT(o.saida)} · Faturamento: ${money(v.faturamento)}</p></div>`;
+  }).join('');
+  const map = new Map();
+  orders.forEach(o => { const c = (o.cliente||'Sem Nome').trim(); const v = calcValores(o); if (!map.has(c)) map.set(c, {name:c, qtd:0, lucro:0}); const item = map.get(c); item.qtd++; item.lucro += v.lucroLiq; });
+  const ranking = Array.from(map.values()).sort((a,b)=>b.lucro-a.lucro);
+  const tb = document.getElementById('adm-client-table');
+  if (!ranking.length) tb.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Sem clientes.</td></tr>';
+  else tb.innerHTML = ranking.map(r => `<tr><td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(r.name)}</td><td class="px-4 py-3 text-center font-semibold">${r.qtd}</td><td class="px-4 py-3 text-right font-extrabold text-emerald-600">${money(r.lucro)}</td></tr>`).join('');
 }
 
 function renderAdminFinance() {
-  const f = document.getElementById('adm-fin-filter')?.value || 'all';
-  const items = txs.filter(t => f==='all' || t.type===f).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  const flt = document.getElementById('adm-fin-filter')?.value || 'all';
   const list = document.getElementById('adm-fin-list');
-  if (!items.length) list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento encontrado.</p>';
-  else list.innerHTML = items.map(t => `<div class="p-3 flex justify-between items-center gap-2"><div class="min-w-0"><p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><b class="text-sm shrink-0 ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'+':'-'}${money(t.amount)}</b></div>`).join('');
+  const items = txs.filter(t => flt==='all' || t.type===flt).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  if (!items.length) { list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Sem registros.</p>'; return; }
+  list.innerHTML = items.map(t => { const isInc = t.type==='income'; return `<div class="p-3 flex justify-between items-center gap-2"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.createdAt||t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><b class="text-sm shrink-0 ${isInc?'text-emerald-600':'text-rose-600'}">${isInc?'+':'-'}${money(t.amount)}</b></div>`; }).join('');
 }
 
 function openChartsModal() {
   const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth();
-  const rows = [];
-  let maxVal = 0;
-  let monthIncTotal = 0;
-  let monthExpTotal = 0;
+  const ym = `${now.getFullYear()}-${pad(now.getMonth()+1)}`;
+  const monthTxs = txs.filter(t => String(t.date || '').startsWith(ym) && t.status !== 'pending');
 
-  for (let d = 1; d <= 31; d++) {
-    const dt = new Date(y, m, d);
-    if (dt.getMonth() !== m) break;
-    const ds = y + '-' + pad(m+1) + '-' + pad(d);
-    const inc = txs.filter(t => t.status === 'paid' && t.type === 'income' && t.date === ds).reduce((a, b) => a + b.amount, 0);
-    const exp = txs.filter(t => t.status === 'paid' && t.type === 'expense' && t.date === ds).reduce((a, b) => a + b.amount, 0);
-    monthIncTotal += inc;
-    monthExpTotal += exp;
-    maxVal = Math.max(maxVal, inc, exp);
-    if (inc > 0 || exp > 0) rows.push({ d, inc, exp });
-  }
+  let totalInc = 0;
+  let totalExp = 0;
+  const byAccount = {};
+  ACCOUNTS.forEach(a => { byAccount[a.id] = { name: a.name, inc: 0, exp: 0 }; });
 
-  const mIncEl = document.getElementById('chart-month-income');
-  const mExpEl = document.getElementById('chart-month-expense');
-  const scaleEl = document.getElementById('chart-scale-max');
-  if (mIncEl) mIncEl.textContent = money(monthIncTotal);
-  if (mExpEl) mExpEl.textContent = money(monthExpTotal);
-  if (scaleEl) scaleEl.textContent = `Escala: ${money(maxVal)}`;
+  monthTxs.forEach(t => {
+    const amt = Number(t.amount) || 0;
+    if (t.type === 'income') totalInc += amt;
+    else if (t.type === 'expense') totalExp += amt;
+    if (byAccount[t.accountId]) {
+      if (t.type === 'income') byAccount[t.accountId].inc += amt;
+      else if (t.type === 'expense') byAccount[t.accountId].exp += amt;
+    }
+  });
 
-  const cont = document.getElementById('column-charts-container');
-  if (!rows.length) {
-    cont.innerHTML = '<p class="text-center text-xs text-slate-400 py-8">Sem movimentações pagas no mês atual.</p>';
-  } else {
-    cont.innerHTML = rows.map(r => {
-      const incPct = maxVal > 0 ? Math.max(r.inc > 0 ? 6 : 0, Math.round((r.inc / maxVal) * 100)) : 0;
-      const expPct = maxVal > 0 ? Math.max(r.exp > 0 ? 6 : 0, Math.round((r.exp / maxVal) * 100)) : 0;
-      return `
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-700/60 space-y-2">
-          <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 dark:text-slate-200">
-            <span>Dia ${pad(r.d)}/${pad(m+1)}</span>
-            <span class="text-[11px] font-bold text-slate-500">Saldo dia: ${money(r.inc - r.exp)}</span>
+  document.getElementById('chart-month-income').textContent = money(totalInc);
+  document.getElementById('chart-month-expense').textContent = money(totalExp);
+
+  const accValues = Object.values(byAccount);
+  const maxVal = Math.max(100, ...accValues.map(x => Math.max(x.inc, x.exp)));
+  document.getElementById('chart-scale-max').textContent = `Escala máx: ${money(maxVal)}`;
+
+  const container = document.getElementById('column-charts-container');
+  container.innerHTML = accValues.map(item => {
+    const incPct = Math.min(100, Math.round((item.inc / maxVal) * 100));
+    const expPct = Math.min(100, Math.round((item.exp / maxVal) * 100));
+    return `
+      <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-700 space-y-2.5">
+        <div class="flex justify-between items-center gap-2">
+          <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.name)}</span>
+          <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0">+${money(item.inc)} / -${money(item.exp)}</span>
+        </div>
+        <div class="space-y-1.5">
+          <div class="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width:${incPct}%"></div>
           </div>
-          <div class="space-y-1.5">
-            <div class="flex items-center gap-2 text-[11px]">
-              <span class="w-16 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">Entrada</span>
-              <div class="flex-1 h-4 rounded-md bg-slate-200/70 dark:bg-slate-800 overflow-hidden">
-                <div class="h-full rounded-md bg-emerald-500 transition-all" style="width:${incPct}%"></div>
-              </div>
-              <span class="w-24 text-right font-extrabold text-emerald-700 dark:text-emerald-400 shrink-0">${money(r.inc)}</span>
-            </div>
-            <div class="flex items-center gap-2 text-[11px]">
-              <span class="w-16 text-rose-600 dark:text-rose-400 font-bold shrink-0">Saída</span>
-              <div class="flex-1 h-4 rounded-md bg-slate-200/70 dark:bg-slate-800 overflow-hidden">
-                <div class="h-full rounded-md bg-rose-500 transition-all" style="width:${expPct}%"></div>
-              </div>
-              <span class="w-24 text-right font-extrabold text-rose-700 dark:text-rose-400 shrink-0">${money(r.exp)}</span>
-            </div>
+          <div class="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div class="h-full bg-rose-500 rounded-full transition-all duration-300" style="width:${expPct}%"></div>
           </div>
         </div>
-      `;
-    }).join('');
-  }
+      </div>
+    `;
+  }).join('');
+
   document.getElementById('chartsModal').classList.remove('hidden');
 }
 
-// Receipt modal, tracking timeline, and print handlers
+// Administrative and customer receipt modal + printing
 function openReceipt(orderId) {
-  const o = orders.find(x => x.id === orderId); if (!o) return; activeReceiptOrderId = orderId; const v = calcValores(o);
-  document.getElementById('recPedido').textContent = o.pedido || '—'; document.getElementById('recCliente').textContent = o.cliente || '—'; document.getElementById('recOperador').textContent = normalizeOperator(o.operador); document.getElementById('recData').textContent = fmtDT(o.saida);
-  document.getElementById('recInv').textContent = money(v.inv); document.getElementById('recMargem').textContent = money(v.margemVal);
-  if (o.freightStatus === 'pending' && !o.pagoFrete) {
-    document.getElementById('recFreteAdminLabel').textContent = '(-) Custo Frete (A Pagar):';
-  } else if (v.descontoFreteCliente > 0) {
-    document.getElementById('recFreteAdminLabel').textContent = '(-) Custo Frete (Abatido):';
-  } else {
-    document.getElementById('recFreteAdminLabel').textContent = '(-) Custo Frete (Pendente):';
+  const o = orders.find(x => x.id === orderId); if (!o) return;
+  activeReceiptOrderId = orderId;
+  const v = calcValores(o);
+  const opLabel = normalizeOperator(o.operador);
+  document.getElementById('recPedido').textContent = o.pedido || '—';
+  document.getElementById('recCliente').textContent = o.cliente || '—';
+  const recOpEl = document.getElementById('recOperador');
+  if (recOpEl) recOpEl.textContent = opLabel;
+  document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
+  document.getElementById('recInv').textContent = money(v.inv);
+  document.getElementById('recMargem').textContent = money(v.margemVal);
+  const freteAdminLbl = document.getElementById('recFreteAdminLabel');
+  if (freteAdminLbl) {
+    if (o.freightStatus === 'pending' && !o.pagoFrete) {
+      freteAdminLbl.textContent = '(-) Custo Frete (Conta a Pagar):';
+    } else if (v.descontarFreteCliente) {
+      freteAdminLbl.textContent = '(-) Custo Frete (Abatido):';
+    } else {
+      freteAdminLbl.textContent = '(-) Custo Frete (Pendente):';
+    }
   }
-  document.getElementById('recFreteAdmin').textContent = money(v.descontoFreteCliente);
-  document.getElementById('recLucro').textContent = money(v.lucroLiq); document.getElementById('recFat').textContent = money(v.faturamento);
-  document.getElementById('recPedidoCliente').textContent = o.pedido || '—'; document.getElementById('recClienteCliente').textContent = o.cliente || '—'; document.getElementById('recFreteCliente').textContent = money(v.freteVal);
-  const stEl = document.getElementById('recStatusFrete');
-  if (o.freightStatus === 'pending' && !o.pagoFrete) { stEl.textContent = 'CONTA A PAGAR (FUTURO)'; stEl.className = 'text-[10px] font-black uppercase tracking-wide text-[#fbbf24] bg-[#451a03] border border-[#f59e0b]/40 px-2.5 py-1 rounded'; }
-  else { stEl.textContent = 'INCLUSO NO FATURAMENTO'; stEl.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded'; }
+  document.getElementById('recFreteAdmin').textContent = money(v.descontarFreteCliente ? v.freteVal : 0);
+  document.getElementById('recLucro').textContent = money(v.lucroLiq);
+  document.getElementById('recFat').textContent = money(v.faturamento);
+  document.getElementById('recPedidoCliente').textContent = o.pedido || '—';
+  document.getElementById('recClienteCliente').textContent = o.cliente || '—';
+  document.getElementById('recFreteCliente').textContent = money(v.freteVal);
 
-  const steps = [];
-  if (o.saida) steps.push({ title: `Saída (${o.cidadeOrigem || 'Origem'})`, time: o.saida });
-  if (o.transportadora || o.subiuTransp) steps.push({ title: `Subiu na Transp. (${o.transportadora || 'Transportadora'})`, time: o.subiuTransp });
-  if (o.cidade1) steps.push({ title: `Passou em ${o.cidade1}`, time: o.cidade1Hora });
-  if (o.cidade2) steps.push({ title: `Passou em ${o.cidade2}`, time: o.cidade2Hora });
-  if (o.cidade3) steps.push({ title: `Passou em ${o.cidade3}`, time: o.cidade3Hora });
-  if (o.desceuSP) steps.push({ title: 'Desceu em São Paulo', time: o.desceuSP });
-  if (o.clienteRecebeu) steps.push({ title: 'Entregue ao Cliente', time: o.clienteRecebeu });
-  if (!steps.length) steps.push({ title: 'Aguardando atualização de rastreio', time: '' });
-
-  const adminList = document.getElementById('recTrajetoAdmin');
-  if (adminList) {
-    adminList.innerHTML = steps.map((s, idx) => `<div class="flex items-start gap-2.5 text-xs"><span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span><div class="min-w-0 flex-1"><p class="font-bold text-slate-200">${escapeHtml(s.title)}</p><p class="text-[11px] text-slate-400">${s.time ? fmtDT(s.time) : 'Sem data/hora registrada'}</p></div></div>`).join('');
+  const stFreteEl = document.getElementById('recStatusFrete');
+  if (stFreteEl) {
+    if (o.freightStatus === 'pending' && !o.pagoFrete) {
+      stFreteEl.textContent = 'CONTA A PAGAR / EM ABERTO';
+      stFreteEl.className = 'text-[10px] font-black uppercase tracking-wide text-amber-300 bg-amber-950/90 border border-amber-400/40 px-2.5 py-1 rounded';
+    } else {
+      stFreteEl.textContent = 'INCLUSO NO FATURAMENTO';
+      stFreteEl.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded';
+    }
   }
 
-  const clientList = document.getElementById('recTrajetoCliente');
-  if (clientList) {
-    clientList.innerHTML = `<div class="space-y-4">${steps.map((s, idx) => {
-      const isLast = idx === steps.length - 1;
-      const isDone = !!s.time;
-      return `<div class="relative flex items-start gap-3.5">${!isLast ? '<span class="absolute left-[11px] top-6 bottom-[-14px] w-0.5 bg-slate-700/80"></span>' : ''}<span class="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black shrink-0 z-10 ${isDone ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400 border border-slate-600'}">${idx + 1}</span><div class="min-w-0 flex-1"><p class="text-sm font-bold text-white leading-snug">${escapeHtml(s.title)}</p><p class="text-xs text-slate-400 mt-0.5">${s.time ? fmtShortDT(s.time) : 'Em andamento'}</p></div></div>`;
-    }).join('')}</div>`;
-  }
+  const pts = [];
+  if (o.cidadeOrigem || o.saida) pts.push({ label: o.cidadeOrigem || 'Origem', dt: fmtDT(o.saida), sub: 'Saída / Origem' });
+  if (o.transportadora || o.subiuTransp) pts.push({ label: o.transportadora || 'Transportadora', dt: fmtDT(o.subiuTransp), sub: 'Subiu Transp.' });
+  if (o.cidade1 || o.cidade1Hora) pts.push({ label: o.cidade1 || '1ª Cidade', dt: fmtDT(o.cidade1Hora), sub: '1ª Parada' });
+  if (o.cidade2 || o.cidade2Hora) pts.push({ label: o.cidade2 || '2ª Cidade', dt: fmtDT(o.cidade2Hora), sub: '2ª Parada' });
+  if (o.cidade3 || o.cidade3Hora) pts.push({ label: o.cidade3 || '3ª Cidade', dt: fmtDT(o.cidade3Hora), sub: '3ª Parada' });
+  if (o.desceuSP) pts.push({ label: 'São Paulo (SP)', dt: fmtDT(o.desceuSP), sub: 'Desceu SP' });
+  if (o.clienteRecebeu) pts.push({ label: o.cliente || 'Cliente', dt: fmtDT(o.clienteRecebeu), sub: 'Recebido pelo Cliente' });
+
+  document.getElementById('recTrajetoAdmin').innerHTML = pts.length ? pts.map(p => `<div class="flex justify-between items-start gap-2 border-b border-slate-700/60 pb-2 text-xs"><div><p class="font-bold text-white">${escapeHtml(p.label)}</p><p class="text-[10px] text-slate-400">${escapeHtml(p.sub)}</p></div><span class="font-semibold text-slate-300 text-right shrink-0">${p.dt}</span></div>`).join('') : '<p class="text-xs text-slate-400">Sem etapas de rastreio registradas.</p>';
+
+  document.getElementById('recTrajetoCliente').innerHTML = pts.length ? pts.map((p, idx) => `
+    <div class="flex items-start gap-3 ${idx < pts.length - 1 ? 'pb-4 border-l-2 border-indigo-500/60 ml-2 pl-4 relative' : 'ml-2 pl-4 relative'}">
+      <span class="w-3 h-3 rounded-full bg-[#6366f1] border-2 border-[#1e283c] absolute -left-[7px] top-1"></span>
+      <div class="flex-1 min-w-0">
+        <div class="flex justify-between items-baseline gap-2">
+          <p class="text-xs font-extrabold text-white truncate">${escapeHtml(p.label)}</p>
+          <span class="text-[10px] font-semibold text-slate-400 shrink-0">${fmtShortDT(p.dt.includes(' às ') ? `${p.dt.split(' às ')[0].split('/').reverse().join('-')}T${p.dt.split(' às ')[1]}` : '')}</span>
+        </div>
+        <p class="text-[10px] text-slate-400">${escapeHtml(p.sub)}</p>
+      </div>
+    </div>`).join('') : '<p class="text-xs text-slate-400">Sem etapas de rastreio registradas.</p>';
 
   document.getElementById('receiptModal').classList.remove('hidden');
 }
-function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
-function printReceipt(type) { document.body.classList.remove('printing-admin','printing-client'); if (type==='admin') document.body.classList.add('printing-admin'); else document.body.classList.add('printing-client'); window.print(); setTimeout(()=>{ document.body.classList.remove('printing-admin','printing-client'); }, 400); }
 
-// Backup, restore, and full system HTML download
+function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
+function printReceipt(type) {
+  document.body.classList.remove('printing-admin','printing-client');
+  document.body.classList.add(type==='admin'?'printing-admin':'printing-client');
+  window.print();
+  setTimeout(()=>{ document.body.classList.remove('printing-admin','printing-client'); }, 500);
+}
+
+// Backup, system HTML export, auto-backup restore, and factory reset
 function exportJSON() {
-  const payload = { version: 2, exportedAt: new Date().toISOString(), orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile };
+  closeMenu();
+  const payload = { exportedAt: new Date().toISOString(), profile: userProfile, orders, txs, creditCards, patrimonioBens, quickState, historyData };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_gestao_${todayISO()}.json`; a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href), 1000); closeMenu();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `backup-gestao-${todayISO()}.json`; a.click(); URL.revokeObjectURL(url);
   showToast('Backup JSON exportado!', 'success');
 }
 
 function exportSystemCode() {
-  const docClone = document.documentElement.cloneNode(true);
-  const headEl = docClone.querySelector('head');
-  if (headEl) {
-    headEl.querySelectorAll('script[src*="cdn.tailwindcss.com"]').forEach(el => el.remove());
-  }
-  const htmlContent = '<!DOCTYPE html>\n' + docClone.outerHTML;
-  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `Sistema_Gestao_Definitivo_${todayISO()}.html`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   closeMenu();
-  showToast('Sistema completo (.html) baixado!', 'success');
+  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `sistema-gestao-${todayISO()}.html`; a.click(); URL.revokeObjectURL(url);
+  showToast('Sistema (.html) baixado!', 'success');
 }
 
 function importJSON(e) {
-  const file = e.target.files[0]; if (!file) return;
+  const file = e.target.files && e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     try {
@@ -2613,32 +2573,48 @@ function importJSON(e) {
       if (Array.isArray(data.txs)) txs = data.txs;
       if (Array.isArray(data.creditCards)) creditCards = data.creditCards;
       if (Array.isArray(data.patrimonioBens)) patrimonioBens = data.patrimonioBens;
-      if (data.quickState) quickState = { ...JSON.parse(JSON.stringify(quickDefaultState)), ...data.quickState, tetoProgramado: 0, operadorPadrao: normalizeOperator(data.quickState.operadorPadrao) };
+      if (data.quickState) quickState = { ...JSON.parse(JSON.stringify(quickDefaultState)), ...data.quickState, operadorPadrao: normalizeOperator(data.quickState.operadorPadrao) };
       if (data.historyData) historyData = data.historyData;
-      if (data.userProfile) userProfile = data.userProfile;
-      saveAll(); updateMenuUserDisplay(); renderDatalists(); populateSelects(); switchTab(currentTab);
+      if (data.profile) { userProfile = data.profile; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); updateMenuUserDisplay(); }
+      saveAll(); renderDatalists(); populateSelects(); switchTab(currentTab);
       showToast('Backup importado com sucesso!', 'success');
-    } catch (err) { showToast('Arquivo de backup inválido.', 'error'); }
+    } catch(err) { showToast('Arquivo de backup inválido.', 'error'); }
   };
   reader.readAsText(file); e.target.value = '';
 }
-async function restaurarAutoBackup() {
-  const raw = safeGet(AUTO_BACKUP_KEY); if (!raw) { showToast('Nenhum backup automático encontrado.', 'error'); closeMenu(); return; }
-  const ok = await requestConfirm('Restaurar backup automático?', 'Os dados atuais serão substituídos pelo último backup automático.', 'Restaurar');
-  if (!ok) { closeMenu(); return; }
+
+function salvarAutoBackup() {
   try {
-    const d = JSON.parse(raw); orders=d.orders||[]; txs=d.txs||[]; creditCards=d.creditCards||creditCards; patrimonioBens=d.patrimonioBens||[];
-    if (d.quickState) quickState={...JSON.parse(JSON.stringify(quickDefaultState)), ...d.quickState, tetoProgramado:0, operadorPadrao: normalizeOperator(d.quickState.operadorPadrao)};
-    if (d.historyData) historyData=d.historyData; if (d.userProfile) userProfile=d.userProfile;
-    saveAll(); updateMenuUserDisplay(); switchTab(currentTab); showToast('Backup automático restaurado!', 'success');
-  } catch (err) { showToast('Erro ao restaurar backup automático.', 'error'); }
-  closeMenu();
+    const snap = { savedAt: new Date().toISOString(), profile: userProfile, orders, txs, creditCards, patrimonioBens, quickState, historyData };
+    safeSet(AUTO_BACKUP_KEY, JSON.stringify(snap));
+  } catch(e){}
 }
+
+async function restaurarAutoBackup() {
+  closeMenu();
+  const raw = safeGet(AUTO_BACKUP_KEY);
+  if (!raw) { showToast('Nenhum backup automático encontrado.', 'error'); return; }
+  const ok = await requestConfirm('Restaurar backup automático?', 'Os dados atuais serão substituídos pelo último backup automático salvo.', 'Restaurar');
+  if (!ok) return;
+  try {
+    const data = JSON.parse(raw);
+    if (Array.isArray(data.orders)) orders = data.orders;
+    if (Array.isArray(data.txs)) txs = data.txs;
+    if (Array.isArray(data.creditCards)) creditCards = data.creditCards;
+    if (Array.isArray(data.patrimonioBens)) patrimonioBens = data.patrimonioBens;
+    if (data.quickState) quickState = { ...JSON.parse(JSON.stringify(quickDefaultState)), ...data.quickState, operadorPadrao: normalizeOperator(data.quickState.operadorPadrao) };
+    if (data.historyData) historyData = data.historyData;
+    if (data.profile) { userProfile = data.profile; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); updateMenuUserDisplay(); }
+    saveAll(); renderDatalists(); populateSelects(); switchTab(currentTab);
+    showToast('Backup automático restaurado!', 'success');
+  } catch(e) { showToast('Falha ao restaurar backup automático.', 'error'); }
+}
+
 async function resetData() {
-  const ok = await requestConfirm('Restaurar dados padrão?', 'Todos os pedidos, lançamentos e configurações serão apagados.', 'Apagar e Restaurar');
-  if (!ok) { closeMenu(); return; }
-  safeSet(AUTO_BACKUP_KEY, JSON.stringify({ savedAt: new Date().toISOString(), orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile }));
-  ['pedidos_v1','fin_txs_v2','credit_cards_final_v1','patrimonio_bens_v1','capa_rapida_padrao_salvo_v1','pedidos_history_v1','seen_notifications_v1'].forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+  closeMenu();
+  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará seus pedidos, lançamentos e configurações salvas neste navegador.', 'Restaurar');
+  if (!ok) return;
+  salvarAutoBackup();
   orders = []; txs = []; patrimonioBens = [];
   creditCards = [
     { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
@@ -2649,10 +2625,11 @@ async function resetData() {
   quickState = JSON.parse(JSON.stringify(quickDefaultState));
   historyData = { clients: [], cities: [], carriers: [] };
   seenNotifications = {};
-  updateMenuUserDisplay(); renderDatalists(); populateSelects(); switchTab('quick');
-  closeMenu(); showToast('Dados restaurados para o padrão!', 'success');
+  saveAll(); safeSet(HISTORY_KEY, JSON.stringify(historyData)); renderDatalists(); populateSelects(); switchTab(currentTab);
+  showToast('Dados restaurados para o padrão.', 'info');
 }
 
+// Application bootstrap
 load();
 </script>
 </body>
