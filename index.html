@@ -483,29 +483,34 @@
     <div class="overflow-y-auto space-y-4 pr-0.5 flex-1">
       <div class="qr-subbox rounded-2xl p-3.5 flex flex-col justify-between min-h-[92px] num-align">
         <div class="flex items-center justify-between gap-2 mb-1.5">
-          <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">TETO DE GASTO</p>
-          <button type="button" id="qrBtnEditTeto" onclick="qrIniciarEdicaoTeto()" aria-label="Editar valor do teto de gasto" title="Editar Teto de Gasto" class="w-7 h-7 rounded-lg qr-pill text-xs flex items-center justify-center hover:border-brand-500 transition cursor-pointer shrink-0">✏️</button>
+          <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">TETO MENSAL</p>
+          <button type="button" id="qrBtnEditTeto" onclick="qrIniciarEdicaoTeto()" aria-label="Editar valor do teto mensal" title="Editar Teto Mensal" class="w-7 h-7 rounded-lg qr-pill text-xs flex items-center justify-center hover:border-brand-500 transition cursor-pointer shrink-0">✏️</button>
         </div>
-        <p id="qrDisplayTeto" onclick="qrIniciarEdicaoTeto()" title="Toque para editar" class="text-xl font-black text-slate-900 dark:text-white cursor-pointer">R$ 0,00</p>
+        <p id="qrDisplayTeto" onclick="qrIniciarEdicaoTeto()" title="Toque para editar" class="text-xl font-black text-slate-900 dark:text-white cursor-pointer">R$ 3.000,00</p>
         <div id="qrInlineWrapTeto" class="hidden money-wrap mt-0.5">
           <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
-          <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="0,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="qr-input-box w-full h-10 pl-10 pr-3 rounded-xl text-base font-black outline-none focus:border-brand-500">
+          <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="3000,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="qr-input-box w-full h-10 pl-10 pr-3 rounded-xl text-base font-black outline-none focus:border-brand-500">
         </div>
       </div>
 
+      <div id="qrTetoAlertaBox" class="hidden rounded-xl p-3 text-xs font-extrabold border bg-rose-500/15 border-rose-500/40 text-rose-700 dark:text-rose-300 num-align">
+        <p id="qrTetoAlertaTitulo">⚠️ Meta / Teto atingido!</p>
+        <p id="qrTetoAlertaDetalhe" class="text-[11px] font-semibold mt-0.5 opacity-90"></p>
+      </div>
+
       <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Consumido / Descontado (s/ op.):</span><strong id="qrTetoConsumido" class="text-right">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Margem restante vs. Teto:</span><strong id="qrTetoMargem" class="text-right">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Consumido no Mês (s/ op.):</span><strong id="qrTetoConsumido" class="text-right text-slate-900 dark:text-white">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Restante até o Teto:</span><strong id="qrTetoMargem" class="text-right text-emerald-600 dark:text-emerald-400">R$ 3.000,00</strong></div>
         <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Percentual atual:</span><strong id="qrTetoPercentual" class="text-right">0%</strong></div>
       </div>
 
       <div class="qr-subbox rounded-xl p-3 space-y-2 num-align">
         <div class="flex items-center justify-between gap-2">
-          <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">DESPESAS DO CICLO NO TETO</span>
+          <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">DESPESAS CONTABILIZADAS</span>
           <span id="qrTetoItensQtd" class="text-[11px] font-bold text-slate-500 dark:text-slate-400">0 itens</span>
         </div>
         <div id="qrTetoItensList" class="divide-y divide-slate-200/70 dark:divide-slate-700/60 max-h-40 overflow-y-auto text-xs">
-          <p class="py-3 text-center text-slate-400">Nenhuma despesa lançada neste ciclo.</p>
+          <p class="py-3 text-center text-slate-400">Nenhuma despesa contabilizada neste ciclo.</p>
         </div>
       </div>
     </div>
@@ -844,7 +849,7 @@ let creditCards = [
 ];
 
 const quickDefaultState = {
-  teto: 0,
+  teto: 3000,
   tetoProgramado: 0,
   consumido: 0,
   tetoCicloInicio: null,
@@ -1202,9 +1207,10 @@ function switchAdminTab(tab) {
 
 function isLancamentoOperacional(tx) {
   if (!tx || tx.type !== 'expense') return false;
+  if (tx.isOp === true || tx.isFreightOut === true) return true;
   const cat = String(tx.cat || '').trim().toLowerCase();
   const desc = String(tx.desc || '').trim().toLowerCase();
-  if (tx.isOp === true || cat === 'despesa operacional' || cat === 'operacional') return true;
+  if (cat === 'despesa operacional' || cat === 'operacional') return true;
   if (/^(op\b|operacional\b)/i.test(desc)) return true;
   return false;
 }
@@ -1263,7 +1269,8 @@ function getValorTetoAtivo(overrideTeto) {
   if (typeof overrideTeto === 'number' && Number.isFinite(overrideTeto)) {
     return Math.max(0, overrideTeto);
   }
-  return Math.max(0, Number(quickState.teto) || 0);
+  const atual = Number(quickState.teto);
+  return Number.isFinite(atual) && atual >= 0 ? atual : 3000;
 }
 
 function recalcularConsumidoTeto(overrideTeto) {
@@ -1300,7 +1307,7 @@ function load(){
       quickState = {
         ...JSON.parse(JSON.stringify(quickDefaultState)),
         ...p,
-        teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
+        teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 3000,
         tetoProgramado: 0,
         tetoCicloInicio: p.tetoCicloInicio || null,
         operadorPadrao: normalizeOperator(p.operadorPadrao),
@@ -1337,7 +1344,7 @@ function qrAtualizarPercentualFab(overrideTeto) {
   const tetoEfetivo = getValorTetoAtivo(overrideTeto);
   const pct = tetoEfetivo > 0 ? Math.round((quickState.consumido / tetoEfetivo) * 100) : 0;
   fab.textContent = `${pct}%`;
-  fab.style.background = pct === 0 ? '#10b981' : (pct < 60 ? '#10b981' : (pct < 85 ? '#f59e0b' : '#e11d48'));
+  fab.style.background = pct < 60 ? '#10b981' : (pct < 100 ? '#f59e0b' : '#e11d48');
 }
 
 function qrResolverSelecaoPagamento(contexto) {
@@ -1664,10 +1671,32 @@ function qrRenderResumoTeto(tetoVal) {
   const displayEl = document.getElementById('qrDisplayTeto');
   if (displayEl) displayEl.textContent = money(efetivo);
   document.getElementById('qrTetoConsumido').textContent = money(consumido);
-  const margem = Math.max(0, efetivo - consumido);
-  document.getElementById('qrTetoMargem').textContent = money(margem);
+  const restante = Math.max(0, efetivo - consumido);
+  const margemEl = document.getElementById('qrTetoMargem');
+  margemEl.textContent = money(restante);
+  margemEl.className = 'text-right ' + (restante > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+
   const pct = efetivo > 0 ? Math.round((consumido / efetivo) * 100) : 0;
   document.getElementById('qrTetoPercentual').textContent = `${pct}%`;
+
+  const alertBox = document.getElementById('qrTetoAlertaBox');
+  const alertTitle = document.getElementById('qrTetoAlertaTitulo');
+  const alertDetail = document.getElementById('qrTetoAlertaDetalhe');
+  if (alertBox && alertTitle && alertDetail) {
+    if (efetivo > 0 && consumido >= efetivo) {
+      const excedente = consumido - efetivo;
+      alertBox.classList.remove('hidden');
+      alertTitle.textContent = consumido > efetivo
+        ? `🚨 Teto de ${money(efetivo)} ultrapassado (${pct}%)!`
+        : `🎯 Meta / Teto de ${money(efetivo)} atingido (100%)!`;
+      alertDetail.textContent = excedente > 0
+        ? `Consumo atual: ${money(consumido)} (${money(excedente)} acima do teto).`
+        : `Consumo atual: ${money(consumido)} — restante zerado.`;
+    } else {
+      alertBox.classList.add('hidden');
+    }
+  }
+
   qrRenderListaDespesasTeto();
   qrAtualizarPercentualFab(efetivo);
 }
@@ -1757,17 +1786,16 @@ function qrTratarTeclaInline(event) {
 async function qrZerarCicloTeto() {
   const ok = await requestConfirm(
     'Zerar ciclo do teto?',
-    'O teto voltará para R$ 0,00 e o consumo do ciclo será zerado a partir de agora (os lançamentos do extrato financeiro continuam salvos).',
+    'O consumo do ciclo será zerado a partir de agora (os lançamentos do extrato financeiro continuam salvos).',
     'Zerar Ciclo'
   );
   if (!ok) return;
   qrFecharCampoInlineTeto(true);
-  quickState.teto = 0;
   quickState.tetoProgramado = 0;
   quickState.consumido = 0;
   quickState.tetoCicloInicio = new Date().toISOString();
   saveAll();
-  qrRenderResumoTeto(0);
+  qrRenderResumoTeto(quickState.teto);
   showToast('Ciclo do teto zerado.', 'success');
 }
 
