@@ -1223,7 +1223,7 @@ function switchAdminTab(tab) {
   }
 }
 
-// Non-operational expense filtering and ceiling calculation
+// Non-operational expense filtering and ceiling calculation (credit card purchases count; card bill payments do not duplicate)
 function isLancamentoOperacional(tx) {
   if (!tx || tx.type !== 'expense') return false;
   if (tx.isOp === true || tx.isFreightOut === true) return true;
@@ -1249,8 +1249,10 @@ function getTxTimestampMs(tx) {
 function isDespesaNoTeto(tx) {
   if (!tx || tx.type !== 'expense') return false;
   if (isLancamentoOperacional(tx)) return false;
+  if (tx.isCardBillPayment === true) return false;
   const cat = String(tx.cat || '').trim().toLowerCase();
   const desc = String(tx.desc || '').trim().toLowerCase();
+  if (cat === 'pagamento de fatura' || /^pagamento\s+fatura\b/i.test(desc)) return false;
   if (cat === 'transferência' || cat === 'transferencia') return false;
   if (/^(transferência|transferencia)\s+(para|de)\s+/i.test(desc)) return false;
   if (quickState.tetoCicloInicio) {
@@ -2216,7 +2218,32 @@ function openCardDetail(cardId) { const c = creditCards.find(x => x.id === cardI
 function openEditCardFromDetail() { const id = document.getElementById('detCardId').value; const c = creditCards.find(x => x.id === id); if (!c) return; document.getElementById('cardId').value = id; document.getElementById('cardName').value = c.name; document.getElementById('cardLimit').value = c.limit; document.getElementById('cardDueDay').value = `Dia ${c.dueDay}`; document.getElementById('cardCurrentBill').value = c.currentBill; document.getElementById('cardDetailModal').classList.add('hidden'); document.getElementById('cardModal').classList.remove('hidden'); }
 function saveCardConfig(e) { e.preventDefault(); const id = document.getElementById('cardId').value; const c = creditCards.find(x => x.id === id); if (!c) return; c.limit = parseFloat(document.getElementById('cardLimit').value)||0; c.currentBill = parseFloat(document.getElementById('cardCurrentBill').value)||0; saveAll(); document.getElementById('cardModal').classList.add('hidden'); renderFinance(); showToast('Cartão atualizado.', 'success'); }
 function openPayCardFromDetail() { const id = document.getElementById('detCardId').value; const c = creditCards.find(x => x.id === id); if (!c) return; document.getElementById('payCardId').value = id; document.getElementById('payCardNameDesc').textContent = `Cartão ${c.name}`; document.getElementById('payCardAmountDesc').textContent = money(c.currentBill); document.getElementById('cardDetailModal').classList.add('hidden'); document.getElementById('payCardModal').classList.remove('hidden'); }
-function confirmPayCard(e) { e.preventDefault(); const id = document.getElementById('payCardId').value; const c = creditCards.find(x => x.id === id); const accId = document.getElementById('payCardAccount').value; if (!c) return; if (c.currentBill > 0) { txs.unshift({ id: genId(), desc: `Pagamento fatura ${c.name}`, amount: c.currentBill, type: 'expense', cat: 'Cartão', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, status: 'paid' }); c.currentBill = 0; } saveAll(); document.getElementById('payCardModal').classList.add('hidden'); renderFinance(); showToast('Fatura paga com sucesso!', 'success'); }
+function confirmPayCard(e) {
+  e.preventDefault();
+  const id = document.getElementById('payCardId').value;
+  const c = creditCards.find(x => x.id === id);
+  const accId = document.getElementById('payCardAccount').value;
+  if (!c) return;
+  if (c.currentBill > 0) {
+    txs.unshift({
+      id: genId(),
+      desc: `Pagamento fatura ${c.name}`,
+      amount: c.currentBill,
+      type: 'expense',
+      cat: 'Cartão',
+      isCardBillPayment: true,
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accId,
+      status: 'paid'
+    });
+    c.currentBill = 0;
+  }
+  saveAll();
+  document.getElementById('payCardModal').classList.add('hidden');
+  renderFinance();
+  showToast('Fatura paga com sucesso!', 'success');
+}
 
 function openPatrimonioModal() { const bens = patrimonioBens.reduce((a,b) => a + (Number(b.amount)||0), 0); const lp = getPendingLucros().reduce((a,t)=>a+t.amount,0); const s = getTotalBankBalance(); document.getElementById('detSaldoBancos').textContent = money(s); document.getElementById('detReceber').textContent = money(lp); document.getElementById('detBens').textContent = money(bens); document.getElementById('detPatrimonioTotal').textContent = money(s + lp + bens); document.getElementById('patrimonioModal').classList.remove('hidden'); }
 function openPendingLucrosModal() {
@@ -2372,18 +2399,22 @@ function openReceipt(orderId) {
   document.getElementById('recTrajetoAdmin').innerHTML = steps.map(s => `
     <div class="flex items-start gap-2.5 text-xs ${s.italic ? 'italic text-slate-400' : 'text-slate-200'}">
       <span class="shrink-0 mt-0.5">${s.icon}</span>
-      <div class="leading-snug"><b class="font-bold text-white">${escapeHtml(s.label)}</b><span class="text-slate-400"> — ${fmtShortDT(s.dt)}</span></div>
+      <div class="leading-snug">
+        <span class="${s.italic ? 'font-medium text-slate-400' : 'font-bold text-white'}">${escapeHtml(s.label)}</span>
+        <span class="text-slate-400"> - ${fmtDT(s.dt)}</span>
+      </div>
     </div>`).join('');
 
   document.getElementById('recTrajetoCliente').innerHTML = steps.map((s, idx) => {
     const isLast = idx === steps.length - 1;
+    const isDone = !!s.dt;
     return `
-      <div class="relative flex items-start gap-3.5 ${!isLast ? 'pb-5' : ''}">
-        ${!isLast ? '<div class="absolute left-[11px] top-6 bottom-0 w-[2px] bg-slate-700/80"></div>' : ''}
-        <div class="relative z-10 w-6 h-6 rounded-full bg-[#161e2e] border border-slate-600/80 flex items-center justify-center text-xs shrink-0">${s.icon}</div>
-        <div class="min-w-0 flex-1 pt-0.5 leading-snug">
-          <p class="text-xs sm:text-sm font-bold text-white truncate">${escapeHtml(s.label)}</p>
-          <p class="text-[11px] ${s.italic ? 'italic text-slate-400' : 'text-slate-400'} mt-0.5">${fmtShortDT(s.dt)}</p>
+      <div class="relative flex items-start gap-3.5 ${isLast ? '' : 'pb-5'}">
+        ${!isLast ? '<div class="absolute left-[15px] top-8 bottom-0 w-[2px] bg-slate-700/90"></div>' : ''}
+        <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 border ${isDone ? 'bg-[#102a43] border-[#38bdf8]/40 text-white' : 'bg-[#131a29] border-slate-700 text-slate-400'}">${s.icon}</div>
+        <div class="pt-0.5 min-w-0 flex-1">
+          <div class="text-sm leading-snug ${s.italic ? 'italic text-slate-400 font-medium' : 'font-bold text-white'}">${escapeHtml(s.label)}</div>
+          <div class="text-[11px] font-medium text-slate-400 mt-0.5">${fmtShortDT(s.dt)}</div>
         </div>
       </div>`;
   }).join('');
@@ -2391,125 +2422,148 @@ function openReceipt(orderId) {
   document.getElementById('receiptModal').classList.remove('hidden');
 }
 
-function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); document.body.classList.remove('printing-admin', 'printing-client'); }
-function printReceipt(type) { document.body.classList.remove('printing-admin', 'printing-client'); document.body.classList.add(type === 'admin' ? 'printing-admin' : 'printing-client'); window.print(); setTimeout(() => { document.body.classList.remove('printing-admin', 'printing-client'); }, 500); }
+function closeReceipt() {
+  activeReceiptOrderId = null;
+  document.getElementById('receiptModal').classList.add('hidden');
+  document.body.classList.remove('printing-admin','printing-client');
+}
+function printReceipt(mode) { document.body.classList.remove('printing-admin','printing-client'); document.body.classList.add('printing-' + mode); window.print(); setTimeout(() => { document.body.classList.remove('printing-admin','printing-client'); }, 500); }
 
-// Backup export, import, auto-backup, and full system download
-function createBackupPayload() {
+// Backup export, import, auto-backup restore, and reset
+function buildBackupPayload() {
   return {
-    orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile,
-    exportedAt: new Date().toISOString()
+    version: 3,
+    exportedAt: new Date().toISOString(),
+    orders,
+    txs,
+    creditCards,
+    patrimonioBens,
+    quickState,
+    historyData,
+    userProfile
   };
 }
-function saveAutoBackup() {
+
+function saveAutoBackupSnapshot() {
   try {
-    safeSet(AUTO_BACKUP_KEY, JSON.stringify(createBackupPayload()));
+    const payload = JSON.stringify(buildBackupPayload());
+    safeSet(AUTO_BACKUP_KEY, payload);
   } catch (e) {}
-}
-function restaurarAutoBackup() {
-  closeMenu();
-  const raw = safeGet(AUTO_BACKUP_KEY);
-  if (!raw) {
-    showToast('Nenhum backup automático encontrado neste navegador.', 'error');
-    return;
-  }
-  try {
-    const d = JSON.parse(raw);
-    applyBackupData(d);
-    showToast('Backup automático restaurado com sucesso!', 'success');
-  } catch (err) {
-    showToast('Erro ao restaurar backup automático.', 'error');
-  }
-}
-function applyBackupData(d) {
-  if (!d || typeof d !== 'object') throw new Error('Backup inválido');
-  if (Array.isArray(d.orders)) orders = d.orders;
-  if (Array.isArray(d.txs)) txs = d.txs;
-  if (Array.isArray(d.creditCards)) creditCards = d.creditCards;
-  if (Array.isArray(d.patrimonioBens)) patrimonioBens = d.patrimonioBens;
-  if (d.quickState && typeof d.quickState === 'object') {
-    const tetoNum = Number(d.quickState.teto);
-    quickState = {
-      ...JSON.parse(JSON.stringify(quickDefaultState)),
-      ...d.quickState,
-      teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 3000,
-      tetoProgramado: 0,
-      tetoCicloInicio: d.quickState.tetoCicloInicio || null,
-      operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
-      metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
-      bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
-      cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
-    };
-  }
-  if (d.historyData && typeof d.historyData === 'object') historyData = d.historyData;
-  if (d.userProfile && typeof d.userProfile === 'object') userProfile = d.userProfile;
-  saveAll();
-  saveAutoBackup();
-  updateMenuUserDisplay();
-  renderDatalists();
-  populateSelects();
-  recalcularConsumidoTeto();
-  switchTab(currentTab);
 }
 
 function exportJSON() {
   closeMenu();
-  try {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(createBackupPayload(), null, 2));
-    const dl = document.createElement('a');
-    dl.setAttribute("href", dataStr);
-    dl.setAttribute("download", `backup_gestao_${todayISO()}.json`);
-    document.body.appendChild(dl);
-    dl.click();
-    dl.remove();
-    showToast('Backup JSON exportado!', 'success');
-  } catch (e) {
-    showToast('Erro ao exportar backup JSON.', 'error');
-  }
+  const payload = JSON.stringify(buildBackupPayload(), null, 2);
+  const blob = new Blob([payload], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `backup_gestao_${todayISO()}.json`;
+  a.click();
+  showToast('Backup exportado com sucesso!', 'success');
 }
 
 function exportSystemCode() {
   closeMenu();
-  try {
-    const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-    const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const dl = document.createElement('a');
-    dl.setAttribute("href", url);
-    dl.setAttribute("download", `sistema_gestao_definitivo_${todayISO()}.html`);
-    document.body.appendChild(dl);
-    dl.click();
-    dl.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    showToast('Sistema completo (.html) baixado!', 'success');
-  } catch (e) {
-    showToast('Erro ao baixar o sistema completo.', 'error');
+  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sistema_gestao_definitivo_${todayISO()}.html`;
+  a.click();
+  showToast('Sistema (.html) baixado!', 'success');
+}
+
+function applyBackupData(data) {
+  if (!data || (!Array.isArray(data.orders) && !Array.isArray(data.txs))) {
+    return false;
   }
+  if (Array.isArray(data.orders)) orders = data.orders;
+  if (Array.isArray(data.txs)) txs = data.txs;
+  if (Array.isArray(data.creditCards) && data.creditCards.length) creditCards = data.creditCards;
+  if (Array.isArray(data.patrimonioBens)) patrimonioBens = data.patrimonioBens;
+  if (data.quickState && typeof data.quickState === 'object') {
+    const tetoNum = Number(data.quickState.teto);
+    quickState = {
+      ...JSON.parse(JSON.stringify(quickDefaultState)),
+      ...data.quickState,
+      teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 3000,
+      tetoProgramado: 0,
+      tetoCicloInicio: data.quickState.tetoCicloInicio || null,
+      operadorPadrao: normalizeOperator(data.quickState.operadorPadrao),
+      metodos: { ...quickDefaultState.metodos, ...(data.quickState.metodos || {}) },
+      bancos: { ...quickDefaultState.bancos, ...(data.quickState.bancos || {}) },
+      cartoes: { ...quickDefaultState.cartoes, ...(data.quickState.cartoes || {}) }
+    };
+  }
+  if (data.historyData && typeof data.historyData === 'object') {
+    historyData = {
+      clients: Array.isArray(data.historyData.clients) ? data.historyData.clients : [],
+      cities: Array.isArray(data.historyData.cities) ? data.historyData.cities : [],
+      carriers: Array.isArray(data.historyData.carriers) ? data.historyData.carriers : []
+    };
+  }
+  if (data.userProfile && typeof data.userProfile === 'object') {
+    userProfile = { ...userProfile, ...data.userProfile };
+  }
+  saveAll();
+  renderDatalists();
+  populateSelects();
+  updateMenuUserDisplay();
+  switchTab(currentTab);
+  return true;
 }
 
 function importJSON(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => {
     try {
-      const d = JSON.parse(ev.target.result);
-      applyBackupData(d);
-      showToast('Backup importado com sucesso!', 'success');
-    } catch (err) {
-      showToast('Erro ao ler backup: ' + err.message, 'error');
+      const data = JSON.parse(ev.target.result);
+      if (applyBackupData(data)) {
+        showToast('Backup importado com sucesso!', 'success');
+      } else {
+        showToast('Arquivo de backup inválido.', 'error');
+      }
+    } catch(err){
+      showToast('Erro ao ler backup.', 'error');
     }
   };
-  r.readAsText(file);
+  r.readAsText(f);
   e.target.value = '';
+}
+
+async function restaurarAutoBackup() {
+  closeMenu();
+  const raw = safeGet(AUTO_BACKUP_KEY);
+  if (!raw) {
+    showToast('Nenhum backup automático encontrado.', 'error');
+    return;
+  }
+  let parsed = null;
+  try { parsed = JSON.parse(raw); } catch (e) { parsed = null; }
+  if (!parsed) {
+    showToast('Backup automático corrompido.', 'error');
+    return;
+  }
+  const ok = await requestConfirm(
+    'Restaurar backup automático?',
+    `Restaurar o último estado salvo automaticamente (${parsed.exportedAt ? fmtDateTimeTx(parsed.exportedAt) : 'recente'})?`,
+    'Restaurar'
+  );
+  if (!ok) return;
+  if (applyBackupData(parsed)) {
+    showToast('Backup automático restaurado!', 'success');
+  } else {
+    showToast('Não foi possível restaurar o backup automático.', 'error');
+  }
 }
 
 async function resetData() {
   closeMenu();
-  const ok = await requestConfirm('Restaurar padrão?', 'Isso apagará todos os dados locais atuais. Deseja continuar?', 'Restaurar');
+  const ok = await requestConfirm('Restaurar padrão?', 'Isso apagará todos os pedidos, lançamentos e configurações atuais.', 'Restaurar');
   if (!ok) return;
-  saveAutoBackup();
-  localStorage.removeItem(STORAGE_ORDERS); localStorage.removeItem(STORAGE_FIN); localStorage.removeItem(STORAGE_CARDS); localStorage.removeItem(STORAGE_BENS); localStorage.removeItem(STORAGE_QUICK); localStorage.removeItem(HISTORY_KEY); localStorage.removeItem(PROFILE_KEY); localStorage.removeItem(SEEN_NOTIF_KEY);
+  saveAutoBackupSnapshot();
+  [STORAGE_ORDERS, STORAGE_FIN, STORAGE_CARDS, STORAGE_BENS, STORAGE_QUICK, HISTORY_KEY, PROFILE_KEY, SEEN_NOTIF_KEY].forEach(k => { try{ localStorage.removeItem(k); }catch(e){} });
   orders = []; txs = []; patrimonioBens = [];
   creditCards = [
     { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
@@ -2521,20 +2575,20 @@ async function resetData() {
   historyData = { clients: [], cities: [], carriers: [] };
   userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
   seenNotifications = {};
-  updateMenuUserDisplay(); renderDatalists(); populateSelects(); recalcularConsumidoTeto(); switchTab('quick');
-  showToast('Dados restaurados ao padrão.', 'info');
+  recalcularConsumidoTeto();
+  renderDatalists(); populateSelects(); updateMenuUserDisplay(); switchTab('quick');
+  showToast('Dados restaurados para o padrão.', 'info');
 }
 
-// Application startup
-window.onload = function(){
-  try {
-    load();
-    saveAutoBackup();
-    setInterval(saveAutoBackup, 60000);
-  } catch (err) {
-    showToast('Erro ao inicializar o sistema: ' + err.message, 'error');
-  }
-};
+// Application initialization
+function initApp() {
+  load();
+  saveAutoBackupSnapshot();
+  setInterval(saveAutoBackupSnapshot, 45000);
+  window.addEventListener('beforeunload', saveAutoBackupSnapshot);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
+else initApp();
 </script>
 </body>
 </html>
