@@ -39,7 +39,7 @@
   .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(15,23,42,0.08); }
   .dark .glass { background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.06); }
 
-  .field { width:100%; background:#f8fafc; border:1px solid #cbd5e1; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); color: #0f172a; }
+  .field { width:100%; background:#f8fafc; border:1px solid #cbd5e1; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); color: #0f172a; font-variant-numeric: tabular-nums; }
   .dark .field { background:#1e293b; border-color:#334155; color: #f8fafc; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
   .field:focus { border-color:#4f46e5; box-shadow:0 0 0 4px rgba(79,70,229,.18); background: #ffffff; color: #0f172a; }
   .dark .field:focus { border-color:#818cf8; background: #0f172a; color: #ffffff; }
@@ -84,7 +84,7 @@
   .qr-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 22px; padding: 18px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
   .dark .qr-card { background: #161c2e; border-color: rgba(148, 163, 184, 0.14); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45); }
 
-  .qr-input-box { background: #f1f5f9; border: 1px solid rgba(15, 23, 42, 0.14); color: #0f172a; }
+  .qr-input-box { background: #f1f5f9; border: 1px solid rgba(15, 23, 42, 0.14); color: #0f172a; font-variant-numeric: tabular-nums; }
   .dark .qr-input-box { background: #0e1320; border-color: rgba(148, 163, 184, 0.16); color: #f1f5f9; }
 
   .qr-pill { background: #e2e8f0; border: 1px solid rgba(15, 23, 42, 0.12); color: #334155; }
@@ -104,8 +104,13 @@
   .receipt-edge { position: relative; background: #172033; }
   .receipt-edge::after { content: ''; position: absolute; bottom: -10px; left: 0; right: 0; height: 10px; background-size: 20px 20px; background-image: radial-gradient(circle at 10px 0, transparent 10px, #172033 11px); }
 
-  .receipt-surface { background: #1e283c; color: #f1f5f9; border: 1px solid rgba(148, 163, 184, 0.16); }
+  .receipt-surface { background: #1e283c; color: #f1f5f9; border: 1px solid rgba(148, 163, 184, 0.16); font-variant-numeric: tabular-nums; }
   .receipt-inner-box { background: #161e2e; border: 1px solid rgba(148, 163, 184, 0.14); }
+
+  .money-wrap { position: relative; display: flex; align-items: center; width: 100%; }
+  .money-prefix { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; line-height: 1; pointer-events: none; user-select: none; z-index: 2; }
+  .money-suffix { position: absolute; right: 0.875rem; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; line-height: 1; pointer-events: none; user-select: none; z-index: 2; }
+  .num-align { font-variant-numeric: tabular-nums; }
 
   @media print {
     body { background: white !important; padding-bottom: 0; color: black !important; }
@@ -165,7 +170,7 @@
       </button>
       <div class="relative">
         <button type="button" onclick="toggleMenu(event)" class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-xs border border-slate-200/70 dark:border-slate-700 relative cursor-pointer" aria-label="Abrir menu de opções" aria-expanded="false">
-          <span id="notification-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-xs">0</span>
+          <span id="notification-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-xs num-align">0</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
         <div id="menu" role="menu" class="hidden absolute right-0 mt-2 w-64 glass rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-50 no-print animate-in">
@@ -173,7 +178,7 @@
             <p class="text-[10px] uppercase font-bold text-slate-400">Perfil Ativo</p>
             <p id="menu-user-name" class="text-xs text-brand-600 dark:text-indigo-400 font-extrabold truncate mt-0.5">👤 Meu Perfil</p>
           </div>
-          <button type="button" role="menuitem" onclick="openNotificationsFromMenu()" class="w-full text-left px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between gap-2 cursor-pointer"><span>🔔 Notificações</span><span id="menu-notif-count" class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500">0</span></button>
+          <button type="button" role="menuitem" onclick="openNotificationsFromMenu()" class="w-full text-left px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between gap-2 cursor-pointer"><span>🔔 Notificações</span><span id="menu-notif-count" class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500 num-align">0</span></button>
           <button type="button" role="menuitem" onclick="toggleDarkModeFromMenu()" class="w-full text-left px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"><span id="menu-theme-label">☀️ Modo Claro</span></button>
           <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
           <button type="button" role="menuitem" onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer">🆔 Configurar Meu Perfil</button>
@@ -207,8 +212,8 @@
 <div id="notification-modal" role="dialog" aria-modal="true" aria-labelledby="notifModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><div class="flex items-center gap-2"><span class="text-lg">🔔</span><h3 id="notifModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Central de Notificações</h3></div><button type="button" onclick="toggleNotifications()" aria-label="Fechar notificações" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <div class="px-4 py-2 bg-slate-50/50 dark:bg-slate-900/30 text-[11px] text-slate-500 border-b border-slate-100 dark:border-slate-700/50 flex justify-between"><span>Avisos: 5 dias e 2 dias antes do vencimento</span><span id="notification-count-label" class="font-bold text-slate-700 dark:text-slate-300">0 avisos</span></div>
-    <div id="notification-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 p-2"></div>
+    <div class="px-4 py-2 bg-slate-50/50 dark:bg-slate-900/30 text-[11px] text-slate-500 border-b border-slate-100 dark:border-slate-700/50 flex justify-between"><span>Avisos: 5 dias e 2 dias antes do vencimento</span><span id="notification-count-label" class="font-bold text-slate-700 dark:text-slate-300 num-align">0 avisos</span></div>
+    <div id="notification-list" class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 p-2 num-align"></div>
     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center"><button type="button" onclick="toggleNotifications()" class="w-full py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold cursor-pointer">Fechar</button></div>
   </div>
 </div>
@@ -229,7 +234,7 @@
         </div>
         <button type="button" onclick="qrProcessarOk()" class="h-12 px-4 sm:px-5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer shrink-0 transition">OK</button>
       </div>
-      <div id="qrSearchMatches" class="hidden mt-3 pt-3 border-t border-slate-200/70 dark:border-slate-700/60 space-y-1.5"></div>
+      <div id="qrSearchMatches" class="hidden mt-3 pt-3 border-t border-slate-200/70 dark:border-slate-700/60 space-y-1.5 num-align"></div>
       <div id="qrDynamicPanel" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/60">
         <div class="flex items-center justify-between gap-2 mb-2">
           <span id="qrPanelTag" class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">FUNÇÃO</span>
@@ -244,7 +249,13 @@
             <button type="button" class="qr-chip" onclick="qrSelecionarEtapaOp(this, 'Rastreio')">Rastreio</button>
             <button type="button" class="qr-chip" onclick="qrSelecionarEtapaOp(this, 'Conferência')">Conferência</button>
           </div>
-          <div><label class="lbl" for="qrOpValor">Valor da Compra / Operação (R$)</label><input type="text" id="qrOpValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoOp()" onchange="qrAtualizarResumoOp()" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></div>
+          <div>
+            <label class="lbl" for="qrOpValor">Valor da Compra / Operação (R$)</label>
+            <div class="money-wrap">
+              <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
+              <input type="text" id="qrOpValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoOp()" onchange="qrAtualizarResumoOp()" onblur="qrAtualizarResumoOp()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+            </div>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="lbl" for="qrOpMetodoSelect">Forma de Pagamento</label>
@@ -260,18 +271,24 @@
               <select id="qrOpInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('op', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5">
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Etapa</span><strong id="qrOpResumoEtapa">Despacho</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrOpResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrOpResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrOpResumoValor">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Etapa</span><strong id="qrOpResumoEtapa">Despacho</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrOpResumoMetodo">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrOpResumoOrigem">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrOpResumoValor" class="text-right">R$ 0,00</strong></div>
           </div>
           <button type="button" onclick="qrConfirmarOperacao()" class="w-full h-11 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer transition">Confirmar Operação</button>
         </div>
 
         <!-- Painel Cliente (cli ...) -->
         <div id="qrCliFields" class="hidden space-y-3">
-          <div><label class="lbl" for="qrCliValor">Valor do Cliente (R$)</label><input type="text" id="qrCliValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoCli()" onchange="qrAtualizarResumoCli()" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></div>
+          <div>
+            <label class="lbl" for="qrCliValor">Valor do Cliente (R$)</label>
+            <div class="money-wrap">
+              <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
+              <input type="text" id="qrCliValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoCli()" onchange="qrAtualizarResumoCli()" onblur="qrAtualizarResumoCli()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+            </div>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="lbl" for="qrCliMetodoSelect">Forma de Pagamento</label>
@@ -287,18 +304,24 @@
               <select id="qrCliInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('cli', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5">
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Cliente</span><strong id="qrCliResumoNome">—</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrCliResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrCliResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrCliResumoValor">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Cliente</span><strong id="qrCliResumoNome">—</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrCliResumoMetodo">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrCliResumoOrigem">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrCliResumoValor" class="text-right">R$ 0,00</strong></div>
           </div>
           <button type="button" onclick="qrConfirmarCliente()" class="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-extrabold cursor-pointer transition">Confirmar Cliente</button>
         </div>
 
         <!-- Painel Despesa / Compra do Dia a Dia (entra no teto) -->
         <div id="qrGastoFields" class="hidden space-y-3">
-          <div><label class="lbl" for="qrGastoValor">Valor da Compra / Despesa (R$)</label><input type="text" id="qrGastoValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoGasto()" onchange="qrAtualizarResumoGasto()" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></div>
+          <div>
+            <label class="lbl" for="qrGastoValor">Valor da Compra / Despesa (R$)</label>
+            <div class="money-wrap">
+              <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
+              <input type="text" id="qrGastoValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoGasto()" onchange="qrAtualizarResumoGasto()" onblur="qrAtualizarResumoGasto()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+            </div>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="lbl" for="qrGastoMetodoSelect">Forma de Pagamento</label>
@@ -314,11 +337,11 @@
               <select id="qrGastoInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('gasto', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5">
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrGastoResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrGastoResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Desconto do gasto</span><strong id="qrGastoResumoValor">- R$ 0,00</strong></div>
-            <div class="flex justify-between"><span class="text-amber-600 dark:text-amber-400 font-semibold">Consumido no Teto (após lançar)</span><strong class="text-amber-600 dark:text-amber-400" id="qrGastoResumoConsumido">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrGastoResumoMetodo">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrGastoResumoOrigem">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Desconto do gasto</span><strong id="qrGastoResumoValor" class="text-right">- R$ 0,00</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-amber-600 dark:text-amber-400 font-semibold">Consumido no Teto (após lançar)</span><strong class="text-amber-600 dark:text-amber-400 text-right" id="qrGastoResumoConsumido">R$ 0,00</strong></div>
           </div>
           <button type="button" onclick="qrConfirmarDespesa()" class="w-full h-11 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-extrabold cursor-pointer transition">Descontar e Registrar</button>
         </div>
@@ -328,7 +351,7 @@
 
   <!-- Aba 2: Pedidos -->
   <div id="view-orders" class="hidden space-y-5 animate-in">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 num-align">
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Pedidos</p><h3 id="ord-count" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">0</h3></div>
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Investimento</p><h3 id="ord-inv" class="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3></div>
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-brand-600 dark:text-brand-400 tracking-wider truncate">Faturamento</p><h3 id="ord-fat" class="text-sm sm:text-base font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3></div>
@@ -344,7 +367,7 @@
           <input type="text" id="ord-search" aria-label="Buscar pedido ou cliente" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 min-w-0 md:w-52 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
         </div>
       </div>
-      <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
+      <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 num-align"></div>
       <div id="ord-empty" class="hidden py-14 text-center"><div class="text-5xl mb-3 opacity-30">📦</div><p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Nenhum pedido encontrado neste período.</p></div>
     </div>
   </div>
@@ -357,13 +380,13 @@
     </div>
     <div>
       <div class="flex justify-between items-center mb-2 px-1"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Minhas Contas</h2><button type="button" onclick="openTransferModal()" class="text-[11px] font-bold text-brand-700 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-300 px-2.5 py-1.5 rounded-lg transition hover:bg-brand-100 cursor-pointer">↔️ Transferir</button></div>
-      <div class="scroll-x" id="accounts-container"></div>
+      <div class="scroll-x num-align" id="accounts-container"></div>
     </div>
     <div>
       <div class="flex justify-between items-center mb-2 px-1"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cartões de Crédito</h2><span class="text-[10px] font-bold text-purple-700 dark:text-purple-400">Toque no cartão para detalhes</span></div>
-      <div class="scroll-x" id="cards-container"></div>
+      <div class="scroll-x num-align" id="cards-container"></div>
     </div>
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-2 gap-3 num-align">
       <div role="button" tabindex="0" onclick="openPatrimonioModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPatrimonioModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p><h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate mt-1">R$ 0,00</h3></div>
       <div role="button" tabindex="0" onclick="openPendingLucrosModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPendingLucrosModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 tracking-wider truncate">A Receber (Lucros) ℹ️</p><h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0,00</h3></div>
     </div>
@@ -372,7 +395,7 @@
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white truncate">Extrato e Lançamentos</h2>
         <select id="fin-period-filter" aria-label="Filtrar extrato por período" onchange="renderFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500 shrink-0"><option value="30d" selected>Últimos 30 dias</option><option value="prev_month">Mês Anterior</option><option value="all">Ver Tudo</option></select>
       </div>
-      <div id="fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[500px] overflow-y-auto"></div>
+      <div id="fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[500px] overflow-y-auto num-align"></div>
     </div>
   </div>
 
@@ -381,7 +404,7 @@
     <div role="button" tabindex="0" onclick="openChartsModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openChartsModal();}" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition pointer-events-none">📊</div>
       <div class="flex justify-between items-center gap-2 mb-3.5 relative z-10"><h2 class="text-xs sm:text-sm font-bold truncate">Resumo Geral do Negócio</h2><span class="text-[11px] bg-brand-600/80 text-indigo-100 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30 shrink-0">Ver Gráficos 📈</span></div>
-      <div class="grid grid-cols-2 gap-3 relative z-10">
+      <div class="grid grid-cols-2 gap-3 relative z-10 num-align">
         <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p><p id="adm-total-profit" class="text-sm sm:text-base font-black mt-1 text-emerald-400 truncate">R$ 0,00</p></div>
         <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p><p id="adm-total-fat" class="text-sm sm:text-base font-black mt-1 text-white truncate">R$ 0,00</p></div>
       </div>
@@ -394,7 +417,7 @@
       <button type="button" onclick="switchAdminTab('orders')" id="btn-adm-orders" class="flex-1 py-2.5 text-xs font-bold text-slate-800 dark:text-white bg-white dark:bg-slate-700 shadow-xs rounded-lg transition cursor-pointer">Pedidos</button>
       <button type="button" onclick="switchAdminTab('finance')" id="btn-adm-finance" class="flex-1 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg transition cursor-pointer">Relatório Financeiro</button>
     </div>
-    <div id="adm-view-orders" class="space-y-5">
+    <div id="adm-view-orders" class="space-y-5 num-align">
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
         <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">📋 Relatório Executivo de Pedidos</h2></div>
         <div id="adm-detailed-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
@@ -406,7 +429,7 @@
         </div>
       </div>
     </div>
-    <div id="adm-view-finance" class="hidden space-y-5">
+    <div id="adm-view-finance" class="hidden space-y-5 num-align">
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
         <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center gap-2"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">Extrato Geral (Entradas e Saídas)</h2><select id="adm-fin-filter" aria-label="Filtrar extrato administrativo" onchange="renderAdminFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none"><option value="all">Tudo</option><option value="income">Só Receitas</option><option value="expense">Só Despesas</option></select></div>
         <div id="adm-fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
@@ -416,7 +439,7 @@
 </main>
 
 <!-- Botão flutuante de percentual de teto -->
-<button type="button" id="qrPctFab" onclick="qrAbrirModalTeto()" aria-label="Abrir controle de teto" class="qr-pct-fab no-print">0%</button>
+<button type="button" id="qrPctFab" onclick="qrAbrirModalTeto()" aria-label="Abrir controle de teto" class="qr-pct-fab no-print num-align">0%</button>
 
 <!-- Barra de navegação inferior -->
 <nav id="bottom-nav" aria-label="Navegação principal" class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.08)] no-print transition-colors duration-300">
@@ -441,22 +464,25 @@
     </div>
 
     <div class="overflow-y-auto space-y-4 pr-0.5 flex-1">
-      <div class="qr-subbox rounded-2xl p-3.5 flex flex-col justify-between min-h-[92px]">
+      <div class="qr-subbox rounded-2xl p-3.5 flex flex-col justify-between min-h-[92px] num-align">
         <div class="flex items-center justify-between gap-2 mb-1.5">
           <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">TETO DE GASTO</p>
           <button type="button" id="qrBtnEditTeto" onclick="qrIniciarEdicaoTeto()" aria-label="Editar valor do teto de gasto" title="Editar Teto de Gasto" class="w-7 h-7 rounded-lg qr-pill text-xs flex items-center justify-center hover:border-brand-500 transition cursor-pointer shrink-0">✏️</button>
         </div>
         <p id="qrDisplayTeto" onclick="qrIniciarEdicaoTeto()" title="Toque para editar" class="text-xl font-black text-slate-900 dark:text-white cursor-pointer">R$ 0,00</p>
-        <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="0,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="hidden qr-input-box w-full h-10 px-3 rounded-xl text-base font-black outline-none focus:border-brand-500 mt-0.5">
+        <div id="qrInlineWrapTeto" class="hidden money-wrap mt-0.5">
+          <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
+          <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="0,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="qr-input-box w-full h-10 pl-10 pr-3 rounded-xl text-base font-black outline-none focus:border-brand-500">
+        </div>
       </div>
 
-      <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5">
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Consumido / Descontado (s/ op.):</span><strong id="qrTetoConsumido">R$ 0,00</strong></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Margem restante vs. Teto:</span><strong id="qrTetoMargem">R$ 0,00</strong></div>
-        <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Percentual atual:</span><strong id="qrTetoPercentual">0%</strong></div>
+      <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Consumido / Descontado (s/ op.):</span><strong id="qrTetoConsumido" class="text-right">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Margem restante vs. Teto:</span><strong id="qrTetoMargem" class="text-right">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Percentual atual:</span><strong id="qrTetoPercentual" class="text-right">0%</strong></div>
       </div>
 
-      <div class="qr-subbox rounded-xl p-3 space-y-2">
+      <div class="qr-subbox rounded-xl p-3 space-y-2 num-align">
         <div class="flex items-center justify-between gap-2">
           <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">DESPESAS DO CICLO NO TETO</span>
           <span id="qrTetoItensQtd" class="text-[11px] font-bold text-slate-500 dark:text-slate-400">0 itens</span>
@@ -477,14 +503,14 @@
 <div id="patrimonioBensModal" role="dialog" aria-modal="true" aria-labelledby="bensModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0"><div><h3 id="bensModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Inventário de Bens e Patrimônio</h3><p class="text-[11px] text-slate-500 dark:text-slate-400">Imóveis, terrenos e investimentos por fora (Visualização pura)</p></div><button type="button" onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" aria-label="Fechar inventário de bens" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <div class="p-4 overflow-y-auto space-y-4 flex-1">
+    <div class="p-4 overflow-y-auto space-y-4 flex-1 num-align">
       <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex justify-between items-center gap-2"><div><p class="text-[10px] uppercase font-bold text-indigo-700 dark:text-indigo-300">Total em Bens Cadastrados</p><p id="patrimonioBensTotal" class="text-lg font-black text-slate-900 dark:text-white">R$ 0,00</p></div><button type="button" onclick="openAddBemForm()" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer shrink-0">+ Adicionar Bem</button></div>
       <div id="formAddBem" class="hidden bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
         <h4 id="bemFormTitle" class="text-xs font-bold text-slate-800 dark:text-slate-200">Novo Bem / Investimento</h4>
         <input type="hidden" id="bemId">
         <div><label class="lbl" for="bemName">Nome / Descrição</label><input type="text" id="bemName" placeholder="Ex: Terreno, Imóvel, Investimento" class="field text-xs"></div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div><label class="lbl" for="bemVal">Valor Estimado (R$)</label><input type="number" id="bemVal" step="0.01" min="0" inputmode="decimal" placeholder="0,00" class="field text-xs font-bold text-emerald-600"></div>
+          <div><label class="lbl" for="bemVal">Valor Estimado (R$)</label><div class="money-wrap"><span class="money-prefix text-xs font-extrabold text-emerald-600">R$</span><input type="number" id="bemVal" step="0.01" min="0" inputmode="decimal" placeholder="0,00" class="field pl-11 text-xs font-bold text-emerald-600"></div></div>
           <div><label class="lbl" for="bemCat">Categoria</label><select id="bemCat" class="field text-xs h-12 py-0"><option value="Imóvel / Terreno">Imóvel / Terreno</option><option value="Herança">Herança</option><option value="Investimento Externo">Investimento Externo</option><option value="Outro Bem">Outro Bem</option></select></div>
         </div>
         <div class="flex gap-2 pt-1"><button type="button" onclick="saveBemItem()" class="flex-1 py-2.5 bg-brand-600 text-white rounded-lg text-xs font-bold cursor-pointer">Salvar Bem</button><button type="button" onclick="document.getElementById('formAddBem').classList.add('hidden')" class="px-3 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold cursor-pointer">Cancelar</button></div>
@@ -498,7 +524,7 @@
 <div id="cardDetailModal" role="dialog" aria-modal="true" aria-labelledby="detCardTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="detCardTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Detalhes do Cartão</h3><button type="button" onclick="document.getElementById('cardDetailModal').classList.add('hidden')" aria-label="Fechar detalhes do cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <div class="p-5 space-y-4">
+    <div class="p-5 space-y-4 num-align">
       <input type="hidden" id="detCardId">
       <div class="space-y-2.5 text-sm">
         <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-700/60"><span class="text-slate-500">Limite Total (Banco):</span><b id="detCardLimit" class="text-slate-900 dark:text-white">R$ 0,00</b></div>
@@ -518,10 +544,10 @@
       <input type="hidden" id="cardId">
       <div><label class="lbl" for="cardName">Cartão</label><input type="text" id="cardName" disabled class="field font-bold"></div>
       <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl" for="cardLimit">Limite Total (R$)</label><input type="number" id="cardLimit" step="0.01" min="0" inputmode="decimal" required class="field font-bold text-emerald-600 dark:text-emerald-400"></div>
+        <div><label class="lbl" for="cardLimit">Limite Total (R$)</label><div class="money-wrap"><span class="money-prefix text-xs font-extrabold text-emerald-600 dark:text-emerald-400">R$</span><input type="number" id="cardLimit" step="0.01" min="0" inputmode="decimal" required class="field pl-11 font-bold text-emerald-600 dark:text-emerald-400"></div></div>
         <div><label class="lbl" for="cardDueDay">Vencimento (Fixo 🔒)</label><input type="text" id="cardDueDay" disabled class="field text-center font-bold"></div>
       </div>
-      <div><label class="lbl" for="cardCurrentBill">Fatura Atual / Aberta (R$)</label><input type="number" id="cardCurrentBill" step="0.01" min="0" inputmode="decimal" required class="field font-bold text-purple-600 dark:text-purple-400"></div>
+      <div><label class="lbl" for="cardCurrentBill">Fatura Atual / Aberta (R$)</label><div class="money-wrap"><span class="money-prefix text-xs font-extrabold text-purple-600 dark:text-purple-400">R$</span><input type="number" id="cardCurrentBill" step="0.01" min="0" inputmode="decimal" required class="field pl-11 font-bold text-purple-600 dark:text-purple-400"></div></div>
       <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md cursor-pointer">Salvar Ajuste</button>
     </form>
   </div>
@@ -530,7 +556,7 @@
 <div id="payCardModal" role="dialog" aria-modal="true" aria-labelledby="payCardModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payCardModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Pagar Fatura do Cartão</h3><button type="button" onclick="document.getElementById('payCardModal').classList.add('hidden')" aria-label="Fechar pagamento de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="confirmPayCard(event)" class="p-5 space-y-4">
+    <form onsubmit="confirmPayCard(event)" class="p-5 space-y-4 num-align">
       <input type="hidden" id="payCardId">
       <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><p class="text-[10px] text-slate-500 uppercase font-bold" id="payCardNameDesc">Cartão</p><p class="text-xl font-black text-purple-600" id="payCardAmountDesc">R$ 0,00</p></div>
       <div><label class="lbl" for="payCardAccount">De qual conta vai sair o dinheiro para pagar?</label><select id="payCardAccount" required class="field font-semibold"></select></div>
@@ -542,7 +568,7 @@
 <div id="chartsModal" role="dialog" aria-modal="true" aria-labelledby="chartsModalTitle" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><div class="flex items-center gap-2"><span class="text-xl">📊</span><h3 id="chartsModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">Painel Analítico de Gráficos (Mês Atual)</h3></div><button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" aria-label="Fechar gráficos" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl font-bold px-2 cursor-pointer">×</button></div>
-    <div class="p-5 overflow-y-auto space-y-5">
+    <div class="p-5 overflow-y-auto space-y-5 num-align">
       <div class="grid grid-cols-2 gap-2.5">
         <div class="rounded-xl p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/70 dark:border-emerald-800/50">
           <p class="text-[10px] font-extrabold uppercase text-emerald-700 dark:text-emerald-300">Entradas no Mês</p>
@@ -567,7 +593,7 @@
 <div id="patrimonioModal" role="dialog" aria-modal="true" aria-labelledby="patrimonioModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="patrimonioModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Detalhamento do Patrimônio</h3><button type="button" onclick="document.getElementById('patrimonioModal').classList.add('hidden')" aria-label="Fechar detalhamento do patrimônio" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <div class="p-5 space-y-3 text-sm">
+    <div class="p-5 space-y-3 text-sm num-align">
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-slate-500">Saldo Físico nas Contas:</span><b class="text-slate-800 dark:text-white" id="detSaldoBancos">R$ 0,00</b></div>
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-amber-600">Lucros a Receber:</span><b class="text-amber-600" id="detReceber">R$ 0,00</b></div>
       <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700"><span class="text-indigo-500">Inventário de Bens:</span><b class="text-indigo-600 dark:text-indigo-400" id="detBens">R$ 0,00</b></div>
@@ -580,7 +606,7 @@
 <div id="pendingLucrosModal" role="dialog" aria-modal="true" aria-labelledby="pendingLucrosTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50"><h3 id="pendingLucrosTitle" class="font-bold text-slate-900 dark:text-white">Lucros a Receber (Pendentes)</h3><button type="button" onclick="document.getElementById('pendingLucrosModal').classList.add('hidden')" aria-label="Fechar lucros a receber" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl leading-none font-bold px-2 cursor-pointer">×</button></div>
-    <div id="pending-lucros-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+    <div id="pending-lucros-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto num-align"></div>
   </div>
 </div>
 
@@ -596,12 +622,12 @@
       <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2"><label class="lbl text-indigo-700 dark:text-indigo-300" for="oDriveLink"><span>🔗 Link da Nota Fiscal (Google Drive)</span></label><div class="flex gap-2"><input id="oDriveLink" type="url" oninput="updatePreview()" placeholder="Cole aqui o link do Google Drive da Nota Fiscal..." class="field text-sm bg-white dark:bg-slate-800"><a id="btnTestDrive" href="#" target="_blank" rel="noopener noreferrer" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">Abrir</a></div></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oPedido">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-001" class="field"></div><div><label class="lbl" for="oCliente">Cliente</label><input id="oCliente" type="text" list="list-clients" maxlength="80" placeholder="Nome" class="field"></div></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div><label class="lbl" for="oUSD">Valor (US$)</label><div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" class="field pl-8"></div></div>
-        <div><label class="lbl" for="oCot">Cotação (R$)</label><div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" class="field pl-10"></div></div>
+        <div><label class="lbl" for="oUSD">Valor (US$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-sm">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" onchange="updatePreview()" class="field pl-8"></div></div>
+        <div><label class="lbl" for="oCot">Cotação (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" onchange="updatePreview()" class="field pl-11"></div></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div><label class="lbl" for="oMargem">Sua Margem (%)</label><div class="relative"><span class="absolute right-3 top-3.5 text-indigo-500 font-bold">%</span><input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-8"></div></div>
-        <div><label class="lbl" for="oFrete">Custo do Frete (R$)</label><div class="relative"><span class="absolute left-3 top-3.5 text-rose-500 font-bold">R$</span><input id="oFrete" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0,00" oninput="updatePreview()" class="field pl-10"></div></div>
+        <div><label class="lbl" for="oMargem">Sua Margem (%)</label><div class="money-wrap"><input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" onchange="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-9"><span class="money-suffix text-indigo-500 font-bold text-sm">%</span></div></div>
+        <div><label class="lbl" for="oFrete">Custo do Frete (R$)</label><div class="money-wrap"><span class="money-prefix text-rose-500 font-bold text-xs">R$</span><input id="oFrete" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0,00" oninput="updatePreview()" onchange="updatePreview()" class="field pl-11"></div></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
         <div><label class="lbl" for="oPaymentMethod">Forma Pagto. (Receb.)</label><select id="oPaymentMethod" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"><option value="Pix">Pix</option><option value="Débito">Débito</option><option value="Crédito">Crédito</option><option value="Dinheiro">Dinheiro</option><option value="Boleto">Boleto</option></select></div>
@@ -615,12 +641,12 @@
         <label class="flex items-center gap-3 cursor-pointer pt-2 border-t border-slate-200 dark:border-slate-700"><input type="checkbox" id="oSyncFin" checked onchange="togglePaymentOptions()" class="w-5 h-5 text-brand-600 rounded"><span class="text-sm font-bold text-slate-800 dark:text-slate-200">Lançar Pedido / Baixa no Financeiro?</span></label>
         <div id="wrapAccIn" class="pl-8 space-y-2"><div><label class="text-[10px] uppercase font-bold text-slate-500" for="oAccIn">Conta para o Lucro / Baixa:</label><select id="oAccIn" class="field bg-white dark:bg-slate-800 text-sm h-11 py-0"></select></div></div>
       </div>
-      <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50">
-        <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white" id="prevBRL">R$ 0,00</b></div>
-        <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400" id="prevMargem">R$ 0,00</b></div>
-        <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>(-) Custo Frete</span><b id="prevFrete">R$ 0,00</b></div>
-        <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-xs border border-emerald-100 dark:border-emerald-900/30"><span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base" id="prevLucro">R$ 0,00</b></div>
-        <div class="flex justify-between pt-1 font-bold"><span class="text-brand-800 dark:text-indigo-300">Total a Receber</span><b class="text-brand-900 dark:text-white text-base" id="prevFinal">R$ 0,00</b></div>
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50 num-align">
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white text-right" id="prevBRL">R$ 0,00</b></div>
+        <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400 text-right" id="prevMargem">R$ 0,00</b></div>
+        <div class="flex justify-between items-center gap-2 text-rose-600 dark:text-rose-400"><span>(-) Custo Frete</span><b id="prevFrete" class="text-right">R$ 0,00</b></div>
+        <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center gap-2 bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-xs border border-emerald-100 dark:border-emerald-900/30"><span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base text-right" id="prevLucro">R$ 0,00</b></div>
+        <div class="flex justify-between items-center gap-2 pt-1 font-bold"><span class="text-brand-800 dark:text-indigo-300">Total a Receber</span><b class="text-brand-900 dark:text-white text-base text-right" id="prevFinal">R$ 0,00</b></div>
       </div>
       <h4 class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 pt-3 border-t border-slate-100 dark:border-slate-700">Rastreio</h4>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oOrigem">Origem (Saída)</label><input id="oOrigem" type="text" list="list-cities" placeholder="Ex: Origem" class="field"></div><div><label class="lbl" for="oSaida"><span>Data/Hora Saída</span><button type="button" class="btn-now" onclick="setNow('oSaida')">Agora</button></label><input id="oSaida" type="datetime-local" class="field"></div></div>
@@ -646,7 +672,7 @@
       <input type="hidden" id="fType" value="expense">
       <div><label class="lbl" for="fDesc">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Frete, Conta..." required class="field"></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div><label class="lbl" for="fAmount">Valor (R$)</label><div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="fAmount" step="0.01" min="0.01" inputmode="decimal" placeholder="0,00" required class="field pl-10"></div></div>
+        <div><label class="lbl" for="fAmount">Valor (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input type="number" id="fAmount" step="0.01" min="0.01" inputmode="decimal" placeholder="0,00" required class="field pl-11"></div></div>
         <div><label class="lbl" for="fDate">Data / Vencimento</label><input type="date" id="fDate" required class="field"></div>
       </div>
       <div><label class="lbl" for="fAccount">Conta / Cartão</label><select id="fAccount" required class="field"></select></div>
@@ -659,14 +685,14 @@
 <div id="pendingModal" role="dialog" aria-modal="true" aria-labelledby="pendingModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50"><h3 id="pendingModalTitle" class="font-bold text-slate-900 dark:text-white">Contas a Pagar</h3><button type="button" onclick="document.getElementById('pendingModal').classList.add('hidden')" aria-label="Fechar contas a pagar" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl leading-none font-bold px-2 cursor-pointer">×</button></div>
-    <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+    <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto num-align"></div>
   </div>
 </div>
 
 <div id="payAccountModal" role="dialog" aria-modal="true" aria-labelledby="payAccountModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payAccountModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Efetuar Pagamento / Baixa</h3><button type="button" onclick="document.getElementById('payAccountModal').classList.add('hidden')" aria-label="Fechar pagamento" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="confirmPayPending(event)" class="p-5 space-y-4">
+    <form onsubmit="confirmPayPending(event)" class="p-5 space-y-4 num-align">
       <input type="hidden" id="payTxId">
       <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><p class="text-[10px] text-slate-500 uppercase font-bold">Valor a baixar</p><p class="text-lg font-black text-emerald-600" id="payTxAmountDesc">R$ 0,00</p></div>
       <div><label class="lbl" for="payAccountSelect">De qual conta vai sair o dinheiro?</label><select id="payAccountSelect" required class="field font-semibold"></select></div>
@@ -681,7 +707,7 @@
     <form onsubmit="saveTransfer(event)" class="p-5 space-y-4">
       <div><label class="lbl" for="tFrom">De (Origem)</label><select id="tFrom" required class="field font-semibold"></select></div>
       <div><label class="lbl" for="tTo">Para (Destino)</label><select id="tTo" required class="field font-semibold"></select></div>
-      <div><label class="lbl" for="tAmount">Valor (R$)</label><div class="relative"><span class="absolute left-3 top-3.5 text-slate-400 font-bold">R$</span><input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" inputmode="decimal" required class="field pl-10"></div></div>
+      <div><label class="lbl" for="tAmount">Valor (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" inputmode="decimal" required class="field pl-11"></div></div>
       <div><label class="lbl" for="tDate">Data</label><input type="date" id="tDate" required class="field"></div>
       <button type="submit" class="w-full py-3 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 text-white rounded-xl font-bold mt-2 cursor-pointer">Confirmar Transferência</button>
     </form>
@@ -691,10 +717,10 @@
 <div id="editBalanceModal" role="dialog" aria-modal="true" aria-labelledby="editBalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 class="font-bold text-slate-900 dark:text-white text-sm" id="editBalTitle">Ajustar Saldo</h3><button type="button" onclick="document.getElementById('editBalanceModal').classList.add('hidden')" aria-label="Fechar ajuste de saldo" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="saveEditBalance(event)" class="p-5 space-y-4">
+    <form onsubmit="saveEditBalance(event)" class="p-5 space-y-4 num-align">
       <input type="hidden" id="editBalAccId">
       <div class="text-center bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700"><p class="text-[10px] text-slate-500 uppercase font-bold">Saldo Atual no App</p><p class="text-xl font-bold text-slate-800 dark:text-white" id="editBalCurrent">R$ 0,00</p></div>
-      <div><label class="lbl" for="editBalNew">Qual o saldo real agora?</label><div class="relative"><span class="absolute left-3 top-3.5 text-brand-500 font-bold">R$</span><input type="number" id="editBalNew" step="0.01" inputmode="decimal" required class="field pl-10 text-center text-xl font-bold text-brand-600 dark:text-indigo-400"></div></div>
+      <div><label class="lbl" for="editBalNew">Qual o saldo real agora?</label><div class="money-wrap"><span class="money-prefix text-brand-500 font-bold text-xs">R$</span><input type="number" id="editBalNew" step="0.01" inputmode="decimal" required class="field pl-11 text-center text-xl font-bold text-brand-600 dark:text-indigo-400"></div></div>
       <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold cursor-pointer">Salvar Ajuste</button>
     </form>
   </div>
@@ -718,10 +744,10 @@
           <div class="flex justify-between items-start gap-2"><span class="text-slate-400">Data Emissão:</span><span class="font-bold text-white text-right" id="recData"></span></div>
         </div>
         <div class="receipt-inner-box rounded-2xl p-4 space-y-2.5 text-sm">
-          <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Custo Mercadoria:</span><span class="font-extrabold text-white" id="recInv"></span></div>
+          <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Custo Mercadoria:</span><span class="font-extrabold text-white text-right" id="recInv"></span></div>
           <div class="flex justify-between items-start gap-2"><span class="text-slate-300 leading-snug">Sua Margem<br>Bruta:</span><span class="font-extrabold text-[#60a5fa] text-right" id="recMargem"></span></div>
-          <div class="flex justify-between items-center gap-2 text-[#fb7185]"><span>(-) Custo Frete:</span><span class="font-extrabold" id="recFreteAdmin"></span></div>
-          <div class="flex justify-between items-center gap-2 border-t border-slate-700/80 pt-3 mt-1"><span class="text-[#34d399] font-extrabold">Lucro Líquido:</span><span class="font-extrabold text-[#34d399] text-base" id="recLucro"></span></div>
+          <div class="flex justify-between items-center gap-2 text-[#fb7185]"><span>(-) Custo Frete:</span><span class="font-extrabold text-right" id="recFreteAdmin"></span></div>
+          <div class="flex justify-between items-center gap-2 border-t border-slate-700/80 pt-3 mt-1"><span class="text-[#34d399] font-extrabold">Lucro Líquido:</span><span class="font-extrabold text-[#34d399] text-base text-right" id="recLucro"></span></div>
           <div class="flex justify-between items-start gap-2 border-t border-slate-700/80 pt-3 mt-1 font-extrabold text-white text-base"><span class="leading-snug">Total<br>Faturado:</span><span class="text-right" id="recFat"></span></div>
         </div>
         <div class="mt-5">
@@ -750,7 +776,7 @@
           <div class="receipt-edge receipt-inner-box rounded-xl p-4 mt-6 space-y-2">
             <div class="flex justify-between items-center gap-2">
               <span class="text-sm font-bold text-slate-200 leading-snug">Valor do<br>Serviço:</span>
-              <span class="text-xl font-black text-white" id="recFreteCliente">R$ 0,00</span>
+              <span class="text-xl font-black text-white text-right" id="recFreteCliente">R$ 0,00</span>
             </div>
             <div class="flex justify-between items-center gap-2 pt-1">
               <span class="text-xs text-slate-400">Status:</span>
@@ -1066,8 +1092,7 @@ function switchAdminTab(tab) {
    MECÂNICA DO TETO DE GASTO (ZERADO POR CICLO):
    - Teto inicia zerado (0) e editável pelo lápis.
    - Contabiliza apenas despesas pagas (type === 'expense' && status === 'paid')
-     criadas a partir de quickState.tetoCicloInicio (quando o ciclo é zerado,
-     tetoCicloInicio recebe o instante atual, zerando o teto sem apagar o extrato).
+     criadas a partir de quickState.tetoCicloInicio.
    - Exclui despesas operacionais, transferências e pagamentos de fatura.
    ========================================================================= */
 function isLancamentoOperacional(tx) {
@@ -1540,18 +1565,21 @@ function qrRenderResumoTeto(tetoVal) {
 
 function qrFecharCampoInlineTeto(cancelar) {
   const displayEl = document.getElementById('qrDisplayTeto');
+  const wrapEl = document.getElementById('qrInlineWrapTeto');
   const inputEl = document.getElementById('qrInlineInputTeto');
   qrEditandoTeto = false;
   if (!displayEl || !inputEl) return;
   if (cancelar) {
     inputEl.dataset.cancelado = '1';
   }
+  if (wrapEl) wrapEl.classList.add('hidden');
   inputEl.classList.add('hidden');
   displayEl.classList.remove('hidden');
 }
 
 function qrIniciarEdicaoTeto() {
   const displayEl = document.getElementById('qrDisplayTeto');
+  const wrapEl = document.getElementById('qrInlineWrapTeto');
   const inputEl = document.getElementById('qrInlineInputTeto');
   if (!displayEl || !inputEl) return;
   const atual = getValorTetoAtivo();
@@ -1559,6 +1587,7 @@ function qrIniciarEdicaoTeto() {
   inputEl.dataset.cancelado = '';
   inputEl.value = atual > 0 ? atual.toFixed(2).replace('.', ',') : '';
   displayEl.classList.add('hidden');
+  if (wrapEl) wrapEl.classList.remove('hidden');
   inputEl.classList.remove('hidden');
   inputEl.disabled = false;
   inputEl.readOnly = false;
@@ -1578,11 +1607,13 @@ function qrAoDigitarTetoInline() {
 
 function qrConfirmarEdicaoInline(exibirAviso) {
   const displayEl = document.getElementById('qrDisplayTeto');
+  const wrapEl = document.getElementById('qrInlineWrapTeto');
   const inputEl = document.getElementById('qrInlineInputTeto');
   if (!displayEl || !inputEl || inputEl.classList.contains('hidden')) return;
   if (inputEl.dataset.cancelado === '1') {
     inputEl.dataset.cancelado = '';
     qrEditandoTeto = false;
+    if (wrapEl) wrapEl.classList.add('hidden');
     inputEl.classList.add('hidden');
     displayEl.classList.remove('hidden');
     recalcularConsumidoTeto(quickState.teto);
@@ -1593,6 +1624,7 @@ function qrConfirmarEdicaoInline(exibirAviso) {
   quickState.teto = novoValor;
   quickState.tetoProgramado = 0;
   qrEditandoTeto = false;
+  if (wrapEl) wrapEl.classList.add('hidden');
   inputEl.classList.add('hidden');
   displayEl.classList.remove('hidden');
   saveAll();
