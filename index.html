@@ -180,21 +180,46 @@
           <span id="notification-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-xs num-align">0</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
-        <div id="menu" role="menu" class="hidden absolute right-0 mt-2 w-64 glass rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-50 no-print animate-in">
-          <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 mb-1">
-            <p class="text-[10px] uppercase font-bold text-slate-400">Perfil Ativo</p>
-            <p id="menu-user-name" class="text-xs text-brand-600 dark:text-indigo-400 font-extrabold truncate mt-0.5">👤 Meu Perfil</p>
+        <div id="menu" role="menu" class="hidden absolute right-0 mt-2 w-60 rounded-2xl shadow-2xl border border-slate-200/90 dark:border-slate-700/90 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl py-1.5 z-50 no-print animate-in">
+          <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Perfil Ativo</p>
+              <p id="menu-user-name" class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Meu Perfil</p>
+            </div>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true"></span>
           </div>
-          <button type="button" role="menuitem" onclick="openNotificationsFromMenu()" class="w-full text-left px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between gap-2 cursor-pointer"><span>🔔 Notificações</span><span id="menu-notif-count" class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500 num-align">0</span></button>
-          <button type="button" role="menuitem" onclick="toggleDarkModeFromMenu()" class="w-full text-left px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"><span id="menu-theme-label">☀️ Modo Claro</span></button>
-          <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
-          <button type="button" role="menuitem" onclick="openProfileModal()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer">🆔 Configurar Meu Perfil</button>
-          <button type="button" role="menuitem" onclick="exportJSON()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer">📤 Compartilhar / Salvar Backup</button>
-          <button type="button" role="menuitem" onclick="exportSystemCode()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-brand-600 dark:text-indigo-400 font-bold cursor-pointer">💾 Baixar Sistema Completo (.html)</button>
-          <label role="menuitem" onclick="closeMenu()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center cursor-pointer gap-2">📥 Importar Backup<input type="file" accept=".json" onchange="importJSON(event)" class="hidden"></label>
-          <button type="button" role="menuitem" onclick="restaurarAutoBackup()" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer">♻️ Restaurar Backup Automático</button>
-          <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
-          <button type="button" role="menuitem" onclick="resetData()" class="w-full text-left px-4 py-2.5 text-sm text-rose-600 font-medium hover:bg-rose-50 dark:hover:bg-rose-900/30 cursor-pointer">🔄 Restaurar Padrão</button>
+
+          <div class="py-1">
+            <button type="button" role="menuitem" onclick="openNotificationsFromMenu()" class="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/90 flex items-center justify-between gap-2 transition cursor-pointer">
+              <span class="flex items-center gap-2.5 min-w-0 truncate"><span>🔔</span><span class="truncate">Notificações</span></span>
+              <span id="menu-notif-count" class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 num-align shrink-0">0</span>
+            </button>
+            <button type="button" role="menuitem" onclick="toggleDarkModeFromMenu()" class="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/90 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">🌗</span><span id="menu-theme-label" class="truncate">Modo Claro</span>
+            </button>
+            <button type="button" role="menuitem" onclick="openProfileModal()" class="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/90 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">👤</span><span class="truncate">Configurar Perfil</span>
+            </button>
+          </div>
+
+          <div class="border-t border-slate-100 dark:border-slate-800 py-1">
+            <button type="button" role="menuitem" onclick="exportJSON()" class="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/90 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">📤</span><span class="truncate">Exportar Backup</span>
+            </button>
+            <label role="menuitem" onclick="closeMenu()" class="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/90 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">📥</span><span class="truncate">Importar Backup</span>
+              <input type="file" accept=".json" onchange="importJSON(event)" class="hidden">
+            </label>
+            <button type="button" role="menuitem" onclick="exportSystemCode()" class="w-full px-3.5 py-2 text-[13px] font-bold text-brand-600 dark:text-indigo-400 hover:bg-brand-50/80 dark:hover:bg-indigo-950/50 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">💾</span><span class="truncate">Baixar Sistema (.html)</span>
+            </button>
+          </div>
+
+          <div class="border-t border-slate-100 dark:border-slate-800 pt-1">
+            <button type="button" role="menuitem" onclick="resetData()" class="w-full px-3.5 py-2 text-[13px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50/90 dark:hover:bg-rose-950/40 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">🔄</span><span class="truncate">Restaurar Padrão</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -983,7 +1008,7 @@ function getAccountLabel(accountId) {
 function openProfileModal() { closeMenu(); document.getElementById('pName').value = userProfile.name === 'Meu Perfil' ? '' : userProfile.name; document.getElementById('pCpf').value = userProfile.cpf || ''; document.getElementById('pRg').value = userProfile.rg || ''; document.getElementById('profileModal').classList.remove('hidden'); }
 function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
 function saveProfile(e) { e.preventDefault(); userProfile = { name: document.getElementById('pName').value.trim() || 'Meu Perfil', cpf: document.getElementById('pCpf').value.trim(), rg: document.getElementById('pRg').value.trim() }; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); updateMenuUserDisplay(); closeProfileModal(); showToast('Perfil salvo com sucesso!', 'success'); }
-function updateMenuUserDisplay() { const el = document.getElementById('menu-user-name'); if (el) el.textContent = `👤 ${userProfile.name || 'Meu Perfil'}`; }
+function updateMenuUserDisplay() { const el = document.getElementById('menu-user-name'); if (el) el.textContent = userProfile.name || 'Meu Perfil'; }
 
 // Period filter and due-date notifications
 function matchPeriod(dateStr, period) {
