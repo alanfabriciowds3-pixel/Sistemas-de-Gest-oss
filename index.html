@@ -158,7 +158,7 @@
         </span>
       </div>
       <div class="min-w-0 flex-1 pr-1">
-        <h1 id="header-title" class="text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Capa Rápida</h1>
+        <h1 id="header-title" class="text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight truncate">Busca Rápida</h1>
         <p id="header-subtitle" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Busca · Operação · Cliente · Despesa</p>
       </div>
     </div>
@@ -220,16 +220,16 @@
 
 <!-- Conteúdo principal -->
 <main class="max-w-5xl mx-auto px-3 sm:px-4 py-5 flex-1 w-full space-y-5 no-print">
-  <!-- Aba 1: Capa Rápida -->
+  <!-- Aba 1: Busca Rápida -->
   <div id="view-quick" class="max-w-xl mx-auto space-y-5 animate-in">
     <section class="qr-card">
       <div class="flex items-center justify-between gap-2 mb-3">
-        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">BUSCA / LANÇAMENTO</span>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">BUSCA RÁPIDA / LANÇAMENTO</span>
         <span id="qrModeChip" class="qr-pill text-[11px] font-bold px-2.5 py-1 rounded-full">Aguardando digitação</span>
       </div>
       <div class="flex items-center gap-2 sm:gap-2.5">
         <div class="relative flex-1 flex items-center min-w-0">
-          <input type="text" id="qrBuscaInput" aria-label="Busca rápida ou lançamento" placeholder="Ex: op compra, cli maria, uber ou pedido..." autocomplete="off" onfocus="qrAoFocarBusca()" oninput="qrAoDigitarBusca()" onkeydown="if(event.key==='Enter'){event.preventDefault();qrProcessarOk();}" class="qr-input-box w-full h-12 pl-3.5 pr-10 rounded-xl text-sm font-semibold outline-none focus:border-brand-500 transition" />
+          <input type="text" id="qrBuscaInput" aria-label="Busca rápida ou lançamento" placeholder="Ex: op compra, clint maria, uber ou pedido..." autocomplete="off" onfocus="qrAoFocarBusca()" oninput="qrAoDigitarBusca()" onkeydown="if(event.key==='Enter'){event.preventDefault();qrProcessarOk();}" class="qr-input-box w-full h-12 pl-3.5 pr-10 rounded-xl text-sm font-semibold outline-none focus:border-brand-500 transition" />
           <button type="button" id="qrClearBtn" onclick="qrLimparBuscaCompleta()" aria-label="Limpar busca" class="hidden absolute right-2 w-7 h-7 rounded-lg qr-pill text-xs font-bold flex items-center justify-center cursor-pointer">×</button>
         </div>
         <button type="button" onclick="qrProcessarOk()" class="h-12 px-4 sm:px-5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer shrink-0 transition">OK</button>
@@ -280,7 +280,7 @@
           <button type="button" onclick="qrConfirmarOperacao()" class="w-full h-11 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer transition">Confirmar Operação</button>
         </div>
 
-        <!-- Painel Cliente (cli ...) -->
+        <!-- Painel Cliente (clint ... / cli ...) -->
         <div id="qrCliFields" class="hidden space-y-3">
           <div>
             <label class="lbl" for="qrCliValor">Valor do Cliente (R$)</label>
@@ -382,7 +382,7 @@
           <p id="fin-search-summary" class="text-xs font-extrabold text-slate-900 dark:text-white truncate">Buscando...</p>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" onclick="switchTab('quick')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 cursor-pointer">Capa Rápida</button>
+          <button type="button" onclick="switchTab('quick')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 cursor-pointer">Busca Rápida</button>
           <button type="button" onclick="clearFinanceSearchPriority()" class="px-2.5 py-1.5 rounded-lg bg-brand-600 text-white text-[11px] font-bold cursor-pointer">Limpar</button>
         </div>
       </div>
@@ -462,7 +462,7 @@
 <!-- Barra de navegação inferior -->
 <nav id="bottom-nav" aria-label="Navegação principal" class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.08)] no-print transition-colors duration-300">
   <div class="max-w-5xl mx-auto flex">
-    <button type="button" id="nav-quick" onclick="switchTab('quick')" class="nav-item active" title="Capa Rápida"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Capa</span></button>
+    <button type="button" id="nav-quick" onclick="switchTab('quick')" class="nav-item active" title="Busca Rápida"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Busca</span></button>
     <button type="button" id="nav-finance" onclick="switchTab('finance')" class="nav-item" title="Finanças"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Finanças</span></button>
     <button type="button" id="nav-orders" onclick="switchTab('orders')" class="nav-item" title="Pedidos"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg><span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Pedidos</span></button>
     <button type="button" id="nav-admin" onclick="switchTab('admin')" class="nav-item" title="Admin"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span class="text-[10px] font-bold mt-1 uppercase tracking-wide">Admin</span></button>
@@ -476,7 +476,7 @@
       <div>
         <p class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-0.5">CONTROLE DE TETO</p>
         <h2 id="qrTetoModalTitle" class="text-lg font-black text-slate-900 dark:text-white">Teto de Gasto</h2>
-        <p id="qrTetoCicloInfo" class="text-[11px] text-slate-500 dark:text-slate-400">Ciclo zerado — apenas despesas lançadas neste ciclo</p>
+        <p id="qrTetoCicloInfo" class="text-[11px] text-slate-500 dark:text-slate-400">Ciclo ativo — despesas lançadas neste ciclo</p>
       </div>
       <button type="button" onclick="qrFecharModalTeto()" aria-label="Fechar controle de teto" class="w-8 h-8 rounded-xl qr-pill text-sm font-bold flex items-center justify-center cursor-pointer shrink-0">✕</button>
     </div>
@@ -638,10 +638,14 @@
       <datalist id="list-cities"></datalist>
       <datalist id="list-carriers"></datalist>
       <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2"><label class="lbl text-indigo-700 dark:text-indigo-300" for="oDriveLink"><span>🔗 Link da Nota Fiscal (Google Drive)</span></label><div class="flex gap-2"><input id="oDriveLink" type="url" oninput="updatePreview()" placeholder="Cole aqui o link do Google Drive da Nota Fiscal..." class="field text-sm bg-white dark:bg-slate-800"><a id="btnTestDrive" href="#" target="_blank" rel="noopener noreferrer" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">Abrir</a></div></div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oPedido">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-001" class="field"></div><div><label class="lbl" for="oCliente">Cliente</label><input id="oCliente" type="text" list="list-clients" maxlength="80" placeholder="Nome" class="field"></div></div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div><label class="lbl" for="oPedido">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-001" class="field"></div>
+        <div><label class="lbl" for="oCliente">Cliente</label><input id="oCliente" type="text" list="list-clients" maxlength="80" placeholder="Nome" class="field"></div>
+        <div><label class="lbl" for="oOperator">Operador</label><select id="oOperator" class="field text-sm h-12 py-0"><option value="OP Henrique">OP Henrique</option><option value="OP Eliana">OP Eliana</option></select></div>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div><label class="lbl" for="oUSD">Valor (US$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-sm">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" onchange="updatePreview()" class="field pl-8"></div></div>
-        <div><label class="lbl" for="oCot">Cotação (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="5.40" oninput="updatePreview()" onchange="updatePreview()" class="field pl-11"></div></div>
+        <div><label class="lbl" for="oCot">Cotação (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input id="oCot" type="number" step="0.01" min="0" inputmode="decimal" placeholder="Cotação do dia" oninput="updatePreview()" onchange="updatePreview()" class="field pl-11"></div></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div><label class="lbl" for="oMargem">Sua Margem (%)</label><div class="money-wrap"><input id="oMargem" type="number" step="0.1" min="0" inputmode="decimal" placeholder="Ex: 15" oninput="updatePreview()" onchange="updatePreview()" class="field font-bold text-indigo-700 dark:text-indigo-400 pr-9"><span class="money-suffix text-indigo-500 font-bold text-sm">%</span></div></div>
@@ -662,7 +666,7 @@
       <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50 num-align">
         <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white text-right" id="prevBRL">R$ 0,00</b></div>
         <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400 text-right" id="prevMargem">R$ 0,00</b></div>
-        <div class="flex justify-between items-center gap-2 text-rose-600 dark:text-rose-400"><span>(-) Custo Frete</span><b id="prevFrete" class="text-right">R$ 0,00</b></div>
+        <div class="flex justify-between items-center gap-2 text-rose-600 dark:text-rose-400"><span id="prevFreteLabel">(-) Custo Frete</span><b id="prevFrete" class="text-right">R$ 0,00</b></div>
         <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center gap-2 bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-xs border border-emerald-100 dark:border-emerald-900/30"><span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base text-right" id="prevLucro">R$ 0,00</b></div>
         <div class="flex justify-between items-center gap-2 pt-1 font-bold"><span class="text-brand-800 dark:text-indigo-300">Total a Receber</span><b class="text-brand-900 dark:text-white text-base text-right" id="prevFinal">R$ 0,00</b></div>
       </div>
@@ -672,7 +676,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oC1">1ª Cidade</label><input id="oC1" type="text" list="list-cities" class="field"></div><div><label class="lbl" for="oC1H"><span>Hora</span><button type="button" class="btn-now" onclick="setNow('oC1H')">Agora</button></label><input id="oC1H" type="datetime-local" class="field"></div></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oC2">2ª Cidade</label><input id="oC2" type="text" list="list-cities" class="field"></div><div><label class="lbl" for="oC2H"><span>Hora</span><button type="button" class="btn-now" onclick="setNow('oC2H')">Agora</button></label><input id="oC2H" type="datetime-local" class="field"></div></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oC3">3ª Cidade</label><input id="oC3" type="text" list="list-cities" class="field"></div><div><label class="lbl" for="oC3H"><span>Hora</span><button type="button" class="btn-now" onclick="setNow('oC3H')">Agora</button></label><input id="oC3H" type="datetime-local" class="field"></div></div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oSP"><span>Desceu SP</span><button type="button" class="btn-now" onclick="setNow('oSP')">Agora</button></label><input id="oSP" type="datetime-local" class="field"></div><div><label class="lbl" for="oRec"><span>Recebido</span><button type="button" class="btn-now" onclick="setNow('oRec')">Agora</button></label><input id="oRec" type="datetime-local" class="field"></div></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="lbl" for="oSP"><span>Desceu SP</span><button type="button" class="btn-now" onclick="setNow('oSP')">Agora</button></label><input id="oSP" type="datetime-local" class="field"></div><div><label class="lbl" for="oRec"><span>Recebido (Cliente)</span><button type="button" class="btn-now" onclick="setNow('oRec');updatePreview();">Agora</button></label><input id="oRec" type="datetime-local" oninput="updatePreview()" onchange="updatePreview()" class="field"></div></div>
       <div class="flex gap-2 pt-4 sticky bottom-0 bg-white dark:bg-slate-800 pb-2"><button type="button" onclick="closeModal()" class="flex-1 py-3 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 cursor-pointer">Cancelar</button><button type="submit" class="flex-1 py-3 rounded-xl font-bold text-sm text-white bg-brand-600 shadow-md cursor-pointer">Salvar Pedido</button></div>
     </form>
   </div>
@@ -759,12 +763,13 @@
         </div>
         <div class="py-1 space-y-2 text-sm mb-4">
           <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Cliente:</span><span class="font-bold text-white truncate max-w-[210px]" id="recCliente"></span></div>
+          <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Operador:</span><span class="font-bold text-indigo-300 truncate max-w-[210px]" id="recOperador">OP Henrique</span></div>
           <div class="flex justify-between items-start gap-2"><span class="text-slate-400">Data Emissão:</span><span class="font-bold text-white text-right" id="recData"></span></div>
         </div>
         <div class="receipt-inner-box rounded-2xl p-4 space-y-2.5 text-sm">
           <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Custo Mercadoria:</span><span class="font-extrabold text-white text-right" id="recInv"></span></div>
           <div class="flex justify-between items-start gap-2"><span class="text-slate-300 leading-snug">Sua Margem<br>Bruta:</span><span class="font-extrabold text-[#60a5fa] text-right" id="recMargem"></span></div>
-          <div class="flex justify-between items-center gap-2 text-[#fb7185]"><span>(-) Custo Frete:</span><span class="font-extrabold text-right" id="recFreteAdmin"></span></div>
+          <div class="flex justify-between items-center gap-2 text-[#fb7185]"><span id="recFreteAdminLabel">(-) Custo Frete:</span><span class="font-extrabold text-right" id="recFreteAdmin"></span></div>
           <div class="flex justify-between items-center gap-2 border-t border-slate-700/80 pt-3 mt-1"><span class="text-[#34d399] font-extrabold">Lucro Líquido:</span><span class="font-extrabold text-[#34d399] text-base text-right" id="recLucro"></span></div>
           <div class="flex justify-between items-start gap-2 border-t border-slate-700/80 pt-3 mt-1 font-extrabold text-white text-base"><span class="leading-snug">Total<br>Faturado:</span><span class="text-right" id="recFat"></span></div>
         </div>
@@ -845,6 +850,7 @@ const quickDefaultState = {
   consumido: 0,
   tetoCicloInicio: null,
   etapaOp: 'Despacho',
+  operadorPadrao: 'OP Henrique',
   metodos: { op: 'Pix', cli: 'Pix', gasto: 'Pix' },
   bancos: { op: 'nubank', cli: 'nubank', gasto: 'nubank' },
   cartoes: { op: 'riachuelo', cli: 'riachuelo', gasto: 'riachuelo' }
@@ -880,6 +886,7 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 function setNow(id){ const el = document.getElementById(id); if (el) el.value = nowLocal(); }
+function normalizeOperator(op){ return op === 'OP Eliana' ? 'OP Eliana' : 'OP Henrique'; }
 
 function showToast(msg, variant = 'info') {
   const wrap = document.getElementById('appToast');
@@ -1073,7 +1080,7 @@ function updateHeaderTabIcon(tab) {
 function switchTab(tab) {
   if (!document.getElementById('view-' + tab)) return;
   currentTab = tab;
-  ['quick','orders','finance','admin'].forEach(t => {
+  ['quick','finance','orders','admin'].forEach(t => {
     const v = document.getElementById('view-' + t); const n = document.getElementById('nav-' + t);
     if (v) v.classList.add('hidden'); if (n) n.classList.remove('active');
   });
@@ -1085,7 +1092,7 @@ function switchTab(tab) {
   const fab = document.getElementById('qrPctFab'); if (fab) fab.classList.toggle('hidden', tab !== 'quick');
   updateHeaderTabIcon(tab);
   const title = document.getElementById('header-title'); const sub = document.getElementById('header-subtitle');
-  if (tab === 'quick') { if (title) title.textContent = 'Capa Rápida'; if (sub) sub.textContent = 'Busca · Operação · Cliente · Despesa'; }
+  if (tab === 'quick') { if (title) title.textContent = 'Busca Rápida'; if (sub) sub.textContent = 'Busca · Operação · Cliente · Despesa'; }
   else if (tab === 'orders') { if (title) title.textContent = 'Controle de Pedidos'; if (sub) sub.textContent = 'Rastreio · Valores · Lucro'; renderOrders(); }
   else if (tab === 'finance') { if (title) title.textContent = 'Painel Financeiro'; if (sub) sub.textContent = 'Contas · Cartões · Lançamentos'; renderFinance(); }
   else if (tab === 'admin') { if (title) title.textContent = 'Administração'; if (sub) sub.textContent = 'Relatórios e Gráficos'; switchAdminTab('orders'); }
@@ -1095,10 +1102,20 @@ function switchTab(tab) {
 /* =========================================================================
    PRIORIDADE DA TELA DE FINANCEIRO AO FAZER BUSCA
    ========================================================================= */
+function isClientQuickCommand(rawText) {
+  return /^(clint|cliente|cli)(\s+|$|-|—)/i.test(String(rawText || '').trim());
+}
+
+function extractClientCommandName(rawText) {
+  return String(rawText || '').replace(/^(clint|cliente|cli)\s*(—|-)?\s*/i, '').trim();
+}
+
 function normalizeSearchTerm(rawTerm) {
-  return String(rawTerm || '')
-    .replace(/^(cliente|cli)\s*(—|-)?\s*/i, '')
-    .trim();
+  const trimmed = String(rawTerm || '').trim();
+  if (isClientQuickCommand(trimmed)) {
+    return extractClientCommandName(trimmed);
+  }
+  return trimmed;
 }
 
 function openFinancePrioritySearch(rawTerm) {
@@ -1116,7 +1133,7 @@ function clearFinanceSearchPriority() {
   const ordSearchEl = document.getElementById('ord-search');
   if (ordSearchEl) ordSearchEl.value = '';
   const qrInput = document.getElementById('qrBuscaInput');
-  if (qrInput && !/^op\b/i.test(qrInput.value.trim()) && !/^(cli|cliente)\b/i.test(qrInput.value.trim())) {
+  if (qrInput && !/^op\b/i.test(qrInput.value.trim()) && !isClientQuickCommand(qrInput.value.trim())) {
     qrInput.value = '';
     const clearBtn = document.getElementById('qrClearBtn');
     if (clearBtn) clearBtn.classList.add('hidden');
@@ -1161,7 +1178,7 @@ function renderFinanceSearchBanner(txMatchCount, orderMatches) {
       <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-700 hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
         <div class="min-w-0">
           <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
-          <p class="text-[10px] text-slate-500 truncate">${fmtDT(o.saida)} · Toque para abrir recibo</p>
+          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)} · Toque para abrir recibo</p>
         </div>
         <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
       </button>
@@ -1188,7 +1205,7 @@ function switchAdminTab(tab) {
 }
 
 /* =========================================================================
-   MECÂNICA DO TETO DE GASTO (ZERADO POR CICLO):
+   MECÂNICA DO TETO DE GASTO (CONTÍNUO NO CICLO ATIVO):
    - Teto inicia zerado (0) e editável pelo lápis.
    - Contabiliza apenas despesas pagas (type === 'expense' && status === 'paid')
      criadas a partir de quickState.tetoCicloInicio.
@@ -1298,6 +1315,7 @@ function load(){
         teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
         tetoProgramado: 0,
         tetoCicloInicio: p.tetoCicloInicio || null,
+        operadorPadrao: normalizeOperator(p.operadorPadrao),
         metodos: { ...quickDefaultState.metodos, ...(p.metodos || {}) },
         bancos: { ...quickDefaultState.bancos, ...(p.bancos || {}) },
         cartoes: { ...quickDefaultState.cartoes, ...(p.cartoes || {}) }
@@ -1428,12 +1446,14 @@ function qrSincronizarSelectsContexto(contexto) {
 
 function qrRegistrarTransacao(desc, valor, tipo, origemStr, accountId, opts) {
   if (valor <= 0) return;
+  const operador = normalizeOperator((opts && opts.operador) || quickState.operadorPadrao);
   txs.unshift({
     id: genId(), desc, amount: valor, type: tipo,
     cat: tipo === 'income' ? 'Receita' : (opts && opts.isOp ? 'Despesa Operacional' : 'Despesa'),
     date: todayISO(), createdAt: new Date().toISOString(),
     accountId: accountId || 'cash', status: 'paid',
     origem: origemStr || '',
+    operador,
     paymentMethod: (opts && opts.paymentMethod) || '',
     isOp: !!(opts && opts.isOp),
     orderId: (opts && opts.orderId) || null
@@ -1471,7 +1491,7 @@ function qrRenderBuscaPedidos(texto) {
       <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left p-2.5 rounded-xl qr-subbox hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
         <div class="min-w-0">
           <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
-          <p class="text-[10px] text-slate-500 truncate">${fmtDT(o.saida)} · Toque para abrir recibo</p>
+          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)} · Toque para abrir recibo</p>
         </div>
         <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
       </button>
@@ -1492,8 +1512,6 @@ function qrAoDigitarBusca() {
   const input = document.getElementById('qrBuscaInput'); const raw = input.value; const trimmed = raw.trim();
   document.getElementById('qrClearBtn').classList.toggle('hidden', raw.length === 0);
   if (!trimmed) { qrResetarModoBusca(); return; }
-  const m = raw.match(/^cli\s+(.+)$/i);
-  if (m) { const nome = m[1]; if (!nome.startsWith('—')) { input.value = `Cliente — ${nome}`; qrAvaliarEntrada(input.value); qrRenderBuscaPedidos(input.value); return; } }
   qrAvaliarEntrada(trimmed);
   qrRenderBuscaPedidos(trimmed);
 }
@@ -1531,10 +1549,10 @@ function qrAvaliarEntrada(texto) {
     qrSincronizarSelectsContexto('op');
     document.getElementById('qrOpFields').classList.remove('hidden'); panel.classList.remove('hidden'); qrAtualizarResumoOp(); return;
   }
-  if (/^(cli|cliente)\b/i.test(texto)) {
-    const nome = texto.replace(/^(cliente|cli)\s*(—|-)?\s*/i, '').trim() || 'Cliente';
+  if (isClientQuickCommand(texto)) {
+    const nome = extractClientCommandName(texto) || 'Cliente';
     chip.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30';
-    chip.textContent = `Cliente: ${nome}`; tag.textContent = 'CLI · CLIENTE'; title.textContent = `Cliente — ${nome}`;
+    chip.textContent = `Cliente: ${nome}`; tag.textContent = 'CLINT · CLIENTE'; title.textContent = `Cliente — ${nome}`;
     document.getElementById('qrCliResumoNome').textContent = nome;
     qrSincronizarSelectsContexto('cli');
     document.getElementById('qrCliFields').classList.remove('hidden'); panel.classList.remove('hidden'); qrAtualizarResumoCli(); return;
@@ -1590,7 +1608,7 @@ function qrConfirmarOperacao() {
   const valor = qrParseMoeda(document.getElementById('qrOpValor').value);
   const sel = qrResolverSelecaoPagamento('op');
   if (valor <= 0) { showToast('Informe o valor da operação.', 'error'); return; }
-  qrRegistrarTransacao(`OP ${nome} · ${quickState.etapaOp}`, valor, 'expense', sel.origemLabel, sel.accountId, { isOp: true, paymentMethod: sel.metodo });
+  qrRegistrarTransacao(`OP ${nome} · ${quickState.etapaOp}`, valor, 'expense', sel.origemLabel, sel.accountId, { isOp: true, paymentMethod: sel.metodo, operador: quickState.operadorPadrao });
   document.getElementById('qrOpValor').value = '';
   saveAll();
   showToast(`Operação registrada (fora do teto): ${nome} — ${money(valor)}`, 'success');
@@ -1599,12 +1617,12 @@ function qrConfirmarOperacao() {
 
 function qrConfirmarCliente() {
   const texto = document.getElementById('qrBuscaInput').value.trim();
-  const nome = texto.replace(/^(cliente|cli)\s*(—|-)?\s*/i, '').trim() || 'Cliente';
+  const nome = extractClientCommandName(texto) || 'Cliente';
   const valor = qrParseMoeda(document.getElementById('qrCliValor').value);
   const sel = qrResolverSelecaoPagamento('cli');
   if (valor <= 0) { showToast('Informe o valor do cliente.', 'error'); return; }
-  qrRegistrarTransacao(`CLI ${nome}`, valor, 'income', sel.origemLabel, sel.accountId, { paymentMethod: sel.metodo });
-  const newOrder = { id: genId(), pedido: `CLI-${String(orders.length+1).padStart(3,'0')}`, cliente: nome, driveLink: '', valorUSD: 0, cotacao: 5.40, margem: 0, frete: 0, paymentMethod: sel.metodo, freightStatus: 'paid', pagoMerc: false, pagoFrete: false, syncFin: false, cidadeOrigem: '', saida: nowLocal(), transportadora: '', subiuTransp: '', cidade1: '', cidade1Hora: '', cidade2: '', cidade2Hora: '', cidade3: '', cidade3Hora: '', desceuSP: '', clienteRecebeu: '' };
+  qrRegistrarTransacao(`CLI ${nome}`, valor, 'income', sel.origemLabel, sel.accountId, { paymentMethod: sel.metodo, operador: quickState.operadorPadrao });
+  const newOrder = { id: genId(), pedido: `CLI-${String(orders.length+1).padStart(3,'0')}`, cliente: nome, operador: normalizeOperator(quickState.operadorPadrao), driveLink: '', valorUSD: 0, cotacao: '', margem: 0, frete: 0, paymentMethod: sel.metodo, freightStatus: 'paid', pagoMerc: false, pagoFrete: false, syncFin: false, cidadeOrigem: '', saida: nowLocal(), transportadora: '', subiuTransp: '', cidade1: '', cidade1Hora: '', cidade2: '', cidade2Hora: '', cidade3: '', cidade3Hora: '', desceuSP: '', clienteRecebeu: '' };
   orders.unshift(newOrder);
   saveToHistory(newOrder);
   document.getElementById('qrCliValor').value = '';
@@ -1618,7 +1636,7 @@ function qrConfirmarDespesa() {
   const valor = qrParseMoeda(document.getElementById('qrGastoValor').value);
   const sel = qrResolverSelecaoPagamento('gasto');
   if (valor <= 0) { showToast('Informe o valor da despesa.', 'error'); return; }
-  qrRegistrarTransacao(desc, valor, 'expense', sel.origemLabel, sel.accountId, { isOp: false, paymentMethod: sel.metodo });
+  qrRegistrarTransacao(desc, valor, 'expense', sel.origemLabel, sel.accountId, { isOp: false, paymentMethod: sel.metodo, operador: quickState.operadorPadrao });
   document.getElementById('qrGastoValor').value = '';
   saveAll();
   showToast(`Despesa registrada no teto: ${desc} — ${money(valor)}`, 'success');
@@ -1816,7 +1834,23 @@ function populateSelects() {
   const c = document.getElementById('oAccOutFrete'); if (c) c.value = 'cash';
   const d = document.getElementById('tTo'); if (d) d.value = 'cash';
 }
-function calcValores(o) { const inv = (o.valorUSD||0)*(o.cotacao||0); const margemVal = inv*((o.margem||0)/100); const meuCustoMerc = o.pagoMerc ? inv : 0; const meuCustoFrete = o.pagoFrete ? (o.frete||0) : 0; const faturamento = margemVal + meuCustoMerc; const lucroLiq = faturamento - meuCustoMerc - meuCustoFrete; return { inv, margemVal, lucroLiq, faturamento, meuCustoMerc, meuCustoFrete }; }
+
+/* =========================================================================
+   FRETE, DESCONTO COM O CLIENTE E OPERADOR (OP HENRIQUE / OP ELIANA)
+   ========================================================================= */
+function calcValores(o) {
+  const inv = (Number(o.valorUSD) || 0) * (Number(o.cotacao) || 0);
+  const margemVal = inv * ((Number(o.margem) || 0) / 100);
+  const freteVal = Number(o.frete) || 0;
+  const comCliente = !!(o && o.clienteRecebeu);
+  const descontoFreteCliente = comCliente ? freteVal : 0;
+  const meuCustoMerc = o.pagoMerc ? inv : 0;
+  const meuCustoFrete = o.pagoFrete ? freteVal : 0;
+  const faturamento = margemVal + meuCustoMerc;
+  const lucroLiq = margemVal - descontoFreteCliente;
+  return { inv, margemVal, lucroLiq, faturamento, meuCustoMerc, meuCustoFrete, freteVal, descontoFreteCliente, comCliente };
+}
+
 function statusOf(o){ if (o.clienteRecebeu) return {key:'entregue', label:'Entregue', cls:'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'}; if (o.desceuSP) return {key:'sp', label:'Em SP', cls:'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400'}; if (o.subiuTransp) return {key:'transito', label:'Em trânsito', cls:'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'}; if (o.saida) return {key:'saiu', label:'Saiu', cls:'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'}; return {key:'pendente', label:'Pendente', cls:'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'}; }
 
 function renderOrders() {
@@ -1827,11 +1861,12 @@ function renderOrders() {
   const q = document.getElementById('ord-search').value.toLowerCase().trim();
   const period = document.getElementById('ord-period-filter')?.value || '30d';
   const list = document.getElementById('ord-list'); const empty = document.getElementById('ord-empty');
-  const items = orders.filter(o => { const mt = !q || (o.pedido||'').toLowerCase().includes(q) || (o.cliente||'').toLowerCase().includes(q); const mp = matchPeriod(o.saida, period); return mt && mp; }).sort((a,b) => (b.saida||'').localeCompare(a.saida||''));
+  const items = orders.filter(o => { const mt = !q || (o.pedido||'').toLowerCase().includes(q) || (o.cliente||'').toLowerCase().includes(q) || (o.operador||'').toLowerCase().includes(q); const mp = matchPeriod(o.saida, period); return mt && mp; }).sort((a,b) => (b.saida||'').localeCompare(a.saida||''));
   if (!items.length) { list.innerHTML = ''; empty.classList.remove('hidden'); return; } empty.classList.add('hidden');
   list.innerHTML = items.map(o => {
     const st = statusOf(o);
     const v = calcValores(o);
+    const opLabel = normalizeOperator(o.operador);
     const hasDoc = o.driveLink ? `<a href="${escapeHtml(o.driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-xs ml-1 inline-flex items-center gap-0.5 text-brand-600 dark:text-brand-400 underline">📎 NF</a>` : '';
     const safeOrderLabel = escapeHtml(o.pedido || 'Pedido');
     return `
@@ -1840,6 +1875,7 @@ function renderOrders() {
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 flex-wrap">
               <p class="font-extrabold text-slate-900 dark:text-white text-sm truncate">${escapeHtml(o.pedido || '—')} · ${escapeHtml(o.cliente || '—')} ${hasDoc}</p>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300 shrink-0">${escapeHtml(opLabel)}</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded ${st.cls} shrink-0">${st.label}</span>
             </div>
             <p class="text-[11px] text-slate-500 truncate mt-0.5">${fmtDT(o.saida)}</p>
@@ -1860,8 +1896,18 @@ function updatePreview() {
   const cot = parseFloat(document.getElementById('oCot').value) || 0;
   const margem = parseFloat(document.getElementById('oMargem').value) || 0;
   const frete = parseFloat(document.getElementById('oFrete').value) || 0;
-  const inv = usd * cot; const margemVal = inv * (margem/100); const lucro = margemVal - frete; const total = inv + margemVal;
-  document.getElementById('prevBRL').textContent = money(inv); document.getElementById('prevMargem').textContent = money(margemVal); document.getElementById('prevFrete').textContent = money(frete); document.getElementById('prevLucro').textContent = money(lucro); document.getElementById('prevFinal').textContent = money(total);
+  const comCliente = !!(document.getElementById('oRec') && document.getElementById('oRec').value);
+  const inv = usd * cot;
+  const margemVal = inv * (margem / 100);
+  const descontoFrete = comCliente ? frete : 0;
+  const lucro = margemVal - descontoFrete;
+  const total = inv + margemVal;
+  document.getElementById('prevBRL').textContent = money(inv);
+  document.getElementById('prevMargem').textContent = money(margemVal);
+  document.getElementById('prevFreteLabel').textContent = comCliente ? '(-) Frete c/ Cliente' : '(-) Custo Frete (pendente c/ cliente)';
+  document.getElementById('prevFrete').textContent = money(descontoFrete);
+  document.getElementById('prevLucro').textContent = money(lucro);
+  document.getElementById('prevFinal').textContent = money(total);
   const btn = document.getElementById('btnTestDrive'); const link = document.getElementById('oDriveLink').value.trim(); if (link) { btn.href = link; btn.classList.remove('hidden'); } else btn.classList.add('hidden');
 }
 
@@ -1874,6 +1920,7 @@ function openModal(orderId) {
       document.getElementById('oId').value = o.id;
       document.getElementById('oPedido').value = o.pedido || '';
       document.getElementById('oCliente').value = o.cliente || '';
+      document.getElementById('oOperator').value = normalizeOperator(o.operador);
       document.getElementById('oDriveLink').value = o.driveLink || '';
       document.getElementById('oUSD').value = o.valorUSD || '';
       document.getElementById('oCot').value = o.cotacao || '';
@@ -1902,6 +1949,7 @@ function openModal(orderId) {
   }
   document.getElementById('modalTitle').textContent = 'Novo Pedido'; document.getElementById('oId').value = '';
   ['oPedido','oCliente','oDriveLink','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('oOperator').value = normalizeOperator(quickState.operadorPadrao);
   document.getElementById('oPagoMerc').checked = true; document.getElementById('oPagoFrete').checked = true; document.getElementById('oSyncFin').checked = true;
   updatePreview(); togglePaymentOptions();
 }
@@ -1914,21 +1962,97 @@ function togglePaymentOptions() {
   document.getElementById('wrapAccOutMerc').classList.toggle('hidden', !pm); document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !pf); document.getElementById('wrapAccIn').classList.toggle('hidden', !sf);
 }
 
+function registrarSaidaFreteImediata(order, accFreteId) {
+  const freteVal = Number(order.frete) || 0;
+  if (!order.pagoFrete || freteVal <= 0 || !accFreteId) return;
+  const opLabel = normalizeOperator(order.operador);
+  const origemLabel = getAccountLabel(accFreteId);
+  txs = txs.filter(t => !(t.orderId === order.id && t.isFreightOut === true));
+  txs.unshift({
+    id: genId(),
+    orderId: order.id,
+    isFreightOut: true,
+    isOp: true,
+    operador: opLabel,
+    origem: origemLabel,
+    desc: `Frete ${order.pedido} · ${order.cliente || 'Cliente'} (${opLabel})`,
+    amount: freteVal,
+    type: 'expense',
+    cat: 'Despesa Operacional',
+    date: todayISO(),
+    createdAt: new Date().toISOString(),
+    accountId: accFreteId,
+    status: 'paid'
+  });
+  if (accFreteId.startsWith('card_')) {
+    const card = creditCards.find(c => c.id === accFreteId.replace('card_', ''));
+    if (card) card.currentBill = (Number(card.currentBill) || 0) + freteVal;
+  }
+}
+
 function saveOrder(e) {
   e.preventDefault();
   const id = document.getElementById('oId').value;
-  const order = { id: id || genId(), pedido: document.getElementById('oPedido').value.trim(), cliente: document.getElementById('oCliente').value.trim(), driveLink: document.getElementById('oDriveLink').value.trim(), valorUSD: parseFloat(document.getElementById('oUSD').value)||0, cotacao: parseFloat(document.getElementById('oCot').value)||0, margem: parseFloat(document.getElementById('oMargem').value)||0, frete: parseFloat(document.getElementById('oFrete').value)||0, paymentMethod: document.getElementById('oPaymentMethod').value, freightStatus: document.getElementById('oFreightStatus').value, pagoMerc: document.getElementById('oPagoMerc').checked, pagoFrete: document.getElementById('oPagoFrete').checked, syncFin: document.getElementById('oSyncFin').checked, cidadeOrigem: document.getElementById('oOrigem').value.trim(), saida: document.getElementById('oSaida').value, transportadora: document.getElementById('oTransportadora').value.trim(), subiuTransp: document.getElementById('oSubiu').value, cidade1: document.getElementById('oC1').value.trim(), cidade1Hora: document.getElementById('oC1H').value, cidade2: document.getElementById('oC2').value.trim(), cidade2Hora: document.getElementById('oC2H').value, cidade3: document.getElementById('oC3').value.trim(), cidade3Hora: document.getElementById('oC3H').value, desceuSP: document.getElementById('oSP').value, clienteRecebeu: document.getElementById('oRec').value };
+  const operador = normalizeOperator(document.getElementById('oOperator').value);
+  const accFreteId = document.getElementById('oAccOutFrete').value;
+  const order = {
+    id: id || genId(),
+    pedido: document.getElementById('oPedido').value.trim(),
+    cliente: document.getElementById('oCliente').value.trim(),
+    operador,
+    driveLink: document.getElementById('oDriveLink').value.trim(),
+    valorUSD: parseFloat(document.getElementById('oUSD').value)||0,
+    cotacao: parseFloat(document.getElementById('oCot').value)||0,
+    margem: parseFloat(document.getElementById('oMargem').value)||0,
+    frete: parseFloat(document.getElementById('oFrete').value)||0,
+    paymentMethod: document.getElementById('oPaymentMethod').value,
+    freightStatus: document.getElementById('oFreightStatus').value,
+    pagoMerc: document.getElementById('oPagoMerc').checked,
+    pagoFrete: document.getElementById('oPagoFrete').checked,
+    accOutFrete: accFreteId,
+    syncFin: document.getElementById('oSyncFin').checked,
+    cidadeOrigem: document.getElementById('oOrigem').value.trim(),
+    saida: document.getElementById('oSaida').value,
+    transportadora: document.getElementById('oTransportadora').value.trim(),
+    subiuTransp: document.getElementById('oSubiu').value,
+    cidade1: document.getElementById('oC1').value.trim(),
+    cidade1Hora: document.getElementById('oC1H').value,
+    cidade2: document.getElementById('oC2').value.trim(),
+    cidade2Hora: document.getElementById('oC2H').value,
+    cidade3: document.getElementById('oC3').value.trim(),
+    cidade3Hora: document.getElementById('oC3H').value,
+    desceuSP: document.getElementById('oSP').value,
+    clienteRecebeu: document.getElementById('oRec').value
+  };
   if (!order.pedido) order.pedido = `PED-${String(orders.length+1).padStart(3,'0')}`;
+  quickState.operadorPadrao = operador;
   if (id) { const idx = orders.findIndex(o => o.id === id); if (idx >= 0) orders[idx] = order; else orders.unshift(order); } else orders.unshift(order);
+
+  if (order.pagoFrete && order.frete > 0) {
+    registrarSaidaFreteImediata(order, accFreteId);
+  }
+
   if (order.syncFin) {
-    txs = txs.filter(t => t.orderId !== order.id);
+    txs = txs.filter(t => !(t.orderId === order.id && !t.isFreightOut));
     const v = calcValores(order);
     if (v.lucroLiq > 0) {
-      txs.unshift({ id: genId(), orderId: order.id, desc: `Lucro ${order.pedido} · ${order.cliente}`, amount: v.lucroLiq, type: 'income', cat: 'Receita', date: todayISO(), createdAt: new Date().toISOString(), accountId: document.getElementById('oAccIn').value, status: order.clienteRecebeu ? 'paid' : 'pending' });
+      txs.unshift({
+        id: genId(),
+        orderId: order.id,
+        operador,
+        desc: `Lucro ${order.pedido} · ${order.cliente} (${operador})`,
+        amount: v.lucroLiq,
+        type: 'income',
+        cat: 'Receita',
+        date: todayISO(),
+        createdAt: new Date().toISOString(),
+        accountId: document.getElementById('oAccIn').value,
+        status: order.clienteRecebeu ? 'paid' : 'pending'
+      });
     }
   }
   saveToHistory(order); saveAll(); closeModal(); renderOrders(); renderFinance();
-  showToast(`Pedido ${order.pedido} salvo.`, 'success');
+  showToast(`Pedido ${order.pedido} salvo (${operador}).`, 'success');
 }
 
 async function deleteOrderById(orderId) {
@@ -1971,6 +2095,7 @@ function renderFinance() {
       (t.desc || '').toLowerCase().includes(searchLower) ||
       (t.cat || '').toLowerCase().includes(searchLower) ||
       (t.origem || '').toLowerCase().includes(searchLower) ||
+      (t.operador || '').toLowerCase().includes(searchLower) ||
       getAccountLabel(t.accountId).toLowerCase().includes(searchLower) ||
       String(t.amount || '').includes(searchLower)
     );
@@ -1981,6 +2106,7 @@ function renderFinance() {
     ? orders.filter(o =>
         (o.pedido || '').toLowerCase().includes(searchLower) ||
         (o.cliente || '').toLowerCase().includes(searchLower) ||
+        (o.operador || '').toLowerCase().includes(searchLower) ||
         (o.cidadeOrigem || '').toLowerCase().includes(searchLower)
       )
     : [];
@@ -2088,7 +2214,7 @@ function renderAdminOrders() {
   document.getElementById('adm-total-profit').textContent = money(tp); document.getElementById('adm-total-fat').textContent = money(tf);
   const list = document.getElementById('adm-detailed-list'); if (!list) return;
   if (!orders.length) list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido cadastrado.</p>';
-  else list.innerHTML = orders.map(o => { const v = calcValores(o); const st = statusOf(o); return `<div class="p-3 flex justify-between items-start gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/50"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido)} · ${escapeHtml(o.cliente)}</p><p class="text-[10px] text-slate-500">${fmtDT(o.saida)} · <span class="px-1.5 py-0.5 rounded ${st.cls}">${st.label}</span></p></div><div class="text-right shrink-0"><b class="text-xs text-emerald-600 block">${money(v.lucroLiq)}</b><span class="text-[10px] text-slate-500">F: ${money(v.faturamento)}</span></div></div>`; }).join('');
+  else list.innerHTML = orders.map(o => { const v = calcValores(o); const st = statusOf(o); return `<div class="p-3 flex justify-between items-start gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/50"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido)} · ${escapeHtml(o.cliente)} · <span class="text-indigo-500">${escapeHtml(normalizeOperator(o.operador))}</span></p><p class="text-[10px] text-slate-500">${fmtDT(o.saida)} · <span class="px-1.5 py-0.5 rounded ${st.cls}">${st.label}</span></p></div><div class="text-right shrink-0"><b class="text-xs text-emerald-600 block">${money(v.lucroLiq)}</b><span class="text-[10px] text-slate-500">F: ${money(v.faturamento)}</span></div></div>`; }).join('');
   const map = {}; orders.forEach(o => { const k = o.cliente || '—'; if (!map[k]) map[k] = { qtd: 0, lucro: 0 }; map[k].qtd++; map[k].lucro += calcValores(o).lucroLiq; });
   const tbody = document.getElementById('adm-client-table'); const rank = Object.entries(map).sort((a,b) => b[1].lucro - a[1].lucro);
   if (!rank.length) tbody.innerHTML = '<tr><td colspan="3" class="text-center text-xs text-slate-400 py-4">Sem dados.</td></tr>';
@@ -2183,10 +2309,12 @@ function openReceipt(orderId) {
   const serviceVal = (Number(o.frete) || 0) > 0 ? Number(o.frete) : (v.lucroLiq > 0 ? v.lucroLiq : v.faturamento);
   document.getElementById('recPedido').textContent = o.pedido || '—';
   document.getElementById('recCliente').textContent = o.cliente || '—';
+  document.getElementById('recOperador').textContent = normalizeOperator(o.operador);
   document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
   document.getElementById('recInv').textContent = money(v.inv);
   document.getElementById('recMargem').textContent = money(v.margemVal);
-  document.getElementById('recFreteAdmin').textContent = money(o.frete || 0);
+  document.getElementById('recFreteAdminLabel').textContent = v.comCliente ? '(-) Frete c/ Cliente:' : '(-) Frete (c/ cliente):';
+  document.getElementById('recFreteAdmin').textContent = money(v.descontoFreteCliente);
   document.getElementById('recLucro').textContent = money(v.lucroLiq);
   document.getElementById('recFat').textContent = money(v.faturamento);
 
@@ -2213,63 +2341,158 @@ function openReceipt(orderId) {
       <div class="flex items-center justify-between gap-3 text-xs">
         <div class="flex items-center gap-2.5 min-w-0">
           <span class="text-base shrink-0">${s.icon}</span>
-          <span class="font-bold text-slate-200 truncate ${s.italic ? 'italic' : ''}">${escapeHtml(s.label)}</span>
+          <span class="font-bold text-slate-100 truncate ${s.italic ? 'italic text-slate-300' : ''}">${escapeHtml(s.label)}</span>
         </div>
-        <div class="text-right text-[11px] text-slate-400 font-semibold leading-tight shrink-0">
-          <span class="block">${escapeHtml(datePart)}</span>
-          <span class="block">${escapeHtml(timePart)}</span>
+        <div class="text-right shrink-0 leading-tight">
+          <div class="font-bold text-slate-200">${escapeHtml(datePart)}</div>
+          <div class="text-[11px] text-slate-400">${escapeHtml(timePart)}</div>
         </div>
       </div>`;
-  }).join('') || '<p class="text-xs text-slate-400">Sem rastreio.</p>';
+  }).join('') || '<p class="text-xs text-slate-400">Sem marcos de rastreio preenchidos.</p>';
 
-  const timelineHtml = steps.map((s, idx) => {
+  document.getElementById('recTrajetoCliente').innerHTML = steps.map((s, idx) => {
     const isLast = idx === steps.length - 1;
+    const isFirst = idx === 0;
+    const dotClass = isLast ? 'bg-[#10b981]' : (isFirst ? 'bg-[#818cf8]' : 'bg-[#64748b]');
+    const badgeClass = isLast ? 'bg-[#064e3b] text-[#34d399]' : 'bg-[#263248] text-slate-200';
     return `
-      <div class="relative flex items-start gap-3.5 ${isLast ? '' : 'pb-5'}">
-        ${!isLast ? '<span aria-hidden="true" class="absolute left-[11px] top-6 bottom-0 w-0.5 bg-slate-600/70"></span>' : ''}
-        <span class="relative z-10 w-6 h-6 rounded-full flex items-center justify-center text-sm shrink-0 mt-0.5">${s.icon}</span>
-        <div class="min-w-0 flex-1">
-          <p class="text-sm font-extrabold text-white leading-snug ${s.italic ? 'italic' : ''}">${escapeHtml(s.label)}</p>
-          <p class="text-xs text-slate-400 font-medium mt-0.5">${fmtDT(s.dt)}</p>
+      <div class="relative flex items-start justify-between gap-3 ${!isLast ? 'pb-4' : ''}">
+        ${!isLast ? '<span class="absolute left-[5px] top-3 bottom-0 w-[2px] bg-[#334155]"></span>' : ''}
+        <div class="flex items-start gap-3 min-w-0">
+          <span class="relative z-10 mt-1 w-3 h-3 rounded-full ${dotClass} shrink-0 ring-4 ring-[#1e283c]"></span>
+          <span class="text-sm font-bold text-white leading-snug ${s.italic ? 'italic text-slate-200' : ''}">${escapeHtml(s.label)}</span>
         </div>
+        <span class="text-[11px] font-bold px-2.5 py-1 rounded-md shrink-0 ${badgeClass}">${escapeHtml(fmtShortDT(s.dt))}</span>
       </div>`;
-  }).join('');
+  }).join('') || '<p class="text-xs text-slate-400">Sem marcos de rastreio preenchidos.</p>';
 
-  document.getElementById('recTrajetoCliente').innerHTML = timelineHtml || '<p class="text-xs text-slate-400">Sem rastreio.</p>';
   document.getElementById('receiptModal').classList.remove('hidden');
 }
 function closeReceipt() { activeReceiptOrderId = null; document.getElementById('receiptModal').classList.add('hidden'); }
-function printReceipt(kind) { document.body.classList.remove('printing-admin','printing-client'); document.body.classList.add(kind==='admin'?'printing-admin':'printing-client'); window.print(); setTimeout(() => document.body.classList.remove('printing-admin','printing-client'), 500); }
+function printReceipt(type) { document.body.classList.remove('printing-admin','printing-client'); if (type==='admin') document.body.classList.add('printing-admin'); else if (type==='client') document.body.classList.add('printing-client'); window.print(); setTimeout(()=>document.body.classList.remove('printing-admin','printing-client'), 300); }
 
-function exportJSON() { closeMenu(); const data = { orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile }; const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup-gestao-${todayISO()}.json`; a.click(); showToast('Backup JSON exportado.', 'success'); }
-function importJSON(e) { const file = e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result); if (d.orders) orders = d.orders; if (d.txs) txs = d.txs; if (d.creditCards) creditCards = d.creditCards; if (d.patrimonioBens) patrimonioBens = d.patrimonioBens; if (d.quickState) quickState = { ...JSON.parse(JSON.stringify(quickDefaultState)), ...d.quickState, metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) }, bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) }, cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) } }; if (d.historyData) historyData = d.historyData; if (d.userProfile) userProfile = d.userProfile; saveAll(); renderDatalists(); populateSelects(); renderOrders(); renderFinance(); showToast('Backup importado com sucesso!', 'success'); } catch(err) { showToast('Arquivo de backup inválido.', 'error'); } }; r.readAsText(file); e.target.value = ''; }
-function exportSystemCode() { closeMenu(); const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML; const blob = new Blob([html], {type:'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sistema-gestao-definitivo.html'; a.click(); showToast('Arquivo HTML exportado.', 'success'); }
-async function resetData() {
-  closeMenu();
-  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará os dados salvos localmente neste navegador.', 'Apagar e Restaurar');
-  if (!ok) return;
-  [STORAGE_ORDERS, STORAGE_FIN, STORAGE_CARDS, STORAGE_BENS, STORAGE_QUICK, HISTORY_KEY, PROFILE_KEY, SEEN_NOTIF_KEY, AUTO_BACKUP_KEY].forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
-  location.reload();
+function buildBackupPayload() {
+  return {
+    version: 3,
+    exportedAt: new Date().toISOString(),
+    orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile
+  };
 }
-
-function autoBackup() { try { const data = { orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile, ts: new Date().toISOString() }; safeSet(AUTO_BACKUP_KEY, JSON.stringify(data)); } catch(e){} }
+function salvarAutoBackup() {
+  try {
+    safeSet(AUTO_BACKUP_KEY, JSON.stringify(buildBackupPayload()));
+  } catch (e) {}
+}
 async function restaurarAutoBackup() {
   closeMenu();
   const raw = safeGet(AUTO_BACKUP_KEY);
-  if (!raw) { showToast('Nenhum backup automático encontrado.', 'error'); return; }
-  const ok = await requestConfirm('Restaurar backup automático?', 'Os dados atuais serão substituídos pelo último backup automático.', 'Restaurar');
+  if (!raw) {
+    showToast('Nenhum backup automático encontrado.', 'error');
+    return;
+  }
+  const ok = await requestConfirm('Restaurar backup automático?', 'Isso substituirá os dados atuais pelos do último backup automático salvo.', 'Restaurar');
   if (!ok) return;
   try {
     const d = JSON.parse(raw);
-    if (d.orders) orders = d.orders; if (d.txs) txs = d.txs; if (d.creditCards) creditCards = d.creditCards; if (d.patrimonioBens) patrimonioBens = d.patrimonioBens; if (d.quickState) quickState = { ...JSON.parse(JSON.stringify(quickDefaultState)), ...d.quickState, metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) }, bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) }, cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) } }; if (d.historyData) historyData = d.historyData; if (d.userProfile) userProfile = d.userProfile;
-    saveAll(); renderDatalists(); populateSelects(); renderOrders(); renderFinance();
+    orders = Array.isArray(d.orders) ? d.orders : [];
+    txs = Array.isArray(d.txs) ? d.txs : [];
+    if (Array.isArray(d.creditCards) && d.creditCards.length) creditCards = d.creditCards;
+    patrimonioBens = Array.isArray(d.patrimonioBens) ? d.patrimonioBens : [];
+    if (d.quickState) {
+      const tetoNum = Number(d.quickState.teto);
+      quickState = {
+        ...JSON.parse(JSON.stringify(quickDefaultState)),
+        ...d.quickState,
+        teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
+        tetoProgramado: 0,
+        tetoCicloInicio: d.quickState.tetoCicloInicio || null,
+        operadorPadrao: normalizeOperator(d.quickState.operadorPadrao)
+      };
+    }
+    if (d.historyData) historyData = d.historyData;
+    if (d.userProfile) userProfile = d.userProfile;
+    saveAll(); renderDatalists(); populateSelects(); updateMenuUserDisplay(); recalcularConsumidoTeto();
+    renderOrders(); renderFinance(); renderAdminOrders(); renderAdminFinance();
     showToast('Backup automático restaurado!', 'success');
-  } catch(e) { showToast('Backup automático corrompido.', 'error'); }
+  } catch (e) {
+    showToast('Erro ao ler backup automático.', 'error');
+  }
 }
-setInterval(autoBackup, 5 * 60 * 1000);
-window.addEventListener('beforeunload', autoBackup);
 
-load();
+async function exportJSON() {
+  closeMenu();
+  salvarAutoBackup();
+  const data = JSON.stringify(buildBackupPayload(), null, 2);
+  const filename = `backup_gestao_${todayISO()}.json`;
+  const blob = new Blob([data], { type: 'application/json' });
+  const file = new File([blob], filename, { type: 'application/json' });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+    try {
+      await navigator.share({ title: 'Backup do Sistema de Gestão', files: [file] });
+      showToast('Backup compartilhado!', 'success');
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup JSON baixado!', 'success');
+}
+
+function importJSON(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      const d = JSON.parse(r.result);
+      const ok = await requestConfirm('Importar backup?', 'Os dados atuais serão substituídos pelos do arquivo selecionado.', 'Importar');
+      if (!ok) { e.target.value = ''; return; }
+      salvarAutoBackup();
+      orders = d.orders || []; txs = d.txs || [];
+      if (d.creditCards && d.creditCards.length) creditCards = d.creditCards;
+      patrimonioBens = d.patrimonioBens || [];
+      if (d.quickState) {
+        const tetoNum = Number(d.quickState.teto);
+        quickState = {
+          ...JSON.parse(JSON.stringify(quickDefaultState)),
+          ...d.quickState,
+          teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 0,
+          tetoProgramado: 0,
+          tetoCicloInicio: d.quickState.tetoCicloInicio || null,
+          operadorPadrao: normalizeOperator(d.quickState.operadorPadrao)
+        };
+      }
+      if (d.historyData) historyData = d.historyData;
+      if (d.userProfile) userProfile = d.userProfile;
+      saveAll(); renderDatalists(); populateSelects(); updateMenuUserDisplay(); recalcularConsumidoTeto();
+      renderOrders(); renderFinance(); renderAdminOrders(); renderAdminFinance();
+      showToast('Backup importado com sucesso!', 'success');
+    } catch (err) {
+      showToast('Erro ao ler o arquivo JSON.', 'error');
+    } finally {
+      e.target.value = '';
+    }
+  };
+  r.readAsText(file);
+}
+function exportSystemCode() { closeMenu(); const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML; const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click(); URL.revokeObjectURL(url); showToast('Arquivo index.html baixado!', 'success'); }
+
+async function resetData() {
+  closeMenu();
+  const ok = await requestConfirm('Restaurar padrão?', 'Isso apagará todos os pedidos, lançamentos e configurações atuais.', 'Apagar e Restaurar');
+  if (!ok) return;
+  salvarAutoBackup();
+  [STORAGE_ORDERS,STORAGE_FIN,STORAGE_CARDS,STORAGE_BENS,STORAGE_QUICK,HISTORY_KEY,PROFILE_KEY,SEEN_NOTIF_KEY].forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  load();
+  salvarAutoBackup();
+});
 </script>
 </body>
 </html>
