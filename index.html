@@ -164,9 +164,9 @@
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
       <button type="button" id="btn-new" onclick="openModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-brand-500/25 active:scale-95 transition cursor-pointer">+ Pedido</button>
-      <button type="button" id="btn-open-full" onclick="switchTab('orders')" title="Abrir Programa Completo" aria-label="Abrir Programa Completo" class="bg-slate-100 dark:bg-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-200 px-2.5 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition shrink-0 cursor-pointer">
+      <button type="button" id="btn-open-full" onclick="switchTab('finance')" title="Abrir Painel Financeiro" aria-label="Abrir Painel Financeiro" class="bg-slate-100 dark:bg-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-200 px-2.5 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition shrink-0 cursor-pointer">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
-        <span class="hidden sm:inline">Programa Completo</span>
+        <span class="hidden sm:inline">Finanças</span>
       </button>
       <div class="relative">
         <button type="button" onclick="toggleMenu(event)" class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-xs border border-slate-200/70 dark:border-slate-700 relative cursor-pointer" aria-label="Abrir menu de opções" aria-expanded="false">
@@ -364,7 +364,7 @@
           <select id="ord-period-filter" aria-label="Filtrar pedidos por período" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
             <option value="30d" selected>Últimos 30 dias</option><option value="prev_month">Mês Anterior</option><option value="all">Ver Tudo</option>
           </select>
-          <input type="text" id="ord-search" aria-label="Buscar pedido ou cliente" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 min-w-0 md:w-52 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
+          <input type="text" id="ord-search" aria-label="Buscar pedido ou cliente" oninput="handleOrdersSearchInput(this.value)" placeholder="Buscar pedido ou cliente..." class="flex-1 min-w-0 md:w-52 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
         </div>
       </div>
       <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 num-align"></div>
@@ -374,6 +374,24 @@
 
   <!-- Aba 3: Finanças -->
   <div id="view-finance" class="hidden space-y-5 animate-in">
+    <!-- Banner prioritário quando há busca ativa -->
+    <div id="fin-search-banner" class="hidden bg-brand-50/90 dark:bg-indigo-950/50 border border-brand-200 dark:border-indigo-800/70 rounded-2xl p-3.5 shadow-xs space-y-2.5 num-align">
+      <div class="flex items-center justify-between gap-2">
+        <div class="min-w-0">
+          <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-700 dark:text-indigo-300">PRIORIDADE: FINANCEIRO NA BUSCA</p>
+          <p id="fin-search-summary" class="text-xs font-extrabold text-slate-900 dark:text-white truncate">Buscando...</p>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button type="button" onclick="switchTab('quick')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 cursor-pointer">Capa Rápida</button>
+          <button type="button" onclick="clearFinanceSearchPriority()" class="px-2.5 py-1.5 rounded-lg bg-brand-600 text-white text-[11px] font-bold cursor-pointer">Limpar</button>
+        </div>
+      </div>
+      <div id="fin-search-orders-sec" class="hidden pt-2 border-t border-brand-200/70 dark:border-indigo-800/50 space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pedidos Relacionados</p>
+        <div id="fin-search-orders-list" class="space-y-1.5"></div>
+      </div>
+    </div>
+
     <div class="grid grid-cols-2 gap-3">
       <button type="button" onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-brand-500/20 flex items-center justify-center text-center gap-1.5 text-xs sm:text-sm transition active:scale-95 cursor-pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="text-center leading-tight">Novo Lançamento</span></button>
       <button type="button" onclick="openPendingModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-3.5 rounded-xl shadow-md shadow-amber-500/20 flex items-center justify-center text-center gap-1.5 text-xs sm:text-sm transition active:scale-95 cursor-pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span class="text-center leading-tight">Contas a Pagar</span></button>
@@ -841,6 +859,7 @@ let activeReceiptOrderId = null;
 let pendingConfirmResolver = null;
 let toastTimer = null;
 let qrEditandoTeto = false;
+let activeSearchQuery = '';
 
 function pad(n){ return String(n).padStart(2,'0'); }
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -888,7 +907,7 @@ function requestConfirm(title, message, okLabel = 'Confirmar') {
   return new Promise((resolve) => {
     pendingConfirmResolver = resolve;
     document.getElementById('appConfirmTitle').textContent = title || 'Confirmar ação?';
-    document.getElementById('appConfirmMessage').textContent = message || 'Deseja prosseguir?';
+    document.getElementById('appConfirmMessage').textContent = message || 'Deseja prosseguir com esta operação?';
     document.getElementById('appConfirmOkBtn').textContent = okLabel;
     document.getElementById('appConfirmModal').classList.remove('hidden');
   });
@@ -1071,6 +1090,86 @@ function switchTab(tab) {
   else if (tab === 'finance') { if (title) title.textContent = 'Painel Financeiro'; if (sub) sub.textContent = 'Contas · Cartões · Lançamentos'; renderFinance(); }
   else if (tab === 'admin') { if (title) title.textContent = 'Administração'; if (sub) sub.textContent = 'Relatórios e Gráficos'; switchAdminTab('orders'); }
   checkNotifications();
+}
+
+/* =========================================================================
+   PRIORIDADE DA TELA DE FINANCEIRO AO FAZER BUSCA
+   ========================================================================= */
+function normalizeSearchTerm(rawTerm) {
+  return String(rawTerm || '')
+    .replace(/^(cliente|cli)\s*(—|-)?\s*/i, '')
+    .trim();
+}
+
+function openFinancePrioritySearch(rawTerm) {
+  const cleanTerm = normalizeSearchTerm(rawTerm);
+  activeSearchQuery = cleanTerm;
+  const ordSearchEl = document.getElementById('ord-search');
+  if (ordSearchEl && ordSearchEl.value !== cleanTerm) {
+    ordSearchEl.value = cleanTerm;
+  }
+  switchTab('finance');
+}
+
+function clearFinanceSearchPriority() {
+  activeSearchQuery = '';
+  const ordSearchEl = document.getElementById('ord-search');
+  if (ordSearchEl) ordSearchEl.value = '';
+  const qrInput = document.getElementById('qrBuscaInput');
+  if (qrInput && !/^op\b/i.test(qrInput.value.trim()) && !/^(cli|cliente)\b/i.test(qrInput.value.trim())) {
+    qrInput.value = '';
+    const clearBtn = document.getElementById('qrClearBtn');
+    if (clearBtn) clearBtn.classList.add('hidden');
+    qrResetarModoBusca();
+  }
+  renderFinance();
+}
+
+function handleOrdersSearchInput(val) {
+  const trimmed = String(val || '').trim();
+  if (trimmed) {
+    openFinancePrioritySearch(trimmed);
+  } else {
+    activeSearchQuery = '';
+    renderFinanceSearchBanner(0, []);
+    renderOrders();
+    renderFinance();
+  }
+}
+
+function renderFinanceSearchBanner(txMatchCount, orderMatches) {
+  const banner = document.getElementById('fin-search-banner');
+  const summaryEl = document.getElementById('fin-search-summary');
+  const ordSec = document.getElementById('fin-search-orders-sec');
+  const ordList = document.getElementById('fin-search-orders-list');
+  if (!banner || !summaryEl || !ordSec || !ordList) return;
+
+  const q = activeSearchQuery.trim();
+  if (!q) {
+    banner.classList.add('hidden');
+    ordSec.classList.add('hidden');
+    ordList.innerHTML = '';
+    return;
+  }
+
+  banner.classList.remove('hidden');
+  summaryEl.textContent = `Busca "${q}": ${txMatchCount} no financeiro · ${orderMatches.length} em pedidos`;
+
+  if (orderMatches.length > 0) {
+    ordSec.classList.remove('hidden');
+    ordList.innerHTML = orderMatches.slice(0, 4).map(o => `
+      <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-700 hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
+        <div class="min-w-0">
+          <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
+          <p class="text-[10px] text-slate-500 truncate">${fmtDT(o.saida)} · Toque para abrir recibo</p>
+        </div>
+        <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
+      </button>
+    `).join('');
+  } else {
+    ordSec.classList.add('hidden');
+    ordList.innerHTML = '';
+  }
 }
 
 function switchAdminTab(tab) {
@@ -1349,8 +1448,8 @@ function qrRegistrarTransacao(desc, valor, tipo, origemStr, accountId, opts) {
 function qrRenderBuscaPedidos(texto) {
   const box = document.getElementById('qrSearchMatches');
   if (!box) return;
-  const q = (texto || '').toLowerCase().trim();
-  if (!q || /^op\b/i.test(q) || /^(cli|cliente)\b/i.test(q)) {
+  const q = normalizeSearchTerm(texto).toLowerCase();
+  if (!q || /^op\b/i.test(texto.trim())) {
     box.classList.add('hidden');
     box.innerHTML = '';
     return;
@@ -1403,6 +1502,9 @@ function qrLimparBuscaCompleta() {
   const i = document.getElementById('qrBuscaInput');
   i.value = '';
   document.getElementById('qrClearBtn').classList.add('hidden');
+  activeSearchQuery = '';
+  const ordSearchEl = document.getElementById('ord-search');
+  if (ordSearchEl) ordSearchEl.value = '';
   qrResetarModoBusca();
   i.focus();
 }
@@ -1445,9 +1547,13 @@ function qrAvaliarEntrada(texto) {
 
 function qrProcessarOk() {
   const t = document.getElementById('qrBuscaInput').value.trim();
-  if (!t) { document.getElementById('qrBuscaInput').focus(); return; }
+  if (!t) {
+    openFinancePrioritySearch('');
+    return;
+  }
   qrAvaliarEntrada(t);
   qrRenderBuscaPedidos(t);
+  openFinancePrioritySearch(t);
 }
 function qrSelecionarEtapaOp(btn, etapa) { document.querySelectorAll('#qrOpEtapas .qr-chip').forEach(el => el.classList.remove('selected')); btn.classList.add('selected'); quickState.etapaOp = etapa; saveAll(); qrAtualizarResumoOp(); }
 
@@ -1857,8 +1963,30 @@ function renderFinance() {
   const pend = document.getElementById('fin-pending-lucro'); if (pend) pend.textContent = money(pendLucroTotal);
   const list = document.getElementById('fin-list'); if (!list) return;
   const period = document.getElementById('fin-period-filter')?.value || '30d';
-  const items = txs.filter(t => matchPeriod(t.date, period)).sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-  if (!items.length) { list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento no período.</p>'; return; }
+  const searchLower = activeSearchQuery.toLowerCase().trim();
+
+  let items = txs.filter(t => matchPeriod(t.date, period));
+  if (searchLower) {
+    items = items.filter(t =>
+      (t.desc || '').toLowerCase().includes(searchLower) ||
+      (t.cat || '').toLowerCase().includes(searchLower) ||
+      (t.origem || '').toLowerCase().includes(searchLower) ||
+      getAccountLabel(t.accountId).toLowerCase().includes(searchLower) ||
+      String(t.amount || '').includes(searchLower)
+    );
+  }
+  items = items.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  const orderMatches = searchLower
+    ? orders.filter(o =>
+        (o.pedido || '').toLowerCase().includes(searchLower) ||
+        (o.cliente || '').toLowerCase().includes(searchLower) ||
+        (o.cidadeOrigem || '').toLowerCase().includes(searchLower)
+      )
+    : [];
+  renderFinanceSearchBanner(items.length, orderMatches);
+
+  if (!items.length) { list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento encontrado.</p>'; return; }
   list.innerHTML = items.map(t => {
     const isInc = t.type === 'income';
     const statusTag = t.status === 'pending' ? '<span class="text-[9px] font-bold text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300 px-1.5 py-0.5 rounded">Pendente</span>' : '';
