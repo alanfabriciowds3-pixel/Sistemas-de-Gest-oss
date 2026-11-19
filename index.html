@@ -40,7 +40,7 @@
   .field { width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); }
   .dark .field { background:#1e293b; border-color:#334155; color: white; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
   .field:focus { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15); background: white; }
-  .dark .field:focus { border-color:#818cf8; background: #0f172a; }
+  .dark .field:focus { border-color:#818cf8; background: #0f17a; }
   .field:disabled { opacity: 0.65; cursor: not-allowed; background: #e2e8f0; }
   .dark .field:disabled { background: #0f172a; }
   
@@ -296,7 +296,6 @@
       </div>
     </div>
 
-    <!-- CAIXINHA DISCRETA DE PATRIMÔNIO E BENS PESSOAIS -->
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 p-4 shadow-xs flex items-center justify-between">
       <div>
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Inventário de Bens e Patrimônio</h3>
@@ -339,8 +338,8 @@
           <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">Extrato Geral (Entradas e Saídas)</h2>
           <select id="adm-fin-filter" onchange="renderAdminFinance()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs focus:outline-none">
             <option value="all">Tudo</option>
-            <option value="income">Só Entradas</option>
-            <option value="expense">Só Saídas</option>
+            <option value="income">Só Receitas</option>
+            <option value="expense">Só Despesas</option>
           </select>
         </div>
         <div id="adm-fin-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 max-h-[600px] overflow-y-auto"></div>
@@ -709,7 +708,7 @@
   </div>
 </div>
 
-<!-- MODAL DE NOVO LANÇAMENTO (DIRETO, SEM RÓTULO FORÇADO DE PESSOAL) -->
+<!-- MODAL DE NOVO LANÇAMENTO (RECEITA ↑ OU DESPESA ↓ + SITUAÇÃO DO PAGAMENTO) -->
 <div id="finModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between bg-slate-50/50 dark:bg-slate-800/50">
@@ -717,8 +716,16 @@
       <button onclick="document.getElementById('finModal').classList.add('hidden')" class="text-slate-400 text-2xl leading-none font-bold">×</button>
     </div>
     <form onsubmit="saveFinTx(event)" class="p-5 space-y-4">
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" id="btn-type-income" onclick="setFinType('income')" class="py-2.5 px-3 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
+          <span>↑</span> Receita
+        </button>
+        <button type="button" id="btn-type-expense" onclick="setFinType('expense')" class="py-2.5 px-3 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition">
+          <span>↓</span> Despesa
+        </button>
+      </div>
       <input type="hidden" id="fType" value="expense">
-      
+
       <div><label class="lbl">Descrição</label><input type="text" id="fDesc" placeholder="Ex: Aluguel, Frete, Conta..." required class="field"></div>
       
       <div class="grid grid-cols-2 gap-3">
@@ -729,24 +736,16 @@
         <div><label class="lbl">Data / Vencimento</label><input type="date" id="fDate" required class="field"></div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="lbl">Conta / Cartão</label><select id="fAccount" required class="field"></select></div>
-        <div>
-          <label class="lbl">Tipo / Categoria</label>
-          <select id="fCat" class="field text-sm font-semibold">
-            <option value="Conta">Conta / Despesa</option>
-            <option value="Agendamento">Agendamento / Aluguel</option>
-            <option value="Frete">Frete</option>
-            <option value="Outros">Outros</option>
-          </select>
-        </div>
+      <div>
+        <label class="lbl">Conta / Cartão</label>
+        <select id="fAccount" required class="field"></select>
       </div>
 
       <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-        <label class="lbl">Situação do Lançamento</label>
+        <label class="lbl">Situação do Pagamento</label>
         <select id="fStatus" class="field bg-white dark:bg-slate-800 text-sm font-bold">
-          <option value="paid">Pago agora (desconta da conta)</option>
-          <option value="pending">Agendar / Conta a Pagar (vai para Contas a Pagar)</option>
+          <option value="paid">Pago agora</option>
+          <option value="pending">Agendar pagamento / Conta a Pagar</option>
         </select>
       </div>
 
@@ -1041,7 +1040,6 @@ function daysUntilDueDay(dueDay) {
   return Math.round((target - start) / (1000 * 60 * 60 * 24));
 }
 
-// Janela 1: 5 a 3 dias antes | Janela 2: 2 dias antes até vencido
 function getNotificationStage(daysLeft) {
   if (daysLeft <= 2) return 'stage2';
   if (daysLeft <= 5) return 'stage1';
@@ -1053,7 +1051,6 @@ function getActiveNotifications() {
   today.setHours(0, 0, 0, 0);
   const alerts = [];
 
-  // Contas agendadas / a pagar pendentes
   txs.forEach(t => {
     if (t.status !== 'pending' || t.type === 'income' || !t.date) return;
     const parts = t.date.split('-');
@@ -1078,7 +1075,6 @@ function getActiveNotifications() {
     });
   });
 
-  // Cartões de crédito com fatura aberta
   creditCards.forEach(c => {
     if (c.currentBill <= 0) return;
     const daysLeft = daysUntilDueDay(c.dueDay);
@@ -1572,7 +1568,7 @@ function receivePendingLucro(orderId, txId) {
       const v = calcValores(o);
       txs.unshift({
         id: genId(), refId: o.id, desc: `Pedido ${o.pedido} - ${o.cliente}`, 
-        amount: v.faturamento, type: 'income', cat: 'Vendas', date: todayISO(), createdAt: new Date().toISOString(), accountId: 'nubank', status: 'paid'
+        amount: v.faturamento, type: 'income', cat: 'Receita', date: todayISO(), createdAt: new Date().toISOString(), accountId: 'nubank', status: 'paid'
       });
     }
   }
@@ -1673,7 +1669,7 @@ function confirmPayCard(e) {
     desc: `Pagamento Fatura ${c.name}`,
     amount: c.currentBill,
     type: 'expense',
-    cat: 'Pagamento Cartão',
+    cat: 'Despesa',
     date: todayISO(),
     createdAt: new Date().toISOString(),
     accountId: accId,
@@ -1753,15 +1749,13 @@ function renderFinance() {
     const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
     const isPending = t.status === 'pending';
     
-    let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
-    let tagName = t.cat || 'Conta';
+    let tagColor = isInc
+      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+      : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400';
+    let tagName = isInc ? 'Receita' : 'Despesa';
     let icon = isInc ? '↑' : '↓';
     
     if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-200'; tagName = 'Transfer'; icon = '↔️'; }
-    else if (t.cat === 'Vendas') { tagColor = 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300'; tagName = 'Venda'; icon = '💰'; }
-    else if (t.cat === 'Pagamento Cartão') { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Fatura Cartão'; icon = '💳'; }
-    else if (t.cat === 'Frete') { tagColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'; tagName = 'Frete'; icon = '🚚'; }
-    else if (t.cat === 'Agendamento') { tagColor = 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300'; tagName = 'Agendamento'; icon = '📅'; }
     else if (t.isAdjustment) { tagColor = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'; tagName = 'Ajuste'; icon = '⚖️'; }
 
     const dateTimeStr = isPending ? `Venc. ${t.date.split('-').reverse().join('/')}` : fmtDateTimeTx(t.createdAt || t.date);
@@ -1769,7 +1763,7 @@ function renderFinance() {
 
     return `
       <div class="flex items-start gap-3 px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs ${isInc ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:border-emerald-800' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-900/20 dark:border-rose-800')}">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs font-bold ${isInc ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:border-emerald-800' : (isTransfer ? 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-600' : 'bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-900/20 dark:border-rose-800')}">
           ${icon}
         </div>
         <div class="flex-1 min-w-0 pr-2">
@@ -1802,7 +1796,7 @@ function openPendingModal() {
     <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
       <div class="min-w-0 flex-1">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[11px] text-slate-500 truncate">Vencimento: ${t.date.split('-').reverse().join('/')} · ${escapeHtml(t.cat || 'Conta')}</p>
+        <p class="text-[11px] text-slate-500 truncate">Vencimento: ${t.date.split('-').reverse().join('/')}</p>
       </div>
       <div class="text-right shrink-0">
         <p class="font-black text-emerald-600 text-sm mb-1">${money(t.amount)}</p>
@@ -1945,9 +1939,9 @@ function openModal(id){
     const linked = txs.find(t => t.refId === o.id && t.type === 'income');
     if (linked) {
       document.getElementById('oAccIn').value = linked.accountId || 'nubank';
-      const linkedOut = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Fornecedores');
+      const linkedOut = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Despesa');
       if (linkedOut) document.getElementById('oAccOutMerc').value = linkedOut.accountId;
-      const linkedFrete = txs.find(t => t.refId === o.id && t.type === 'expense' && t.cat === 'Frete');
+      const linkedFrete = txs.find(t => t.refId === o.id && t.type === 'expense' && t.desc.startsWith('Frete'));
       if (linkedFrete) document.getElementById('oAccOutFrete').value = linkedFrete.accountId;
     }
   } else {
@@ -2086,7 +2080,7 @@ function saveOrder(e){
     if (v.faturamento > 0) {
       txs.push({
         id: genId(), refId: data.id, desc: `Pedido ${data.pedido} - ${data.cliente}`, 
-        amount: v.faturamento, type: 'income', cat: 'Vendas', date: dateStr, createdAt: createdAtStr, 
+        amount: v.faturamento, type: 'income', cat: 'Receita', date: dateStr, createdAt: createdAtStr, 
         accountId: oldIncome?.accountId || document.getElementById('oAccIn').value, status: incomeStatus, paymentMethod: data.paymentMethod
       });
     }
@@ -2099,12 +2093,12 @@ function saveOrder(e){
         if (cardObj) cardObj.currentBill += v.meuCustoMerc;
         txs.push({
           id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido} (${cardObj?.name})`, 
-          amount: v.meuCustoMerc, type: 'expense', cat: 'Cartão', date: dateStr, createdAt: createdAtStr, accountId: accOut, status: 'paid', isCardExpense: true
+          amount: v.meuCustoMerc, type: 'expense', cat: 'Despesa', date: dateStr, createdAt: createdAtStr, accountId: accOut, status: 'paid', isCardExpense: true
         });
       } else {
         txs.push({
           id: genId(), refId: data.id, desc: `Mercadoria - Pedido ${data.pedido}`, 
-          amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dateStr, createdAt: createdAtStr, accountId: accOut, status: 'paid'
+          amount: v.meuCustoMerc, type: 'expense', cat: 'Despesa', date: dateStr, createdAt: createdAtStr, accountId: accOut, status: 'paid'
         });
       }
     }
@@ -2117,12 +2111,12 @@ function saveOrder(e){
         if (cardObj) cardObj.currentBill += v.meuCustoFrete;
         txs.push({
           id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido} (${cardObj?.name})`, 
-          amount: v.meuCustoFrete, type: 'expense', cat: 'Cartão', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid', isCardExpense: true
+          amount: v.meuCustoFrete, type: 'expense', cat: 'Despesa', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid', isCardExpense: true
         });
       } else {
         txs.push({
           id: genId(), refId: data.id, desc: `Frete - Pedido ${data.pedido}`, 
-          amount: v.meuCustoFrete, type: 'expense', cat: 'Frete', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid'
+          amount: v.meuCustoFrete, type: 'expense', cat: 'Despesa', date: dateStr, createdAt: createdAtStr, accountId: accOutFrete, status: 'paid'
         });
       }
     }
@@ -2143,25 +2137,40 @@ function delOrder(id){
   }
 }
 
+function setFinType(type) {
+  document.getElementById('fType').value = type;
+  const btnInc = document.getElementById('btn-type-income');
+  const btnExp = document.getElementById('btn-type-expense');
+
+  if (type === 'income') {
+    btnInc.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center justify-center gap-1.5 transition';
+    btnExp.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
+  } else {
+    btnExp.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 flex items-center justify-center gap-1.5 transition';
+    btnInc.className = 'py-2.5 px-3 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition';
+  }
+}
+
 function openFinModal() {
   document.getElementById('finModal').classList.remove('hidden');
   document.getElementById('fDesc').value = '';
   document.getElementById('fAmount').value = '';
   document.getElementById('fDate').value = todayISO();
-  document.getElementById('fCat').value = 'Conta';
   document.getElementById('fStatus').value = 'paid';
+  setFinType('expense');
 }
 
 function saveFinTx(e) {
   e.preventDefault();
+  const type = document.getElementById('fType').value;
   const desc = document.getElementById('fDesc').value.trim();
   const amount = parseFloat(document.getElementById('fAmount').value);
   const date = document.getElementById('fDate').value;
   const accId = document.getElementById('fAccount').value;
-  const cat = document.getElementById('fCat').value;
   const status = document.getElementById('fStatus').value;
-  
-  if (accId.startsWith('card_')) {
+  const cat = type === 'income' ? 'Receita' : 'Despesa';
+
+  if (type === 'expense' && accId.startsWith('card_')) {
     const cId = accId.replace('card_', '');
     const cardObj = creditCards.find(x => x.id === cId);
     if (cardObj && status !== 'pending') {
@@ -2172,7 +2181,7 @@ function saveFinTx(e) {
       desc: `${desc} (${cardObj?.name || 'Cartão'})`, 
       amount, 
       type: 'expense', 
-      cat: status === 'pending' ? 'Agendamento' : cat, 
+      cat, 
       date, 
       createdAt: new Date().toISOString(), 
       accountId: accId, 
@@ -2180,7 +2189,7 @@ function saveFinTx(e) {
       isCardExpense: status !== 'pending'
     });
   } else {
-    if (status !== 'pending') {
+    if (type === 'expense' && status !== 'pending') {
       const currentBalance = getAccountBalance(accId);
       if (currentBalance - amount < 0) {
         if (!confirm("Aviso: Este lançamento deixará o saldo da conta selecionada negativo. Deseja prosseguir?")) {
@@ -2188,7 +2197,7 @@ function saveFinTx(e) {
         }
       }
     }
-    txs.unshift({ id: genId(), desc, amount, type: 'expense', cat, date, createdAt: new Date().toISOString(), accountId: accId, status });
+    txs.unshift({ id: genId(), desc, amount, type, cat, date, createdAt: new Date().toISOString(), accountId: accId, status });
   }
 
   saveAll();
@@ -2333,7 +2342,7 @@ function renderAdminFinance() {
 
     return `
       <div class="flex items-center gap-3 px-4 py-3 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isInc ? 'bg-emerald-50 text-emerald-600' : (t.isCardExpense ? 'bg-purple-50 text-purple-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600'))}">${icon}</div>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold ${isInc ? 'bg-emerald-50 text-emerald-600' : (t.isCardExpense ? 'bg-purple-50 text-purple-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600'))}">${icon}</div>
         <div class="flex-1 min-w-0 pr-2">
           <div class="flex items-center gap-1 flex-wrap mb-0.5">${pendingLabel}</div>
           <p class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
@@ -2374,7 +2383,7 @@ function openChartsModal() {
     else if (day <= 14) key = '2ª Sem';
     else if (day <= 21) key = '3ª Sem';
     
-    if (t.isCardExpense || t.cat === 'Pagamento Cartão' || (t.accountId && t.accountId.startsWith('card_'))) {
+    if (t.isCardExpense || (t.accountId && t.accountId.startsWith('card_'))) {
       weeks[key].cartao += t.amount;
     } else if (t.type === 'expense') {
       weeks[key].despesas += t.amount;
