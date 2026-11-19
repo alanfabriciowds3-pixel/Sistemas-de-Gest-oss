@@ -649,10 +649,9 @@
       <datalist id="list-cities"></datalist>
       <datalist id="list-carriers"></datalist>
       <div class="bg-indigo-50/60 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 space-y-2"><label class="lbl text-indigo-700 dark:text-indigo-300" for="oDriveLink"><span>🔗 Link da Nota Fiscal (Google Drive)</span></label><div class="flex gap-2"><input id="oDriveLink" type="url" oninput="updatePreview()" placeholder="Cole aqui o link do Google Drive da Nota Fiscal..." class="field text-sm bg-white dark:bg-slate-800"><a id="btnTestDrive" href="#" target="_blank" rel="noopener noreferrer" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer shadow-sm shrink-0">Abrir</a></div></div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div><label class="lbl" for="oPedido">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-001" class="field"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div><label class="lbl" for="oPedido">Nº do Pedido</label><input id="oPedido" type="text" maxlength="40" placeholder="PED-010204" class="field"></div>
         <div><label class="lbl" for="oCliente">Cliente</label><input id="oCliente" type="text" list="list-clients" maxlength="80" placeholder="Nome" class="field"></div>
-        <div><label class="lbl" for="oOperator">Operador</label><select id="oOperator" class="field text-sm h-12 py-0"><option value="OP Henrique">OP Henrique</option><option value="OP Eliana">OP Eliana</option></select></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div><label class="lbl" for="oUSD">Valor (US$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-sm">$</span><input id="oUSD" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00" oninput="updatePreview()" onchange="updatePreview()" class="field pl-8"></div></div>
@@ -901,6 +900,16 @@ function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return nu
 function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 function setNow(id){ const el = document.getElementById(id); if (el) el.value = nowLocal(); }
 function normalizeOperator(op){ return op === 'OP Eliana' ? 'OP Eliana' : 'OP Henrique'; }
+function normalizeOrderNumber(num){ return String(num || '').trim().replace(/\s+/g, ' ').toUpperCase(); }
+function isDuplicateOrderNumber(orderNum, excludeOrderId = ''){
+  const normalized = normalizeOrderNumber(orderNum);
+  if (!normalized) return false;
+  return orders.some(o => {
+    if (!o || !o.pedido) return false;
+    if (excludeOrderId && String(o.id) === String(excludeOrderId)) return false;
+    return normalizeOrderNumber(o.pedido) === normalized;
+  });
+}
 
 // Toast and promise-based confirmation dialog
 function showToast(msg, variant = 'info') {
@@ -1956,7 +1965,6 @@ function openModal(orderId) {
       document.getElementById('oId').value = o.id;
       document.getElementById('oPedido').value = o.pedido || '';
       document.getElementById('oCliente').value = o.cliente || '';
-      document.getElementById('oOperator').value = normalizeOperator(o.operador);
       document.getElementById('oDriveLink').value = o.driveLink || '';
       document.getElementById('oUSD').value = o.valorUSD || '';
       document.getElementById('oCot').value = o.cotacao || '';
@@ -1985,7 +1993,6 @@ function openModal(orderId) {
   }
   document.getElementById('modalTitle').textContent = 'Novo Pedido'; document.getElementById('oId').value = '';
   ['oPedido','oCliente','oDriveLink','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  document.getElementById('oOperator').value = normalizeOperator(quickState.operadorPadrao);
   document.getElementById('oPagoMerc').checked = true; document.getElementById('oPagoFrete').checked = true; document.getElementById('oSyncFin').checked = true;
   updatePreview(); togglePaymentOptions();
 }
@@ -1998,14 +2005,41 @@ function togglePaymentOptions() {
   document.getElementById('wrapAccOutMerc').classList.toggle('hidden', !pm); document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !pf); document.getElementById('wrapAccIn').classList.toggle('hidden', !sf);
 }
 
+// Removes duplicate Lucro/Frete transactions tied to an order before inserting fresh ones
+function cleanupOrderTransactions(orderId, orderNumber, clientName, kindFilter = null) {
+  const normPed = normalizeOrderNumber(orderNumber);
+  const normCli = String(clientName || '').trim().toLowerCase();
+  txs = txs.filter(t => {
+    if (!t) return false;
+    const sameOrderId = orderId && String(t.orderId) === String(orderId);
+    const descStr = String(t.desc || '');
+    const isFreightMatch = /^frete\b/i.test(descStr.trim()) || t.isFreightOut === true;
+    const isProfitMatch = /^lucro\b/i.test(descStr.trim()) || (t.type === 'income' && !!t.orderId);
+    const matchesKind =
+      kindFilter === 'freight' ? isFreightMatch :
+      kindFilter === 'profit' ? isProfitMatch :
+      (isFreightMatch || isProfitMatch);
+
+    if (sameOrderId && matchesKind) return false;
+
+    if (normPed && matchesKind) {
+      const upperDesc = descStr.toUpperCase();
+      const hasSameOrderNum = upperDesc.includes(normPed);
+      const hasSameClient = !normCli || descStr.toLowerCase().includes(normCli);
+      if (hasSameOrderNum && hasSameClient) return false;
+    }
+    return true;
+  });
+}
+
 // Records immediate freight expense when paid, using a clean description without forced operator suffixes
 function registrarSaidaFreteImediata(order, accFreteId) {
   const freteVal = Number(order.frete) || 0;
+  cleanupOrderTransactions(order.id, order.pedido, order.cliente, 'freight');
   if (!order.pagoFrete || freteVal <= 0 || !accFreteId) return;
-  const opLabel = normalizeOperator(order.operador);
+  const opLabel = normalizeOperator(order.operador || quickState.operadorPadrao);
   const origemLabel = getAccountLabel(accFreteId);
   const clienteLabel = order.cliente || 'Cliente';
-  txs = txs.filter(t => !(t.orderId === order.id && t.isFreightOut === true));
   txs.unshift({
     id: genId(),
     orderId: order.id,
@@ -2028,15 +2062,24 @@ function registrarSaidaFreteImediata(order, accFreteId) {
   }
 }
 
-// Saves an order, deducts paid freight immediately, and always keeps order profit 'pending' until received
+// Saves an order, blocks duplicate order numbers, deducts paid freight immediately, and keeps profit pending until received
 function saveOrder(e) {
   e.preventDefault();
-  const id = document.getElementById('oId').value;
-  const operador = normalizeOperator(document.getElementById('oOperator').value);
+  const id = document.getElementById('oId').value.trim();
+  const existingOrder = id ? orders.find(o => String(o.id) === String(id)) : null;
+  const rawPedido = document.getElementById('oPedido').value.trim();
+  const normalizedPedido = normalizeOrderNumber(rawPedido);
+
+  if (normalizedPedido && isDuplicateOrderNumber(normalizedPedido, existingOrder ? existingOrder.id : '')) {
+    showToast(`O número de pedido ${normalizedPedido} já existe e não pode ser repetido.`, 'error');
+    return;
+  }
+
+  const operador = normalizeOperator(existingOrder ? existingOrder.operador : quickState.operadorPadrao);
   const accFreteId = document.getElementById('oAccOutFrete').value;
   const order = {
-    id: id || genId(),
-    pedido: document.getElementById('oPedido').value.trim(),
+    id: existingOrder ? existingOrder.id : genId(),
+    pedido: normalizedPedido || rawPedido || `PED-${String(orders.length+1).padStart(3,'0')}`,
     cliente: document.getElementById('oCliente').value.trim(),
     operador,
     driveLink: document.getElementById('oDriveLink').value.trim(),
@@ -2063,16 +2106,23 @@ function saveOrder(e) {
     desceuSP: document.getElementById('oSP').value,
     clienteRecebeu: document.getElementById('oRec').value
   };
-  if (!order.pedido) order.pedido = `PED-${String(orders.length+1).padStart(3,'0')}`;
-  quickState.operadorPadrao = operador;
-  if (id) { const idx = orders.findIndex(o => o.id === id); if (idx >= 0) orders[idx] = order; else orders.unshift(order); } else orders.unshift(order);
+
+  if (existingOrder) {
+    const idx = orders.findIndex(o => String(o.id) === String(existingOrder.id));
+    if (idx >= 0) orders[idx] = order;
+    else orders.unshift(order);
+  } else {
+    orders.unshift(order);
+  }
 
   if (order.pagoFrete && order.frete > 0) {
     registrarSaidaFreteImediata(order, accFreteId);
+  } else {
+    cleanupOrderTransactions(order.id, order.pedido, order.cliente, 'freight');
   }
 
   if (order.syncFin) {
-    txs = txs.filter(t => !(t.orderId === order.id && !t.isFreightOut));
+    cleanupOrderTransactions(order.id, order.pedido, order.cliente, 'profit');
     const v = calcValores(order);
     if (v.lucroLiq > 0) {
       const clienteDesc = order.cliente || 'Cliente';
