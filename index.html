@@ -848,12 +848,16 @@ const BANK_ACCOUNTS = ACCOUNTS.filter(a => a.id !== 'cash');
 let orders = [];
 let txs = [];
 let patrimonioBens = [];
-let creditCards = [
-  { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
-  { id: 'htn', name: 'HTN Card', limit: 850.00, currentBill: 35.70, dueDay: 25, color: '#16a34a' },
-  { id: 'neon', name: 'NEON', limit: 2137.00, currentBill: 0.00, dueDay: 23, color: '#0284c7' },
-  { id: 'pernambucanas', name: 'Pernambucanas', limit: 100.00, currentBill: 0.00, dueDay: 25, color: '#1d4ed8' }
-];
+function createDefaultCreditCards() {
+  return [
+    { id: 'riachuelo', name: 'Riachuelo', limit: 0, currentBill: 0, dueDay: 23, color: '#059669' },
+    { id: 'htn', name: 'HTN Card', limit: 0, currentBill: 0, dueDay: 25, color: '#16a34a' },
+    { id: 'neon', name: 'NEON', limit: 0, currentBill: 0, dueDay: 23, color: '#0284c7' },
+    { id: 'pernambucanas', name: 'Pernambucanas', limit: 0, currentBill: 0, dueDay: 25, color: '#1d4ed8' }
+  ];
+}
+
+let creditCards = createDefaultCreditCards();
 
 const quickDefaultState = {
   teto: 3000,
@@ -1323,10 +1327,34 @@ function saveAll(){
   saveSeenNotifications(); checkNotifications();
 }
 
+function normalizeCreditCardsList(rawCards) {
+  const defaults = createDefaultCreditCards();
+  if (!Array.isArray(rawCards) || !rawCards.length) return defaults;
+  return rawCards.map((c, idx) => {
+    const base = defaults[idx] || { id: `card_${idx + 1}`, name: `Cartão ${idx + 1}`, limit: 0, currentBill: 0, dueDay: 10, color: '#4f46e5' };
+    const limitNum = Number(c && c.limit);
+    const billNum = Number(c && c.currentBill);
+    const dueNum = parseInt(c && c.dueDay, 10);
+    return {
+      id: (c && c.id) ? String(c.id) : base.id,
+      name: (c && c.name) ? String(c.name) : base.name,
+      limit: Number.isFinite(limitNum) && limitNum >= 0 ? limitNum : 0,
+      currentBill: Number.isFinite(billNum) && billNum >= 0 ? billNum : 0,
+      dueDay: Number.isFinite(dueNum) && dueNum >= 1 && dueNum <= 31 ? dueNum : base.dueDay,
+      color: (c && c.color) ? String(c.color) : base.color
+    };
+  });
+}
+
 function load(){
   const rawOrders = safeGet(STORAGE_ORDERS); if (rawOrders) { try { orders = JSON.parse(rawOrders) || []; } catch(e){} }
   const rawFin = safeGet(STORAGE_FIN); if (rawFin) { try { txs = JSON.parse(rawFin) || []; } catch(e){} }
-  const rawCards = safeGet(STORAGE_CARDS); if (rawCards) { try { creditCards = JSON.parse(rawCards) || []; } catch(e){} }
+  const rawCards = safeGet(STORAGE_CARDS);
+  if (rawCards) {
+    try { creditCards = normalizeCreditCardsList(JSON.parse(rawCards)); } catch(e){ creditCards = createDefaultCreditCards(); }
+  } else {
+    creditCards = createDefaultCreditCards();
+  }
   const rawBens = safeGet(STORAGE_BENS); if (rawBens) { try { patrimonioBens = JSON.parse(rawBens) || []; } catch(e){} }
   const rawQuick = safeGet(STORAGE_QUICK);
   if (rawQuick) {
@@ -2612,21 +2640,36 @@ async function restaurarAutoBackup() {
 
 async function resetData() {
   closeMenu();
-  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará seus pedidos, lançamentos e configurações salvas neste navegador.', 'Restaurar');
+  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará seus pedidos, lançamentos, cartões e configurações salvas neste navegador.', 'Restaurar');
   if (!ok) return;
   salvarAutoBackup();
-  orders = []; txs = []; patrimonioBens = [];
-  creditCards = [
-    { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
-    { id: 'htn', name: 'HTN Card', limit: 850.00, currentBill: 35.70, dueDay: 25, color: '#16a34a' },
-    { id: 'neon', name: 'NEON', limit: 2137.00, currentBill: 0.00, dueDay: 23, color: '#0284c7' },
-    { id: 'pernambucanas', name: 'Pernambucanas', limit: 100.00, currentBill: 0.00, dueDay: 25, color: '#1d4ed8' }
-  ];
+  orders = [];
+  txs = [];
+  patrimonioBens = [];
+  creditCards = createDefaultCreditCards();
   quickState = JSON.parse(JSON.stringify(quickDefaultState));
   historyData = { clients: [], cities: [], carriers: [] };
   seenNotifications = {};
-  saveAll(); safeSet(HISTORY_KEY, JSON.stringify(historyData)); renderDatalists(); populateSelects(); switchTab(currentTab);
-  showToast('Dados restaurados para o padrão.', 'info');
+  try {
+    localStorage.removeItem(STORAGE_ORDERS);
+    localStorage.removeItem(STORAGE_FIN);
+    localStorage.removeItem(STORAGE_CARDS);
+    localStorage.removeItem(STORAGE_BENS);
+    localStorage.removeItem(STORAGE_QUICK);
+    localStorage.removeItem(SEEN_NOTIF_KEY);
+  } catch (e) {}
+  saveAll();
+  safeSet(HISTORY_KEY, JSON.stringify(historyData));
+  renderDatalists();
+  populateSelects();
+  qrLimparBuscaCompleta();
+  renderOrders();
+  renderFinance();
+  if (currentTab === 'admin') {
+    switchAdminTab(currentAdminTab);
+  }
+  switchTab(currentTab);
+  showToast('Dados e cartões de crédito resetados por completo!', 'info');
 }
 
 // Application bootstrap
