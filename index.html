@@ -170,7 +170,6 @@
       </div>
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
-      <button type="button" id="btn-new" onclick="openModal()" class="hidden bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-brand-500/25 active:scale-95 transition cursor-pointer">+ Pedido</button>
       <button type="button" id="btn-open-full" onclick="switchTab('finance')" title="Abrir Painel Financeiro" aria-label="Abrir Painel Financeiro" class="bg-slate-100 dark:bg-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-200 px-2.5 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition shrink-0 cursor-pointer">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
         <span class="hidden sm:inline">Finanças</span>
@@ -384,7 +383,12 @@
   <!-- Aba 2: Pedidos -->
   <div id="view-orders" class="hidden space-y-5 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 num-align">
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Pedidos</p><h3 id="ord-count" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">0</h3></div>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
+        <div class="flex items-center justify-start">
+          <button type="button" id="btn-new" onclick="openModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1 rounded-xl text-[11px] font-bold shadow-md shadow-brand-500/25 active:scale-95 transition cursor-pointer shrink-0">+ Pedido</button>
+        </div>
+        <h3 id="ord-count" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">0</h3>
+      </div>
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Investimento</p><h3 id="ord-inv" class="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3></div>
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-brand-600 dark:text-brand-400 tracking-wider truncate">Faturamento</p><h3 id="ord-fat" class="text-sm sm:text-base font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3></div>
       <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-200/70 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 tracking-wider truncate">Lucro Líq.</p><h3 id="ord-profit" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-400 truncate">R$ 0</h3></div>
