@@ -223,7 +223,7 @@
     </div>
   </div>
 
-  <!-- FINANCEIRO (VISUAL LIMPO E COMPACTO) -->
+  <!-- FINANCEIRO -->
   <div id="view-finance" class="hidden space-y-5 animate-in">
     <div class="grid grid-cols-2 gap-3">
       <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-brand-500/20 flex items-center justify-center gap-2 text-xs sm:text-sm transition active:scale-95">
@@ -236,7 +236,6 @@
       </button>
     </div>
 
-    <!-- SEÇÃO MINHAS CONTAS (CARDS HORIZONTAIS) -->
     <div>
       <div class="flex justify-between items-center mb-2 px-1">
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Minhas Contas</h2>
@@ -245,7 +244,6 @@
       <div class="scroll-x" id="accounts-container"></div>
     </div>
 
-    <!-- SEÇÃO CARTÕES DE CRÉDITO (CARDS HORIZONTAIS COMPACTOS - TOQUE PARA DETALHES) -->
     <div>
       <div class="flex justify-between items-center mb-2 px-1">
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cartões de Crédito</h2>
@@ -254,7 +252,6 @@
       <div class="scroll-x" id="cards-container"></div>
     </div>
 
-    <!-- PAINEL PATRIMÔNIO RESUMIDO -->
     <div class="grid grid-cols-2 gap-3">
       <div onclick="openPatrimonioModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0">
         <p class="text-[9px] font-bold uppercase text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
@@ -266,7 +263,6 @@
       </div>
     </div>
 
-    <!-- EXTRATO E LANÇAMENTOS -->
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs overflow-hidden">
       <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center gap-2">
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white truncate">Extrato e Lançamentos</h2>
@@ -298,6 +294,17 @@
           <p id="adm-total-fat" class="text-xl sm:text-2xl font-black mt-1 text-white truncate">R$ 0,00</p>
         </div>
       </div>
+    </div>
+
+    <!-- CAIXINHA DISCRETA DE PATRIMÔNIO E BENS PESSOAIS -->
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 p-4 shadow-xs flex items-center justify-between">
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Inventário de Bens e Patrimônio</h3>
+        <p class="text-[10px] text-slate-400 mt-0.5">Terrenos, imóveis e investimentos externos (Não afetam o caixa)</p>
+      </div>
+      <button onclick="openPatrimonioBensModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition shadow-xs flex items-center gap-1.5">
+        <span>🏛️</span> Ver / Gerenciar Bens
+      </button>
     </div>
 
     <div class="flex bg-slate-200/60 dark:bg-slate-800 p-1 rounded-xl">
@@ -359,6 +366,64 @@
     </div>
   </div>
 </nav>
+
+<!-- MODAL DE PATRIMÔNIO / BENS PESSOAIS (NÃO CONTÁBEIS) -->
+<div id="patrimonioBensModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+      <div>
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-sm">Inventário de Bens e Patrimônio</h3>
+        <p class="text-[10px] text-slate-400">Imóveis, terrenos e investimentos por fora (Visualização pura)</p>
+      </div>
+      <button onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" class="text-slate-400 text-xl font-bold">×</button>
+    </div>
+    
+    <div class="p-4 overflow-y-auto space-y-4 flex-1">
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex justify-between items-center">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-400">Total em Bens Cadastrados</p>
+          <p id="patrimonioBensTotal" class="text-lg font-black text-slate-900 dark:text-white">R$ 0,00</p>
+        </div>
+        <button onclick="openAddBemForm()" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs">+ Adicionar Bem</button>
+      </div>
+
+      <!-- Formulário de cadastro de novo bem (escondido por padrão) -->
+      <div id="formAddBem" class="hidden bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+        <h4 id="bemFormTitle" class="text-xs font-bold text-slate-800 dark:text-slate-200">Novo Bem / Investimento</h4>
+        <input type="hidden" id="bemId">
+        <div>
+          <label class="lbl">Nome / Descrição (Ex: Terreno Bahia, Barra de Ouro)</label>
+          <input type="text" id="bemName" placeholder="Ex: Terreno na Bahia" class="field text-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="lbl">Valor Estimado (R$)</label>
+            <input type="number" id="bemVal" step="0.01" placeholder="0,00" class="field text-xs font-bold text-emerald-600">
+          </div>
+          <div>
+            <label class="lbl">Categoria</label>
+            <select id="bemCat" class="field text-xs h-12 py-0">
+              <option value="Imóvel / Terreno">Imóvel / Terreno</option>
+              <option value="Herança">Herança</option>
+              <option value="Investimento Externo">Investimento Externo</option>
+              <option value="Outro Bem">Outro Bem</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-2 pt-1">
+          <button onclick="saveBemItem()" class="flex-1 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold">Salvar Bem</button>
+          <button onclick="document.getElementById('formAddBem').classList.add('hidden')" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold">Cancelar</button>
+        </div>
+      </div>
+
+      <div id="patrimonioBensList" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
+    </div>
+
+    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center shrink-0">
+      <button onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" class="w-full py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold">Fechar</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL DE DETALHES DO CARTÃO -->
 <div id="cardDetailModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
@@ -835,6 +900,7 @@
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const STORAGE_CARDS = 'credit_cards_final_v1';
+const STORAGE_BENS = 'patrimonio_bens_v1';
 const HISTORY_KEY = 'pedidos_history_v1';
 const PROFILE_KEY = 'user_profile_v1';
 
@@ -848,8 +914,13 @@ const ACCOUNTS = [
 
 let orders = [];
 let txs = [];
+let patrimonioBens = [
+  { id: 'b1', name: '2 Terrenos na Bahia', amount: 50000, cat: 'Imóvel / Terreno' },
+  { id: 'b2', name: 'Outra Propriedade na Bahia', amount: 100000, cat: 'Imóvel / Terreno' },
+  { id: 'b3', name: 'Herança (Rochinha do Pai)', amount: 100000, cat: 'Herança' },
+  { id: 'b4', name: 'Casa e Terreno (Filha)', amount: 100000, cat: 'Imóvel / Terreno' }
+];
 
-// Cartões configurados
 let creditCards = [
   { id: 'riachuelo', name: 'Riachuelo', limit: 2057.12, currentBill: 144.60, dueDay: 23, color: '#059669' },
   { id: 'htn', name: 'HTN Card', limit: 850.00, currentBill: 35.70, dueDay: 25, color: '#16a34a' },
@@ -877,7 +948,7 @@ function fmtDateTimeTx(dtStr){
   if (isNaN(d.getTime())) { const [y,m,dd] = dtStr.split('-'); return dd+'/'+m+'/'+y; }
   return d.toLocaleDateString('pt-BR') + ' às ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;n'}[c])); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
@@ -1015,7 +1086,7 @@ function checkNotifications() {
 
   if (list) {
     if (pendingAlerts.length === 0) {
-      list.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Nenhum alerta pendente. Pró-labore sob controle.</div>';
+      list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum alerta pendente. Pró-labore sob controle.</p>';
     } else {
       list.innerHTML = pendingAlerts.map(t => t.isWarning ? `
         <div class="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800 flex justify-between items-center text-xs">
@@ -1144,6 +1215,7 @@ function saveAll(){
   safeSet(STORAGE_ORDERS, JSON.stringify(orders));
   safeSet(STORAGE_FIN, JSON.stringify(txs));
   safeSet(STORAGE_CARDS, JSON.stringify(creditCards));
+  safeSet(STORAGE_BENS, JSON.stringify(patrimonioBens));
   checkNotifications();
 }
 
@@ -1156,6 +1228,9 @@ function load(){
 
   const rawCards = safeGet(STORAGE_CARDS);
   if (rawCards) { try { creditCards = JSON.parse(rawCards) || []; } catch(e){} }
+
+  const rawBens = safeGet(STORAGE_BENS);
+  if (rawBens) { try { patrimonioBens = JSON.parse(rawBens) || []; } catch(e){} }
 
   const rawHist = safeGet(HISTORY_KEY);
   if (rawHist) { try { historyData = JSON.parse(rawHist); } catch(e){} }
@@ -1309,6 +1384,91 @@ function getTotalPendingLucros() {
     }
   });
   return total;
+}
+
+// GESTÃO DOS BENS E PATRIMÔNIO NÃO CONTÁBEIS
+function openPatrimonioBensModal() {
+  renderPatrimonioBensList();
+  document.getElementById('formAddBem').classList.add('hidden');
+  document.getElementById('patrimonioBensModal').classList.remove('hidden');
+}
+
+function renderPatrimonioBensList() {
+  let total = 0;
+  patrimonioBens.forEach(b => total += b.amount);
+  document.getElementById('patrimonioBensTotal').textContent = money(total);
+
+  const list = document.getElementById('patrimonioBensList');
+  if (!patrimonioBens.length) {
+    list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum bem cadastrado ainda.</p>';
+    return;
+  }
+
+  list.innerHTML = patrimonioBens.map(b => `
+    <div class="py-3 flex justify-between items-center gap-2">
+      <div class="min-w-0 flex-1">
+        <p class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p>
+        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 uppercase">${escapeHtml(b.cat)}</span>
+      </div>
+      <div class="text-right shrink-0 flex items-center gap-2">
+        <div>
+          <p class="font-black text-xs sm:text-sm text-emerald-600 dark:text-emerald-400">${money(b.amount)}</p>
+        </div>
+        <div class="flex gap-1">
+          <button onclick="editBemItem('${b.id}')" class="p-1.5 text-slate-400 hover:text-brand-500 text-xs">✏️</button>
+          <button onclick="delBemItem('${b.id}')" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddBemForm() {
+  document.getElementById('bemId').value = '';
+  document.getElementById('bemName').value = '';
+  document.getElementById('bemVal').value = '';
+  document.getElementById('bemCat').value = 'Imóvel / Terreno';
+  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
+  document.getElementById('formAddBem').classList.remove('hidden');
+}
+
+function editBemItem(id) {
+  const b = patrimonioBens.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('bemId').value = b.id;
+  document.getElementById('bemName').value = b.name;
+  document.getElementById('bemVal').value = b.amount;
+  document.getElementById('bemCat').value = b.cat;
+  document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
+  document.getElementById('formAddBem').classList.remove('hidden');
+}
+
+function saveBemItem() {
+  const id = document.getElementById('bemId').value;
+  const name = document.getElementById('bemName').value.trim();
+  const amount = parseFloat(document.getElementById('bemVal').value) || 0;
+  const cat = document.getElementById('bemCat').value;
+
+  if (!name) return alert('Informe a descrição do bem.');
+
+  if (id) {
+    const b = patrimonioBens.find(x => x.id === id);
+    if (b) { b.name = name; b.amount = amount; b.cat = cat; }
+  } else {
+    patrimonioBens.push({ id: genId(), name, amount, cat });
+  }
+
+  saveAll();
+  document.getElementById('formAddBem').classList.add('hidden');
+  renderPatrimonioBensList();
+}
+
+function delBemItem(id) {
+  if (confirm('Deseja excluir este bem do seu inventário?')) {
+    patrimonioBens = patrimonioBens.filter(x => x.id !== id);
+    saveAll();
+    renderPatrimonioBensList();
+  }
 }
 
 function openPatrimonioModal() {
@@ -2129,7 +2289,6 @@ function renderAdminFinance() {
   }).join('');
 }
 
-// PAINEL ANALÍTICO DE GRÁFICOS SEMANAIS (CORRIGIDO PARA CARTÕES E DEMAIS)
 function openChartsModal() {
   const container = document.getElementById('column-charts-container');
   const weeks = { 
@@ -2151,7 +2310,6 @@ function openChartsModal() {
     weeks[key].mov += v.faturamento;
   });
 
-  // Varredura rigorosa das transações e faturas de cartões
   txs.forEach(t => {
     if (!t.date || t.status === 'pending') return;
     const day = parseInt(t.date.split('-')[2]);
@@ -2171,7 +2329,6 @@ function openChartsModal() {
     }
   });
 
-  // Soma também o valor atual da fatura aberta dos cartões na semana atual para refletir o uso real
   const todayDay = new Date().getDate();
   let currentWeekKey = '4ª Sem+';
   if (todayDay <= 7) currentWeekKey = '1ª Sem';
@@ -2303,7 +2460,7 @@ function printReceipt(type) {
 
 async function exportJSON(){
   closeMenu();
-  const data = { userProfile, orders, txs, creditCards, historyData };
+  const data = { userProfile, orders, txs, creditCards, patrimonioBens, historyData };
   const jsonStr = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonStr], {type:'application/json'});
   const file = new File([blob], 'backup_dados_gestao.json', {type: 'application/json'});
@@ -2349,6 +2506,7 @@ function importJSON(e){
       if (data.orders) orders = data.orders;
       if (data.txs) txs = data.txs;
       if (data.creditCards) creditCards = data.creditCards;
+      if (data.patrimonioBens) patrimonioBens = data.patrimonioBens;
       if (data.historyData) historyData = data.historyData;
       saveAll();
       safeSet(HISTORY_KEY, JSON.stringify(historyData));
@@ -2364,7 +2522,7 @@ function importJSON(e){
 function resetData(){
   closeMenu();
   if (!confirm('Apagar TODOS os dados e perfil?')) return;
-  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(STORAGE_CARDS); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
+  safeRemove(STORAGE_ORDERS); safeRemove(STORAGE_FIN); safeRemove(STORAGE_CARDS); safeRemove(STORAGE_BENS); safeRemove(HISTORY_KEY); safeRemove(PROFILE_KEY);
   location.reload();
 }
 
