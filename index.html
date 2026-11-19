@@ -184,35 +184,35 @@
 
   <!-- PEDIDOS -->
   <div id="view-orders" class="space-y-5 animate-in">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-28 flex flex-col justify-between">
-        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Pedidos</p>
-        <h3 id="ord-count" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white truncate">0</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
+        <p class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Pedidos</p>
+        <h3 id="ord-count" class="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">0</h3>
       </div>
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-28 flex flex-col justify-between">
-        <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Investimento</p>
-        <h3 id="ord-inv" class="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
+        <p class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 tracking-wider truncate">Investimento</p>
+        <h3 id="ord-inv" class="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3>
       </div>
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-28 flex flex-col justify-between">
-        <p class="text-[10px] font-bold uppercase text-brand-500 tracking-wider truncate">Faturamento</p>
-        <h3 id="ord-fat" class="text-xl sm:text-2xl font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
+        <p class="text-[9px] sm:text-[10px] font-bold uppercase text-brand-500 tracking-wider truncate">Faturamento</p>
+        <h3 id="ord-fat" class="text-sm sm:text-base font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3>
       </div>
-      <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-28 flex flex-col justify-between">
-        <p class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider truncate">Lucro Líq.</p>
-        <h3 id="ord-profit" class="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 truncate">R$ 0</h3>
+      <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-24 sm:h-28 flex flex-col justify-between">
+        <p class="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-600 tracking-wider truncate">Lucro Líq.</p>
+        <h3 id="ord-profit" class="text-sm sm:text-base font-black text-emerald-600 dark:text-emerald-400 truncate">R$ 0</h3>
       </div>
     </div>
 
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-xs overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-3 bg-white/50 dark:bg-slate-800/50">
-        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white w-full md:w-auto truncate">Histórico de Pedidos</h2>
-        <div class="flex gap-2 w-full md:w-auto">
-          <select id="ord-period-filter" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500">
+      <div class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 bg-white/50 dark:bg-slate-800/50">
+        <h2 class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Histórico de Pedidos</h2>
+        <div class="flex items-center gap-2 w-full md:w-auto min-w-0">
+          <select id="ord-period-filter" onchange="renderOrders()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none focus:border-brand-500 shrink-0">
             <option value="30d" selected>Últimos 30 dias</option>
             <option value="prev_month">Mês Anterior</option>
             <option value="all">Ver Tudo</option>
           </select>
-          <input type="text" id="ord-search" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 md:w-48 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
+          <input type="text" id="ord-search" oninput="renderOrders()" placeholder="Buscar pedido ou cliente..." class="flex-1 min-w-0 md:w-48 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-500">
         </div>
       </div>
       <div id="ord-list" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
@@ -226,13 +226,13 @@
   <!-- FINANCEIRO -->
   <div id="view-finance" class="hidden space-y-5 animate-in">
     <div class="grid grid-cols-2 gap-3">
-      <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-brand-500/20 flex items-center justify-center gap-2 text-xs sm:text-sm transition active:scale-95">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        Novo Lançamento
+      <button onclick="openFinModal()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-brand-500/20 flex items-center justify-center text-center gap-1.5 text-xs sm:text-sm transition active:scale-95">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span class="text-center leading-tight">Novo Lançamento</span>
       </button>
-      <button onclick="openPendingModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-amber-500/20 flex items-center justify-center gap-2 text-xs sm:text-sm transition active:scale-95">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        Contas a Pagar
+      <button onclick="openPendingModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-3.5 rounded-xl shadow-md shadow-amber-500/20 flex items-center justify-center text-center gap-1.5 text-xs sm:text-sm transition active:scale-95">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="text-center leading-tight">Contas a Pagar</span>
       </button>
     </div>
 
@@ -278,30 +278,30 @@
 
   <!-- ADMINISTRAÇÃO -->
   <div id="view-admin" class="hidden space-y-5 animate-in">
-    <div onclick="openChartsModal()" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
+    <div onclick="openChartsModal()" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition">📊</div>
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-sm font-bold">Resumo Geral do Negócio</h2>
-        <span class="text-xs bg-brand-600/60 text-indigo-100 px-3 py-1 rounded-lg font-bold border border-indigo-400/30">Ver Gráficos 📈</span>
+      <div class="flex justify-between items-center gap-2 mb-3.5 relative z-10">
+        <h2 class="text-xs sm:text-sm font-bold truncate">Resumo Geral do Negócio</h2>
+        <span class="text-[11px] bg-brand-600/60 text-indigo-100 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30 shrink-0">Ver Gráficos 📈</span>
       </div>
-      <div class="grid grid-cols-2 gap-3 sm:gap-4">
+      <div class="grid grid-cols-2 gap-3 relative z-10">
         <div class="min-w-0">
-          <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
-          <p id="adm-total-profit" class="text-xl sm:text-2xl font-black mt-1 text-emerald-400 truncate">R$ 0,00</p>
+          <p class="text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p>
+          <p id="adm-total-profit" class="text-sm sm:text-base font-black mt-1 text-emerald-400 truncate">R$ 0,00</p>
         </div>
         <div class="min-w-0">
-          <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p>
-          <p id="adm-total-fat" class="text-xl sm:text-2xl font-black mt-1 text-white truncate">R$ 0,00</p>
+          <p class="text-slate-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p>
+          <p id="adm-total-fat" class="text-sm sm:text-base font-black mt-1 text-white truncate">R$ 0,00</p>
         </div>
       </div>
     </div>
 
-    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 p-4 shadow-xs flex items-center justify-between">
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Inventário de Bens e Patrimônio</h3>
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/60 dark:border-slate-700 p-4 shadow-xs flex items-center justify-between gap-2">
+      <div class="min-w-0">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 truncate">Inventário de Bens e Patrimônio</h3>
         <p class="text-[10px] text-slate-400 mt-0.5">Terrenos, imóveis e investimentos externos (Não afetam o caixa)</p>
       </div>
-      <button onclick="openPatrimonioBensModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition shadow-xs flex items-center gap-1.5">
+      <button onclick="openPatrimonioBensModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition shadow-xs flex items-center gap-1.5 shrink-0">
         <span>🏛️</span> Ver / Gerenciar Bens
       </button>
     </div>
