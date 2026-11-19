@@ -10,6 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Cpath d='M50 22 L78 36 L78 64 L50 78 L22 64 L22 36 Z' fill='white'/%3E%3Cpath d='M50 22 L78 36 L50 50 L22 36 Z' fill='%23a5b4fc'/%3E%3Cpath d='M50 50 L50 78 L22 64 L22 36 Z' fill='%23c7d2fe'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
+  // Configure Tailwind CSS with class-based dark mode and custom Inter font and brand palette
   tailwind.config = {
     darkMode: 'class',
     theme: {
@@ -24,6 +25,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  /* Base page layout and adaptive light/dark radial background */
   body {
     font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -36,9 +38,11 @@
   body.no-bottom-nav { padding-bottom: 0 !important; }
   .dark body { background: radial-gradient(circle at top right, #0f172a, #020617); }
 
+  /* Frosted glass surfaces for header, menu, and bottom navigation */
   .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(15,23,42,0.08); }
   .dark .glass { background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.06); }
 
+  /* Form controls and action buttons */
   .field { width:100%; background:#f8fafc; border:1px solid #cbd5e1; border-radius:.75rem; padding:0 1rem; font-size:.875rem; outline:none; height: 48px; transition: all 0.2s; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); color: #0f172a; font-variant-numeric: tabular-nums; }
   .dark .field { background:#1e293b; border-color:#334155; color: #f8fafc; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.2); }
   .field:focus { border-color:#4f46e5; box-shadow:0 0 0 4px rgba(79,70,229,.18); background: #ffffff; color: #0f172a; }
@@ -69,6 +73,7 @@
   .order-action-btn:hover { transform: scale(1.06); filter: brightness(0.97); }
   .order-action-btn:active { transform: scale(0.95); }
 
+  /* Bottom navigation items and horizontal scroll strips */
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 54px; padding: 8px 4px; color: #64748b; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: none; background: transparent; }
   .dark .nav-item { color: #94a3b8; }
   .nav-item.active { color: #4f46e5; transform: translateY(-2px); }
@@ -81,6 +86,7 @@
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .animate-in { animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+  /* Quick search & ceiling tracker styles */
   .qr-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 22px; padding: 18px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
   .dark .qr-card { background: #161c2e; border-color: rgba(148, 163, 184, 0.14); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45); }
 
@@ -101,6 +107,7 @@
   .qr-pct-fab { position: fixed; right: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 999px; border: none; background: #10b981; color: #ffffff; font-size: 15px; font-weight: 900; box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35); cursor: pointer; z-index: 42; transition: transform 0.2s ease, background 0.3s ease; }
   .qr-pct-fab:hover { transform: scale(1.05); }
 
+  /* Receipt and currency alignment helpers */
   .receipt-edge { position: relative; background: #172033; }
   .receipt-edge::after { content: ''; position: absolute; bottom: -10px; left: 0; right: 0; height: 10px; background-size: 20px 20px; background-image: radial-gradient(circle at 10px 0, transparent 10px, #172033 11px); }
 
@@ -818,6 +825,7 @@
 </div>
 
 <script>
+// Storage keys and account definitions
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const STORAGE_CARDS = 'credit_cards_final_v1';
@@ -838,6 +846,7 @@ const ACCOUNTS = [
 
 const BANK_ACCOUNTS = ACCOUNTS.filter(a => a.id !== 'cash');
 
+// Application state
 let orders = [];
 let txs = [];
 let patrimonioBens = [];
@@ -871,6 +880,7 @@ let toastTimer = null;
 let qrEditandoTeto = false;
 let activeSearchQuery = '';
 
+// Formatting and storage helpers
 function pad(n){ return String(n).padStart(2,'0'); }
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function nowLocal(){ const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes()); }
@@ -892,6 +902,7 @@ function safeSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 function setNow(id){ const el = document.getElementById(id); if (el) el.value = nowLocal(); }
 function normalizeOperator(op){ return op === 'OP Eliana' ? 'OP Eliana' : 'OP Henrique'; }
 
+// Toast and promise-based confirmation dialog
 function showToast(msg, variant = 'info') {
   const wrap = document.getElementById('appToast');
   const inner = document.getElementById('appToastInner');
@@ -930,6 +941,7 @@ function resolveAppConfirm(accepted) {
   if (typeof resolver === 'function') resolver(!!accepted);
 }
 
+// Header menu and account resolution
 function toggleMenu(e){
   if(e) e.stopPropagation();
   syncThemeLabelInMenu();
@@ -955,11 +967,13 @@ function getAccountLabel(accountId) {
   return accountId;
 }
 
+// Profile modal handlers
 function openProfileModal() { closeMenu(); document.getElementById('pName').value = userProfile.name === 'Meu Perfil' ? '' : userProfile.name; document.getElementById('pCpf').value = userProfile.cpf || ''; document.getElementById('pRg').value = userProfile.rg || ''; document.getElementById('profileModal').classList.remove('hidden'); }
 function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
 function saveProfile(e) { e.preventDefault(); userProfile = { name: document.getElementById('pName').value.trim() || 'Meu Perfil', cpf: document.getElementById('pCpf').value.trim(), rg: document.getElementById('pRg').value.trim() }; safeSet(PROFILE_KEY, JSON.stringify(userProfile)); updateMenuUserDisplay(); closeProfileModal(); showToast('Perfil salvo com sucesso!', 'success'); }
 function updateMenuUserDisplay() { const el = document.getElementById('menu-user-name'); if (el) el.textContent = `👤 ${userProfile.name || 'Meu Perfil'}`; }
 
+// Period filter and due-date notifications
 function matchPeriod(dateStr, period) {
   if (period === 'all' || !dateStr) return true;
   const parts = dateStr.split('T')[0].split('-'); if (parts.length < 3) return true;
@@ -1035,6 +1049,7 @@ function toggleNotifications() {
 function openNotificationsFromMenu() { closeMenu(); toggleNotifications(); }
 function checkNotifications() { loadSeenNotifications(); updateNotificationBadge(getActiveNotifications()); }
 
+// Global keyboard and click dismissal handlers
 document.addEventListener('click', e => {
   const m = document.getElementById('menu');
   if (m && !m.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleMenu"]') && !m.contains(e.target)) closeMenu();
@@ -1055,6 +1070,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// Theme toggle and initial theme resolution
 function syncThemeLabelInMenu() { const isDark = document.documentElement.classList.contains('dark'); const lbl = document.getElementById('menu-theme-label'); if (lbl) lbl.textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro'; }
 function toggleDarkMode() { const html = document.documentElement; if (html.classList.contains('dark')) { html.classList.remove('dark'); localStorage.setItem('theme', 'light'); } else { html.classList.add('dark'); localStorage.setItem('theme', 'dark'); } syncThemeLabelInMenu(); }
 function toggleDarkModeFromMenu() { toggleDarkMode(); closeMenu(); }
@@ -1063,6 +1079,7 @@ if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') 
   document.documentElement.classList.add('dark');
 } else document.documentElement.classList.remove('dark');
 
+// Header tab icon and navigation switching
 function getHeaderIconSvg(tab) {
   if (tab === 'orders') {
     return '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"></path><path d="M14 10h3.5l2.5 3v3h-6v-6z"></path><circle cx="6.5" cy="17.5" r="2"></circle><circle cx="17.5" cy="17.5" r="2"></circle><line x1="6" y1="10.5" x2="11" y2="10.5"></line></svg>';
@@ -1103,6 +1120,7 @@ function switchTab(tab) {
   checkNotifications();
 }
 
+// Cross-tab search helpers
 function isClientQuickCommand(rawText) {
   return /^(clint|cliente|cli)(\s+|$|-|—)/i.test(String(rawText || '').trim());
 }
@@ -1205,6 +1223,7 @@ function switchAdminTab(tab) {
   }
 }
 
+// Non-operational expense filtering and ceiling calculation
 function isLancamentoOperacional(tx) {
   if (!tx || tx.type !== 'expense') return false;
   if (tx.isOp === true || tx.isFreightOut === true) return true;
@@ -1326,6 +1345,7 @@ function load(){
   switchTab('quick');
 }
 
+// Quick search currency parsing, payment selectors, and dynamic panels
 function qrParseMoeda(str) {
   if (str === null || str === undefined) return 0;
   let limpo = String(str).replace(/[^\d,.-]/g, '').trim();
@@ -1635,6 +1655,7 @@ function qrConfirmarDespesa() {
   qrLimparBuscaCompleta(); renderFinance();
 }
 
+// Ceiling modal rendering, inline editing, and cycle reset
 function qrRenderListaDespesasTeto() {
   const listEl = document.getElementById('qrTetoItensList');
   const qtdEl = document.getElementById('qrTetoItensQtd');
@@ -1830,6 +1851,7 @@ async function qrExcluirLancamento(id) {
   showToast('Lançamento excluído.', 'info');
 }
 
+// Autocomplete history and select initialization
 function saveToHistory(order) {
   let changed = false;
   const add = (arr, v) => { if (v && v.trim() && !arr.includes(v.trim())) { arr.push(v.trim()); changed = true; } };
@@ -1848,6 +1870,7 @@ function populateSelects() {
   const d = document.getElementById('tTo'); if (d) d.value = 'cash';
 }
 
+// Orders calculations, list rendering, and form modal
 function calcValores(o) {
   const inv = (Number(o.valorUSD) || 0) * (Number(o.cotacao) || 0);
   const margemVal = inv * ((Number(o.margem) || 0) / 100);
@@ -2082,6 +2105,7 @@ async function deleteOrderById(orderId) {
   showToast('Pedido excluído.', 'info');
 }
 
+// Financial balances, accounts, cards, transfers, and assets
 function getTotalBankBalance() { return txs.reduce((acc, t) => { if (t.status !== 'paid' || (t.accountId||'').startsWith('card_')) return acc; return acc + (t.type === 'income' ? t.amount : -t.amount); }, 0); }
 function getAccountBalance(id) { return txs.reduce((acc, t) => { if (t.status !== 'paid' || t.accountId !== id) return acc; return acc + (t.type === 'income' ? t.amount : -t.amount); }, 0); }
 function getPendingLucros() { return txs.filter(t => t.type === 'income' && t.status === 'pending'); }
@@ -2219,6 +2243,7 @@ function openAddBemForm() { document.getElementById('formAddBem').classList.remo
 function saveBemItem() { const id = document.getElementById('bemId').value; const name = document.getElementById('bemName').value.trim(); const amount = parseFloat(document.getElementById('bemVal').value)||0; const cat = document.getElementById('bemCat').value; if (!name || amount <= 0) { showToast('Preencha nome e valor do bem.', 'error'); return; } if (id) { const b = patrimonioBens.find(x => x.id === id); if (b) { b.name = name; b.amount = amount; b.cat = cat; } } else patrimonioBens.unshift({ id: genId(), name, amount, cat }); saveAll(); document.getElementById('formAddBem').classList.add('hidden'); renderBensList(); renderFinance(); showToast('Bem salvo.', 'success'); }
 async function deleteBem(id) { const ok = await requestConfirm('Excluir bem?', 'Este item será removido do inventário de bens.', 'Excluir'); if (!ok) return; patrimonioBens = patrimonioBens.filter(x => x.id !== id); saveAll(); renderBensList(); renderFinance(); showToast('Bem excluído.', 'info'); }
 
+// Admin reports and weekly column chart modal
 function renderAdminOrders() {
   let tp = 0, tf = 0; orders.forEach(o => { const v = calcValores(o); tp += v.lucroLiq; tf += v.faturamento; });
   document.getElementById('adm-total-profit').textContent = money(tp); document.getElementById('adm-total-fat').textContent = money(tf);
@@ -2312,6 +2337,7 @@ function openChartsModal() {
   document.getElementById('chartsModal').classList.remove('hidden');
 }
 
+// Administrative and client transport receipts
 function openReceipt(orderId) {
   const o = orders.find(x => x.id === orderId); if (!o) return;
   activeReceiptOrderId = orderId;
@@ -2352,167 +2378,138 @@ function openReceipt(orderId) {
   document.getElementById('recTrajetoCliente').innerHTML = steps.map((s, idx) => {
     const isLast = idx === steps.length - 1;
     return `
-      <div class="flex items-start gap-3.5 relative ${isLast ? '' : 'pb-4'}">
-        ${!isLast ? '<span aria-hidden="true" class="absolute left-[13px] top-7 bottom-0 w-[2px] bg-[#334155]"></span>' : ''}
-        <span class="w-7 h-7 rounded-full bg-[#243049] border border-[#3b4b6b] flex items-center justify-center text-xs shrink-0 relative z-10">${s.icon}</span>
-        <div class="pt-0.5 leading-snug min-w-0">
-          <p class="text-sm font-bold ${s.italic ? 'italic text-slate-400' : 'text-white'} truncate">${escapeHtml(s.label)}</p>
-          <p class="text-xs text-slate-400 mt-0.5">${fmtShortDT(s.dt)}</p>
+      <div class="relative flex items-start gap-3.5 ${!isLast ? 'pb-5' : ''}">
+        ${!isLast ? '<div class="absolute left-[11px] top-6 bottom-0 w-[2px] bg-slate-700/80"></div>' : ''}
+        <div class="relative z-10 w-6 h-6 rounded-full bg-[#161e2e] border border-slate-600/80 flex items-center justify-center text-xs shrink-0">${s.icon}</div>
+        <div class="min-w-0 flex-1 pt-0.5 leading-snug">
+          <p class="text-xs sm:text-sm font-bold text-white truncate">${escapeHtml(s.label)}</p>
+          <p class="text-[11px] ${s.italic ? 'italic text-slate-400' : 'text-slate-400'} mt-0.5">${fmtShortDT(s.dt)}</p>
         </div>
       </div>`;
   }).join('');
 
   document.getElementById('receiptModal').classList.remove('hidden');
 }
-function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
-function printReceipt(mode) { document.body.classList.remove('printing-admin','printing-client'); document.body.classList.add(mode==='admin'?'printing-admin':'printing-client'); window.print(); setTimeout(() => { document.body.classList.remove('printing-admin','printing-client'); }, 500); }
 
-function buildBackupPayload() {
+function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); document.body.classList.remove('printing-admin', 'printing-client'); }
+function printReceipt(type) { document.body.classList.remove('printing-admin', 'printing-client'); document.body.classList.add(type === 'admin' ? 'printing-admin' : 'printing-client'); window.print(); setTimeout(() => { document.body.classList.remove('printing-admin', 'printing-client'); }, 500); }
+
+// Backup export, import, auto-backup, and full system download
+function createBackupPayload() {
   return {
-    savedAt: new Date().toISOString(),
-    orders,
-    txs,
-    creditCards,
-    patrimonioBens,
-    quickState,
-    historyData,
-    userProfile,
-    seenNotifications
+    orders, txs, creditCards, patrimonioBens, quickState, historyData, userProfile,
+    exportedAt: new Date().toISOString()
   };
 }
-
-function executarAutoBackup() {
+function saveAutoBackup() {
   try {
-    const payload = buildBackupPayload();
-    safeSet(AUTO_BACKUP_KEY, JSON.stringify(payload));
+    safeSet(AUTO_BACKUP_KEY, JSON.stringify(createBackupPayload()));
   } catch (e) {}
 }
-
-async function restaurarAutoBackup() {
+function restaurarAutoBackup() {
   closeMenu();
   const raw = safeGet(AUTO_BACKUP_KEY);
   if (!raw) {
     showToast('Nenhum backup automático encontrado neste navegador.', 'error');
     return;
   }
-  const ok = await requestConfirm('Restaurar backup automático?', 'Isso substituirá os dados atuais pelos do último backup automático.', 'Restaurar');
-  if (!ok) return;
   try {
     const d = JSON.parse(raw);
-    if (d.orders) orders = d.orders;
-    if (d.txs) txs = d.txs;
-    if (d.creditCards) creditCards = d.creditCards;
-    if (d.patrimonioBens) patrimonioBens = d.patrimonioBens;
-    if (d.quickState) {
-      quickState = {
-        ...JSON.parse(JSON.stringify(quickDefaultState)),
-        ...d.quickState,
-        tetoProgramado: 0,
-        operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
-        metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
-        bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
-        cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
-      };
-    }
-    if (d.historyData) historyData = d.historyData;
-    if (d.userProfile) userProfile = d.userProfile;
-    if (d.seenNotifications) seenNotifications = d.seenNotifications;
-    saveAll();
-    updateMenuUserDisplay();
-    renderDatalists();
-    populateSelects();
-    switchTab(currentTab);
+    applyBackupData(d);
     showToast('Backup automático restaurado com sucesso!', 'success');
   } catch (err) {
-    showToast('Falha ao restaurar o backup automático.', 'error');
+    showToast('Erro ao restaurar backup automático.', 'error');
   }
 }
-
-function downloadFile(content, filename, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 150);
+function applyBackupData(d) {
+  if (!d || typeof d !== 'object') throw new Error('Backup inválido');
+  if (Array.isArray(d.orders)) orders = d.orders;
+  if (Array.isArray(d.txs)) txs = d.txs;
+  if (Array.isArray(d.creditCards)) creditCards = d.creditCards;
+  if (Array.isArray(d.patrimonioBens)) patrimonioBens = d.patrimonioBens;
+  if (d.quickState && typeof d.quickState === 'object') {
+    const tetoNum = Number(d.quickState.teto);
+    quickState = {
+      ...JSON.parse(JSON.stringify(quickDefaultState)),
+      ...d.quickState,
+      teto: Number.isFinite(tetoNum) && tetoNum >= 0 ? tetoNum : 3000,
+      tetoProgramado: 0,
+      tetoCicloInicio: d.quickState.tetoCicloInicio || null,
+      operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
+      metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
+      bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
+      cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
+    };
+  }
+  if (d.historyData && typeof d.historyData === 'object') historyData = d.historyData;
+  if (d.userProfile && typeof d.userProfile === 'object') userProfile = d.userProfile;
+  saveAll();
+  saveAutoBackup();
+  updateMenuUserDisplay();
+  renderDatalists();
+  populateSelects();
+  recalcularConsumidoTeto();
+  switchTab(currentTab);
 }
 
-async function exportJSON() {
+function exportJSON() {
   closeMenu();
-  const dataStr = JSON.stringify(buildBackupPayload(), null, 2);
-  const fileName = `backup-sistema-gestao-${todayISO()}.json`;
-
   try {
-    const file = new File([dataStr], fileName, { type: 'application/json' });
-    if (navigator.canShare && navigator.canShare({ files: [file] }) && typeof navigator.share === 'function') {
-      await navigator.share({
-        title: 'Backup Sistema de Gestão',
-        text: `Backup de dados (${todayISO()})`,
-        files: [file]
-      });
-      showToast('Backup compartilhado com sucesso!', 'success');
-      return;
-    }
-  } catch (err) {
-    if (err && err.name === 'AbortError') return;
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(createBackupPayload(), null, 2));
+    const dl = document.createElement('a');
+    dl.setAttribute("href", dataStr);
+    dl.setAttribute("download", `backup_gestao_${todayISO()}.json`);
+    document.body.appendChild(dl);
+    dl.click();
+    dl.remove();
+    showToast('Backup JSON exportado!', 'success');
+  } catch (e) {
+    showToast('Erro ao exportar backup JSON.', 'error');
   }
-
-  downloadFile(dataStr, fileName, 'application/json');
-  showToast('Arquivo de backup JSON baixado.', 'success');
 }
 
 function exportSystemCode() {
   closeMenu();
-  const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-  const fileName = `sistema-gestao-${todayISO()}.html`;
-  downloadFile(fullHtml, fileName, 'text/html;charset=utf-8');
-  showToast('Sistema completo (.html) baixado!', 'success');
+  try {
+    const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const dl = document.createElement('a');
+    dl.setAttribute("href", url);
+    dl.setAttribute("download", `sistema_gestao_definitivo_${todayISO()}.html`);
+    document.body.appendChild(dl);
+    dl.click();
+    dl.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('Sistema completo (.html) baixado!', 'success');
+  } catch (e) {
+    showToast('Erro ao baixar o sistema completo.', 'error');
+  }
 }
 
 function importJSON(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async function(ev) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
     try {
       const d = JSON.parse(ev.target.result);
-      const ok = await requestConfirm('Importar backup?', 'Deseja substituir os dados atuais pelos dados do arquivo?', 'Importar');
-      if (!ok) { e.target.value = ''; return; }
-      executarAutoBackup();
-      if (d.orders) orders = d.orders;
-      if (d.txs) txs = d.txs;
-      if (d.creditCards) creditCards = d.creditCards;
-      if (d.patrimonioBens) patrimonioBens = d.patrimonioBens;
-      if (d.quickState) {
-        quickState = {
-          ...JSON.parse(JSON.stringify(quickDefaultState)),
-          ...d.quickState,
-          tetoProgramado: 0,
-          operadorPadrao: normalizeOperator(d.quickState.operadorPadrao),
-          metodos: { ...quickDefaultState.metodos, ...(d.quickState.metodos || {}) },
-          bancos: { ...quickDefaultState.bancos, ...(d.quickState.bancos || {}) },
-          cartoes: { ...quickDefaultState.cartoes, ...(d.quickState.cartoes || {}) }
-        };
-      }
-      if (d.historyData) historyData = d.historyData;
-      if (d.userProfile) userProfile = d.userProfile;
-      if (d.seenNotifications) seenNotifications = d.seenNotifications;
-      saveAll(); updateMenuUserDisplay(); renderDatalists(); populateSelects(); switchTab(currentTab);
+      applyBackupData(d);
       showToast('Backup importado com sucesso!', 'success');
-    } catch(err) { showToast('Erro ao importar arquivo JSON.', 'error'); }
-    e.target.value = '';
+    } catch (err) {
+      showToast('Erro ao ler backup: ' + err.message, 'error');
+    }
   };
-  reader.readAsText(file);
+  r.readAsText(file);
+  e.target.value = '';
 }
+
 async function resetData() {
   closeMenu();
-  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará todos os pedidos, lançamentos e configurações atuais.', 'Restaurar');
+  const ok = await requestConfirm('Restaurar padrão?', 'Isso apagará todos os dados locais atuais. Deseja continuar?', 'Restaurar');
   if (!ok) return;
-  executarAutoBackup();
+  saveAutoBackup();
+  localStorage.removeItem(STORAGE_ORDERS); localStorage.removeItem(STORAGE_FIN); localStorage.removeItem(STORAGE_CARDS); localStorage.removeItem(STORAGE_BENS); localStorage.removeItem(STORAGE_QUICK); localStorage.removeItem(HISTORY_KEY); localStorage.removeItem(PROFILE_KEY); localStorage.removeItem(SEEN_NOTIF_KEY);
   orders = []; txs = []; patrimonioBens = [];
   creditCards = [
     { id: 'riachuelo', name: 'Riachuelo', limit: 1912.00, currentBill: 144.60, dueDay: 23, color: '#059669' },
@@ -2522,16 +2519,22 @@ async function resetData() {
   ];
   quickState = JSON.parse(JSON.stringify(quickDefaultState));
   historyData = { clients: [], cities: [], carriers: [] };
+  userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
   seenNotifications = {};
-  safeSet(HISTORY_KEY, JSON.stringify(historyData));
-  saveAll(); renderDatalists(); populateSelects(); switchTab(currentTab);
-  showToast('Dados restaurados para o padrão.', 'info');
+  updateMenuUserDisplay(); renderDatalists(); populateSelects(); recalcularConsumidoTeto(); switchTab('quick');
+  showToast('Dados restaurados ao padrão.', 'info');
 }
 
-load();
-executarAutoBackup();
-setInterval(executarAutoBackup, 120000);
-window.addEventListener('beforeunload', executarAutoBackup);
+// Application startup
+window.onload = function(){
+  try {
+    load();
+    saveAutoBackup();
+    setInterval(saveAutoBackup, 60000);
+  } catch (err) {
+    showToast('Erro ao inicializar o sistema: ' + err.message, 'error');
+  }
+};
 </script>
 </body>
 </html>
