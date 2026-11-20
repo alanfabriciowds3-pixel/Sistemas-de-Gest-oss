@@ -844,36 +844,12 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0"><div class="flex items-center gap-2"><span class="text-xl">📅</span><h3 id="chartsModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">Fechamento Mensal Detalhado</h3></div><button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" aria-label="Fechar fechamento mensal" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl font-bold px-2 cursor-pointer">×</button></div>
     <div class="p-4 sm:p-5 overflow-y-auto space-y-4 num-align flex-1">
-      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2.5 text-xs">
-        <div class="flex items-center justify-between gap-2 pb-1 border-b border-slate-200/70 dark:border-slate-800">
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">1. Operação no Mês (Separada dos Seus Gastos)</span>
-          <span id="chart-month-op-status" class="text-[10px] font-bold text-slate-500 dark:text-slate-400">0 pedidos</span>
-        </div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">O que foi Operacionado / Valor de Operação</span><strong id="chart-month-op-volume" class="text-slate-900 dark:text-white font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Receita que Entrou (Receitas Pagas)</span><strong id="chart-month-income" class="text-emerald-600 dark:text-emerald-400 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Gastos Operacionais (Fretes / OP — Separado)</span><strong id="chart-month-op-expense" class="text-amber-600 dark:text-amber-400 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Valor Líquido da Operação</span><strong id="chart-month-op-net" class="text-indigo-700 dark:text-indigo-300 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Valor Líquido de Receita (Entradas − Seus Gastos)</span><strong id="chart-month-net-income" class="text-emerald-700 dark:text-emerald-400 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2 pt-1.5 border-t border-slate-200/70 dark:border-slate-800"><span class="text-slate-700 dark:text-slate-200 font-extrabold uppercase text-[10px]">Lucro do Mês (Líquido dos Pedidos)</span><strong id="chart-month-profit" class="text-emerald-600 dark:text-emerald-400 font-black text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Receita / Lucro Previsto (Pendente)</span><strong id="chart-month-forecast-rev" class="text-amber-600 dark:text-amber-400 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
+      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2 text-xs">
+        <div class="flex justify-between items-center"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Mês Atual · Receita / Faturamento Realizado</span><strong id="chart-month-income" class="text-emerald-600 dark:text-emerald-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Mês Atual · Receita / Lucro Previsto</span><strong id="chart-month-forecast-rev" class="text-amber-600 dark:text-amber-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Mês Atual · Total Gasto (Saídas Pagas)</span><strong id="chart-month-expense" class="text-rose-600 dark:text-rose-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center pt-1.5 border-t border-slate-200/70 dark:border-slate-800"><span class="text-slate-700 dark:text-slate-200 font-extrabold uppercase text-[10px]">Mês Atual · Saldo Líquido do Caixa</span><strong id="chart-month-balance" class="text-indigo-700 dark:text-indigo-300 font-black text-sm">R$ 0,00</strong></div>
       </div>
-
-      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2.5 text-xs">
-        <div class="flex items-center justify-between gap-2 pb-1 border-b border-slate-200/70 dark:border-slate-800">
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">2. Seus Gastos no Mês (Sem Gastos Operacionais)</span>
-          <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Saídas Pagas &amp; Onde Foi</span>
-        </div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-700 dark:text-slate-200 font-extrabold uppercase text-[10px]">Gasto Total no Mês (Seus Gastos Pagos)</span><strong id="chart-month-personal-paid" class="text-rose-600 dark:text-rose-400 font-black text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Seus Gastos Agendados / Pendentes</span><strong id="chart-month-personal-pending" class="text-amber-600 dark:text-amber-400 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px]">Total Geral de Despesas Saídas no Mês</span><strong id="chart-month-expense" class="text-slate-800 dark:text-slate-200 font-black text-xs sm:text-sm">R$ 0,00</strong></div>
-        <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-800 space-y-1.5">
-          <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Onde Foi (Destinos / Categorias dos Seus Gastos)</p>
-          <div id="chart-personal-destinations" class="space-y-1.5 text-[11px]">
-            <p class="text-slate-400 text-center py-2">Nenhum gasto pessoal/mensal registrado neste mês.</p>
-          </div>
-        </div>
-      </div>
-
       <div id="column-charts-container" class="space-y-3"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center shrink-0"><button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl text-sm font-bold shadow-md cursor-pointer">Fechar Fechamento</button></div>
@@ -3936,20 +3912,6 @@ function openChartsModal() {
     return parseInt(parts[0], 10) === curYear && (parseInt(parts[1], 10) - 1) === curMonth;
   };
 
-  // Volume operacionado e lucro líquido dos pedidos do mês atual
-  let monthOpVolume = 0;
-  let monthOrderProfit = 0;
-  let monthOrderCount = 0;
-  orders.forEach(o => {
-    if (o && o.saida && isInCurrentMonth(o.saida)) {
-      const v = calcValores(o);
-      monthOpVolume += v.faturamento;
-      monthOrderProfit += v.lucroLiq;
-      monthOrderCount += 1;
-    }
-  });
-
-  // Receita paga e pendente no mês atual
   const monthIncomePaid = txs
     .filter(t => t.type === 'income' && t.status !== 'pending' && isInCurrentMonth(t.date))
     .reduce((s, t) => s + (Number(t.amount) || 0), 0);
@@ -3958,156 +3920,53 @@ function openChartsModal() {
     .filter(t => t.type === 'income' && t.status === 'pending' && isInCurrentMonth(t.date))
     .reduce((s, t) => s + (Number(t.amount) || 0), 0);
 
-  // Separação explícita entre gastos operacionais (fretes / OP) e seus gastos do mês
-  const monthExpensesAll = txs.filter(t => t.type === 'expense' && isInCurrentMonth(t.date));
-  const monthOpExpensePaid = monthExpensesAll
-    .filter(t => t.status !== 'pending' && isLancamentoOperacional(t))
+  const monthExpensePaid = txs
+    .filter(t => t.type === 'expense' && t.status !== 'pending' && isInCurrentMonth(t.date))
     .reduce((s, t) => s + (Number(t.amount) || 0), 0);
 
-  const monthPersonalExpensesPaidList = monthExpensesAll
-    .filter(t => t.status !== 'pending' && !isLancamentoOperacional(t) && !t.isCardBillPayment);
-  const monthPersonalExpensePaid = monthPersonalExpensesPaidList
-    .reduce((s, t) => s + (Number(t.amount) || 0), 0);
+  const monthNet = monthIncomePaid - monthExpensePaid;
 
-  const monthPersonalExpensePending = monthExpensesAll
-    .filter(t => t.status === 'pending' && !isLancamentoOperacional(t) && !t.isCardBillPayment)
-    .reduce((s, t) => s + (Number(t.amount) || 0), 0);
-
-  const monthExpensePaidTotal = monthExpensesAll
-    .filter(t => t.status !== 'pending')
-    .reduce((s, t) => s + (Number(t.amount) || 0), 0);
-
-  // Valor líquido da operação e valor líquido de receita (receita paga menos seus gastos)
-  const monthOpNet = monthOpVolume - monthOpExpensePaid;
-  const monthNetIncome = monthIncomePaid - monthPersonalExpensePaid;
-
-  const opStatusEl = document.getElementById('chart-month-op-status');
-  const opVolEl = document.getElementById('chart-month-op-volume');
   const incEl = document.getElementById('chart-month-income');
-  const opExpEl = document.getElementById('chart-month-op-expense');
-  const opNetEl = document.getElementById('chart-month-op-net');
-  const netIncEl = document.getElementById('chart-month-net-income');
-  const profitEl = document.getElementById('chart-month-profit');
   const prevRevEl = document.getElementById('chart-month-forecast-rev');
-  const persPaidEl = document.getElementById('chart-month-personal-paid');
-  const persPendEl = document.getElementById('chart-month-personal-pending');
   const expEl = document.getElementById('chart-month-expense');
-  const destEl = document.getElementById('chart-personal-destinations');
-
-  if (opStatusEl) opStatusEl.textContent = `${monthOrderCount} ${monthOrderCount === 1 ? 'pedido' : 'pedidos'}`;
-  if (opVolEl) opVolEl.textContent = money(monthOpVolume);
+  const balEl = document.getElementById('chart-month-balance');
   if (incEl) incEl.textContent = money(monthIncomePaid);
-  if (opExpEl) opExpEl.textContent = money(monthOpExpensePaid);
-  if (opNetEl) opNetEl.textContent = money(monthOpNet);
-  if (netIncEl) netIncEl.textContent = money(monthNetIncome);
-  if (profitEl) profitEl.textContent = money(monthOrderProfit);
   if (prevRevEl) prevRevEl.textContent = money(monthIncomePending);
-  if (persPaidEl) persPaidEl.textContent = money(monthPersonalExpensePaid);
-  if (persPendEl) persPendEl.textContent = money(monthPersonalExpensePending);
-  if (expEl) expEl.textContent = money(monthExpensePaidTotal);
+  if (expEl) expEl.textContent = money(monthExpensePaid);
+  if (balEl) balEl.textContent = money(monthNet);
 
-  // Agrupa "onde foi" por destino/categoria e descrição dos seus gastos pagos no mês
-  if (destEl) {
-    if (!monthPersonalExpensesPaidList.length) {
-      destEl.innerHTML = '<p class="text-slate-400 text-center py-2">Nenhum gasto pessoal/mensal pago neste mês.</p>';
-    } else {
-      const grouped = {};
-      monthPersonalExpensesPaidList.forEach(t => {
-        const destino = t.origem || getAccountLabel(t.accountId) || 'Conta Geral';
-        const chave = `${t.desc || 'Despesa'} · ${destino}`;
-        if (!grouped[chave]) {
-          grouped[chave] = { label: t.desc || 'Despesa', destino, total: 0, count: 0 };
-        }
-        grouped[chave].total += (Number(t.amount) || 0);
-        grouped[chave].count += 1;
-      });
-      const destItems = Object.values(grouped).sort((a, b) => b.total - a.total);
-      destEl.innerHTML = destItems.map(item => `
-        <div class="flex items-center justify-between gap-2 bg-white dark:bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
-          <div class="min-w-0">
-            <p class="font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(item.label)}</p>
-            <p class="text-[10px] text-slate-500 truncate">Onde foi: ${escapeHtml(item.destino)}${item.count > 1 ? ` · ${item.count}x` : ''}</p>
-          </div>
-          <span class="font-black text-rose-600 dark:text-rose-400 shrink-0">${money(item.total)}</span>
-        </div>
-      `).join('');
-    }
-  }
-
-  // Histórico dos últimos 6 meses com lucro, receita entrada e seus gastos pagos por mês
   const months = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(curYear, curMonth - i, 1);
     const label = d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase();
-    const mIdx = d.getMonth();
-    const yIdx = d.getFullYear();
-
-    const inMonth = (ds) => {
-      if (!ds) return false;
-      const p = String(ds).split('T')[0].split('-');
-      return p.length >= 2 && parseInt(p[0], 10) === yIdx && (parseInt(p[1], 10) - 1) === mIdx;
-    };
-
     let profit = 0;
     orders.forEach(o => {
-      if (o && o.saida && inMonth(o.saida)) {
-        profit += calcValores(o).lucroLiq;
+      if (o.saida) {
+        const parts = o.saida.split('T')[0].split('-');
+        if (parts.length >= 2) {
+          if (parseInt(parts[0], 10) === d.getFullYear() && (parseInt(parts[1], 10) - 1) === d.getMonth()) {
+            profit += calcValores(o).lucroLiq;
+          }
+        }
       }
     });
-
-    const receitaEntrou = txs
-      .filter(t => t.type === 'income' && t.status !== 'pending' && inMonth(t.date))
-      .reduce((s, t) => s + (Number(t.amount) || 0), 0);
-
-    const seusGastosPagos = txs
-      .filter(t => t.type === 'expense' && t.status !== 'pending' && !isLancamentoOperacional(t) && !t.isCardBillPayment && inMonth(t.date))
-      .reduce((s, t) => s + (Number(t.amount) || 0), 0);
-
-    months.push({ label, profit, receitaEntrou, seusGastosPagos });
+    months.push({ label, profit });
   }
-
-  const maxVal = Math.max(
-    ...months.map(m => Math.max(Math.abs(m.profit), m.receitaEntrou, m.seusGastosPagos)),
-    1
-  );
-
+  const maxVal = Math.max(...months.map(m => Math.abs(m.profit)), 1);
   document.getElementById('column-charts-container').innerHTML = `
-    <div class="bg-slate-50 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-100 dark:border-slate-700/60 space-y-3">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <h4 class="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 tracking-wider">Evolução Mensal (Últimos 6 Meses)</h4>
-        <div class="flex items-center gap-3 text-[10px] font-bold">
-          <span class="text-emerald-600 dark:text-emerald-400">■ Lucro</span>
-          <span class="text-indigo-500 dark:text-indigo-400">■ Receita</span>
-          <span class="text-rose-500 dark:text-rose-400">■ Seus Gastos</span>
-        </div>
-      </div>
-      <div class="flex items-end justify-between gap-2 h-36 pt-4 px-1">
+    <div class="bg-slate-50 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-100 dark:border-slate-700/60">
+      <h4 class="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 mb-4 tracking-wider">Evolução do Lucro (Últimos 6 Meses)</h4>
+      <div class="flex items-end justify-between gap-2 h-36 pt-4 px-2">
         ${months.map(m => {
-          const pctProfit = Math.max(6, Math.round((Math.abs(m.profit) / maxVal) * 80));
-          const pctRec = Math.max(6, Math.round((m.receitaEntrou / maxVal) * 80));
-          const pctGasto = Math.max(6, Math.round((m.seusGastosPagos / maxVal) * 80));
+          const pct = Math.max(8, Math.round((Math.abs(m.profit) / maxVal) * 85));
           const isPos = m.profit >= 0;
           return `
-            <div class="flex flex-col items-center flex-1 h-full justify-end min-w-0">
-              <span class="text-[9px] font-bold mb-1 truncate ${isPos ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">${m.profit !== 0 ? (m.profit / 1000).toFixed(1) + 'k' : 'R$0'}</span>
-              <div class="w-full flex items-end justify-center gap-0.5 h-24">
-                <div style="height: ${pctProfit}%" title="Lucro: ${money(m.profit)}" class="w-2.5 rounded-t ${isPos ? 'bg-emerald-500' : 'bg-amber-500'}"></div>
-                <div style="height: ${pctRec}%" title="Receita Entrada: ${money(m.receitaEntrou)}" class="w-2.5 rounded-t bg-indigo-500"></div>
-                <div style="height: ${pctGasto}%" title="Seus Gastos Pagos: ${money(m.seusGastosPagos)}" class="w-2.5 rounded-t bg-rose-500"></div>
-              </div>
+            <div class="flex flex-col items-center flex-1 h-full justify-end group">
+              <span class="text-[9px] font-bold mb-1 ${isPos ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">${m.profit !== 0 ? (m.profit / 1000).toFixed(1) + 'k' : 'R$0'}</span>
+              <div style="height: ${pct}%" class="w-full max-w-[28px] rounded-t-lg transition-all duration-500 ${isPos ? 'bg-gradient-to-t from-emerald-600 to-emerald-400' : 'bg-gradient-to-t from-rose-600 to-rose-400'}"></div>
               <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5">${m.label}</span>
             </div>`;
         }).join('')}
-      </div>
-      <div class="space-y-1.5 pt-2 border-t border-slate-200/70 dark:border-slate-800 text-[11px]">
-        ${months.map(m => `
-          <div class="flex flex-wrap items-center justify-between gap-1 py-1 border-b border-slate-200/40 dark:border-slate-800/60 last:border-b-0">
-            <strong class="text-slate-700 dark:text-slate-200 w-10">${m.label}</strong>
-            <span class="text-emerald-600 dark:text-emerald-400 font-semibold">Lucro: ${money(m.profit)}</span>
-            <span class="text-indigo-600 dark:text-indigo-400 font-semibold">Entrou: ${money(m.receitaEntrou)}</span>
-            <span class="text-rose-600 dark:text-rose-400 font-semibold">Gastos: ${money(m.seusGastosPagos)}</span>
-          </div>
-        `).join('')}
       </div>
     </div>`;
   document.getElementById('chartsModal').classList.remove('hidden');
@@ -4145,10 +4004,9 @@ function openReceipt(id) {
 
   const v = calcValores(o);
   const isFretePago = v.remainingFreight <= 0.004;
-  // No recibo do cliente, o "Valor do Serviço" exibe o valor da margem (margemVal)
-  document.getElementById('recFreteCliente').textContent = money(v.margemVal);
+  document.getElementById('recFreteCliente').textContent = money(v.freteVal);
   const stEl = document.getElementById('recStatusFrete');
-  stEl.textContent = isFretePago ? 'SERVIÇO / MARGEM' : `SERVIÇO / MARGEM · FRETE PENDENTE ${money(v.remainingFreight)}`;
+  stEl.textContent = isFretePago ? 'FRETE PAGO' : (v.paidFreight > 0 ? `FRETE PARCIAL · FALTA ${money(v.remainingFreight)}` : 'FRETE A PAGAR');
   stEl.className = 'text-[10px] font-black uppercase tracking-wide px-2.5 py-1 rounded ' + (isFretePago ? 'text-[#34d399] bg-[#064e3b] border border-[#10b981]/30' : 'text-amber-300 bg-amber-950/80 border border-amber-500/30');
 
   document.getElementById('admRecPedido').textContent = o.pedido || '—';
