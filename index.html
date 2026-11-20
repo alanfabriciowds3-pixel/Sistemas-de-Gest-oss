@@ -335,7 +335,7 @@
     </div>
     <div class="flex gap-2.5">
       <button type="button" onclick="resolveAppConfirm(false)" class="flex-1 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold cursor-pointer">Cancelar</button>
-      <button type="button" id="appConfirmOkBtn" onclick="resolveAppConfirm(true)" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold cursor-pointer">Confirmar</button>
+      <div class="grid grid-cols-2 gap-2 pt-2"><button type="button" onclick="openEditCardFromDetail()" class="py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer">✏️ Ajustar Limite/Fatura</button><button type="button" id="btnPayCardFromDetail" onclick="openPayCardFromDetail(event)" class="py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-sm transition cursor-pointer">💳 Pagar Fatura</button></div>
     </div>
   </div>
 </div>
@@ -2953,6 +2953,124 @@ function saveCardConfig(e) {
     showToast(`Cartão ${c.name} salvo (Venc. Dia ${c.dueDay}).`, 'success');
   } catch (err) {
     showToast('Não foi possível salvar os dados do cartão.', 'error');
+  }
+}
+
+function getSelectedCardIdForPayment() {
+  const detInput = document.getElementById('detCardId');
+  const payInput = document.getElementById('payCardId');
+  const rawId = (payInput && payInput.value) || (detInput && detInput.value) || '';
+  return String(rawId).replace(/^card_/, '').trim();
+}
+
+function ensurePayCardAccountOptions() {
+  const select = document.getElementById('payCardAccount');
+  if (!select) return;
+  const currentVal = select.value;
+  select.innerHTML = ACCOUNTS.map(a => `<option value="${escapeHtml(a.id)}">${escapeHtml(a.name)}</option>`).join('');
+  if (currentVal && Array.from(select.options).some(opt => opt.value === currentVal)) {
+    select.value = currentVal;
+  } else if (ACCOUNTS.length > 0) {
+    const preferred = ACCOUNTS.find(a => a.id === 'caixa') || ACCOUNTS[0];
+    select.value = preferred.id;
+  }
+}
+
+function openPayCardFromDetail(e) {
+  if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+  try {
+    const cardId = getSelectedCardIdForPayment();
+    const card = creditCards.find(x => String(x.id).toLowerCase() === String(cardId).toLowerCase());
+    if (!card) {
+      showToast('Selecione um cartão válido para pagar a fatura.', 'error');
+      return;
+    }
+
+    const billAmount = Math.max(0, Number(card.currentBill) || 0);
+    if (billAmount <= 0) {
+      showToast(`O cartão ${card.name} não possui fatura aberta (R$ 0,00).`, 'info');
+      return;
+    }
+
+    ensurePayCardAccountOptions();
+
+    const payIdEl = document.getElementById('payCardId');
+    const nameDescEl = document.getElementById('payCardNameDesc');
+    const amountDescEl = document.getElementById('payCardAmountDesc');
+    const detailModal = document.getElementById('cardDetailModal');
+    const payModal = document.getElementById('payCardModal');
+
+    if (payIdEl) payIdEl.value = card.id;
+    if (nameDescEl) nameDescEl.textContent = `Cartão ${card.name} · Venc. Dia ${card.dueDay}`;
+    if (amountDescEl) amountDescEl.textContent = money(billAmount);
+
+    if (detailModal) detailModal.classList.add('hidden');
+    if (payModal) {
+      payModal.classList.remove('hidden');
+      const accSelect = document.getElementById('payCardAccount');
+      if (accSelect) setTimeout(() => accSelect.focus(), 0);
+    }
+  } catch (err) {
+    showToast('Erro ao abrir o pagamento da fatura do cartão.', 'error');
+  }
+}
+
+function confirmPayCard(e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+  try {
+    const cardId = getSelectedCardIdForPayment();
+    const cardIndex = creditCards.findIndex(x => String(x.id).toLowerCase() === String(cardId).toLowerCase());
+    if (cardIndex < 0) {
+      showToast('Cartão não encontrado para efetuar o pagamento.', 'error');
+      return;
+    }
+
+    const card = creditCards[cardIndex];
+    const billAmount = Math.max(0, Number(card.currentBill) || 0);
+    if (billAmount <= 0) {
+      showToast(`A fatura do cartão ${card.name} já está zerada.`, 'info');
+      const payModal = document.getElementById('payCardModal');
+      if (payModal) payModal.classList.add('hidden');
+      renderFinance();
+      return;
+    }
+
+    const accSelect = document.getElementById('payCardAccount');
+    const accountId = (accSelect && accSelect.value) ? accSelect.value : 'cash';
+    const accountLabel = getAccountLabel(accountId);
+
+    // Registra a despesa paga na conta de origem (não conta no teto mensal de gastos pessoais)
+    txs.unshift({
+      id: genId(),
+      desc: `Pagamento Fatura ${card.name}`,
+      amount: billAmount,
+      type: 'expense',
+      cat: 'Pagamento de Fatura',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId,
+      status: 'paid',
+      isCardBillPayment: true,
+      cardId: card.id
+    });
+
+    // Zera a fatura atual do cartão específico, restaurando seu limite disponível
+    creditCards[cardIndex] = {
+      ...card,
+      currentBill: 0
+    };
+
+    saveAll();
+
+    const payModal = document.getElementById('payCardModal');
+    const detailModal = document.getElementById('cardDetailModal');
+    if (payModal) payModal.classList.add('hidden');
+    if (detailModal) detailModal.classList.add('hidden');
+
+    renderFinance();
+    showToast(`Fatura de ${money(billAmount)} do cartão ${card.name} paga via ${accountLabel}.`, 'success');
+  } catch (err) {
+    showToast('Não foi possível confirmar o pagamento da fatura.', 'error');
   }
 }
 
