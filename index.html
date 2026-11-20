@@ -29,13 +29,13 @@
   body {
     font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent;
-    padding-bottom: 96px;
+    padding-bottom: 112px;
     transition: background-color 0.4s ease, padding-bottom 0.3s ease;
     background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
     background-attachment: fixed;
     overflow-x: hidden;
   }
-  body.no-bottom-nav { padding-bottom: 0 !important; }
+  body.no-bottom-nav { padding-bottom: 112px !important; }
   .dark body { background: radial-gradient(circle at top right, #0f172a, #020617); }
 
   /* Frosted glass surfaces for header, menu, and bottom navigation */
@@ -87,25 +87,75 @@
   .animate-in { animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
   /* Quick search & ceiling tracker styles */
-  .qr-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 22px; padding: 18px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
+  .qr-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 20px; padding: 12px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
   .dark .qr-card { background: #161c2e; border-color: rgba(148, 163, 184, 0.14); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45); }
 
-  .qr-input-box { background: #f1f5f9; border: 1px solid rgba(15, 23, 42, 0.14); color: #0f172a; font-variant-numeric: tabular-nums; }
-  .dark .qr-input-box { background: #0e1320; border-color: rgba(148, 163, 184, 0.16); color: #f1f5f9; }
-
+  .qr-panel { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(148, 163, 184, 0.22); width: 100%; max-width: 368px; margin-left: auto; margin-right: auto; }
+  .qr-panel .field { height: 38px; font-size: 0.75rem; padding: 0 0.75rem; border-radius: 0.65rem; }
+  .qr-panel .money-wrap .field { padding-left: 2.35rem; }
+  .qr-panel .lbl { font-size: 0.6rem; letter-spacing: 0.04em; margin-bottom: 3px; line-height: 1.15; text-align: left; }
+  .qr-panel-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-items: end; }
+  @media (max-width: 420px) { .qr-panel-grid { grid-template-columns: minmax(0, 1fr); } }
   .qr-pill { background: #e2e8f0; border: 1px solid rgba(15, 23, 42, 0.12); color: #334155; }
   .dark .qr-pill { background: #1e263d; border-color: rgba(148, 163, 184, 0.14); color: #cbd5e1; }
 
   .qr-subbox { background: #f1f5f9; border: 1px solid rgba(15, 23, 42, 0.1); }
   .dark .qr-subbox { background: #0e1320; border-color: rgba(148, 163, 184, 0.14); }
 
-  .qr-chip { padding: 8px 12px; min-height: 36px; border-radius: 11px; border: 1px solid rgba(15, 23, 42, 0.12); background: #e2e8f0; color: #0f172a; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .qr-chip { padding: 6px 10px; min-height: 32px; border-radius: 10px; border: 1px solid rgba(15, 23, 42, 0.12); background: #e2e8f0; color: #0f172a; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
   .dark .qr-chip { border-color: rgba(148, 163, 184, 0.14); background: #1e263d; color: #f1f5f9; }
   .qr-chip.selected { background: rgba(91, 77, 245, 0.18); border-color: #6366f1; color: #4338ca; }
   .dark .qr-chip.selected { color: #c7d2fe; }
 
-  .qr-pct-fab { position: fixed; right: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 999px; border: none; background: #10b981; color: #ffffff; font-size: 15px; font-weight: 900; box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35); cursor: pointer; z-index: 42; transition: transform 0.2s ease, background 0.3s ease; }
+  .hidden { display: none !important; }
+
+  .qr-pct-fab {
+    position: fixed;
+    left: 18px;
+    bottom: 22px;
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    border: none;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);
+    cursor: pointer;
+    z-index: 45;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.3s ease;
+  }
   .qr-pct-fab:hover { transform: scale(1.05); }
+
+  .qr-nav-fab {
+    position: fixed;
+    right: 18px;
+    bottom: 22px;
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.45);
+    cursor: pointer;
+    z-index: 45;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  html:not(.dark) .qr-nav-fab {
+    background: #ffffff;
+    color: #1e293b;
+    border-color: rgba(15, 23, 42, 0.14);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  }
+  .qr-nav-fab:hover { transform: scale(1.05); border-color: #6366f1; }
 
   /* Receipt and currency alignment helpers */
   .receipt-edge { position: relative; background: #172033; }
@@ -170,10 +220,6 @@
       </div>
     </div>
     <div class="flex items-center gap-1.5 shrink-0">
-      <button type="button" id="btn-open-full" onclick="switchTab('finance')" title="Abrir Painel Financeiro" aria-label="Abrir Painel Financeiro" class="bg-slate-100 dark:bg-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-200 px-2.5 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition shrink-0 cursor-pointer">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
-        <span class="hidden sm:inline">Finanças</span>
-      </button>
       <div class="relative">
         <button type="button" onclick="toggleMenu(event)" class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-xs border border-slate-200/70 dark:border-slate-700 relative cursor-pointer" aria-label="Abrir menu de opções" aria-expanded="false">
           <span id="notification-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-xs num-align">0</span>
@@ -250,32 +296,31 @@
 </div>
 
 <!-- Conteúdo principal -->
-<main class="max-w-5xl mx-auto px-3 sm:px-4 py-5 flex-1 w-full space-y-5 no-print">
+<main class="max-w-5xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full space-y-5 no-print">
   <!-- Aba 1: Busca Rápida -->
-  <div id="view-quick" class="max-w-xl mx-auto space-y-5 animate-in">
+  <div id="view-quick" class="max-w-[392px] mx-auto space-y-2.5 animate-in pb-28">
     <section class="qr-card">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">BUSCA RÁPIDA / LANÇAMENTO</span>
-        <span id="qrModeChip" class="qr-pill text-[11px] font-bold px-2.5 py-1 rounded-full">Aguardando digitação</span>
+      <div class="flex items-center justify-between gap-2 mb-1.5">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">BUSCA RÁPIDA / LANÇAMENTO</span>
+        <span id="qrModeChip" class="hidden qr-pill text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"></span>
       </div>
-      <div class="flex items-center gap-2 sm:gap-2.5">
+      <div class="flex items-center gap-2">
         <div class="relative flex-1 flex items-center min-w-0">
-          <input type="text" id="qrBuscaInput" aria-label="Busca rápida ou lançamento" placeholder="Ex: op compra, clint maria, uber ou pedido..." autocomplete="off" onfocus="qrAoFocarBusca()" oninput="qrAoDigitarBusca()" onkeydown="if(event.key==='Enter'){event.preventDefault();qrProcessarOk();}" class="qr-input-box w-full h-12 pl-3.5 pr-10 rounded-xl text-sm font-semibold outline-none focus:border-brand-500 transition" />
-          <button type="button" id="qrClearBtn" onclick="qrLimparBuscaCompleta()" aria-label="Limpar busca" class="hidden absolute right-2 w-7 h-7 rounded-lg qr-pill text-xs font-bold flex items-center justify-center cursor-pointer">×</button>
+          <input type="text" id="qrBuscaInput" aria-label="Busca rápida ou lançamento" placeholder="Ex: op compra, clint maria, uber ou pedido..." autocomplete="off" onfocus="qrAoFocarBusca()" oninput="qrAoDigitarBusca()" onkeydown="if(event.key==='Enter'){event.preventDefault();qrProcessarOk();}" class="field h-10 text-xs sm:text-sm pr-9 font-semibold" />
+          <button type="button" id="qrClearBtn" onclick="qrLimparBuscaCompleta()" aria-label="Limpar busca" class="hidden absolute right-2 w-6 h-6 rounded-lg qr-pill text-xs font-bold flex items-center justify-center cursor-pointer">×</button>
         </div>
-        <button type="button" onclick="qrProcessarOk()" class="h-12 px-4 sm:px-5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer shrink-0 transition">OK</button>
       </div>
-      <div id="qrSearchMatches" class="hidden mt-3 pt-3 border-t border-slate-200/70 dark:border-slate-700/60 space-y-1.5 num-align"></div>
-      <div id="qrDynamicPanel" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/60">
-        <div class="flex items-center justify-between gap-2 mb-2">
-          <span id="qrPanelTag" class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">FUNÇÃO</span>
-          <button type="button" onclick="qrFecharPainelDinamico()" class="text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 px-2 py-1 cursor-pointer">Fechar</button>
+      <div id="qrSearchMatches" class="hidden mt-1.5 pt-1.5 border-t border-slate-200/70 dark:border-slate-700/60 space-y-1 num-align"></div>
+      <div id="qrDynamicPanel" class="hidden qr-panel">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span id="qrPanelTag" class="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate text-left">FUNÇÃO</span>
+          <button type="button" onclick="qrFecharPainelDinamico()" class="text-[10px] font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 px-1.5 py-0.5 cursor-pointer shrink-0">Fechar</button>
         </div>
-        <div id="qrPanelTitle" class="text-base font-extrabold text-slate-900 dark:text-white mb-3"></div>
+        <div id="qrPanelTitle" class="text-xs font-extrabold text-slate-900 dark:text-white mb-1.5 truncate text-left"></div>
 
         <!-- Painel Operação / Compra (op ...) -->
-        <div id="qrOpFields" class="hidden space-y-3">
-          <div class="flex flex-wrap gap-2" id="qrOpEtapas">
+        <div id="qrOpFields" class="hidden space-y-2">
+          <div class="flex flex-wrap gap-1.5" id="qrOpEtapas">
             <button type="button" class="qr-chip selected" onclick="qrSelecionarEtapaOp(this, 'Despacho')">Despacho</button>
             <button type="button" class="qr-chip" onclick="qrSelecionarEtapaOp(this, 'Rastreio')">Rastreio</button>
             <button type="button" class="qr-chip" onclick="qrSelecionarEtapaOp(this, 'Conferência')">Conferência</button>
@@ -284,97 +329,97 @@
             <label class="lbl" for="qrOpValor">Valor da Compra / Operação (R$)</label>
             <div class="money-wrap">
               <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
-              <input type="text" id="qrOpValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoOp()" onchange="qrAtualizarResumoOp()" onblur="qrAtualizarResumoOp()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <input type="text" id="qrOpValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoOp()" onchange="qrAtualizarResumoOp()" onblur="qrAtualizarResumoOp()" class="field pl-10 font-semibold">
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
+          <div class="qr-panel-grid">
+            <div class="min-w-0">
               <label class="lbl" for="qrOpMetodoSelect">Forma de Pagamento</label>
-              <select id="qrOpMetodoSelect" onchange="qrAoMudarMetodoSelect('op', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <select id="qrOpMetodoSelect" onchange="qrAoMudarMetodoSelect('op', this.value)" class="field text-xs font-semibold py-0">
                 <option value="Pix">Pix</option>
                 <option value="Débito">Débito</option>
                 <option value="Crédito">Crédito</option>
                 <option value="Dinheiro">Dinheiro</option>
               </select>
             </div>
-            <div>
+            <div class="min-w-0">
               <label class="lbl" id="qrOpInstituicaoLabel" for="qrOpInstituicaoSelect">Instituição / Conta</label>
-              <select id="qrOpInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('op', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
+              <select id="qrOpInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('op', this.value)" class="field text-xs font-semibold py-0"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Etapa</span><strong id="qrOpResumoEtapa">Despacho</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrOpResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrOpResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrOpResumoValor" class="text-right">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl p-2.5 text-[11px] space-y-1.5 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Etapa</span><strong id="qrOpResumoEtapa" class="font-bold text-slate-800 dark:text-slate-100 shrink-0 text-right">Despacho</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Forma de Pagamento</span><strong id="qrOpResumoMetodo" class="font-bold text-slate-800 dark:text-slate-100 shrink-0 text-right">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Instituição / Conta</span><strong id="qrOpResumoOrigem" class="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[55%] text-right">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Valor</span><strong id="qrOpResumoValor" class="font-extrabold text-slate-900 dark:text-white shrink-0 text-right">R$ 0,00</strong></div>
           </div>
-          <button type="button" onclick="qrConfirmarOperacao()" class="w-full h-11 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold cursor-pointer transition">Confirmar Operação</button>
+          <button type="button" onclick="qrConfirmarOperacao()" class="w-full py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-extrabold cursor-pointer transition">Confirmar Operação</button>
         </div>
 
         <!-- Painel Cliente (clint ... / cli ...) -->
-        <div id="qrCliFields" class="hidden space-y-3">
+        <div id="qrCliFields" class="hidden space-y-2">
           <div>
             <label class="lbl" for="qrCliValor">Valor do Cliente (R$)</label>
             <div class="money-wrap">
               <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
-              <input type="text" id="qrCliValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoCli()" onchange="qrAtualizarResumoCli()" onblur="qrAtualizarResumoCli()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <input type="text" id="qrCliValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoCli()" onchange="qrAtualizarResumoCli()" onblur="qrAtualizarResumoCli()" class="field pl-10 font-semibold">
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
+          <div class="qr-panel-grid">
+            <div class="min-w-0">
               <label class="lbl" for="qrCliMetodoSelect">Forma de Pagamento</label>
-              <select id="qrCliMetodoSelect" onchange="qrAoMudarMetodoSelect('cli', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <select id="qrCliMetodoSelect" onchange="qrAoMudarMetodoSelect('cli', this.value)" class="field text-xs font-semibold py-0">
                 <option value="Pix">Pix</option>
                 <option value="Débito">Débito</option>
                 <option value="Crédito">Crédito</option>
                 <option value="Dinheiro">Dinheiro</option>
               </select>
             </div>
-            <div>
+            <div class="min-w-0">
               <label class="lbl" id="qrCliInstituicaoLabel" for="qrCliInstituicaoSelect">Instituição / Conta</label>
-              <select id="qrCliInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('cli', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
+              <select id="qrCliInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('cli', this.value)" class="field text-xs font-semibold py-0"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Cliente</span><strong id="qrCliResumoNome">—</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrCliResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrCliResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Valor</span><strong id="qrCliResumoValor" class="text-right">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl p-2.5 text-[11px] space-y-1.5 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Cliente</span><strong id="qrCliResumoNome" class="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[55%] text-right">—</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Forma de Pagamento</span><strong id="qrCliResumoMetodo" class="font-bold text-slate-800 dark:text-slate-100 shrink-0 text-right">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Instituição / Conta</span><strong id="qrCliResumoOrigem" class="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[55%] text-right">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Valor</span><strong id="qrCliResumoValor" class="font-extrabold text-slate-900 dark:text-white shrink-0 text-right">R$ 0,00</strong></div>
           </div>
-          <button type="button" onclick="qrConfirmarCliente()" class="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-extrabold cursor-pointer transition">Confirmar Cliente</button>
+          <button type="button" onclick="qrConfirmarCliente()" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold cursor-pointer transition">Confirmar Cliente</button>
         </div>
 
         <!-- Painel Despesa / Compra do Dia a Dia (entra no teto) -->
-        <div id="qrGastoFields" class="hidden space-y-3">
+        <div id="qrGastoFields" class="hidden space-y-1.5">
           <div>
             <label class="lbl" for="qrGastoValor">Valor da Compra / Despesa (R$)</label>
             <div class="money-wrap">
-              <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
-              <input type="text" id="qrGastoValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoGasto()" onchange="qrAtualizarResumoGasto()" onblur="qrAtualizarResumoGasto()" class="qr-input-box w-full h-11 pl-10 pr-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <span class="money-prefix text-[11px] font-extrabold text-slate-500 dark:text-slate-400">R$</span>
+              <input type="text" id="qrGastoValor" inputmode="decimal" placeholder="0,00" oninput="qrAtualizarResumoGasto()" onchange="qrAtualizarResumoGasto()" onblur="qrAtualizarResumoGasto()" class="field font-semibold">
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
+          <div class="qr-panel-grid">
+            <div class="min-w-0">
               <label class="lbl" for="qrGastoMetodoSelect">Forma de Pagamento</label>
-              <select id="qrGastoMetodoSelect" onchange="qrAoMudarMetodoSelect('gasto', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500">
+              <select id="qrGastoMetodoSelect" onchange="qrAoMudarMetodoSelect('gasto', this.value)" class="field font-semibold py-0">
                 <option value="Pix">Pix</option>
                 <option value="Débito">Débito</option>
                 <option value="Crédito">Crédito</option>
                 <option value="Dinheiro">Dinheiro</option>
               </select>
             </div>
-            <div>
+            <div class="min-w-0">
               <label class="lbl" id="qrGastoInstituicaoLabel" for="qrGastoInstituicaoSelect">Instituição / Conta</label>
-              <select id="qrGastoInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('gasto', this.value)" class="qr-input-box w-full h-11 px-3 rounded-xl text-sm font-semibold outline-none focus:border-brand-500"></select>
+              <select id="qrGastoInstituicaoSelect" onchange="qrAoMudarInstituicaoSelect('gasto', this.value)" class="field font-semibold py-0"></select>
             </div>
           </div>
-          <div class="qr-subbox rounded-xl p-3 text-xs space-y-1.5 num-align">
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Forma de Pagamento</span><strong id="qrGastoResumoMetodo">Pix</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Instituição / Conta</span><strong id="qrGastoResumoOrigem">Nubank</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400">Desconto do gasto</span><strong id="qrGastoResumoValor" class="text-right">- R$ 0,00</strong></div>
-            <div class="flex justify-between items-center gap-2"><span class="text-amber-600 dark:text-amber-400 font-semibold">Consumido no Teto (após lançar)</span><strong class="text-amber-600 dark:text-amber-400 text-right" id="qrGastoResumoConsumido">R$ 0,00</strong></div>
+          <div class="qr-subbox rounded-xl px-2.5 py-2 text-[11px] space-y-1 num-align">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Forma de Pagamento</span><strong id="qrGastoResumoMetodo" class="font-bold text-slate-800 dark:text-slate-100 shrink-0 text-right">Pix</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Instituição / Conta</span><strong id="qrGastoResumoOrigem" class="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[55%] text-right">Nubank</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-500 dark:text-slate-400 truncate">Desconto do gasto</span><strong id="qrGastoResumoValor" class="font-extrabold text-slate-900 dark:text-white shrink-0 text-right">- R$ 0,00</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-amber-600 dark:text-amber-400 font-semibold truncate">Consumido no Teto (após lançar)</span><strong class="text-amber-600 dark:text-amber-400 font-extrabold shrink-0 text-right" id="qrGastoResumoConsumido">R$ 0,00</strong></div>
           </div>
-          <button type="button" onclick="qrConfirmarDespesa()" class="w-full h-11 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-extrabold cursor-pointer transition">Descontar e Registrar</button>
+          <button type="button" onclick="qrConfirmarDespesa()" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold cursor-pointer transition">Registrar</button>
         </div>
       </div>
     </section>
@@ -491,8 +536,13 @@
   </div>
 </main>
 
-<!-- Botão flutuante de percentual de teto -->
-<button type="button" id="qrPctFab" onclick="qrAbrirModalTeto()" aria-label="Abrir controle de teto" class="qr-pct-fab no-print num-align">0%</button>
+<!-- Botão flutuante de percentual de teto (canto inferior esquerdo) -->
+<button type="button" id="qrPctFab" onclick="qrAbrirModalTeto()" aria-label="Abrir controle de teto" class="qr-pct-fab no-print num-align" style="position: fixed; left: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; z-index: 45; background: #10b981; color: #ffffff; font-size: 15px; font-weight: 900; border: none; box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);">0%</button>
+
+<!-- Botão flutuante de acesso ao painel financeiro (canto inferior direito) -->
+<button type="button" id="btn-open-full" onclick="switchTab('finance')" title="Abrir Painel Financeiro" aria-label="Abrir Painel Financeiro" class="qr-nav-fab no-print" style="position: fixed; right: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; z-index: 45;">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+</button>
 
 <!-- Barra de navegação inferior -->
 <nav id="bottom-nav" aria-label="Navegação principal" class="glass fixed bottom-0 w-full z-40 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.08)] no-print transition-colors duration-300">
@@ -525,7 +575,7 @@
         <p id="qrDisplayTeto" onclick="qrIniciarEdicaoTeto()" title="Toque para editar" class="text-xl font-black text-slate-900 dark:text-white cursor-pointer">R$ 3.000,00</p>
         <div id="qrInlineWrapTeto" class="hidden money-wrap mt-0.5">
           <span class="money-prefix text-xs font-extrabold text-slate-500 dark:text-slate-400">R$</span>
-          <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="3000,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="qr-input-box w-full h-10 pl-10 pr-3 rounded-xl text-base font-black outline-none focus:border-brand-500">
+          <input type="text" id="qrInlineInputTeto" inputmode="decimal" placeholder="3000,00" oninput="qrAoDigitarTetoInline()" onchange="qrAoDigitarTetoInline()" onkeydown="qrTratarTeclaInline(event)" onblur="qrConfirmarEdicaoInline(false)" class="field pl-11 text-base font-black">
         </div>
       </div>
 
@@ -1151,7 +1201,17 @@ function switchTab(tab) {
   const btnNew = document.getElementById('btn-new'); if (btnNew) btnNew.classList.toggle('hidden', tab !== 'orders');
   const bottomNav = document.getElementById('bottom-nav'); if (bottomNav) bottomNav.classList.toggle('hidden', tab === 'quick');
   document.body.classList.toggle('no-bottom-nav', tab === 'quick');
-  const fab = document.getElementById('qrPctFab'); if (fab) fab.classList.toggle('hidden', tab !== 'quick');
+  const isQuick = tab === 'quick';
+  const fab = document.getElementById('qrPctFab');
+  if (fab) {
+    fab.classList.toggle('hidden', !isQuick);
+    fab.style.display = isQuick ? 'inline-flex' : 'none';
+  }
+  const finFab = document.getElementById('btn-open-full');
+  if (finFab) {
+    finFab.classList.toggle('hidden', !isQuick);
+    finFab.style.display = isQuick ? 'inline-flex' : 'none';
+  }
   updateHeaderTabIcon(tab);
   const title = document.getElementById('header-title'); const sub = document.getElementById('header-subtitle');
   if (tab === 'quick') { if (title) title.textContent = 'Busca Rápida'; if (sub) sub.textContent = 'Busca · Operação · Cliente · Despesa'; recalcularConsumidoTeto(); }
@@ -1558,7 +1618,7 @@ function qrRenderBuscaPedidos(texto) {
     (o.pedido || '').toLowerCase().includes(q) ||
     (o.cliente || '').toLowerCase().includes(q) ||
     (o.cidadeOrigem || '').toLowerCase().includes(q)
-  ).slice(0, 4);
+  ).slice(0, 3);
 
   if (!matches.length) {
     box.classList.add('hidden');
@@ -1566,14 +1626,14 @@ function qrRenderBuscaPedidos(texto) {
     return;
   }
 
-  box.innerHTML = `<p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Pedidos Encontrados</p>` +
+  box.innerHTML = `<p class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Pedidos Encontrados</p>` +
     matches.map(o => `
-      <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left p-2.5 rounded-xl qr-subbox hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
+      <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left px-2.5 py-1.5 rounded-xl qr-subbox hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
         <div class="min-w-0">
-          <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
-          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)} · Toque para abrir recibo</p>
+          <p class="text-[11px] font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
+          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtShortDT(o.saida)}</p>
         </div>
-        <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
+        <span class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
       </button>
     `).join('');
   box.classList.remove('hidden');
@@ -1609,8 +1669,11 @@ function qrLimparBuscaCompleta() {
 
 function qrResetarModoBusca() {
   const chip = document.getElementById('qrModeChip');
-  chip.className = 'qr-pill text-[11px] font-bold px-2.5 py-1 rounded-full';
-  chip.textContent = 'Aguardando digitação';
+  if (chip) {
+    chip.className = 'qr-pill text-[11px] font-bold px-2.5 py-1 rounded-full';
+    chip.textContent = 'Aguardando digitação';
+    chip.classList.add('hidden');
+  }
   const box = document.getElementById('qrSearchMatches');
   if (box) { box.classList.add('hidden'); box.innerHTML = ''; }
   qrFecharPainelDinamico();
@@ -1621,24 +1684,25 @@ function qrFecharPainelDinamico() { document.getElementById('qrDynamicPanel').cl
 function qrAvaliarEntrada(texto) {
   const panel = document.getElementById('qrDynamicPanel'); const chip = document.getElementById('qrModeChip');
   const tag = document.getElementById('qrPanelTag'); const title = document.getElementById('qrPanelTitle');
+  if (chip) {
+    chip.textContent = '';
+    chip.classList.add('hidden');
+  }
   document.getElementById('qrOpFields').classList.add('hidden'); document.getElementById('qrCliFields').classList.add('hidden'); document.getElementById('qrGastoFields').classList.add('hidden');
   if (/^op\b/i.test(texto)) {
     const nome = texto.replace(/^op\s*/i, '').trim() || 'Compra / Operação';
-    chip.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30';
-    chip.textContent = `Operação: ${nome}`; tag.textContent = 'OP · COMPRA / OPERAÇÃO (FORA DO TETO)'; title.textContent = `Operação — ${nome}`;
+    tag.textContent = 'OP · COMPRA / OPERAÇÃO (FORA DO TETO)'; title.textContent = `Operação — ${nome}`;
     qrSincronizarSelectsContexto('op');
     document.getElementById('qrOpFields').classList.remove('hidden'); panel.classList.remove('hidden'); qrAtualizarResumoOp(); return;
   }
   if (isClientQuickCommand(texto)) {
     const nome = extractClientCommandName(texto) || 'Cliente';
-    chip.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30';
-    chip.textContent = `Cliente: ${nome}`; tag.textContent = 'CLINT · CLIENTE'; title.textContent = `Cliente — ${nome}`;
+    tag.textContent = 'CLINT · CLIENTE'; title.textContent = `Cliente — ${nome}`;
     document.getElementById('qrCliResumoNome').textContent = nome;
     qrSincronizarSelectsContexto('cli');
     document.getElementById('qrCliFields').classList.remove('hidden'); panel.classList.remove('hidden'); qrAtualizarResumoCli(); return;
   }
-  chip.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30';
-  chip.textContent = `Despesa: ${texto}`; tag.textContent = 'DESPESA DO DIA A DIA (ENTRA NO TETO)'; title.textContent = `Despesa — ${texto}`;
+  tag.textContent = 'DESPESA DO DIA A DIA (ENTRA NO TETO)'; title.textContent = `Despesa — ${texto}`;
   qrSincronizarSelectsContexto('gasto');
   document.getElementById('qrGastoFields').classList.remove('hidden'); panel.classList.remove('hidden'); qrAtualizarResumoGasto();
 }
