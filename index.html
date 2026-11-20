@@ -657,6 +657,7 @@
       </div>
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
         <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50"><h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">🏆 Resumo por Cliente (Ranking)</h2></div>
+        <div id="adm-client-detail-report" class="hidden p-4 bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-700 space-y-2.5 text-xs"></div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400"><thead class="bg-slate-50 dark:bg-slate-900/50 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700"><tr><th class="px-4 py-3">Cliente</th><th class="px-4 py-3 text-center">Qtd</th><th class="px-4 py-3 text-right">Lucro Total</th></tr></thead><tbody id="adm-client-table" class="divide-y divide-slate-100 dark:divide-slate-700/50"></tbody></table>
         </div>
@@ -3335,6 +3336,64 @@ function renderPatrimonioBens() {
 }
 
 // Relatórios administrativos e gráficos
+function renderAdminClientReport(clientName) {
+  const detailBox = document.getElementById('adm-client-detail-report');
+  if (!detailBox) return;
+  if (!clientName) {
+    detailBox.classList.add('hidden');
+    detailBox.innerHTML = '';
+    return;
+  }
+
+  const clientOrders = orders.filter(o => (o.cliente || 'Sem Cliente') === clientName);
+  let totalInv = 0, totalFat = 0, totalLucro = 0;
+  clientOrders.forEach(o => {
+    const v = calcValores(o);
+    totalInv += v.inv;
+    totalFat += v.faturamento;
+    totalLucro += v.lucroLiq;
+  });
+
+  detailBox.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <div>
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">Relatório Analítico do Cliente</p>
+        <h3 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(clientName)}</h3>
+      </div>
+      <button type="button" onclick="renderAdminClientReport('')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 cursor-pointer">Fechar</button>
+    </div>
+    <div class="grid grid-cols-3 gap-2 pt-1">
+      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
+        <span class="text-[10px] font-bold uppercase text-slate-500 block">Pedidos</span>
+        <b class="text-xs font-black text-slate-900 dark:text-white">${clientOrders.length}</b>
+      </div>
+      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
+        <span class="text-[10px] font-bold uppercase text-slate-500 block">Faturamento</span>
+        <b class="text-xs font-black text-brand-600 dark:text-indigo-400">${money(totalFat)}</b>
+      </div>
+      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
+        <span class="text-[10px] font-bold uppercase text-slate-500 block">Lucro Líquido</span>
+        <b class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(totalLucro)}</b>
+      </div>
+    </div>
+    <div class="space-y-1.5 pt-1">
+      ${clientOrders.length ? clientOrders.map(o => {
+        const v = calcValores(o);
+        return `
+          <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/70">
+            <div class="min-w-0">
+              <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(statusOf(o).label)}</p>
+              <p class="text-[10px] text-slate-500 truncate">${fmtDT(o.saida)} · Invest.: ${money(v.inv)}</p>
+            </div>
+            <span class="font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(v.lucroLiq)}</span>
+          </div>
+        `;
+      }).join('') : '<p class="text-slate-400 text-center py-2">Sem registros para este cliente.</p>'}
+    </div>
+  `;
+  detailBox.classList.remove('hidden');
+}
+
 function renderAdminOrders() {
   let totFat = 0, totLucro = 0;
   const cli = {};
@@ -3358,8 +3417,12 @@ function renderAdminOrders() {
   }).join('');
   const tbody = document.getElementById('adm-client-table');
   const sorted = Object.values(cli).sort((a, b) => b.lucro - a.lucro);
-  if (!sorted.length) tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
-  else tbody.innerHTML = sorted.map(c => `<tr><td class="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td><td class="px-4 py-3 text-center">${c.count}</td><td class="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${money(c.lucro)}</td></tr>`).join('');
+  if (!sorted.length) {
+    renderAdminClientReport('');
+    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
+  } else {
+    tbody.innerHTML = sorted.map(c => `<tr onclick="renderAdminClientReport(${JSON.stringify(c.name)})" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 transition"><td class="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td><td class="px-4 py-3 text-center">${c.count}</td><td class="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${money(c.lucro)}</td></tr>`).join('');
+  }
 }
 
 function renderAdminFinance() {
