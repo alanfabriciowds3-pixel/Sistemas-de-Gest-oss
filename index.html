@@ -335,7 +335,7 @@
     </div>
     <div class="flex gap-2.5">
       <button type="button" onclick="resolveAppConfirm(false)" class="flex-1 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold cursor-pointer">Cancelar</button>
-      <div class="grid grid-cols-2 gap-2 pt-2"><button type="button" onclick="openEditCardFromDetail()" class="py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer">✏️ Ajustar Limite/Fatura</button><button type="button" id="btnPayCardFromDetail" onclick="openPayCardFromDetail(event)" class="py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-sm transition cursor-pointer">💳 Pagar Fatura</button></div>
+      <button type="button" id="appConfirmOkBtn" onclick="resolveAppConfirm(true)" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold cursor-pointer">Confirmar</button>
     </div>
   </div>
 </div>
@@ -796,14 +796,31 @@
   </div>
 </div>
 
+<!-- Modal Pagar Fatura do Cartão -->
 <div id="payCardModal" role="dialog" aria-modal="true" aria-labelledby="payCardModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payCardModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Pagar Fatura do Cartão</h3><button type="button" onclick="document.getElementById('payCardModal').classList.add('hidden')" aria-label="Fechar pagamento de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payCardModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Pagar Fatura do Cartão</h3><button type="button" onclick="closePayCardModal()" aria-label="Fechar pagamento de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
     <form onsubmit="confirmPayCard(event)" class="p-5 space-y-4 num-align">
       <input type="hidden" id="payCardId">
-      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><p class="text-[10px] text-slate-500 uppercase font-bold" id="payCardNameDesc">Cartão</p><p class="text-xl font-black text-purple-600" id="payCardAmountDesc">R$ 0,00</p></div>
-      <div><label class="lbl" for="payCardAccount">De qual conta vai sair o dinheiro para pagar?</label><select id="payCardAccount" required class="field font-semibold"></select></div>
-      <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md cursor-pointer">Confirmar Pagamento (Liberar Limite)</button>
+      <div class="bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-center space-y-1">
+        <p class="text-[10px] text-slate-500 uppercase font-bold" id="payCardNameDesc">Cartão</p>
+        <p class="text-xl font-black text-purple-600 dark:text-purple-400" id="payCardAmountDesc">R$ 0,00</p>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400" id="payCardAvailPreview">Limite disponível após baixar: R$ 0,00</p>
+      </div>
+      <div>
+        <label class="lbl" for="payCardAmountInput">Valor a Pagar (R$)</label>
+        <div class="money-wrap">
+          <span class="money-prefix text-xs font-extrabold text-purple-600 dark:text-purple-400">R$</span>
+          <input type="number" id="payCardAmountInput" step="0.01" min="0.01" inputmode="decimal" oninput="updatePayCardValidationUI()" onchange="updatePayCardValidationUI()" class="field pl-11 font-bold text-purple-600 dark:text-purple-400">
+        </div>
+      </div>
+      <div>
+        <label class="lbl" for="payCardAccount">De qual conta vai sair o dinheiro?</label>
+        <select id="payCardAccount" required onchange="updatePayCardValidationUI()" class="field font-semibold"></select>
+        <p id="payCardAccountBalanceHint" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1.5">Saldo na conta selecionada: R$ 0,00</p>
+      </div>
+      <p id="payCardValidationMsg" class="hidden rounded-xl px-3 py-2 text-[11px] font-bold bg-rose-500/15 border border-rose-500/40 text-rose-700 dark:text-rose-300"></p>
+      <button type="submit" id="btnConfirmPayCard" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md cursor-pointer transition">Confirmar Pagamento (Liberar Limite)</button>
     </form>
   </div>
 </div>
@@ -1052,7 +1069,7 @@ const ACCOUNTS = [
   { id: 'caixa', name: 'Caixa Econômica', style: 'border-top: 5px solid #2563eb;', badgeBg: 'background-color: rgba(37, 99, 235, 0.15); color: #2563eb;' },
   { id: 'nubank', name: 'Nubank', style: 'border-top: 5px solid #9333ea;', badgeBg: 'background-color: rgba(147, 51, 234, 0.15); color: #9333ea;' },
   { id: 'c6', name: 'C6 Bank', style: 'border-top: 5px solid #334155;', badgeBg: 'background-color: rgba(51, 65, 85, 0.15); color: #64748b;' },
-  { id: 'inter', name: 'Inter', style: 'border-top: 5px solid #f97316;', badgeBg: 'background-color: rgba(249, 115, 22, 0.15); color: #f97316;' }
+  { id: 'inter', name: 'Banco Inter', style: 'border-top: 5px solid #f97316;', badgeBg: 'background-color: rgba(249, 115, 22, 0.15); color: #f97316;' }
 ];
 
 const BANK_ACCOUNTS = ACCOUNTS.filter(a => a.id !== 'cash');
@@ -1097,6 +1114,7 @@ let toastTimer = null;
 let qrEditandoTeto = false;
 let activeSearchQuery = '';
 const cardAdjustCycle = {};
+
 // Utilitários de data, moeda e armazenamento
 function pad(n) { return String(n).padStart(2, '0'); }
 function todayISO() { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -1204,6 +1222,105 @@ function getAccountLabel(accountId) {
     return card ? `Cartão ${card.name}` : 'Cartão de Crédito';
   }
   return accountId;
+}
+
+// Backup JSON e exportação do arquivo HTML
+function exportJSON() {
+  closeMenu();
+  try {
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      orders,
+      txs,
+      creditCards,
+      patrimonioBens,
+      quickState,
+      historyData,
+      userProfile
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup-gestao-${todayISO()}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('Backup JSON exportado com sucesso!', 'success');
+  } catch (err) {
+    showToast('Não foi possível exportar o backup JSON.', 'error');
+  }
+}
+
+function importJSON(event) {
+  const file = event && event.target && event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || typeof data !== 'object') {
+        showToast('Arquivo de backup inválido.', 'error');
+        return;
+      }
+      if (Array.isArray(data.orders)) orders = data.orders;
+      if (Array.isArray(data.txs)) txs = data.txs;
+      if (Array.isArray(data.creditCards)) creditCards = normalizeCreditCardsList(data.creditCards);
+      if (Array.isArray(data.patrimonioBens)) patrimonioBens = data.patrimonioBens;
+      if (data.quickState && typeof data.quickState === 'object') {
+        quickState = {
+          ...JSON.parse(JSON.stringify(quickDefaultState)),
+          ...data.quickState,
+          metodos: { ...quickDefaultState.metodos, ...(data.quickState.metodos || {}) },
+          bancos: { ...quickDefaultState.bancos, ...(data.quickState.bancos || {}) },
+          cartoes: { ...quickDefaultState.cartoes, ...(data.quickState.cartoes || {}) }
+        };
+      }
+      if (data.historyData && typeof data.historyData === 'object') {
+        historyData = {
+          clients: Array.isArray(data.historyData.clients) ? data.historyData.clients : [],
+          cities: Array.isArray(data.historyData.cities) ? data.historyData.cities : [],
+          carriers: Array.isArray(data.historyData.carriers) ? data.historyData.carriers : []
+        };
+      }
+      if (data.userProfile && typeof data.userProfile === 'object') {
+        userProfile = {
+          name: data.userProfile.name || 'Meu Perfil',
+          cpf: data.userProfile.cpf || '',
+          rg: data.userProfile.rg || ''
+        };
+      }
+      saveAll();
+      updateMenuUserDisplay();
+      renderDatalists();
+      populateSelects();
+      renderOrders();
+      renderFinance();
+      if (currentTab === 'admin') switchAdminTab(currentAdminTab);
+      showToast('Backup importado com sucesso!', 'success');
+    } catch (err) {
+      showToast('Falha ao ler o arquivo JSON.', 'error');
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function exportSystemCode() {
+  closeMenu();
+  try {
+    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sistema-gestao-definitivo-${todayISO()}.html`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('Arquivo .html exportado com sucesso!', 'success');
+  } catch (err) {
+    showToast('Não foi possível baixar o arquivo .html.', 'error');
+  }
 }
 
 // Perfil
@@ -1609,7 +1726,7 @@ function isDespesaNoTeto(tx) {
   if (tx.isCardBillPayment === true) return false;
   const cat = String(tx.cat || '').trim().toLowerCase();
   const desc = String(tx.desc || '').trim().toLowerCase();
-  if (cat === 'pagamento de fatura' || /^pagamento\s+fatura\b/i.test(desc)) return false;
+  if (cat === 'pagamento de fatura' || /^pagamento\s+(de\s+)?fatura\b/i.test(desc)) return false;
   if (cat === 'transferência' || cat === 'transferencia') return false;
   if (/^(transferência|transferencia)\s+(para|de)\s+/i.test(desc)) return false;
   if (quickState.tetoCicloInicio) {
@@ -1847,7 +1964,7 @@ function qrRegistrarTransacao(desc, valor, tipo, origemStr, accountId, opts) {
     desc,
     amount: valor,
     type: tipo,
-    cat: tipo === 'income' ? 'Receita' : (opts && opts.isOp ? 'Despesa Operacional' : 'Despesa'),
+    cat: tipo === 'income' ? 'Receita' : (opts && opts.isCardBillPayment ? 'Pagamento de Fatura' : (opts && opts.isOp ? 'Despesa Operacional' : 'Despesa')),
     date: todayISO(),
     createdAt: new Date().toISOString(),
     accountId: accountId || 'cash',
@@ -1856,6 +1973,7 @@ function qrRegistrarTransacao(desc, valor, tipo, origemStr, accountId, opts) {
     operador,
     paymentMethod: (opts && opts.paymentMethod) || '',
     isOp: !!(opts && opts.isOp),
+    isCardBillPayment: !!(opts && opts.isCardBillPayment),
     orderId: (opts && opts.orderId) || null
   });
   if (tipo === 'expense' && accountId && accountId.startsWith('card_')) {
@@ -2320,10 +2438,11 @@ function renderDatalists() {
   document.getElementById('list-carriers').innerHTML = historyData.carriers.map(c => `<option value="${escapeHtml(c)}">`).join('');
 }
 function populateSelects() {
-  const opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-  const cardOpts = creditCards.map(c => `<option value="card_${c.id}">Cartão: ${c.name}</option>`).join('');
-  ['oAccIn', 'payAccountSelect', 'payCardAccount', 'tFrom', 'tTo'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
+  const opts = ACCOUNTS.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+  const cardOpts = creditCards.map(c => `<option value="card_${escapeHtml(c.id)}">Cartão: ${escapeHtml(c.name)}</option>`).join('');
+  ['oAccIn', 'payAccountSelect', 'tFrom', 'tTo'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
   ['oAccOutMerc', 'oAccOutFrete', 'fAccount'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts + cardOpts; });
+  populatePayCardAccountSelect();
   const a = document.getElementById('oAccIn'); if (a) a.value = 'nubank';
   const b = document.getElementById('oAccOutMerc'); if (b) b.value = 'c6';
   const c = document.getElementById('oAccOutFrete'); if (c) c.value = 'cash';
@@ -2707,9 +2826,9 @@ function getPendingLucros() { return txs.filter(t => t.type === 'income' && t.st
 
 function renderFinance() {
   const acc = document.getElementById('accounts-container');
-  if (acc) acc.innerHTML = ACCOUNTS.map(a => `<div class="min-w-[155px] flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-xs border border-slate-200/70 dark:border-slate-700" style="${a.style}"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 truncate">${a.name}</p><p class="text-sm font-black text-slate-900 dark:text-white mt-1">${money(getAccountBalance(a.id))}</p><button type="button" onclick="openEditBalance('${a.id}')" class="mt-1.5 text-[11px] text-brand-600 dark:text-brand-400 font-bold cursor-pointer">Ajustar</button></div>`).join('');
+  if (acc) acc.innerHTML = ACCOUNTS.map(a => `<div class="min-w-[155px] flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-xs border border-slate-200/70 dark:border-slate-700" style="${a.style}"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 truncate">${escapeHtml(a.name)}</p><p class="text-sm font-black text-slate-900 dark:text-white mt-1">${money(getAccountBalance(a.id))}</p><button type="button" onclick="openEditBalance('${a.id}')" class="mt-1.5 text-[11px] text-brand-600 dark:text-brand-400 font-bold cursor-pointer">Ajustar</button></div>`).join('');
   const cards = document.getElementById('cards-container');
-  if (cards) cards.innerHTML = creditCards.map(c => `<div role="button" tabindex="0" onclick="openCardDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="min-w-[175px] flex-shrink-0 rounded-xl p-3 shadow-xs text-white cursor-pointer" style="background:linear-gradient(135deg, ${c.color}, ${c.color}cc);"><p class="text-[10px] font-bold uppercase opacity-90 truncate">${c.name}</p><p class="text-sm font-black mt-1">${money(Math.max(0, c.limit - c.currentBill))}</p><p class="text-[10px] opacity-90 mt-0.5">Fatura: ${money(c.currentBill)}</p></div>`).join('');
+  if (cards) cards.innerHTML = creditCards.map(c => `<div role="button" tabindex="0" onclick="openCardDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="min-w-[175px] flex-shrink-0 rounded-xl p-3 shadow-xs text-white cursor-pointer" style="background:linear-gradient(135deg, ${c.color}, ${c.color}cc);"><p class="text-[10px] font-bold uppercase opacity-90 truncate">${escapeHtml(c.name)}</p><p class="text-sm font-black mt-1">${money(Math.max(0, c.limit - c.currentBill))}</p><p class="text-[10px] opacity-90 mt-0.5">Fatura: ${money(c.currentBill)}</p></div>`).join('');
   const pendLucroTotal = getPendingLucros().reduce((a, t) => a + t.amount, 0);
   const patr = document.getElementById('fin-patrimonio'); if (patr) patr.textContent = money(getTotalBankBalance() + pendLucroTotal);
   const pend = document.getElementById('fin-pending-lucro'); if (pend) pend.textContent = money(pendLucroTotal);
@@ -2855,6 +2974,7 @@ function saveEditBalance(e) {
   showToast('Saldo ajustado.', 'success');
 }
 
+// Cartões de crédito: detalhes, ajuste em 3 etapas e pagamento de fatura
 function openCardDetail(cardId) {
   const c = creditCards.find(x => x.id === cardId);
   if (!c) return;
@@ -2870,240 +2990,538 @@ function openCardDetail(cardId) {
 function applyCardDueDayStage(stage) {
   const dueInput = document.getElementById('cardDueDay');
   const dueLabel = document.getElementById('cardDueDayLabel');
-  const hintEl = document.getElementById('cardAdjustStageHint');
+  const stageHint = document.getElementById('cardAdjustStageHint');
   if (!dueInput) return;
 
-  if (stage === 1) {
-    // Etapa 2 (2º clique): destrava o campo do dia de vencimento (1 a 31)
-    dueInput.disabled = false;
-    dueInput.readOnly = false;
-    if (dueLabel) dueLabel.textContent = 'Vencimento (Liberado 🔓)';
-    if (hintEl) hintEl.textContent = 'Etapa 2/3: Dia de vencimento liberado (1 a 31) para ajuste.';
-    dueInput.classList.remove('opacity-70');
-  } else {
-    // Etapa 0 (1º clique) ou Etapa 2 do ciclo (3º clique): mantém o vencimento travado
+  if (stage === 0) {
     dueInput.disabled = true;
-    dueInput.readOnly = true;
     if (dueLabel) dueLabel.textContent = 'Vencimento (Travado 🔒)';
-    if (hintEl) {
-      hintEl.textContent = stage === 2
-        ? 'Etapa 3/3: Vencimento travado novamente. Salve para confirmar.'
-        : 'Etapa 1/3: Limite e fatura liberados; vencimento travado.';
-    }
-    dueInput.classList.remove('opacity-70');
+    if (stageHint) stageHint.textContent = 'Etapa 1/3: Limite e fatura liberados; vencimento travado.';
+  } else if (stage === 1) {
+    dueInput.disabled = false;
+    if (dueLabel) dueLabel.textContent = 'Vencimento (Liberado)';
+    if (stageHint) stageHint.textContent = 'Etapa 2/3: Vencimento liberado para edição.';
+  } else {
+    dueInput.disabled = true;
+    if (dueLabel) dueLabel.textContent = 'Vencimento (Travado 🔒)';
+    if (stageHint) stageHint.textContent = 'Etapa 3/3: Vencimento travado novamente.';
   }
 }
 
 function openEditCardFromDetail() {
-  try {
-    const id = document.getElementById('detCardId').value;
-    const c = creditCards.find(x => x.id === id);
-    if (!c) return;
+  const id = document.getElementById('detCardId').value;
+  document.getElementById('cardDetailModal').classList.add('hidden');
+  openCardModal(id);
+}
 
-    const prevStage = Number.isInteger(cardAdjustCycle[id]) ? cardAdjustCycle[id] : 2;
-    const nextStage = (prevStage + 1) % 3;
-    cardAdjustCycle[id] = nextStage;
+function openCardModal(cardId) {
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c) return;
+  const currentCycle = cardAdjustCycle[cardId] || 0;
+  const nextCycle = (currentCycle + 1) % 3;
+  cardAdjustCycle[cardId] = nextCycle;
 
-    document.getElementById('cardId').value = id;
-    document.getElementById('cardName').value = c.name;
-    document.getElementById('cardLimit').value = Number(c.limit) || 0;
-    document.getElementById('cardDueDay').value = parseInt(c.dueDay, 10) || 1;
-    document.getElementById('cardCurrentBill').value = Number(c.currentBill) || 0;
-
-    applyCardDueDayStage(nextStage);
-
-    document.getElementById('cardDetailModal').classList.add('hidden');
-    document.getElementById('cardModal').classList.remove('hidden');
-
-    if (nextStage === 1) {
-      const dueInput = document.getElementById('cardDueDay');
-      setTimeout(() => { if (dueInput) { dueInput.focus(); dueInput.select(); } }, 0);
-    }
-  } catch (err) {
-    showToast('Erro ao abrir o ajuste do cartão.', 'error');
-  }
+  document.getElementById('cardId').value = cardId;
+  document.getElementById('cardName').value = c.name;
+  document.getElementById('cardLimit').value = c.limit;
+  document.getElementById('cardCurrentBill').value = c.currentBill;
+  document.getElementById('cardDueDay').value = c.dueDay;
+  applyCardDueDayStage(nextCycle);
+  document.getElementById('cardModal').classList.remove('hidden');
 }
 
 function saveCardConfig(e) {
   e.preventDefault();
-  try {
-    const id = document.getElementById('cardId').value;
-    const c = creditCards.find(x => x.id === id);
-    if (!c) return;
+  const id = document.getElementById('cardId').value;
+  const c = creditCards.find(x => x.id === id);
+  if (!c) return;
+  const limitVal = parseFloat(document.getElementById('cardLimit').value);
+  const billVal = parseFloat(document.getElementById('cardCurrentBill').value);
+  const dueInput = document.getElementById('cardDueDay');
+  const dueVal = parseInt(dueInput.value, 10);
 
-    const newLimit = parseFloat(document.getElementById('cardLimit').value);
-    const newBill = parseFloat(document.getElementById('cardCurrentBill').value);
-    const rawDue = parseInt(document.getElementById('cardDueDay').value, 10);
-
-    c.limit = Number.isFinite(newLimit) && newLimit >= 0 ? newLimit : 0;
-    c.currentBill = Number.isFinite(newBill) && newBill >= 0 ? newBill : 0;
-    if (Number.isInteger(rawDue) && rawDue >= 1 && rawDue <= 31) {
-      c.dueDay = rawDue;
-    }
-
-    // Reaplica o travamento padrão após salvar mantendo o ciclo coerente
-    const dueInput = document.getElementById('cardDueDay');
-    const dueLabel = document.getElementById('cardDueDayLabel');
-    if (dueInput) dueInput.disabled = true;
-    if (dueLabel) dueLabel.textContent = 'Vencimento (Travado 🔒)';
-
-    saveAll();
-    document.getElementById('cardModal').classList.add('hidden');
-    renderFinance();
-    showToast(`Cartão ${c.name} salvo (Venc. Dia ${c.dueDay}).`, 'success');
-  } catch (err) {
-    showToast('Não foi possível salvar os dados do cartão.', 'error');
+  c.limit = Number.isFinite(limitVal) && limitVal >= 0 ? limitVal : 0;
+  c.currentBill = Number.isFinite(billVal) && billVal >= 0 ? billVal : 0;
+  if (!dueInput.disabled && Number.isFinite(dueVal) && dueVal >= 1 && dueVal <= 31) {
+    c.dueDay = dueVal;
   }
+
+  saveAll();
+  document.getElementById('cardModal').classList.add('hidden');
+  renderFinance();
+  showToast('Configuração do cartão salva.', 'success');
 }
 
-function getSelectedCardIdForPayment() {
-  const detInput = document.getElementById('detCardId');
-  const payInput = document.getElementById('payCardId');
-  const rawId = (payInput && payInput.value) || (detInput && detInput.value) || '';
-  return String(rawId).replace(/^card_/, '').trim();
-}
-
-function ensurePayCardAccountOptions() {
+function populatePayCardAccountSelect(preferredAccountId) {
   const select = document.getElementById('payCardAccount');
   if (!select) return;
-  const currentVal = select.value;
-  select.innerHTML = ACCOUNTS.map(a => `<option value="${escapeHtml(a.id)}">${escapeHtml(a.name)}</option>`).join('');
-  if (currentVal && Array.from(select.options).some(opt => opt.value === currentVal)) {
+  const currentVal = preferredAccountId || select.value || 'caixa';
+  select.innerHTML = ACCOUNTS.map(a => {
+    const bal = getAccountBalance(a.id);
+    return `<option value="${escapeHtml(a.id)}">${escapeHtml(a.name)} · Saldo: ${money(bal)}</option>`;
+  }).join('');
+  if (ACCOUNTS.some(a => a.id === currentVal)) {
     select.value = currentVal;
-  } else if (ACCOUNTS.length > 0) {
-    const preferred = ACCOUNTS.find(a => a.id === 'caixa') || ACCOUNTS[0];
-    select.value = preferred.id;
+  } else if (ACCOUNTS[0]) {
+    select.value = ACCOUNTS[0].id;
   }
 }
 
-function openPayCardFromDetail(e) {
-  if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
-  try {
-    const cardId = getSelectedCardIdForPayment();
-    const card = creditCards.find(x => String(x.id).toLowerCase() === String(cardId).toLowerCase());
-    if (!card) {
-      showToast('Selecione um cartão válido para pagar a fatura.', 'error');
-      return;
-    }
-
-    const billAmount = Math.max(0, Number(card.currentBill) || 0);
-    if (billAmount <= 0) {
-      showToast(`O cartão ${card.name} não possui fatura aberta (R$ 0,00).`, 'info');
-      return;
-    }
-
-    ensurePayCardAccountOptions();
-
-    const payIdEl = document.getElementById('payCardId');
-    const nameDescEl = document.getElementById('payCardNameDesc');
-    const amountDescEl = document.getElementById('payCardAmountDesc');
-    const detailModal = document.getElementById('cardDetailModal');
-    const payModal = document.getElementById('payCardModal');
-
-    if (payIdEl) payIdEl.value = card.id;
-    if (nameDescEl) nameDescEl.textContent = `Cartão ${card.name} · Venc. Dia ${card.dueDay}`;
-    if (amountDescEl) amountDescEl.textContent = money(billAmount);
-
-    if (detailModal) detailModal.classList.add('hidden');
-    if (payModal) {
-      payModal.classList.remove('hidden');
-      const accSelect = document.getElementById('payCardAccount');
-      if (accSelect) setTimeout(() => accSelect.focus(), 0);
-    }
-  } catch (err) {
-    showToast('Erro ao abrir o pagamento da fatura do cartão.', 'error');
+function openPayCardFromDetail() {
+  const id = document.getElementById('detCardId').value;
+  const c = creditCards.find(x => x.id === id);
+  if (!c) return;
+  const billAmount = Number(c.currentBill) || 0;
+  if (billAmount <= 0) {
+    showToast(`A fatura atual do cartão ${c.name} já está em R$ 0,00.`, 'info');
+    return;
   }
+  document.getElementById('cardDetailModal').classList.add('hidden');
+  openPayCardModal(id);
+}
+
+function openPayCardModal(cardId) {
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c) return;
+  const billAmount = Number(c.currentBill) || 0;
+  const limitAmount = Number(c.limit) || 0;
+
+  document.getElementById('payCardId').value = cardId;
+  document.getElementById('payCardNameDesc').textContent = `Fatura Aberta · Cartão ${c.name}`;
+  document.getElementById('payCardAmountDesc').textContent = money(billAmount);
+  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(Math.max(0, limitAmount))}`;
+
+  const amtInput = document.getElementById('payCardAmountInput');
+  if (amtInput) {
+    amtInput.value = billAmount > 0 ? billAmount.toFixed(2) : '';
+    amtInput.max = billAmount > 0 ? billAmount.toFixed(2) : '0';
+  }
+
+  // Escolhe automaticamente a primeira conta com saldo suficiente, mantendo Caixa Econômica como preferência quando possível
+  const contaPreferida = ACCOUNTS.find(a => a.id === 'caixa' && getAccountBalance(a.id) >= billAmount)
+    || ACCOUNTS.find(a => getAccountBalance(a.id) >= billAmount)
+    || ACCOUNTS.find(a => a.id === 'caixa')
+    || ACCOUNTS[0];
+
+  populatePayCardAccountSelect(contaPreferida ? contaPreferida.id : 'caixa');
+  document.getElementById('payCardModal').classList.remove('hidden');
+  updatePayCardValidationUI();
+}
+
+function closePayCardModal() {
+  const modal = document.getElementById('payCardModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function updatePayCardValidationUI() {
+  const cardId = document.getElementById('payCardId')?.value;
+  const c = creditCards.find(x => x.id === cardId);
+  const billAmount = c ? Math.max(0, Number(c.currentBill) || 0) : 0;
+  const limitAmount = c ? Math.max(0, Number(c.limit) || 0) : 0;
+
+  const amtInput = document.getElementById('payCardAmountInput');
+  const rawPay = amtInput && amtInput.value !== '' ? parseFloat(amtInput.value) : billAmount;
+  const payAmount = Number.isFinite(rawPay) && rawPay > 0 ? rawPay : 0;
+
+  const accSelect = document.getElementById('payCardAccount');
+  const accId = accSelect ? accSelect.value : 'cash';
+  const accObj = ACCOUNTS.find(a => a.id === accId);
+  const accBalance = getAccountBalance(accId);
+
+  const hintEl = document.getElementById('payCardAccountBalanceHint');
+  const availEl = document.getElementById('payCardAvailPreview');
+  const msgEl = document.getElementById('payCardValidationMsg');
+  const submitBtn = document.getElementById('btnConfirmPayCard');
+
+  if (hintEl) {
+    const afterBal = accBalance - payAmount;
+    hintEl.textContent = `Saldo em ${accObj ? accObj.name : accId}: ${money(accBalance)} · Após pagar: ${money(afterBal)}`;
+    hintEl.className = 'text-[11px] font-semibold mt-1.5 ' + (
+      payAmount > accBalance
+        ? 'text-rose-600 dark:text-rose-400'
+        : 'text-emerald-600 dark:text-emerald-400'
+    );
+  }
+
+  if (availEl) {
+    const remainingBill = Math.max(0, billAmount - payAmount);
+    availEl.textContent = `Limite disponível após pagamento: ${money(Math.max(0, limitAmount - remainingBill))}`;
+  }
+
+  let errorText = '';
+  if (!c) {
+    errorText = 'Cartão não encontrado.';
+  } else if (billAmount <= 0) {
+    errorText = `A fatura atual do cartão ${c.name} está zerada (R$ 0,00).`;
+  } else if (payAmount <= 0) {
+    errorText = 'Informe um valor de pagamento maior que R$ 0,00.';
+  } else if (payAmount > billAmount + 0.005) {
+    errorText = `O valor do pagamento (${money(payAmount)}) é maior que a fatura aberta (${money(billAmount)}).`;
+  } else if (payAmount > accBalance + 0.005) {
+    errorText = `Saldo insuficiente em ${accObj ? accObj.name : accId}: disponível ${money(accBalance)} para pagar ${money(payAmount)}.`;
+  }
+
+  if (msgEl) {
+    if (errorText) {
+      msgEl.textContent = `⚠️ ${errorText}`;
+      msgEl.classList.remove('hidden');
+    } else {
+      msgEl.textContent = '';
+      msgEl.classList.add('hidden');
+    }
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = !!errorText;
+    submitBtn.classList.toggle('opacity-50', !!errorText);
+    submitBtn.classList.toggle('cursor-not-allowed', !!errorText);
+  }
+
+  return errorText;
 }
 
 function confirmPayCard(e) {
-  if (e && typeof e.preventDefault === 'function') e.preventDefault();
-  try {
-    const cardId = getSelectedCardIdForPayment();
-    const cardIndex = creditCards.findIndex(x => String(x.id).toLowerCase() === String(cardId).toLowerCase());
-    if (cardIndex < 0) {
-      showToast('Cartão não encontrado para efetuar o pagamento.', 'error');
-      return;
-    }
+  e.preventDefault();
+  const cardId = document.getElementById('payCardId').value;
+  const accId = document.getElementById('payCardAccount').value;
+  const c = creditCards.find(x => x.id === cardId);
+  if (!c) {
+    showToast('Cartão não encontrado.', 'error');
+    return;
+  }
 
-    const card = creditCards[cardIndex];
-    const billAmount = Math.max(0, Number(card.currentBill) || 0);
-    if (billAmount <= 0) {
-      showToast(`A fatura do cartão ${card.name} já está zerada.`, 'info');
-      const payModal = document.getElementById('payCardModal');
-      if (payModal) payModal.classList.add('hidden');
-      renderFinance();
-      return;
-    }
+  const billAmount = Math.max(0, Number(c.currentBill) || 0);
+  if (billAmount <= 0) {
+    showToast(`A fatura do cartão ${c.name} já está zerada (R$ 0,00).`, 'error');
+    updatePayCardValidationUI();
+    return;
+  }
 
-    const accSelect = document.getElementById('payCardAccount');
-    const accountId = (accSelect && accSelect.value) ? accSelect.value : 'cash';
-    const accountLabel = getAccountLabel(accountId);
+  const amtInput = document.getElementById('payCardAmountInput');
+  const rawVal = amtInput && amtInput.value !== '' ? parseFloat(amtInput.value) : billAmount;
+  const payAmount = Number.isFinite(rawVal) ? Number(rawVal.toFixed(2)) : 0;
 
-    // Registra a despesa paga na conta de origem (não conta no teto mensal de gastos pessoais)
-    txs.unshift({
-      id: genId(),
-      desc: `Pagamento Fatura ${card.name}`,
-      amount: billAmount,
-      type: 'expense',
-      cat: 'Pagamento de Fatura',
-      date: todayISO(),
-      createdAt: new Date().toISOString(),
-      accountId,
-      status: 'paid',
-      isCardBillPayment: true,
-      cardId: card.id
-    });
+  if (payAmount <= 0) {
+    showToast('Informe um valor válido maior que R$ 0,00.', 'error');
+    updatePayCardValidationUI();
+    return;
+  }
 
-    // Zera a fatura atual do cartão específico, restaurando seu limite disponível
-    creditCards[cardIndex] = {
-      ...card,
-      currentBill: 0
-    };
+  if (payAmount > billAmount + 0.005) {
+    showToast(`Valor superior à fatura atual (${money(billAmount)}).`, 'error');
+    updatePayCardValidationUI();
+    return;
+  }
 
-    saveAll();
+  const accObj = ACCOUNTS.find(a => a.id === accId);
+  if (!accObj) {
+    showToast('Selecione uma conta de origem válida.', 'error');
+    return;
+  }
 
-    const payModal = document.getElementById('payCardModal');
-    const detailModal = document.getElementById('cardDetailModal');
-    if (payModal) payModal.classList.add('hidden');
-    if (detailModal) detailModal.classList.add('hidden');
+  const accBalance = getAccountBalance(accId);
+  if (payAmount > accBalance + 0.005) {
+    showToast(`Saldo insuficiente em ${accObj.name} (${money(accBalance)} disponível).`, 'error');
+    updatePayCardValidationUI();
+    return;
+  }
 
-    renderFinance();
-    showToast(`Fatura de ${money(billAmount)} do cartão ${card.name} paga via ${accountLabel}.`, 'success');
-  } catch (err) {
-    showToast('Não foi possível confirmar o pagamento da fatura.', 'error');
+  const effectivePay = Math.min(billAmount, payAmount);
+  const nextBill = Math.max(0, Number((billAmount - effectivePay).toFixed(2)));
+  c.currentBill = nextBill;
+
+  txs.unshift({
+    id: genId(),
+    desc: `Pagamento Fatura Cartão ${c.name}`,
+    amount: effectivePay,
+    type: 'expense',
+    cat: 'Pagamento de Fatura',
+    date: todayISO(),
+    createdAt: new Date().toISOString(),
+    accountId: accId,
+    status: 'paid',
+    origem: accObj.name,
+    isCardBillPayment: true
+  });
+
+  saveAll();
+  populatePayCardAccountSelect(accId);
+  closePayCardModal();
+  renderFinance();
+
+  if (nextBill <= 0.005) {
+    showToast(`Fatura do cartão ${c.name} paga (${money(effectivePay)}) via ${accObj.name}. Limite liberado!`, 'success');
+  } else {
+    showToast(`Pagamento parcial de ${money(effectivePay)} via ${accObj.name} registrado. Restante: ${money(nextBill)}.`, 'success');
   }
 }
 
+function openPatrimonioModal() {
+  const b = getTotalBankBalance();
+  const r = getPendingLucros().reduce((a, t) => a + t.amount, 0);
+  document.getElementById('detSaldoBancos').textContent = money(b);
+  document.getElementById('detReceber').textContent = money(r);
+  document.getElementById('detPatrimonioTotal').textContent = money(b + r);
+  document.getElementById('patrimonioModal').classList.remove('hidden');
+}
+function openPendingLucrosModal() {
+  const list = document.getElementById('pending-lucros-list');
+  const items = getPendingLucros();
+  if (!items.length) list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum lucro pendente a receber.</p>';
+  else list.innerHTML = items.map(t => `<div class="flex justify-between items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><div class="text-right shrink-0"><b class="text-sm text-emerald-600 block">+${money(t.amount)}</b><button type="button" onclick="receivePendingLucro('${t.id}')" class="text-[11px] font-bold text-emerald-600 hover:underline cursor-pointer">Receber</button></div></div>`).join('');
+  document.getElementById('pendingLucrosModal').classList.remove('hidden');
+}
+function receivePendingLucro(id) {
+  const t = txs.find(x => x.id === id);
+  if (!t || t.status !== 'pending') return;
+  t.status = 'paid';
+  if (t.orderId) {
+    const ord = orders.find(o => o.id === t.orderId);
+    if (ord && !ord.clienteRecebeu) ord.clienteRecebeu = nowLocal();
+  }
+  saveAll();
+  openPendingLucrosModal();
+  renderFinance();
+  renderOrders();
+  showToast('Lucro recebido com sucesso.', 'success');
+}
+
+// Inventário de bens e patrimônio
+function openPatrimonioBensModal() { document.getElementById('formAddBem').classList.add('hidden'); renderPatrimonioBens(); document.getElementById('patrimonioBensModal').classList.remove('hidden'); }
+function openAddBemForm() { document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento'; document.getElementById('bemId').value = ''; document.getElementById('bemName').value = ''; document.getElementById('bemVal').value = ''; document.getElementById('bemCat').value = 'Imóvel / Terreno'; document.getElementById('formAddBem').classList.remove('hidden'); }
+function editBemItem(id) {
+  const b = patrimonioBens.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
+  document.getElementById('bemId').value = b.id;
+  document.getElementById('bemName').value = b.name;
+  document.getElementById('bemVal').value = b.value;
+  document.getElementById('bemCat').value = b.category || 'Imóvel / Terreno';
+  document.getElementById('formAddBem').classList.remove('hidden');
+}
+function saveBemItem() {
+  const id = document.getElementById('bemId').value;
+  const name = document.getElementById('bemName').value.trim();
+  const value = parseFloat(document.getElementById('bemVal').value) || 0;
+  const category = document.getElementById('bemCat').value;
+  if (!name || value <= 0) { showToast('Preencha o nome e um valor maior que zero.', 'error'); return; }
+  if (id) {
+    const idx = patrimonioBens.findIndex(x => x.id === id);
+    if (idx >= 0) patrimonioBens[idx] = { ...patrimonioBens[idx], name, value, category };
+  } else {
+    patrimonioBens.push({ id: genId(), name, value, category });
+  }
+  saveAll();
+  document.getElementById('formAddBem').classList.add('hidden');
+  renderPatrimonioBens();
+  showToast('Bem salvo no inventário.', 'success');
+}
+async function deleteBemItem(id) {
+  const ok = await requestConfirm('Remover bem?', 'Deseja excluir este item do inventário?', 'Excluir');
+  if (!ok) return;
+  patrimonioBens = patrimonioBens.filter(x => x.id !== id);
+  saveAll();
+  renderPatrimonioBens();
+  showToast('Item removido.', 'info');
+}
+function renderPatrimonioBens() {
+  const list = document.getElementById('patrimonioBensList');
+  const totEl = document.getElementById('patrimonioBensTotal');
+  const tot = patrimonioBens.reduce((a, b) => a + (Number(b.value) || 0), 0);
+  if (totEl) totEl.textContent = money(tot);
+  if (!list) return;
+  if (!patrimonioBens.length) { list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum bem ou investimento cadastrado ainda.</p>'; return; }
+  list.innerHTML = patrimonioBens.map(b => `<div class="py-2.5 flex justify-between items-center gap-2"><div class="min-w-0 pr-2"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500">${escapeHtml(b.category || 'Bem')}</p></div><div class="flex items-center gap-2 shrink-0"><b class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(b.value)}</b><button type="button" onclick="editBemItem('${b.id}')" aria-label="Editar bem" class="text-xs text-brand-600 font-bold cursor-pointer">✏️</button><button type="button" onclick="deleteBemItem('${b.id}')" aria-label="Excluir bem" class="text-xs text-rose-500 font-bold cursor-pointer">🗑️</button></div></div>`).join('');
+}
+
+// Relatórios administrativos e gráficos
+function renderAdminOrders() {
+  let totFat = 0, totLucro = 0;
+  const cli = {};
+  orders.forEach(o => {
+    const v = calcValores(o);
+    totFat += v.faturamento;
+    totLucro += v.lucroLiq;
+    const c = o.cliente || 'Sem Cliente';
+    if (!cli[c]) cli[c] = { name: c, count: 0, lucro: 0 };
+    cli[c].count++;
+    cli[c].lucro += v.lucroLiq;
+  });
+  document.getElementById('adm-total-profit').textContent = money(totLucro);
+  document.getElementById('adm-total-fat').textContent = money(totFat);
+  const detList = document.getElementById('adm-detailed-list');
+  if (!orders.length) detList.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido registrado.</p>';
+  else detList.innerHTML = orders.map(o => {
+    const v = calcValores(o);
+    const opLabel = normalizeOperator(o.operador);
+    return `<div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer flex justify-between items-center gap-2" onclick="openReceipt('${o.id}')"><div class="min-w-0 pr-2"><p class="text-xs font-bold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || '—')} · ${escapeHtml(o.cliente || '—')}</p><p class="text-[10px] text-slate-500">${escapeHtml(opLabel)} · ${fmtDT(o.saida)} · <span class="text-brand-600 font-semibold">Recibo</span></p></div><div class="text-right shrink-0"><b class="text-xs font-black text-emerald-600 dark:text-emerald-400 block">+${money(v.lucroLiq)}</b><span class="text-[10px] text-slate-500">Fat: ${money(v.faturamento)}</span></div></div>`;
+  }).join('');
+  const tbody = document.getElementById('adm-client-table');
+  const sorted = Object.values(cli).sort((a, b) => b.lucro - a.lucro);
+  if (!sorted.length) tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
+  else tbody.innerHTML = sorted.map(c => `<tr><td class="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td><td class="px-4 py-3 text-center">${c.count}</td><td class="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${money(c.lucro)}</td></tr>`).join('');
+}
+
+function renderAdminFinance() {
+  const f = document.getElementById('adm-fin-filter').value;
+  const list = document.getElementById('adm-fin-list');
+  const items = txs.filter(t => f === 'all' || t.type === f).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  if (!items.length) list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento.</p>';
+  else list.innerHTML = items.map(t => {
+    const isInc = t.type === 'income';
+    return `<div class="p-3 flex justify-between items-center gap-2"><div class="min-w-0"><p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.createdAt || t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><b class="text-xs ${isInc ? 'text-emerald-600' : 'text-rose-600'} shrink-0">${isInc ? '+' : '-'}${money(t.amount)}</b></div>`;
+  }).join('');
+}
+
+function openChartsModal() {
+  const now = new Date();
+  const ym = now.getFullYear() + '-' + pad(now.getMonth() + 1);
+  const monthTxs = txs.filter(t => t.status === 'paid' && !(t.accountId || '').startsWith('card_') && (t.date || '').startsWith(ym));
+
+  let totalIn = 0, totalOut = 0;
+  const map = {};
+  ACCOUNTS.forEach(a => { map[a.id] = { name: a.name, inc: 0, exp: 0 }; });
+
+  monthTxs.forEach(t => {
+    const amt = Number(t.amount) || 0;
+    if (t.type === 'income') totalIn += amt;
+    else totalOut += amt;
+    if (map[t.accountId]) {
+      if (t.type === 'income') map[t.accountId].inc += amt;
+      else map[t.accountId].exp += amt;
+    }
+  });
+
+  const maxVal = Math.max(100, ...Object.values(map).flatMap(x => [x.inc, x.exp]));
+  const inEl = document.getElementById('chart-month-income');
+  const outEl = document.getElementById('chart-month-expense');
+  const scaleEl = document.getElementById('chart-scale-max');
+  if (inEl) inEl.textContent = money(totalIn);
+  if (outEl) outEl.textContent = money(totalOut);
+  if (scaleEl) scaleEl.textContent = `Escala máx.: ${money(maxVal)}`;
+
+  const cont = document.getElementById('column-charts-container');
+  cont.innerHTML = Object.values(map).map(item => {
+    const hInc = Math.max(6, Math.round((item.inc / maxVal) * 84));
+    const hExp = Math.max(6, Math.round((item.exp / maxVal) * 84));
+    return `
+      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-700/70">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.name)}</span>
+          <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0">Saldo mês: ${money(item.inc - item.exp)}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-4 items-end h-28 pt-2 border-b border-slate-200 dark:border-slate-700/80">
+          <div class="flex flex-col items-center justify-end h-full gap-1.5">
+            <span class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400">${money(item.inc)}</span>
+            <div class="w-11 sm:w-12 rounded-t-lg bg-emerald-500/90 transition-all" style="height:${hInc}px"></div>
+          </div>
+          <div class="flex flex-col items-center justify-end h-full gap-1.5">
+            <span class="text-[10px] font-extrabold text-rose-600 dark:text-rose-400">${money(item.exp)}</span>
+            <div class="w-11 sm:w-12 rounded-t-lg bg-rose-500/90 transition-all" style="height:${hExp}px"></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 text-center text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5">
+          <span>Entradas</span>
+          <span>Saídas</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('chartsModal').classList.remove('hidden');
+}
+
+// Recibos e impressão
+function openReceipt(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  activeReceiptOrderId = id;
+  const v = calcValores(o);
+  const opLabel = normalizeOperator(o.operador);
+  document.getElementById('recPedido').textContent = o.pedido || '—';
+  document.getElementById('recCliente').textContent = o.cliente || '—';
+  const recOpEl = document.getElementById('recOperador');
+  if (recOpEl) recOpEl.textContent = opLabel;
+  document.getElementById('recData').textContent = fmtDT(o.saida);
+  document.getElementById('recInv').textContent = money(v.inv);
+  document.getElementById('recMargem').textContent = money(v.margemVal);
+  const freteAdminLbl = document.getElementById('recFreteAdminLabel');
+  if (freteAdminLbl) {
+    freteAdminLbl.textContent = (o.freightStatus === 'pending' && !o.pagoFrete)
+      ? '(-) Custo Frete (Conta a Pagar):'
+      : '(-) Custo Frete:';
+  }
+  document.getElementById('recFreteAdmin').textContent = money(v.descontoFreteCliente);
+  document.getElementById('recLucro').textContent = money(v.lucroLiq);
+  document.getElementById('recFat').textContent = money(v.faturamento);
+  document.getElementById('recPedidoCliente').textContent = o.pedido || '—';
+  document.getElementById('recClienteCliente').textContent = o.cliente || '—';
+  document.getElementById('recFreteCliente').textContent = money(v.freteVal);
+
+  const steps = [];
+  if (o.cidadeOrigem || o.saida) steps.push({ title: 'Saída / Origem', city: o.cidadeOrigem, time: o.saida, done: !!o.saida });
+  if (o.transportadora || o.subiuTransp) steps.push({ title: o.transportadora ? 'Subiu na ' + o.transportadora : 'Subiu na Transportadora', city: o.transportadora, time: o.subiuTransp, done: !!o.subiuTransp });
+  if (o.cidade1 || o.cidade1Hora) steps.push({ title: '1ª Passagem', city: o.cidade1, time: o.cidade1Hora, done: !!o.cidade1Hora });
+  if (o.cidade2 || o.cidade2Hora) steps.push({ title: '2ª Passagem', city: o.cidade2, time: o.cidade2Hora, done: !!o.cidade2Hora });
+  if (o.cidade3 || o.cidade3Hora) steps.push({ title: '3ª Passagem', city: o.cidade3, time: o.cidade3Hora, done: !!o.cidade3Hora });
+  if (o.desceuSP) steps.push({ title: 'Desceu em SP', city: 'São Paulo', time: o.desceuSP, done: !!o.desceuSP });
+  if (o.clienteRecebeu) steps.push({ title: 'Entregue ao Cliente', city: o.cliente, time: o.clienteRecebeu, done: !!o.clienteRecebeu });
+
+  const trAdmin = document.getElementById('recTrajetoAdmin');
+  trAdmin.innerHTML = steps.length ? steps.map(s => `<div class="flex justify-between items-start text-xs border-b border-slate-700/60 pb-2"><div><p class="font-bold text-slate-200">${escapeHtml(s.title)}</p><p class="text-[10px] text-slate-400">${escapeHtml(s.city || '')}</p></div><span class="text-[10px] font-semibold text-slate-300 text-right">${fmtDT(s.time)}</span></div>`).join('') : '<p class="text-xs text-slate-400 text-center py-2">Nenhum ponto de rastreio registrado.</p>';
+
+  const trCliente = document.getElementById('recTrajetoCliente');
+  trCliente.innerHTML = steps.length ? steps.map((s, idx) => {
+    const isLast = idx === steps.length - 1;
+    const dotColor = s.done ? 'bg-[#6366f1] border-[#818cf8] shadow-[0_0_0_3px_rgba(99,102,241,0.28)]' : 'bg-[#475569] border-[#64748b]';
+    const lineHtml = !isLast ? `<div class="w-0.5 flex-1 bg-slate-600/80 my-1 min-h-[24px]"></div>` : '';
+    return `<div class="flex items-stretch gap-3.5"><div class="flex flex-col items-center pt-1"><span class="w-2.5 h-2.5 rounded-full border shrink-0 ${dotColor}"></span>${lineHtml}</div><div class="flex-1 ${!isLast ? 'pb-3.5' : 'pb-0.5'}"><div class="flex justify-between items-start gap-2"><p class="text-sm font-bold text-white leading-snug">${escapeHtml(s.title)}</p><span class="text-[11px] font-semibold text-slate-300 shrink-0">${fmtShortDT(s.time)}</span></div>${s.city ? `<p class="text-xs text-slate-400 mt-0.5">${escapeHtml(s.city)}</p>` : ''}</div></div>`;
+  }).join('') : '<p class="text-xs text-slate-400 text-center py-2">Trajeto em andamento.</p>';
+
+  const badge = document.getElementById('recStatusFrete');
+  const isFretePago = !!(o.pagoFrete || o.freightStatus === 'paid');
+  if (isFretePago) {
+    badge.textContent = 'FRETE PAGO';
+    badge.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded';
+  } else {
+    badge.textContent = 'FRETE PENDENTE';
+    badge.className = 'text-[10px] font-black uppercase tracking-wide text-[#fbbf24] bg-[#451a03] border border-[#f59e0b]/30 px-2.5 py-1 rounded';
+  }
+  document.getElementById('receiptModal').classList.remove('hidden');
+}
+
+function closeReceipt() { activeReceiptOrderId = null; document.getElementById('receiptModal').classList.add('hidden'); }
+function printReceipt(mode) {
+  document.body.classList.remove('printing-admin', 'printing-client');
+  document.body.classList.add(mode === 'admin' ? 'printing-admin' : 'printing-client');
+  window.print();
+  setTimeout(() => document.body.classList.remove('printing-admin', 'printing-client'), 500);
+}
+
 async function resetData() {
-  const ok = await requestConfirm(
-    'Restaurar padrão do sistema?',
-    'Todos os pedidos, lançamentos, cartões, bens e configurações serão apagados.',
-    'Restaurar'
-  );
+  closeMenu();
+  const ok = await requestConfirm('Restaurar dados padrão?', 'Todos os pedidos, lançamentos, cartões, bens e teto serão redefinidos para o estado inicial.', 'Restaurar');
   if (!ok) return;
   orders = [];
   txs = [];
   creditCards = createDefaultCreditCards();
   patrimonioBens = [];
   quickState = JSON.parse(JSON.stringify(quickDefaultState));
+  historyData = { clients: [], cities: [], carriers: [] };
+  userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
   seenNotifications = {};
+  safeSet(HISTORY_KEY, JSON.stringify(historyData));
+  safeSet(PROFILE_KEY, JSON.stringify(userProfile));
   saveAll();
+  updateMenuUserDisplay();
+  renderDatalists();
   populateSelects();
   renderOrders();
   renderFinance();
   if (currentTab === 'admin') switchAdminTab(currentAdminTab);
-  closeMenu();
-  showToast('Sistema restaurado para o padrão inicial.', 'success');
+  showToast('Sistema restaurado para os padrões.', 'success');
 }
 
-// Inicialização da aplicação
-window.addEventListener('DOMContentLoaded', () => {
-  try {
-    load();
-  } catch (err) {
-    showToast('Falha ao inicializar dados locais. Reiniciando estado padrão.', 'error');
-  }
-});
+window.addEventListener('DOMContentLoaded', load);
 </script>
 </body>
 </html>
