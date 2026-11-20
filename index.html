@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Cpath d='M50 22 L78 36 L78 64 L50 78 L22 64 L22 36 Z' fill='white'/%3E%3Cpath d='M50 22 L78 36 L50 50 L22 36 Z' fill='%23a5b4fc'/%3E%3Cpath d='M50 50 L50 78 L22 64 L22 36 Z' fill='%23c7d2fe'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  // Configuração do Tailwind CSS com modo escuro via classe e cores de marca
+  // Configuração do Tailwind CSS com alternância de tema via classe e paleta de marca
   tailwind.config = {
     darkMode: 'class',
     theme: {
@@ -25,7 +25,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  /* Base de layout, fundo adaptativo e superfícies translúcidas */
+  /* Layout base, superfícies translúcidas e suporte a impressão de recibos de pedidos */
   body {
     font-family: 'Inter', sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -49,23 +49,22 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  /* Vidro levemente escuro, transparente e fosco no tom ardósia azulado do sistema */
+  /* Menu translúcido estilo vidro fosco */
   .fume-menu {
-    background: rgba(248, 250, 252, 0.84);
+    background: rgba(248, 250, 252, 0.86);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(15, 23, 42, 0.14);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
   }
   .dark .fume-menu {
-    background: rgba(30, 41, 59, 0.74);
+    background: rgba(30, 41, 59, 0.78);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(148, 163, 184, 0.24);
     box-shadow: 0 20px 44px rgba(2, 6, 23, 0.45);
   }
 
-  /* Padrão visual de campos e botões de ação */
   .field {
     width: 100%;
     background: #f8fafc;
@@ -145,7 +144,6 @@
   .order-action-btn:hover { transform: scale(1.06); filter: brightness(0.97); }
   .order-action-btn:active { transform: scale(0.95); }
 
-  /* Navegação inferior e rolagem horizontal */
   .nav-item {
     flex: 1;
     display: flex;
@@ -174,7 +172,6 @@
   }
   .animate-in { animation: fadeSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-  /* Busca Rápida compacta */
   .qr-card {
     background: rgba(255, 255, 255, 0.94);
     border: 1px solid rgba(15, 23, 42, 0.1);
@@ -235,7 +232,6 @@
 
   .hidden { display: none !important; }
 
-  /* Botões flutuantes inferiores */
   .qr-pct-fab {
     position: fixed;
     left: 18px;
@@ -284,7 +280,6 @@
   }
   .qr-nav-fab:hover { transform: scale(1.05); border-color: #6366f1; }
 
-  /* Recibos e campos numéricos */
   .receipt-edge { position: relative; background: #172033; }
   .receipt-edge::after {
     content: '';
@@ -307,8 +302,6 @@
   @media print {
     body { background: white !important; padding-bottom: 0; color: black !important; }
     body * { visibility: hidden; }
-    body.printing-admin #printAdminWrapper, body.printing-admin #printAdminWrapper * { visibility: visible; }
-    body.printing-admin #printAdminWrapper { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important; border: none !important; }
     body.printing-client #printClientWrapper, body.printing-client #printClientWrapper * { visibility: visible; }
     body.printing-client #printClientWrapper { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important; border-top: none !important; border: none !important; }
     .no-print { display: none !important; }
@@ -317,7 +310,7 @@
 </head>
 <body class="text-slate-800 dark:text-slate-200 min-h-screen flex flex-col">
 
-<!-- Toast de aviso -->
+<!-- Toast de notificação -->
 <div id="appToast" role="status" aria-live="polite" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-[92%] max-w-md no-print animate-in">
   <div id="appToastInner" class="rounded-2xl px-4 py-3 text-xs font-bold shadow-2xl border flex items-center justify-between gap-3 bg-slate-900 text-white border-slate-700">
     <span id="appToastText">Aviso</span>
@@ -325,7 +318,7 @@
   </div>
 </div>
 
-<!-- Modal de confirmação -->
+<!-- Modal de confirmação sem alert/confirm nativo -->
 <div id="appConfirmModal" role="dialog" aria-modal="true" aria-labelledby="appConfirmTitle" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-xs z-[60] flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 p-5 space-y-4">
     <div>
@@ -340,7 +333,7 @@
   </div>
 </div>
 
-<!-- Cabeçalho fixo -->
+<!-- Cabeçalho superior com menu translúcido -->
 <header class="glass sticky top-0 z-30 shadow-xs no-print">
   <div class="max-w-5xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2">
     <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
@@ -411,7 +404,7 @@
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="profileModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Meu Perfil (Uso Privado)</h3><button type="button" onclick="closeProfileModal()" aria-label="Fechar perfil" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
     <form onsubmit="saveProfile(event)" class="p-5 space-y-4 text-sm">
-      <p class="text-[11px] text-slate-500 dark:text-slate-400">Estes dados (CPF e RG) ficam salvos apenas localmente neste navegador.</p>
+      <p class="text-[11px] text-slate-500 dark:text-slate-400">Estes dados ficam salvos localmente neste navegador.</p>
       <div><label class="lbl" for="pName">Nome / Apelido</label><input type="text" id="pName" placeholder="Seu Nome" required class="field"></div>
       <div><label class="lbl" for="pCpf">CPF (Privado)</label><input type="text" id="pCpf" placeholder="000.000.000-00" class="field"></div>
       <div><label class="lbl" for="pRg">RG (Privado)</label><input type="text" id="pRg" placeholder="00.000.000-0" class="field"></div>
@@ -430,9 +423,9 @@
   </div>
 </div>
 
-<!-- Conteúdo principal -->
+<!-- Área principal das abas -->
 <main class="max-w-5xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full space-y-5 no-print">
-  <!-- Aba 1: Busca Rápida -->
+  <!-- Aba Busca Rápida -->
   <div id="view-quick" class="max-w-[360px] mx-auto space-y-2.5 animate-in pb-28">
     <section class="qr-card">
       <div class="flex items-center justify-between gap-2 mb-1.5">
@@ -453,7 +446,7 @@
         </div>
         <div id="qrPanelTitle" class="text-xs font-extrabold text-slate-900 dark:text-white mb-1.5 truncate text-left"></div>
 
-        <!-- Painel Operação / Compra -->
+        <!-- Painel Operação -->
         <div id="qrOpFields" class="hidden space-y-2">
           <div class="flex flex-wrap gap-1.5" id="qrOpEtapas">
             <button type="button" class="qr-chip selected" onclick="qrSelecionarEtapaOp(this, 'Despacho')">Despacho</button>
@@ -560,7 +553,7 @@
     </section>
   </div>
 
-  <!-- Aba 2: Pedidos -->
+  <!-- Aba Pedidos -->
   <div id="view-orders" class="hidden space-y-5 animate-in">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 num-align">
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
@@ -588,7 +581,7 @@
     </div>
   </div>
 
-  <!-- Aba 3: Finanças -->
+  <!-- Aba Finanças -->
   <div id="view-finance" class="hidden space-y-5 animate-in">
     <div id="fin-search-banner" class="hidden bg-brand-50/90 dark:bg-indigo-950/50 border border-brand-200 dark:border-indigo-800/70 rounded-2xl p-3.5 shadow-xs space-y-2.5 num-align">
       <div class="flex items-center justify-between gap-2">
@@ -632,7 +625,7 @@
     </div>
   </div>
 
-  <!-- Aba 4: Admin -->
+  <!-- Aba Admin (apenas relatórios e resumos, sem recibo ou impressão) -->
   <div id="view-admin" class="hidden space-y-5 animate-in">
     <div role="button" tabindex="0" onclick="openChartsModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openChartsModal();}" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden border border-slate-700 cursor-pointer hover:border-brand-500 transition group">
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition pointer-events-none">📊</div>
@@ -672,7 +665,7 @@
   </div>
 </main>
 
-<!-- Botões flutuantes inferiores -->
+<!-- Botões flutuantes na Busca Rápida -->
 <button type="button" id="qrPctFab" onclick="qrAbrirModalTeto()" aria-label="Abrir controle de teto" class="qr-pct-fab no-print num-align">0%</button>
 
 <button type="button" id="btn-open-full" onclick="switchTab('finance')" title="Abrir Painel Financeiro" aria-label="Abrir Painel Financeiro" class="qr-nav-fab no-print">
@@ -742,7 +735,7 @@
   </div>
 </div>
 
-<!-- Demais Modais -->
+<!-- Modais auxiliares e financeiros -->
 <div id="patrimonioBensModal" role="dialog" aria-modal="true" aria-labelledby="bensModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0"><div><h3 id="bensModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Inventário de Bens e Patrimônio</h3><p class="text-[11px] text-slate-500 dark:text-slate-400">Imóveis, terrenos e investimentos externos (Não afetam o caixa)</p></div><button type="button" onclick="document.getElementById('patrimonioBensModal').classList.add('hidden')" aria-label="Fechar inventário de bens" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
@@ -764,6 +757,7 @@
   </div>
 </div>
 
+<!-- Detalhes do cartão -->
 <div id="cardDetailModal" role="dialog" aria-modal="true" aria-labelledby="detCardTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="detCardTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Detalhes do Cartão</h3><button type="button" onclick="document.getElementById('cardDetailModal').classList.add('hidden')" aria-label="Fechar detalhes do cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
@@ -780,6 +774,7 @@
   </div>
 </div>
 
+<!-- Ajuste cíclico em 3 etapas do cartão -->
 <div id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 class="font-bold text-slate-900 dark:text-white text-sm" id="cardModalTitle">Ajustar Limite / Fatura</h3><button type="button" onclick="document.getElementById('cardModal').classList.add('hidden')" aria-label="Fechar ajuste de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
@@ -797,7 +792,7 @@
   </div>
 </div>
 
-<!-- Modal Pagar Fatura do Cartão -->
+<!-- Pagamento de fatura do cartão -->
 <div id="payCardModal" role="dialog" aria-modal="true" aria-labelledby="payCardModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payCardModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Pagar Fatura do Cartão</h3><button type="button" onclick="closePayCardModal()" aria-label="Fechar pagamento de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
@@ -806,7 +801,7 @@
       <div class="bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-center space-y-1">
         <p class="text-[10px] text-slate-500 uppercase font-bold" id="payCardNameDesc">Cartão</p>
         <p class="text-xl font-black text-purple-600 dark:text-purple-400" id="payCardAmountDesc">R$ 0,00</p>
-        <p class="text-[10px] text-slate-500 dark:text-slate-400" id="payCardAvailPreview">Limite disponível após baixar: R$ 0,00</p>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400" id="payCardAvailPreview">Limite disponível após baixar tudo: R$ 0,00</p>
       </div>
       <div>
         <label class="lbl" for="payCardAmountInput">Valor a Pagar (R$)</label>
@@ -826,6 +821,7 @@
   </div>
 </div>
 
+<!-- Gráficos e patrimônios -->
 <div id="chartsModal" role="dialog" aria-modal="true" aria-labelledby="chartsModalTitle" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><div class="flex items-center gap-2"><span class="text-xl">📊</span><h3 id="chartsModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">Painel Analítico de Gráficos (Mês Atual)</h3></div><button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" aria-label="Fechar gráficos" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl font-bold px-2 cursor-pointer">×</button></div>
@@ -923,7 +919,7 @@
   </div>
 </div>
 
-<!-- Modais financeiros -->
+<!-- Modais financeiros de lançamento e contas -->
 <div id="finModal" role="dialog" aria-modal="true" aria-labelledby="finModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50"><h3 id="finModalTitle" class="font-bold text-slate-900 dark:text-white">Novo Lançamento</h3><button type="button" onclick="document.getElementById('finModal').classList.add('hidden')" aria-label="Fechar novo lançamento" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl leading-none font-bold px-2 cursor-pointer">×</button></div>
@@ -989,73 +985,45 @@
   </div>
 </div>
 
-<!-- Modal de Recibos -->
-<div id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="recPedido" class="hidden fixed inset-0 bg-[#0b101b]/85 backdrop-blur-xs z-50 flex items-center justify-center p-3 overflow-y-auto">
-  <div class="w-full max-w-md my-auto space-y-6 pb-10">
-    <div>
-      <div id="wrapper-print-admin-btn" class="no-print flex items-center gap-2 mb-3">
-        <button type="button" onclick="printReceipt('admin')" class="flex-1 py-3 px-4 rounded-xl font-extrabold text-xs sm:text-sm text-white bg-[#4f46e5] hover:bg-[#4338ca] shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer truncate">🖨️ Imprimir Administrativo</button>
-        <button type="button" onclick="closeReceipt()" class="px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm text-slate-900 bg-white hover:bg-slate-100 shadow-lg cursor-pointer shrink-0">Fechar</button>
-      </div>
-      <div id="printAdminWrapper" class="receipt-surface rounded-2xl p-5 sm:p-6 shadow-2xl">
-        <div class="text-center mb-4 border-b border-slate-700/80 pb-4">
-          <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">RECIBO<br>ADMINISTRATIVO</h2>
-          <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido: <span id="recPedido" class="font-bold text-slate-200"></span></p>
-        </div>
-        <div class="py-1 space-y-2 text-sm mb-4">
-          <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Cliente:</span><span class="font-bold text-white truncate max-w-[210px]" id="recCliente"></span></div>
-          <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Operador:</span><span class="font-bold text-indigo-300 truncate max-w-[210px]" id="recOperador">OP Henrique</span></div>
-          <div class="flex justify-between items-start gap-2"><span class="text-slate-400">Data Emissão:</span><span class="font-bold text-white text-right" id="recData"></span></div>
-        </div>
-        <div class="receipt-inner-box rounded-2xl p-4 space-y-2.5 text-sm">
-          <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Custo Mercadoria:</span><span class="font-extrabold text-white text-right" id="recInv"></span></div>
-          <div class="flex justify-between items-start gap-2"><span class="text-slate-300 leading-snug">Sua Margem<br>Bruta:</span><span class="font-extrabold text-[#60a5fa] text-right" id="recMargem"></span></div>
-          <div class="flex justify-between items-center gap-2 text-[#fb7185]"><span id="recFreteAdminLabel">(-) Custo Frete:</span><span class="font-extrabold text-right" id="recFreteAdmin"></span></div>
-          <div class="flex justify-between items-center gap-2 border-t border-slate-700/80 pt-3 mt-1"><span class="text-[#34d399] font-extrabold">Lucro Líquido:</span><span class="font-extrabold text-[#34d399] text-base text-right" id="recLucro"></span></div>
-          <div class="flex justify-between items-start gap-2 border-t border-slate-700/80 pt-3 mt-1 font-extrabold text-white text-base"><span class="leading-snug">Total<br>Faturado:</span><span class="text-right" id="recFat"></span></div>
-        </div>
-        <div class="mt-5">
-          <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-3 tracking-wider">RASTREIO DETALHADO</h4>
-          <div class="space-y-3" id="recTrajetoAdmin"></div>
-        </div>
-      </div>
+<!-- Comprovante de Transporte do pedido -->
+<div id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="recPedidoCliente" class="hidden fixed inset-0 bg-[#0b101b]/85 backdrop-blur-xs z-50 flex items-center justify-center p-3 overflow-y-auto">
+  <div class="w-full max-w-md my-auto space-y-4 pb-8">
+    <div class="no-print flex items-center gap-2">
+      <button type="button" onclick="printReceipt('client')" class="flex-1 py-3.5 rounded-xl font-extrabold text-sm text-white bg-[#059669] hover:bg-[#047857] shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">🖨️ Imprimir Recibo do Cliente</button>
+      <button type="button" onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-extrabold text-sm text-slate-900 bg-white hover:bg-slate-100 shadow-lg cursor-pointer shrink-0">Fechar</button>
     </div>
-
-    <div class="pt-2">
-      <div id="wrapper-print-client-btn" class="no-print mb-3"><button type="button" onclick="printReceipt('client')" class="w-full py-3.5 rounded-xl font-extrabold text-sm text-white bg-[#059669] hover:bg-[#047857] shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">🖨️ Imprimir Recibo do Cliente</button></div>
-      <div id="printClientWrapper" class="receipt-surface rounded-2xl overflow-hidden shadow-2xl border-t-4 border-[#6366f1]">
-        <div class="p-5 sm:p-6">
-          <div class="text-center mb-5">
-            <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">COMPROVANTE DE<br>TRANSPORTE</h2>
-            <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-[#818cf8]"></span></p>
-          </div>
-          <div class="receipt-inner-box py-3 px-4 rounded-xl flex justify-between items-center gap-2 mb-5">
-            <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider">DESTINATÁRIO:</span>
-            <span class="font-extrabold text-white text-base truncate max-w-[210px]" id="recClienteCliente"></span>
-          </div>
-          <div class="mb-5">
-            <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-4 tracking-wider">TRAJETO DA ENTREGA</h4>
-            <div class="relative" id="recTrajetoCliente"></div>
-          </div>
-          <div class="receipt-edge receipt-inner-box rounded-xl p-4 mt-6 space-y-2">
-            <div id="recServicoRow" class="flex justify-between items-center gap-2">
-              <span id="recServicoLabel" class="text-sm font-bold text-slate-200 leading-snug">Valor do<br>Serviço:</span>
-              <span class="text-xl font-black text-white text-right" id="recFreteCliente">R$ 0,00</span>
-            </div>
-            <div class="flex justify-between items-center gap-2 pt-1">
-              <span class="text-xs text-slate-400">Status:</span>
-              <span id="recStatusFrete" class="text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded">INCLUSO NO FATURAMENTO</span>
-            </div>
-          </div>
-          <div class="text-center pt-8 text-xs text-slate-400 leading-relaxed">Documento gerado eletronicamente.<br>Obrigado pela preferência!</div>
+    <div id="printClientWrapper" class="receipt-surface rounded-2xl overflow-hidden shadow-2xl border-t-4 border-[#6366f1]">
+      <div class="p-5 sm:p-6">
+        <div class="text-center mb-5">
+          <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">COMPROVANTE DE<br>TRANSPORTE</h2>
+          <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-[#818cf8]"></span></p>
         </div>
+        <div class="receipt-inner-box py-3 px-4 rounded-xl flex justify-between items-center gap-2 mb-5">
+          <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider">DESTINATÁRIO:</span>
+          <span class="font-extrabold text-white text-base truncate max-w-[210px]" id="recClienteCliente"></span>
+        </div>
+        <div class="mb-5">
+          <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-4 tracking-wider">TRAJETO DA ENTREGA</h4>
+          <div class="relative" id="recTrajetoCliente"></div>
+        </div>
+        <div class="receipt-edge receipt-inner-box rounded-xl p-4 mt-6 space-y-2">
+          <div id="recServicoRow" class="flex justify-between items-center gap-2">
+            <span id="recServicoLabel" class="text-sm font-bold text-slate-200 leading-snug">Valor<br>Líquido:</span>
+            <span class="text-xl font-black text-white text-right" id="recFreteCliente">R$ 0,00</span>
+          </div>
+          <div class="flex justify-between items-center gap-2 pt-1">
+            <span class="text-xs text-slate-400">Status:</span>
+            <span id="recStatusFrete" class="text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded">FRETE PAGO</span>
+          </div>
+        </div>
+        <div class="text-center pt-8 text-xs text-slate-400 leading-relaxed">Documento gerado eletronicamente.<br>Obrigado pela preferência!</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Chaves de armazenamento e definição de contas
+// Chaves de armazenamento e contas financeiras
 const STORAGE_ORDERS = 'pedidos_v1';
 const STORAGE_FIN = 'fin_txs_v2';
 const STORAGE_CARDS = 'credit_cards_final_v1';
@@ -1075,7 +1043,6 @@ const ACCOUNTS = [
 
 const BANK_ACCOUNTS = ACCOUNTS.filter(a => a.id !== 'cash');
 
-// Estado global da aplicação
 let orders = [];
 let txs = [];
 let patrimonioBens = [];
@@ -1116,7 +1083,6 @@ let qrEditandoTeto = false;
 let activeSearchQuery = '';
 const cardAdjustCycle = {};
 
-// Utilitários de data, moeda e armazenamento
 function pad(n) { return String(n).padStart(2, '0'); }
 function todayISO() { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
 function nowLocal() { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
@@ -1160,7 +1126,6 @@ function isDuplicateOrderNumber(orderNum, excludeOrderId = '') {
   });
 }
 
-// Toast e confirmação modal
 function showToast(msg, variant = 'info') {
   const wrap = document.getElementById('appToast');
   const inner = document.getElementById('appToastInner');
@@ -1199,7 +1164,6 @@ function resolveAppConfirm(accepted) {
   if (typeof resolver === 'function') resolver(!!accepted);
 }
 
-// Menu suspenso e contas
 function toggleMenu(e) {
   if (e) e.stopPropagation();
   syncThemeLabelInMenu();
@@ -1225,7 +1189,6 @@ function getAccountLabel(accountId) {
   return accountId;
 }
 
-// Backup JSON e exportação do arquivo HTML
 function exportJSON() {
   closeMenu();
   try {
@@ -1324,7 +1287,6 @@ function exportSystemCode() {
   }
 }
 
-// Perfil
 function openProfileModal() {
   closeMenu();
   document.getElementById('pName').value = userProfile.name === 'Meu Perfil' ? '' : userProfile.name;
@@ -1350,7 +1312,6 @@ function updateMenuUserDisplay() {
   if (el) el.textContent = userProfile.name || 'Meu Perfil';
 }
 
-// Filtros e notificações
 function matchPeriod(dateStr, period) {
   if (period === 'all' || !dateStr) return true;
   const parts = dateStr.split('T')[0].split('-');
@@ -1468,7 +1429,6 @@ function toggleNotifications() {
 function openNotificationsFromMenu() { closeMenu(); toggleNotifications(); }
 function checkNotifications() { loadSeenNotifications(); updateNotificationBadge(getActiveNotifications()); }
 
-// Eventos globais de teclado e clique externo
 document.addEventListener('click', e => {
   const m = document.getElementById('menu');
   if (m && !m.classList.contains('hidden') && !e.target.closest('button[onclick*="toggleMenu"]') && !m.contains(e.target)) closeMenu();
@@ -1489,7 +1449,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Tema claro/escuro
 function syncThemeLabelInMenu() {
   const isDark = document.documentElement.classList.contains('dark');
   const lbl = document.getElementById('menu-theme-label');
@@ -1515,7 +1474,6 @@ if (savedTheme === 'light') {
   document.documentElement.classList.add('dark');
 }
 
-// Ícones do cabeçalho e troca de abas
 function getHeaderIconSvg(tab) {
   if (tab === 'orders') {
     return '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"></path><path d="M14 10h3.5l2.5 3v3h-6v-6z"></path><circle cx="6.5" cy="17.5" r="2"></circle><circle cx="17.5" cy="17.5" r="2"></circle><line x1="6" y1="10.5" x2="11" y2="10.5"></line></svg>';
@@ -1589,33 +1547,24 @@ function switchTab(tab) {
   checkNotifications();
 }
 
-// Busca e comandos rápidos
 function isClientQuickCommand(rawText) {
   return /^(clint|cliente|cli)(\s+|$|-|—)/i.test(String(rawText || '').trim());
 }
-
 function extractClientCommandName(rawText) {
   return String(rawText || '').replace(/^(clint|cliente|cli)\s*(—|-)?\s*/i, '').trim();
 }
-
 function normalizeSearchTerm(rawTerm) {
   const trimmed = String(rawTerm || '').trim();
-  if (isClientQuickCommand(trimmed)) {
-    return extractClientCommandName(trimmed);
-  }
+  if (isClientQuickCommand(trimmed)) return extractClientCommandName(trimmed);
   return trimmed;
 }
-
 function openFinancePrioritySearch(rawTerm) {
   const cleanTerm = normalizeSearchTerm(rawTerm);
   activeSearchQuery = cleanTerm;
   const ordSearchEl = document.getElementById('ord-search');
-  if (ordSearchEl && ordSearchEl.value !== cleanTerm) {
-    ordSearchEl.value = cleanTerm;
-  }
+  if (ordSearchEl && ordSearchEl.value !== cleanTerm) ordSearchEl.value = cleanTerm;
   switchTab('finance');
 }
-
 function clearFinanceSearchPriority() {
   activeSearchQuery = '';
   const ordSearchEl = document.getElementById('ord-search');
@@ -1629,7 +1578,6 @@ function clearFinanceSearchPriority() {
   }
   renderFinance();
 }
-
 function handleOrdersSearchInput(val) {
   const trimmed = String(val || '').trim();
   if (trimmed) {
@@ -1666,7 +1614,7 @@ function renderFinanceSearchBanner(txMatchCount, orderMatches) {
       <button type="button" onclick="openReceipt('${o.id}')" class="w-full text-left p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-700 hover:border-brand-500 transition flex items-center justify-between gap-2 cursor-pointer">
         <div class="min-w-0">
           <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(o.cliente || 'Cliente')}</p>
-          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)} · Toque para abrir recibo</p>
+          <p class="text-[10px] text-slate-500 truncate">${escapeHtml(normalizeOperator(o.operador))} · ${fmtDT(o.saida)} · Toque para abrir comprovante</p>
         </div>
         <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(calcValores(o).lucroLiq)}</span>
       </button>
@@ -1698,7 +1646,6 @@ function switchAdminTab(tab) {
   }
 }
 
-// Regras de despesas operacionais e cálculo do teto
 function isLancamentoOperacional(tx) {
   if (!tx || tx.type !== 'expense') return false;
   if (tx.isOp === true || tx.isFreightOut === true) return true;
@@ -1762,9 +1709,7 @@ function getDespesasDoCicloTeto() {
 }
 
 function getValorTetoAtivo(overrideTeto) {
-  if (typeof overrideTeto === 'number' && Number.isFinite(overrideTeto)) {
-    return Math.max(0, overrideTeto);
-  }
+  if (typeof overrideTeto === 'number' && Number.isFinite(overrideTeto)) return Math.max(0, overrideTeto);
   const atual = Number(quickState.teto);
   return Number.isFinite(atual) && atual >= 0 ? atual : 3000;
 }
@@ -1857,7 +1802,6 @@ function load() {
   switchTab('quick');
 }
 
-// Busca Rápida: parsing, seleção de pagamento e confirmações
 function qrParseMoeda(str) {
   if (str === null || str === undefined) return 0;
   let limpo = String(str).replace(/[^\d,.-]/g, '').trim();
@@ -1926,12 +1870,8 @@ function qrRenderSeletorInstituicao(contexto) {
 
 function qrAoMudarMetodoSelect(contexto, metodo) {
   quickState.metodos[contexto] = metodo || 'Pix';
-  if (metodo === 'Crédito' && !quickState.cartoes[contexto] && creditCards[0]) {
-    quickState.cartoes[contexto] = creditCards[0].id;
-  }
-  if ((metodo === 'Pix' || metodo === 'Débito') && !quickState.bancos[contexto] && BANK_ACCOUNTS[0]) {
-    quickState.bancos[contexto] = BANK_ACCOUNTS[0].id;
-  }
+  if (metodo === 'Crédito' && !quickState.cartoes[contexto] && creditCards[0]) quickState.cartoes[contexto] = creditCards[0].id;
+  if ((metodo === 'Pix' || metodo === 'Débito') && !quickState.bancos[contexto] && BANK_ACCOUNTS[0]) quickState.bancos[contexto] = BANK_ACCOUNTS[0].id;
   qrRenderSeletorInstituicao(contexto);
   saveAll();
   if (contexto === 'op') qrAtualizarResumoOp();
@@ -2072,10 +2012,7 @@ function qrAvaliarEntrada(texto) {
   const chip = document.getElementById('qrModeChip');
   const tag = document.getElementById('qrPanelTag');
   const title = document.getElementById('qrPanelTitle');
-  if (chip) {
-    chip.textContent = '';
-    chip.classList.add('hidden');
-  }
+  if (chip) { chip.textContent = ''; chip.classList.add('hidden'); }
   document.getElementById('qrOpFields').classList.add('hidden');
   document.getElementById('qrCliFields').classList.add('hidden');
   document.getElementById('qrGastoFields').classList.add('hidden');
@@ -2111,10 +2048,7 @@ function qrAvaliarEntrada(texto) {
 
 function qrProcessarOk() {
   const t = document.getElementById('qrBuscaInput').value.trim();
-  if (!t) {
-    openFinancePrioritySearch('');
-    return;
-  }
+  if (!t) { openFinancePrioritySearch(''); return; }
   qrAvaliarEntrada(t);
   qrRenderBuscaPedidos(t);
   openFinancePrioritySearch(t);
@@ -2126,7 +2060,6 @@ function qrSelecionarEtapaOp(btn, etapa) {
   saveAll();
   qrAtualizarResumoOp();
 }
-
 function qrAtualizarResumoOp() {
   const v = qrParseMoeda(document.getElementById('qrOpValor').value);
   const sel = qrResolverSelecaoPagamento('op');
@@ -2135,7 +2068,6 @@ function qrAtualizarResumoOp() {
   document.getElementById('qrOpResumoOrigem').textContent = sel.origemLabel;
   document.getElementById('qrOpResumoValor').textContent = money(v);
 }
-
 function qrAtualizarResumoCli() {
   const v = qrParseMoeda(document.getElementById('qrCliValor').value);
   const sel = qrResolverSelecaoPagamento('cli');
@@ -2143,7 +2075,6 @@ function qrAtualizarResumoCli() {
   document.getElementById('qrCliResumoOrigem').textContent = sel.origemLabel;
   document.getElementById('qrCliResumoValor').textContent = money(v);
 }
-
 function qrAtualizarResumoGasto() {
   recalcularConsumidoTeto();
   const v = qrParseMoeda(document.getElementById('qrGastoValor').value);
@@ -2227,7 +2158,6 @@ function qrConfirmarDespesa() {
   renderFinance();
 }
 
-// Controle de teto
 function qrRenderListaDespesasTeto() {
   const listEl = document.getElementById('qrTetoItensList');
   const qtdEl = document.getElementById('qrTetoItensQtd');
@@ -2372,11 +2302,7 @@ function qrTratarTeclaInline(event) {
 }
 
 async function qrZerarCicloTeto() {
-  const ok = await requestConfirm(
-    'Zerar ciclo do teto?',
-    'O consumo do ciclo será zerado a partir de agora (os lançamentos do extrato financeiro continuam salvos).',
-    'Zerar Ciclo'
-  );
+  const ok = await requestConfirm('Zerar ciclo do teto?', 'O consumo do ciclo será zerado a partir de agora (os lançamentos do extrato financeiro continuam salvos).', 'Zerar Ciclo');
   if (!ok) return;
   qrFecharCampoInlineTeto(true);
   quickState.tetoProgramado = 0;
@@ -2405,6 +2331,7 @@ function qrFecharModalTeto() {
 }
 function qrFecharModalTetoBackdrop(e) { if (e.target.id === 'qrTetoModal') qrFecharModalTeto(); }
 
+// Exclusão de lançamento do extrato com persistência e re-renderização
 async function qrExcluirLancamento(id) {
   const ok = await requestConfirm('Excluir lançamento?', 'Este lançamento será removido do extrato.', 'Excluir');
   if (!ok) return;
@@ -2418,10 +2345,10 @@ async function qrExcluirLancamento(id) {
   txs = txs.filter(x => x.id !== id);
   saveAll();
   renderFinance();
+  if (currentTab === 'admin' && currentAdminTab === 'finance') renderAdminFinance();
   showToast('Lançamento excluído.', 'info');
 }
 
-// Histórico e selects
 function saveToHistory(order) {
   let changed = false;
   const add = (arr, v) => { if (v && v.trim() && !arr.includes(v.trim())) { arr.push(v.trim()); changed = true; } };
@@ -2450,7 +2377,6 @@ function populateSelects() {
   const d = document.getElementById('tTo'); if (d) d.value = 'cash';
 }
 
-// Pedidos
 function calcValores(o) {
   const inv = (Number(o.valorUSD) || 0) * (Number(o.cotacao) || 0);
   const margemVal = inv * ((Number(o.margem) || 0) / 100);
@@ -2509,7 +2435,7 @@ function renderOrders() {
             <p class="text-[11px] text-slate-500 truncate mt-0.5">${fmtDT(o.saida)}</p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0" onclick="event.stopPropagation()">
-            <button type="button" onclick="openReceipt('${o.id}')" title="Imprimir Recibos" aria-label="Imprimir recibos do pedido ${safeOrderLabel}" class="order-action-btn bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/80 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300">🖨️</button>
+            <button type="button" onclick="openReceipt('${o.id}')" title="Comprovante de Transporte" aria-label="Comprovante de transporte do pedido ${safeOrderLabel}" class="order-action-btn bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/80 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300">🖨️</button>
             <button type="button" onclick="openModal('${o.id}')" title="Editar Pedido" aria-label="Editar pedido ${safeOrderLabel}" class="order-action-btn bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/70 dark:hover:bg-amber-900/80 text-amber-700 dark:text-amber-300">✏️</button>
             <button type="button" onclick="deleteOrderById('${o.id}')" title="Excluir Pedido" aria-label="Excluir pedido ${safeOrderLabel}" class="order-action-btn bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/70 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-400">🗑️</button>
           </div>
@@ -2820,7 +2746,6 @@ async function deleteOrderById(orderId) {
   showToast('Pedido excluído.', 'info');
 }
 
-// Finanças
 function getTotalBankBalance() { return txs.reduce((acc, t) => { if (t.status !== 'paid' || (t.accountId || '').startsWith('card_')) return acc; return acc + (t.type === 'income' ? t.amount : -t.amount); }, 0); }
 function getAccountBalance(id) { return txs.reduce((acc, t) => { if (t.status !== 'paid' || t.accountId !== id) return acc; return acc + (t.type === 'income' ? t.amount : -t.amount); }, 0); }
 function getPendingLucros() { return txs.filter(t => t.type === 'income' && t.status === 'pending'); }
@@ -2975,7 +2900,7 @@ function saveEditBalance(e) {
   showToast('Saldo ajustado.', 'success');
 }
 
-// Cartões de crédito: detalhes, ajuste em 3 etapas e pagamento de fatura
+// Cartões de crédito: detalhes, ciclo de ajuste em 3 etapas e pagamento de fatura
 function openCardDetail(cardId) {
   const c = creditCards.find(x => x.id === cardId);
   if (!c) return;
@@ -3088,97 +3013,69 @@ function openPayCardModal(cardId) {
   const limitAmount = Number(c.limit) || 0;
 
   document.getElementById('payCardId').value = cardId;
-  document.getElementById('payCardNameDesc').textContent = `Fatura Aberta · Cartão ${c.name}`;
+  document.getElementById('payCardNameDesc').textContent = `Fatura Cartão ${c.name}`;
   document.getElementById('payCardAmountDesc').textContent = money(billAmount);
-  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(Math.max(0, limitAmount))}`;
+  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(limitAmount)}`;
 
   const amtInput = document.getElementById('payCardAmountInput');
   if (amtInput) {
-    amtInput.value = billAmount > 0 ? billAmount.toFixed(2) : '';
-    amtInput.max = billAmount > 0 ? billAmount.toFixed(2) : '0';
+    amtInput.value = billAmount.toFixed(2);
+    amtInput.max = String(Math.max(0.01, billAmount));
   }
 
-  // Escolhe automaticamente a primeira conta com saldo suficiente, mantendo Caixa Econômica como preferência quando possível
-  const contaPreferida = ACCOUNTS.find(a => a.id === 'caixa' && getAccountBalance(a.id) >= billAmount)
-    || ACCOUNTS.find(a => getAccountBalance(a.id) >= billAmount)
-    || ACCOUNTS.find(a => a.id === 'caixa')
-    || ACCOUNTS[0];
-
-  populatePayCardAccountSelect(contaPreferida ? contaPreferida.id : 'caixa');
-  document.getElementById('payCardModal').classList.remove('hidden');
+  populatePayCardAccountSelect('caixa');
   updatePayCardValidationUI();
+  document.getElementById('payCardModal').classList.remove('hidden');
 }
 
 function closePayCardModal() {
-  const modal = document.getElementById('payCardModal');
-  if (modal) modal.classList.add('hidden');
+  document.getElementById('payCardModal').classList.add('hidden');
 }
 
 function updatePayCardValidationUI() {
   const cardId = document.getElementById('payCardId')?.value;
   const c = creditCards.find(x => x.id === cardId);
-  const billAmount = c ? Math.max(0, Number(c.currentBill) || 0) : 0;
-  const limitAmount = c ? Math.max(0, Number(c.limit) || 0) : 0;
-
-  const amtInput = document.getElementById('payCardAmountInput');
-  const rawPay = amtInput && amtInput.value !== '' ? parseFloat(amtInput.value) : billAmount;
-  const payAmount = Number.isFinite(rawPay) && rawPay > 0 ? rawPay : 0;
-
-  const accSelect = document.getElementById('payCardAccount');
-  const accId = accSelect ? accSelect.value : 'cash';
-  const accObj = ACCOUNTS.find(a => a.id === accId);
-  const accBalance = getAccountBalance(accId);
-
-  const hintEl = document.getElementById('payCardAccountBalanceHint');
-  const availEl = document.getElementById('payCardAvailPreview');
-  const msgEl = document.getElementById('payCardValidationMsg');
+  const accId = document.getElementById('payCardAccount')?.value || 'cash';
+  const balHint = document.getElementById('payCardAccountBalanceHint');
+  const valMsg = document.getElementById('payCardValidationMsg');
   const submitBtn = document.getElementById('btnConfirmPayCard');
+  const amtInput = document.getElementById('payCardAmountInput');
 
-  if (hintEl) {
-    const afterBal = accBalance - payAmount;
-    hintEl.textContent = `Saldo em ${accObj ? accObj.name : accId}: ${money(accBalance)} · Após pagar: ${money(afterBal)}`;
-    hintEl.className = 'text-[11px] font-semibold mt-1.5 ' + (
-      payAmount > accBalance
-        ? 'text-rose-600 dark:text-rose-400'
-        : 'text-emerald-600 dark:text-emerald-400'
-    );
-  }
+  const accBalance = getAccountBalance(accId);
+  const accName = getAccountLabel(accId);
+  if (balHint) balHint.textContent = `Saldo em ${accName}: ${money(accBalance)}`;
 
-  if (availEl) {
-    const remainingBill = Math.max(0, billAmount - payAmount);
-    availEl.textContent = `Limite disponível após pagamento: ${money(Math.max(0, limitAmount - remainingBill))}`;
-  }
+  const currentBill = c ? (Number(c.currentBill) || 0) : 0;
+  const rawPay = amtInput ? parseFloat(amtInput.value) : currentBill;
+  const payAmount = Number.isFinite(rawPay) ? rawPay : 0;
 
   let errorText = '';
   if (!c) {
     errorText = 'Cartão não encontrado.';
-  } else if (billAmount <= 0) {
-    errorText = `A fatura atual do cartão ${c.name} está zerada (R$ 0,00).`;
+  } else if (currentBill <= 0) {
+    errorText = `A fatura atual do cartão ${c.name} já está zerada.`;
   } else if (payAmount <= 0) {
-    errorText = 'Informe um valor de pagamento maior que R$ 0,00.';
-  } else if (payAmount > billAmount + 0.005) {
-    errorText = `O valor do pagamento (${money(payAmount)}) é maior que a fatura aberta (${money(billAmount)}).`;
-  } else if (payAmount > accBalance + 0.005) {
-    errorText = `Saldo insuficiente em ${accObj ? accObj.name : accId}: disponível ${money(accBalance)} para pagar ${money(payAmount)}.`;
+    errorText = 'Informe um valor maior que R$ 0,00 para pagar a fatura.';
+  } else if (payAmount > currentBill + 0.005) {
+    errorText = `O valor (${money(payAmount)}) excede a fatura atual (${money(currentBill)}).`;
+  } else if (accBalance + 0.005 < payAmount) {
+    errorText = `Saldo insuficiente em ${accName} (${money(accBalance)}) para pagar ${money(payAmount)}.`;
   }
 
-  if (msgEl) {
+  if (valMsg) {
     if (errorText) {
-      msgEl.textContent = `⚠️ ${errorText}`;
-      msgEl.classList.remove('hidden');
+      valMsg.textContent = errorText;
+      valMsg.classList.remove('hidden');
     } else {
-      msgEl.textContent = '';
-      msgEl.classList.add('hidden');
+      valMsg.textContent = '';
+      valMsg.classList.add('hidden');
     }
   }
-
   if (submitBtn) {
     submitBtn.disabled = !!errorText;
     submitBtn.classList.toggle('opacity-50', !!errorText);
     submitBtn.classList.toggle('cursor-not-allowed', !!errorText);
   }
-
-  return errorText;
 }
 
 function confirmPayCard(e) {
@@ -3186,131 +3083,110 @@ function confirmPayCard(e) {
   const cardId = document.getElementById('payCardId').value;
   const accId = document.getElementById('payCardAccount').value;
   const c = creditCards.find(x => x.id === cardId);
-  if (!c) {
-    showToast('Cartão não encontrado.', 'error');
-    return;
-  }
+  if (!c) { showToast('Cartão não encontrado.', 'error'); return; }
 
-  const billAmount = Math.max(0, Number(c.currentBill) || 0);
-  if (billAmount <= 0) {
-    showToast(`A fatura do cartão ${c.name} já está zerada (R$ 0,00).`, 'error');
-    updatePayCardValidationUI();
+  const currentBill = Number(c.currentBill) || 0;
+  if (currentBill <= 0) {
+    showToast(`A fatura do cartão ${c.name} já está zerada.`, 'info');
+    closePayCardModal();
     return;
   }
 
   const amtInput = document.getElementById('payCardAmountInput');
-  const rawVal = amtInput && amtInput.value !== '' ? parseFloat(amtInput.value) : billAmount;
-  const payAmount = Number.isFinite(rawVal) ? Number(rawVal.toFixed(2)) : 0;
-
-  if (payAmount <= 0) {
-    showToast('Informe um valor válido maior que R$ 0,00.', 'error');
-    updatePayCardValidationUI();
-    return;
-  }
-
-  if (payAmount > billAmount + 0.005) {
-    showToast(`Valor superior à fatura atual (${money(billAmount)}).`, 'error');
-    updatePayCardValidationUI();
-    return;
-  }
-
-  const accObj = ACCOUNTS.find(a => a.id === accId);
-  if (!accObj) {
-    showToast('Selecione uma conta de origem válida.', 'error');
-    return;
-  }
-
+  const parsedPay = amtInput ? parseFloat(amtInput.value) : currentBill;
+  const amount = Number.isFinite(parsedPay) && parsedPay > 0 ? Math.min(parsedPay, currentBill) : currentBill;
   const accBalance = getAccountBalance(accId);
-  if (payAmount > accBalance + 0.005) {
-    showToast(`Saldo insuficiente em ${accObj.name} (${money(accBalance)} disponível).`, 'error');
+
+  if (amount <= 0) {
+    showToast('Informe um valor válido para pagar a fatura.', 'error');
+    return;
+  }
+  if (accBalance + 0.005 < amount) {
+    showToast(`Saldo insuficiente em ${getAccountLabel(accId)} (${money(accBalance)}).`, 'error');
     updatePayCardValidationUI();
     return;
   }
 
-  const effectivePay = Math.min(billAmount, payAmount);
-  const nextBill = Math.max(0, Number((billAmount - effectivePay).toFixed(2)));
-  c.currentBill = nextBill;
-
+  c.currentBill = Math.max(0, Number((currentBill - amount).toFixed(2)));
   txs.unshift({
     id: genId(),
     desc: `Pagamento Fatura Cartão ${c.name}`,
-    amount: effectivePay,
+    amount,
     type: 'expense',
     cat: 'Pagamento de Fatura',
     date: todayISO(),
     createdAt: new Date().toISOString(),
     accountId: accId,
     status: 'paid',
-    origem: accObj.name,
     isCardBillPayment: true
   });
 
   saveAll();
-  populatePayCardAccountSelect(accId);
   closePayCardModal();
   renderFinance();
-
-  if (nextBill <= 0.005) {
-    showToast(`Fatura do cartão ${c.name} paga (${money(effectivePay)}) via ${accObj.name}. Limite liberado!`, 'success');
-  } else {
-    showToast(`Pagamento parcial de ${money(effectivePay)} via ${accObj.name} registrado. Restante: ${money(nextBill)}.`, 'success');
-  }
+  if (currentTab === 'admin' && currentAdminTab === 'finance') renderAdminFinance();
+  showToast(`Fatura ${c.name}: ${money(amount)} pago via ${getAccountLabel(accId)}. Limite liberado!`, 'success');
 }
 
 function openPatrimonioModal() {
   const b = getTotalBankBalance();
-  const r = getPendingLucros().reduce((a, t) => a + t.amount, 0);
+  const p = getPendingLucros().reduce((a, t) => a + t.amount, 0);
   document.getElementById('detSaldoBancos').textContent = money(b);
-  document.getElementById('detReceber').textContent = money(r);
-  document.getElementById('detPatrimonioTotal').textContent = money(b + r);
+  document.getElementById('detReceber').textContent = money(p);
+  document.getElementById('detPatrimonioTotal').textContent = money(b + p);
   document.getElementById('patrimonioModal').classList.remove('hidden');
 }
 function openPendingLucrosModal() {
+  const p = getPendingLucros();
   const list = document.getElementById('pending-lucros-list');
-  const items = getPendingLucros();
-  if (!items.length) list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum lucro pendente a receber.</p>';
-  else list.innerHTML = items.map(t => `<div class="flex justify-between items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><div class="text-right shrink-0"><b class="text-sm text-emerald-600 block">+${money(t.amount)}</b><button type="button" onclick="receivePendingLucro('${t.id}')" class="text-[11px] font-bold text-emerald-600 hover:underline cursor-pointer">Receber</button></div></div>`).join('');
+  if (!p.length) list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum lucro pendente a receber.</p>';
+  else list.innerHTML = p.map(t => `<div class="flex justify-between items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">Agendado em ${fmtDateTimeTx(t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><div class="flex items-center gap-2 shrink-0"><b class="text-sm text-emerald-600">+${money(t.amount)}</b><button type="button" onclick="receiveProfitTx('${t.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded cursor-pointer">Receber</button></div></div>`).join('');
   document.getElementById('pendingLucrosModal').classList.remove('hidden');
 }
-function receivePendingLucro(id) {
+function receiveProfitTx(id) {
   const t = txs.find(x => x.id === id);
-  if (!t || t.status !== 'pending') return;
-  t.status = 'paid';
-  if (t.orderId) {
-    const ord = orders.find(o => o.id === t.orderId);
-    if (ord && !ord.clienteRecebeu) ord.clienteRecebeu = nowLocal();
+  if (t && t.status === 'pending') {
+    t.status = 'paid';
+    t.date = todayISO();
+    t.createdAt = new Date().toISOString();
+    saveAll();
+    openPendingLucrosModal();
+    renderFinance();
+    showToast('Lucro recebido com sucesso!', 'success');
   }
-  saveAll();
-  openPendingLucrosModal();
-  renderFinance();
-  renderOrders();
-  showToast('Lucro recebido com sucesso.', 'success');
 }
 
-// Inventário de bens e patrimônio
 function openPatrimonioBensModal() { document.getElementById('formAddBem').classList.add('hidden'); renderPatrimonioBens(); document.getElementById('patrimonioBensModal').classList.remove('hidden'); }
-function openAddBemForm() { document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento'; document.getElementById('bemId').value = ''; document.getElementById('bemName').value = ''; document.getElementById('bemVal').value = ''; document.getElementById('bemCat').value = 'Imóvel / Terreno'; document.getElementById('formAddBem').classList.remove('hidden'); }
-function editBemItem(id) {
-  const b = patrimonioBens.find(x => x.id === id);
-  if (!b) return;
-  document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
-  document.getElementById('bemId').value = b.id;
-  document.getElementById('bemName').value = b.name;
-  document.getElementById('bemVal').value = b.value;
-  document.getElementById('bemCat').value = b.category || 'Imóvel / Terreno';
+function openAddBemForm(bemId) {
   document.getElementById('formAddBem').classList.remove('hidden');
+  if (bemId) {
+    const b = patrimonioBens.find(x => x.id === bemId);
+    if (b) {
+      document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
+      document.getElementById('bemId').value = b.id;
+      document.getElementById('bemName').value = b.name;
+      document.getElementById('bemVal').value = b.val;
+      document.getElementById('bemCat').value = b.cat;
+      return;
+    }
+  }
+  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
+  document.getElementById('bemId').value = '';
+  document.getElementById('bemName').value = '';
+  document.getElementById('bemVal').value = '';
+  document.getElementById('bemCat').value = 'Imóvel / Terreno';
 }
 function saveBemItem() {
   const id = document.getElementById('bemId').value;
   const name = document.getElementById('bemName').value.trim();
-  const value = parseFloat(document.getElementById('bemVal').value) || 0;
-  const category = document.getElementById('bemCat').value;
-  if (!name || value <= 0) { showToast('Preencha o nome e um valor maior que zero.', 'error'); return; }
+  const val = parseFloat(document.getElementById('bemVal').value) || 0;
+  const cat = document.getElementById('bemCat').value;
+  if (!name || val <= 0) { showToast('Informe nome e valor válidos para o bem.', 'error'); return; }
   if (id) {
     const idx = patrimonioBens.findIndex(x => x.id === id);
-    if (idx >= 0) patrimonioBens[idx] = { ...patrimonioBens[idx], name, value, category };
+    if (idx >= 0) patrimonioBens[idx] = { id, name, val, cat };
   } else {
-    patrimonioBens.push({ id: genId(), name, value, category });
+    patrimonioBens.push({ id: genId(), name, val, cat });
   }
   saveAll();
   document.getElementById('formAddBem').classList.add('hidden');
@@ -3318,277 +3194,278 @@ function saveBemItem() {
   showToast('Bem salvo no inventário.', 'success');
 }
 async function deleteBemItem(id) {
-  const ok = await requestConfirm('Remover bem?', 'Deseja excluir este item do inventário?', 'Excluir');
+  const ok = await requestConfirm('Remover bem?', 'Deseja excluir este item do inventário patrimonial?', 'Remover');
   if (!ok) return;
   patrimonioBens = patrimonioBens.filter(x => x.id !== id);
   saveAll();
   renderPatrimonioBens();
-  showToast('Item removido.', 'info');
+  showToast('Bem removido.', 'info');
 }
 function renderPatrimonioBens() {
+  const tot = patrimonioBens.reduce((a, b) => a + b.val, 0);
+  document.getElementById('patrimonioBensTotal').textContent = money(tot);
   const list = document.getElementById('patrimonioBensList');
-  const totEl = document.getElementById('patrimonioBensTotal');
-  const tot = patrimonioBens.reduce((a, b) => a + (Number(b.value) || 0), 0);
-  if (totEl) totEl.textContent = money(tot);
-  if (!list) return;
-  if (!patrimonioBens.length) { list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum bem ou investimento cadastrado ainda.</p>'; return; }
-  list.innerHTML = patrimonioBens.map(b => `<div class="py-2.5 flex justify-between items-center gap-2"><div class="min-w-0 pr-2"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500">${escapeHtml(b.category || 'Bem')}</p></div><div class="flex items-center gap-2 shrink-0"><b class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(b.value)}</b><button type="button" onclick="editBemItem('${b.id}')" aria-label="Editar bem" class="text-xs text-brand-600 font-bold cursor-pointer">✏️</button><button type="button" onclick="deleteBemItem('${b.id}')" aria-label="Excluir bem" class="text-xs text-rose-500 font-bold cursor-pointer">🗑️</button></div></div>`).join('');
+  if (!patrimonioBens.length) list.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">Nenhum bem cadastrado no inventário.</p>';
+  else list.innerHTML = patrimonioBens.map(b => `<div class="py-2.5 flex justify-between items-center gap-2"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500">${escapeHtml(b.cat)}</p></div><div class="flex items-center gap-2 shrink-0"><b class="text-sm text-indigo-600 dark:text-indigo-400">${money(b.val)}</b><button type="button" onclick="openAddBemForm('${b.id}')" class="text-xs text-amber-600 font-bold p-1 cursor-pointer">✏️</button><button type="button" onclick="deleteBemItem('${b.id}')" class="text-xs text-rose-500 font-bold p-1 cursor-pointer">🗑️</button></div></div>`).join('');
 }
 
-// Relatórios administrativos e gráficos
-function renderAdminClientReport(clientName) {
+// Relatórios administrativos sem recibo ou impressão
+function renderAdminOrders() {
+  let profit = 0, fat = 0;
+  orders.forEach(o => { const v = calcValores(o); profit += v.lucroLiq; fat += v.faturamento; });
+  document.getElementById('adm-total-profit').textContent = money(profit);
+  document.getElementById('adm-total-fat').textContent = money(fat);
+
+  const det = document.getElementById('adm-detailed-list');
+  if (!orders.length) {
+    det.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido registrado para relatório.</p>';
+  } else {
+    const sortedOrders = [...orders].sort((a, b) => (b.saida || '').localeCompare(a.saida || ''));
+    det.innerHTML = sortedOrders.map((o, idx) => {
+      const v = calcValores(o);
+      const opLabel = normalizeOperator(o.operador);
+      const seqNum = String(sortedOrders.length - idx).padStart(2, '0');
+      return `<div class="p-3.5 text-xs space-y-2 hover:bg-slate-50/70 dark:hover:bg-slate-900/40 transition select-none">
+        <div class="flex justify-between items-start gap-2">
+          <div class="min-w-0">
+            <p class="font-extrabold text-slate-800 dark:text-slate-200 text-sm truncate">${seqNum} · ${escapeHtml(o.cliente || '—')}</p>
+            <p class="text-[11px] text-slate-500 truncate">${escapeHtml(opLabel)} · ${fmtDT(o.saida)}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <b class="text-emerald-700 dark:text-emerald-400 text-sm block">+${money(v.lucroLiq)}</b>
+            <p class="text-[10px] text-slate-500">Fat: ${money(v.faturamento)}</p>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const cmap = {};
+  orders.forEach(o => {
+    const c = o.cliente || 'Cliente não informado';
+    const v = calcValores(o);
+    if (!cmap[c]) cmap[c] = { count: 0, profit: 0, fat: 0, orders: [] };
+    cmap[c].count++;
+    cmap[c].profit += v.lucroLiq;
+    cmap[c].fat += v.faturamento;
+    cmap[c].orders.push({ ...o, v });
+  });
+
   const detailBox = document.getElementById('adm-client-detail-report');
-  if (!detailBox) return;
-  if (!clientName) {
+  if (detailBox) { detailBox.classList.add('hidden'); detailBox.innerHTML = ''; }
+
+  const ct = document.getElementById('adm-client-table');
+  const sorted = Object.entries(cmap).sort((a, b) => b[1].profit - a[1].profit);
+  if (!sorted.length) {
+    ct.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-xs text-slate-400">Nenhum dado de cliente.</td></tr>';
+  } else {
+    ct.innerHTML = sorted.map(([name, d]) => `
+      <tr onclick="toggleAdminClientDetail('${escapeHtml(encodeURIComponent(name))}')" class="hover:bg-slate-50 dark:hover:bg-slate-800/50 text-xs cursor-pointer transition">
+        <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(name)}</td>
+        <td class="px-4 py-3 text-center">${d.count}</td>
+        <td class="px-4 py-3 text-right font-black text-emerald-700 dark:text-emerald-400">${money(d.profit)}</td>
+      </tr>`).join('');
+  }
+  window.__admClientsMap = cmap;
+}
+
+function toggleAdminClientDetail(encodedName) {
+  const detailBox = document.getElementById('adm-client-detail-report');
+  if (!detailBox || !window.__admClientsMap) return;
+  const name = decodeURIComponent(encodedName);
+  const data = window.__admClientsMap[name];
+  if (!data) return;
+
+  if (detailBox.dataset.activeClient === name && !detailBox.classList.contains('hidden')) {
     detailBox.classList.add('hidden');
-    detailBox.innerHTML = '';
+    detailBox.dataset.activeClient = '';
     return;
   }
 
-  const clientOrders = orders.filter(o => (o.cliente || 'Sem Cliente') === clientName);
-  let totalInv = 0, totalFat = 0, totalLucro = 0;
-  clientOrders.forEach(o => {
-    const v = calcValores(o);
-    totalInv += v.inv;
-    totalFat += v.faturamento;
-    totalLucro += v.lucroLiq;
-  });
-
+  detailBox.dataset.activeClient = name;
+  detailBox.classList.remove('hidden');
   detailBox.innerHTML = `
-    <div class="flex items-center justify-between gap-2">
+    <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-slate-700">
       <div>
-        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">Relatório Analítico do Cliente</p>
-        <h3 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(clientName)}</h3>
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">RELATÓRIO DO CLIENTE</p>
+        <h4 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(name)}</h4>
       </div>
-      <button type="button" onclick="renderAdminClientReport('')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 cursor-pointer">Fechar</button>
-    </div>
-    <div class="grid grid-cols-3 gap-2 pt-1">
-      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
-        <span class="text-[10px] font-bold uppercase text-slate-500 block">Pedidos</span>
-        <b class="text-xs font-black text-slate-900 dark:text-white">${clientOrders.length}</b>
-      </div>
-      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
-        <span class="text-[10px] font-bold uppercase text-slate-500 block">Faturamento</span>
-        <b class="text-xs font-black text-brand-600 dark:text-indigo-400">${money(totalFat)}</b>
-      </div>
-      <div class="rounded-xl p-2.5 bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
-        <span class="text-[10px] font-bold uppercase text-slate-500 block">Lucro Líquido</span>
-        <b class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(totalLucro)}</b>
+      <div class="text-right">
+        <span class="font-black text-emerald-700 dark:text-emerald-400 block">${money(data.profit)}</span>
+        <span class="text-[10px] text-slate-500">${data.count} ${data.count === 1 ? 'pedido' : 'pedidos'} · Fat: ${money(data.fat)}</span>
       </div>
     </div>
-    <div class="space-y-1.5 pt-1">
-      ${clientOrders.length ? clientOrders.map(o => {
-        const v = calcValores(o);
-        return `
-          <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/70">
-            <div class="min-w-0">
-              <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido || 'Pedido')} · ${escapeHtml(statusOf(o).label)}</p>
-              <p class="text-[10px] text-slate-500 truncate">${fmtDT(o.saida)} · Invest.: ${money(v.inv)}</p>
-            </div>
-            <span class="font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(v.lucroLiq)}</span>
+    <div class="space-y-1.5">
+      ${data.orders.map(item => `
+        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.pedido || 'Pedido')} · ${escapeHtml(normalizeOperator(item.operador))}</p>
+            <p class="text-[10px] text-slate-500">${fmtDT(item.saida)} · ${escapeHtml(statusOf(item).label)}</p>
           </div>
-        `;
-      }).join('') : '<p class="text-slate-400 text-center py-2">Sem registros para este cliente.</p>'}
+          <div class="text-right shrink-0">
+            <b class="text-emerald-700 dark:text-emerald-400 block">+${money(item.v.lucroLiq)}</b>
+            <span class="text-[10px] text-slate-500">Fat: ${money(item.v.faturamento)}</span>
+          </div>
+        </div>
+      `).join('')}
     </div>
   `;
-  detailBox.classList.remove('hidden');
-}
-
-function renderAdminOrders() {
-  let totFat = 0, totLucro = 0;
-  const cli = {};
-  orders.forEach(o => {
-    const v = calcValores(o);
-    totFat += v.faturamento;
-    totLucro += v.lucroLiq;
-    const c = o.cliente || 'Sem Cliente';
-    if (!cli[c]) cli[c] = { name: c, count: 0, lucro: 0 };
-    cli[c].count++;
-    cli[c].lucro += v.lucroLiq;
-  });
-  document.getElementById('adm-total-profit').textContent = money(totLucro);
-  document.getElementById('adm-total-fat').textContent = money(totFat);
-  const detList = document.getElementById('adm-detailed-list');
-  if (!orders.length) detList.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum pedido registrado.</p>';
-  else detList.innerHTML = orders.map(o => {
-    const v = calcValores(o);
-    const opLabel = normalizeOperator(o.operador);
-    return `<div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer flex justify-between items-center gap-2" onclick="openReceipt('${o.id}')"><div class="min-w-0 pr-2"><p class="text-xs font-bold text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || '—')} · ${escapeHtml(o.cliente || '—')}</p><p class="text-[10px] text-slate-500">${escapeHtml(opLabel)} · ${fmtDT(o.saida)} · <span class="text-brand-600 font-semibold">Recibo</span></p></div><div class="text-right shrink-0"><b class="text-xs font-black text-emerald-600 dark:text-emerald-400 block">+${money(v.lucroLiq)}</b><span class="text-[10px] text-slate-500">Fat: ${money(v.faturamento)}</span></div></div>`;
-  }).join('');
-  const tbody = document.getElementById('adm-client-table');
-  const sorted = Object.values(cli).sort((a, b) => b.lucro - a.lucro);
-  if (!sorted.length) {
-    renderAdminClientReport('');
-    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
-  } else {
-    tbody.innerHTML = sorted.map(c => `<tr onclick="renderAdminClientReport(${JSON.stringify(c.name)})" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 transition"><td class="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td><td class="px-4 py-3 text-center">${c.count}</td><td class="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${money(c.lucro)}</td></tr>`).join('');
-  }
 }
 
 function renderAdminFinance() {
-  const f = document.getElementById('adm-fin-filter').value;
+  const f = document.getElementById('adm-fin-filter')?.value || 'all';
   const list = document.getElementById('adm-fin-list');
   const items = txs.filter(t => f === 'all' || t.type === f).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-  if (!items.length) list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento.</p>';
+  if (!items.length) list.innerHTML = '<p class="p-6 text-center text-xs text-slate-400">Nenhum lançamento encontrado.</p>';
   else list.innerHTML = items.map(t => {
     const isInc = t.type === 'income';
-    return `<div class="p-3 flex justify-between items-center gap-2"><div class="min-w-0"><p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.createdAt || t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><b class="text-xs ${isInc ? 'text-emerald-600' : 'text-rose-600'} shrink-0">${isInc ? '+' : '-'}${money(t.amount)}</b></div>`;
+    const statusTag = t.status === 'pending' ? '<span class="text-[9px] font-bold text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300 px-1.5 py-0.5 rounded">Pendente</span>' : '';
+    const opTag = (!isInc && isLancamentoOperacional(t)) ? '<span class="text-[9px] font-bold text-indigo-700 bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 px-1.5 py-0.5 rounded">Operacional · Fora do Teto</span>' : '';
+    return `<div class="p-3.5 flex justify-between items-center gap-2 hover:bg-slate-50/70 dark:hover:bg-slate-900/40"><div class="min-w-0"><p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)} ${statusTag} ${opTag}</p><p class="text-[10px] text-slate-500">${fmtDateTimeTx(t.createdAt || t.date)} · ${escapeHtml(getAccountLabel(t.accountId))}</p></div><b class="text-sm shrink-0 ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'}${money(t.amount)}</b></div>`;
   }).join('');
 }
 
 function openChartsModal() {
+  document.getElementById('chartsModal').classList.remove('hidden');
+  renderColumnCharts();
+}
+function renderColumnCharts() {
   const now = new Date();
-  const ym = now.getFullYear() + '-' + pad(now.getMonth() + 1);
-  const monthTxs = txs.filter(t => t.status === 'paid' && !(t.accountId || '').startsWith('card_') && (t.date || '').startsWith(ym));
-
-  let totalIn = 0, totalOut = 0;
-  const map = {};
-  ACCOUNTS.forEach(a => { map[a.id] = { name: a.name, inc: 0, exp: 0 }; });
-
-  monthTxs.forEach(t => {
-    const amt = Number(t.amount) || 0;
-    if (t.type === 'income') totalIn += amt;
-    else totalOut += amt;
-    if (map[t.accountId]) {
-      if (t.type === 'income') map[t.accountId].inc += amt;
-      else map[t.accountId].exp += amt;
+  const cm = now.getMonth(), cy = now.getFullYear();
+  let tIn = 0, tOut = 0;
+  const stats = {};
+  ACCOUNTS.forEach(a => stats[a.id] = { name: a.name, inc: 0, exp: 0 });
+  txs.forEach(t => {
+    if (t.status !== 'paid' || !t.date || (t.accountId || '').startsWith('card_')) return;
+    const [y, m] = t.date.split('-').map(Number);
+    if (m - 1 === cm && y === cy) {
+      if (t.type === 'income') tIn += t.amount; else tOut += t.amount;
+      if (stats[t.accountId]) { if (t.type === 'income') stats[t.accountId].inc += t.amount; else stats[t.accountId].exp += t.amount; }
     }
   });
-
-  const maxVal = Math.max(100, ...Object.values(map).flatMap(x => [x.inc, x.exp]));
-  const inEl = document.getElementById('chart-month-income');
-  const outEl = document.getElementById('chart-month-expense');
+  const incEl = document.getElementById('chart-month-income');
+  const expEl = document.getElementById('chart-month-expense');
   const scaleEl = document.getElementById('chart-scale-max');
-  if (inEl) inEl.textContent = money(totalIn);
-  if (outEl) outEl.textContent = money(totalOut);
-  if (scaleEl) scaleEl.textContent = `Escala máx.: ${money(maxVal)}`;
+  if (incEl) incEl.textContent = money(tIn);
+  if (expEl) expEl.textContent = money(tOut);
 
-  const cont = document.getElementById('column-charts-container');
-  cont.innerHTML = Object.values(map).map(item => {
-    const hInc = Math.max(6, Math.round((item.inc / maxVal) * 84));
-    const hExp = Math.max(6, Math.round((item.exp / maxVal) * 84));
+  const maxV = Math.max(tIn, tOut, ...Object.values(stats).map(s => Math.max(s.inc, s.exp)), 1);
+  if (scaleEl) scaleEl.textContent = `Escala: ${money(maxV)}`;
+
+  const box = document.getElementById('column-charts-container');
+  box.innerHTML = Object.values(stats).map(s => {
+    const hIn = Math.max(6, Math.round((s.inc / maxV) * 96));
+    const hOut = Math.max(6, Math.round((s.exp / maxV) * 96));
     return `
-      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-700/70">
-        <div class="flex items-center justify-between gap-2 mb-3">
-          <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.name)}</span>
-          <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0">Saldo mês: ${money(item.inc - item.exp)}</span>
+      <div class="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200">${escapeHtml(s.name)}</span>
+          <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Saldo Líquido: <b class="${(s.inc - s.exp) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${money(s.inc - s.exp)}</b></span>
         </div>
-        <div class="grid grid-cols-2 gap-4 items-end h-28 pt-2 border-b border-slate-200 dark:border-slate-700/80">
-          <div class="flex flex-col items-center justify-end h-full gap-1.5">
-            <span class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400">${money(item.inc)}</span>
-            <div class="w-11 sm:w-12 rounded-t-lg bg-emerald-500/90 transition-all" style="height:${hInc}px"></div>
+        <div class="grid grid-cols-2 gap-4 items-end h-28 pt-3 px-2 bg-white/70 dark:bg-slate-800/60 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <div class="flex flex-col items-center justify-end h-full">
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mb-1">${money(s.inc)}</span>
+            <div class="w-10 rounded-t-md bg-emerald-500 transition-all duration-300" style="height:${s.inc > 0 ? hIn : 3}px;opacity:${s.inc > 0 ? 1 : 0.25};"></div>
+            <span class="text-[10px] font-bold text-slate-500 mt-1">Entradas</span>
           </div>
-          <div class="flex flex-col items-center justify-end h-full gap-1.5">
-            <span class="text-[10px] font-extrabold text-rose-600 dark:text-rose-400">${money(item.exp)}</span>
-            <div class="w-11 sm:w-12 rounded-t-lg bg-rose-500/90 transition-all" style="height:${hExp}px"></div>
+          <div class="flex flex-col items-center justify-end h-full">
+            <span class="text-[10px] font-bold text-rose-600 dark:text-rose-400 mb-1">${money(s.exp)}</span>
+            <div class="w-10 rounded-t-md bg-rose-500 transition-all duration-300" style="height:${s.exp > 0 ? hOut : 3}px;opacity:${s.exp > 0 ? 1 : 0.25};"></div>
+            <span class="text-[10px] font-bold text-slate-500 mt-1">Saídas</span>
           </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 text-center text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5">
-          <span>Entradas</span>
-          <span>Saídas</span>
         </div>
       </div>`;
   }).join('');
-
-  document.getElementById('chartsModal').classList.remove('hidden');
 }
 
-// Recibos e impressão
+// Comprovante de Transporte: oculta valor quando frete está pendente e mostra líquido quando quitado
 function openReceipt(id) {
   const o = orders.find(x => x.id === id);
   if (!o) return;
   activeReceiptOrderId = id;
-  const v = calcValores(o);
-  const opLabel = normalizeOperator(o.operador);
-  document.getElementById('recPedido').textContent = o.pedido || '—';
-  document.getElementById('recCliente').textContent = o.cliente || '—';
-  const recOpEl = document.getElementById('recOperador');
-  if (recOpEl) recOpEl.textContent = opLabel;
-  document.getElementById('recData').textContent = fmtDT(o.saida);
-  document.getElementById('recInv').textContent = money(v.inv);
-  document.getElementById('recMargem').textContent = money(v.margemVal);
-  const freteAdminLbl = document.getElementById('recFreteAdminLabel');
-  if (freteAdminLbl) {
-    freteAdminLbl.textContent = (o.freightStatus === 'pending' && !o.pagoFrete)
-      ? '(-) Custo Frete (Conta a Pagar):'
-      : '(-) Custo Frete:';
-  }
-  document.getElementById('recFreteAdmin').textContent = money(v.descontoFreteCliente);
-  document.getElementById('recLucro').textContent = money(v.lucroLiq);
-  document.getElementById('recFat').textContent = money(v.faturamento);
   document.getElementById('recPedidoCliente').textContent = o.pedido || '—';
   document.getElementById('recClienteCliente').textContent = o.cliente || '—';
-  document.getElementById('recFreteCliente').textContent = money(v.freteVal);
 
-  const steps = [];
-  if (o.cidadeOrigem || o.saida) steps.push({ title: 'Saída / Origem', city: o.cidadeOrigem, time: o.saida, done: !!o.saida });
-  if (o.transportadora || o.subiuTransp) steps.push({ title: o.transportadora ? 'Subiu na ' + o.transportadora : 'Subiu na Transportadora', city: o.transportadora, time: o.subiuTransp, done: !!o.subiuTransp });
-  if (o.cidade1 || o.cidade1Hora) steps.push({ title: '1ª Passagem', city: o.cidade1, time: o.cidade1Hora, done: !!o.cidade1Hora });
-  if (o.cidade2 || o.cidade2Hora) steps.push({ title: '2ª Passagem', city: o.cidade2, time: o.cidade2Hora, done: !!o.cidade2Hora });
-  if (o.cidade3 || o.cidade3Hora) steps.push({ title: '3ª Passagem', city: o.cidade3, time: o.cidade3Hora, done: !!o.cidade3Hora });
-  if (o.desceuSP) steps.push({ title: 'Desceu em SP', city: 'São Paulo', time: o.desceuSP, done: !!o.desceuSP });
-  if (o.clienteRecebeu) steps.push({ title: 'Entregue ao Cliente', city: o.cliente, time: o.clienteRecebeu, done: !!o.clienteRecebeu });
-
-  const trAdmin = document.getElementById('recTrajetoAdmin');
-  trAdmin.innerHTML = steps.length ? steps.map(s => `<div class="flex justify-between items-start text-xs border-b border-slate-700/60 pb-2"><div><p class="font-bold text-slate-200">${escapeHtml(s.title)}</p><p class="text-[10px] text-slate-400">${escapeHtml(s.city || '')}</p></div><span class="text-[10px] font-semibold text-slate-300 text-right">${fmtDT(s.time)}</span></div>`).join('') : '<p class="text-xs text-slate-400 text-center py-2">Nenhum ponto de rastreio registrado.</p>';
-
-  const trCliente = document.getElementById('recTrajetoCliente');
-  trCliente.innerHTML = steps.length ? steps.map((s, idx) => {
-    const isLast = idx === steps.length - 1;
-    const dotColor = s.done ? 'bg-[#6366f1] border-[#818cf8] shadow-[0_0_0_3px_rgba(99,102,241,0.28)]' : 'bg-[#475569] border-[#64748b]';
-    const lineHtml = !isLast ? `<div class="w-0.5 flex-1 bg-slate-600/80 my-1 min-h-[24px]"></div>` : '';
-    return `<div class="flex items-stretch gap-3.5"><div class="flex flex-col items-center pt-1"><span class="w-2.5 h-2.5 rounded-full border shrink-0 ${dotColor}"></span>${lineHtml}</div><div class="flex-1 ${!isLast ? 'pb-3.5' : 'pb-0.5'}"><div class="flex justify-between items-start gap-2"><p class="text-sm font-bold text-white leading-snug">${escapeHtml(s.title)}</p><span class="text-[11px] font-semibold text-slate-300 shrink-0">${fmtShortDT(s.time)}</span></div>${s.city ? `<p class="text-xs text-slate-400 mt-0.5">${escapeHtml(s.city)}</p>` : ''}</div></div>`;
-  }).join('') : '<p class="text-xs text-slate-400 text-center py-2">Trajeto em andamento.</p>';
-
-  const badge = document.getElementById('recStatusFrete');
+  const v = calcValores(o);
+  const isFreteQuitado = !!(o.pagoFrete && o.freightStatus !== 'pending');
   const servicoRow = document.getElementById('recServicoRow');
-  const servicoLabel = document.getElementById('recServicoLabel');
-  const isFretePago = !!(o.pagoFrete || o.freightStatus === 'paid');
-  if (isFretePago) {
-    if (servicoRow) servicoRow.classList.remove('hidden');
-    if (servicoLabel) servicoLabel.innerHTML = 'Valor<br>Líquido:';
-    document.getElementById('recFreteCliente').textContent = money(v.lucroLiq);
-    badge.textContent = 'FRETE PAGO';
-    badge.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded';
+  const recFreteEl = document.getElementById('recFreteCliente');
+  const statusEl = document.getElementById('recStatusFrete');
+
+  if (isFreteQuitado) {
+    servicoRow.classList.remove('hidden');
+    recFreteEl.classList.remove('hidden');
+    recFreteEl.textContent = money(v.lucroLiq);
+    statusEl.textContent = 'FRETE PAGO';
+    statusEl.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded';
   } else {
-    if (servicoRow) servicoRow.classList.add('hidden');
-    document.getElementById('recFreteCliente').textContent = '';
-    badge.textContent = 'FRETE PENDENTE';
-    badge.className = 'text-[10px] font-black uppercase tracking-wide text-[#fbbf24] bg-[#451a03] border border-[#f59e0b]/30 px-2.5 py-1 rounded';
+    servicoRow.classList.add('hidden');
+    recFreteEl.classList.add('hidden');
+    recFreteEl.textContent = '';
+    statusEl.textContent = 'FRETE PENDENTE';
+    statusEl.className = 'text-[10px] font-black uppercase tracking-wide text-amber-300 bg-amber-950/80 border border-amber-500/40 px-2.5 py-1 rounded';
   }
+
+  const trajClient = document.getElementById('recTrajetoCliente');
+  const steps = [];
+  if (o.cidadeOrigem || o.saida) steps.push({ title: 'Saída / Origem', sub: o.cidadeOrigem || '—', time: fmtDT(o.saida), done: !!o.saida });
+  if (o.transportadora || o.subiuTransp) steps.push({ title: `Subiu na ${o.transportadora || 'Transportadora'}`, sub: o.transportadora || '—', time: fmtDT(o.subiuTransp), done: !!o.subiuTransp });
+  if (o.cidade1 || o.cidade1Hora) steps.push({ title: '1ª Passagem', sub: o.cidade1 || '—', time: fmtDT(o.cidade1Hora), done: !!o.cidade1Hora });
+  if (o.cidade2 || o.cidade2Hora) steps.push({ title: '2ª Passagem', sub: o.cidade2 || '—', time: fmtDT(o.cidade2Hora), done: !!o.cidade2Hora });
+  if (o.cidade3 || o.cidade3Hora) steps.push({ title: '3ª Passagem', sub: o.cidade3 || '—', time: fmtDT(o.cidade3Hora), done: !!o.cidade3Hora });
+  if (o.desceuSP) steps.push({ title: 'Desceu em SP', sub: 'São Paulo', time: fmtDT(o.desceuSP), done: !!o.desceuSP });
+  if (o.clienteRecebeu) steps.push({ title: 'Entregue ao Cliente', sub: o.cliente || '—', time: fmtDT(o.clienteRecebeu), done: !!o.clienteRecebeu });
+  trajClient.innerHTML = steps.map((s, idx) => {
+    const isLast = idx === steps.length - 1;
+    const dot = s.done
+      ? `<div class="w-3.5 h-3.5 rounded-full bg-[#34d399] shadow-[0_0_10px_rgba(52,211,153,0.45)] shrink-0 z-10"></div>`
+      : `<div class="w-3.5 h-3.5 rounded-full bg-[#334155] border-2 border-[#64748b] shrink-0 z-10"></div>`;
+    const line = !isLast
+      ? `<div class="w-[2px] flex-1 my-1 ${s.done ? 'bg-[#34d399]/60' : 'bg-[#334155]'}"></div>`
+      : '';
+    return `
+      <div class="flex items-stretch gap-3.5">
+        <div class="flex flex-col items-center w-4 pt-1 shrink-0">${dot}${line}</div>
+        <div class="flex-1 ${!isLast ? 'pb-4' : 'pb-1'} min-w-0">
+          <div class="flex justify-between items-baseline gap-2">
+            <span class="text-xs font-extrabold ${s.done ? 'text-white' : 'text-slate-400'}">${escapeHtml(s.title)}</span>
+            <span class="text-[11px] font-medium text-slate-400 shrink-0">${escapeHtml(s.time)}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">${escapeHtml(s.sub)}</p>
+        </div>
+      </div>`;
+  }).join('');
   document.getElementById('receiptModal').classList.remove('hidden');
 }
-
-function closeReceipt() { activeReceiptOrderId = null; document.getElementById('receiptModal').classList.add('hidden'); }
+function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
 function printReceipt(mode) {
-  document.body.classList.remove('printing-admin', 'printing-client');
-  document.body.classList.add(mode === 'admin' ? 'printing-admin' : 'printing-client');
+  document.body.classList.remove('printing-client');
+  if (mode === 'client') document.body.classList.add('printing-client');
   window.print();
-  setTimeout(() => document.body.classList.remove('printing-admin', 'printing-client'), 500);
 }
 
 async function resetData() {
   closeMenu();
-  const ok = await requestConfirm('Restaurar dados padrão?', 'Todos os pedidos, lançamentos, cartões, bens e teto serão redefinidos para o estado inicial.', 'Restaurar');
+  const ok = await requestConfirm('Restaurar dados padrão?', 'Isso apagará todos os pedidos, lançamentos financeiros e configurações locais.', 'Restaurar');
   if (!ok) return;
+  [STORAGE_ORDERS, STORAGE_FIN, STORAGE_CARDS, STORAGE_BENS, STORAGE_QUICK, HISTORY_KEY, PROFILE_KEY, SEEN_NOTIF_KEY].forEach(k => localStorage.removeItem(k));
   orders = [];
   txs = [];
-  creditCards = createDefaultCreditCards();
   patrimonioBens = [];
+  creditCards = createDefaultCreditCards();
   quickState = JSON.parse(JSON.stringify(quickDefaultState));
   historyData = { clients: [], cities: [], carriers: [] };
   userProfile = { name: 'Meu Perfil', cpf: '', rg: '' };
   seenNotifications = {};
-  safeSet(HISTORY_KEY, JSON.stringify(historyData));
-  safeSet(PROFILE_KEY, JSON.stringify(userProfile));
-  saveAll();
   updateMenuUserDisplay();
   renderDatalists();
   populateSelects();
-  renderOrders();
-  renderFinance();
+  recalcularConsumidoTeto();
+  checkNotifications();
+  if (currentTab === 'orders') renderOrders();
+  if (currentTab === 'finance') renderFinance();
   if (currentTab === 'admin') switchAdminTab(currentAdminTab);
-  showToast('Sistema restaurado para os padrões.', 'success');
+  showToast('Dados restaurados para o padrão.', 'success');
 }
 
 window.addEventListener('DOMContentLoaded', load);
