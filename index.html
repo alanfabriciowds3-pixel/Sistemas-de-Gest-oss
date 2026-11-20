@@ -304,6 +304,8 @@
     body * { visibility: hidden; }
     body.printing-client #printClientWrapper, body.printing-client #printClientWrapper * { visibility: visible; }
     body.printing-client #printClientWrapper { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important; border-top: none !important; border: none !important; }
+    body.printing-admin #printAdminWrapper, body.printing-admin #printAdminWrapper * { visibility: visible; }
+    body.printing-admin #printAdminWrapper { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 5mm; box-shadow: none; font-size: 11px !important; background: white !important; color: black !important; border-top: none !important; border: none !important; }
     .no-print { display: none !important; }
   }
 </style>
@@ -947,76 +949,76 @@
     <div id="pending-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto num-align"></div>
   </div>
 </div>
-
-<div id="payAccountModal" role="dialog" aria-modal="true" aria-labelledby="payAccountModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
-  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 id="payAccountModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Efetuar Pagamento / Baixa</h3><button type="button" onclick="document.getElementById('payAccountModal').classList.add('hidden')" aria-label="Fechar pagamento" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="confirmPayPending(event)" class="p-5 space-y-4 num-align">
-      <input type="hidden" id="payTxId">
-      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><p class="text-[10px] text-slate-500 uppercase font-bold">Valor a baixar</p><p class="text-lg font-black text-emerald-600" id="payTxAmountDesc">R$ 0,00</p></div>
-      <div><label class="lbl" for="payAccountSelect">De qual conta vai sair o dinheiro?</label><select id="payAccountSelect" required class="field font-semibold"></select></div>
-      <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md cursor-pointer">Confirmar Pagamento</button>
-    </form>
-  </div>
-</div>
-
-<div id="transferModal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
-  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50"><h3 id="transferModalTitle" class="font-bold text-slate-900 dark:text-white">Transferir entre Contas</h3><button type="button" onclick="document.getElementById('transferModal').classList.add('hidden')" aria-label="Fechar transferência" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl leading-none font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="saveTransfer(event)" class="p-5 space-y-4">
-      <div><label class="lbl" for="tFrom">De (Origem)</label><select id="tFrom" required class="field font-semibold"></select></div>
-      <div><label class="lbl" for="tTo">Para (Destino)</label><select id="tTo" required class="field font-semibold"></select></div>
-      <div><label class="lbl" for="tAmount">Valor (R$)</label><div class="money-wrap"><span class="money-prefix text-slate-400 font-bold text-xs">R$</span><input type="number" id="tAmount" placeholder="0,00" step="0.01" min="0.01" inputmode="decimal" required class="field pl-11"></div></div>
-      <div><label class="lbl" for="tDate">Data</label><input type="date" id="tDate" required class="field"></div>
-      <button type="submit" class="w-full py-3 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 text-white rounded-xl font-bold mt-2 cursor-pointer">Confirmar Transferência</button>
-    </form>
-  </div>
-</div>
-
-<div id="editBalanceModal" role="dialog" aria-modal="true" aria-labelledby="editBalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
-  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 class="font-bold text-slate-900 dark:text-white text-sm" id="editBalTitle">Ajustar Saldo</h3><button type="button" onclick="document.getElementById('editBalanceModal').classList.add('hidden')" aria-label="Fechar ajuste de saldo" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
-    <form onsubmit="saveEditBalance(event)" class="p-5 space-y-4 num-align">
-      <input type="hidden" id="editBalAccId">
-      <div class="text-center bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700"><p class="text-[10px] text-slate-500 uppercase font-bold">Saldo Atual no App</p><p class="text-xl font-bold text-slate-800 dark:text-white" id="editBalCurrent">R$ 0,00</p></div>
-      <div><label class="lbl" for="editBalNew">Qual o saldo real agora?</label><div class="money-wrap"><span class="money-prefix text-brand-500 font-bold text-xs">R$</span><input type="number" id="editBalNew" step="0.01" inputmode="decimal" required class="field pl-11 text-center text-xl font-bold text-brand-600 dark:text-indigo-400"></div></div>
-      <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold cursor-pointer">Salvar Ajuste</button>
-    </form>
-  </div>
-</div>
-
-<!-- Comprovante de Transporte do pedido -->
-<div id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="recPedidoCliente" class="hidden fixed inset-0 bg-[#0b101b]/85 backdrop-blur-xs z-50 flex items-center justify-center p-3 overflow-y-auto">
-  <div class="w-full max-w-md my-auto space-y-4 pb-8">
-    <div class="no-print flex items-center gap-2">
-      <button type="button" onclick="printReceipt('client')" class="flex-1 py-3.5 rounded-xl font-extrabold text-sm text-white bg-[#059669] hover:bg-[#047857] shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">🖨️ Imprimir Recibo do Cliente</button>
-      <button type="button" onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-extrabold text-sm text-slate-900 bg-white hover:bg-slate-100 shadow-lg cursor-pointer shrink-0">Fechar</button>
+<!-- Comprovantes de Transporte (Cliente) e Administrativo (apenas na aba Pedidos) -->
+<div id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="recPedidoCliente" class="hidden fixed inset-0 bg-[#0b101b]/90 backdrop-blur-xs z-50 flex items-start justify-center p-3 overflow-y-auto">
+  <div class="w-full max-w-md my-4 space-y-5 pb-10">
+    <div class="no-print flex items-center justify-between gap-2 sticky top-0 z-20 bg-[#0b101b]/95 py-2 backdrop-blur">
+      <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Comprovantes do Pedido</span>
+      <button type="button" onclick="closeReceipt()" class="px-4 py-2 rounded-xl font-extrabold text-xs text-slate-900 bg-white hover:bg-slate-100 shadow-lg cursor-pointer shrink-0">Fechar</button>
     </div>
-    <div id="printClientWrapper" class="receipt-surface rounded-2xl overflow-hidden shadow-2xl border-t-4 border-[#6366f1]">
-      <div class="p-5 sm:p-6">
-        <div class="text-center mb-5">
-          <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">COMPROVANTE DE<br>TRANSPORTE</h2>
-          <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-[#818cf8]"></span></p>
-        </div>
-        <div class="receipt-inner-box py-3 px-4 rounded-xl flex justify-between items-center gap-2 mb-5">
-          <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider">DESTINATÁRIO:</span>
-          <span class="font-extrabold text-white text-base truncate max-w-[210px]" id="recClienteCliente"></span>
-        </div>
-        <div class="mb-5">
-          <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-4 tracking-wider">TRAJETO DA ENTREGA</h4>
-          <div class="relative" id="recTrajetoCliente"></div>
-        </div>
-        <div class="receipt-edge receipt-inner-box rounded-xl p-4 mt-6 space-y-2">
-          <div id="recServicoRow" class="flex justify-between items-center gap-2">
-            <span id="recServicoLabel" class="text-sm font-bold text-slate-200 leading-snug">Valor<br>Líquido:</span>
-            <span class="text-xl font-black text-white text-right" id="recFreteCliente">R$ 0,00</span>
+
+    <!-- 1. Comprovante de Transporte (Recibo do Cliente) -->
+    <div class="space-y-2.5">
+      <div class="no-print">
+        <button type="button" onclick="printReceipt('client')" class="w-full py-3.5 rounded-xl font-extrabold text-sm text-white bg-[#059669] hover:bg-[#047857] shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">🖨️ Imprimir Recibo do Cliente</button>
+      </div>
+      <div id="printClientWrapper" class="receipt-surface rounded-2xl overflow-hidden shadow-2xl border-t-4 border-[#6366f1]">
+        <div class="p-5 sm:p-6">
+          <div class="text-center mb-5">
+            <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">COMPROVANTE DE<br>TRANSPORTE</h2>
+            <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido Nº: <span id="recPedidoCliente" class="font-bold text-[#818cf8]"></span></p>
           </div>
-          <div class="flex justify-between items-center gap-2 pt-1">
-            <span class="text-xs text-slate-400">Status:</span>
-            <span id="recStatusFrete" class="text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded">FRETE PAGO</span>
+          <div class="receipt-inner-box py-3 px-4 rounded-xl flex justify-between items-center gap-2 mb-5">
+            <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider">DESTINATÁRIO:</span>
+            <span class="font-extrabold text-white text-base truncate max-w-[210px]" id="recClienteCliente"></span>
+          </div>
+          <div class="mb-5">
+            <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-4 tracking-wider">TRAJETO DA ENTREGA</h4>
+            <div class="relative" id="recTrajetoCliente"></div>
+          </div>
+          <div class="receipt-edge receipt-inner-box rounded-xl p-4 mt-6 space-y-2">
+            <div id="recServicoRow" class="flex justify-between items-center gap-2">
+              <span id="recServicoLabel" class="text-sm font-bold text-slate-200 leading-snug">Valor do<br>Serviço:</span>
+              <span class="text-xl font-black text-emerald-400 text-right" id="recFreteCliente">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between items-center gap-2 pt-1">
+              <span class="text-xs text-slate-400">Status do Frete:</span>
+              <span id="recStatusFrete" class="text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded">FRETE PAGO</span>
+            </div>
+          </div>
+          <div class="text-center pt-8 text-xs text-slate-400 leading-relaxed">Documento gerado eletronicamente.<br>Obrigado pela preferência!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Recibo Administrativo (Controle Operacional Interno) -->
+    <div class="space-y-2.5 pt-2">
+      <div class="no-print">
+        <button type="button" onclick="printReceipt('admin')" class="w-full py-3.5 rounded-xl font-extrabold text-sm text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer">🖨️ Imprimir Administrativo</button>
+      </div>
+      <div id="printAdminWrapper" class="receipt-surface rounded-2xl overflow-hidden shadow-2xl border-t-4 border-indigo-500">
+        <div class="p-5 sm:p-6">
+          <div class="text-center mb-5">
+            <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide leading-tight">RECIBO<br>ADMINISTRATIVO</h2>
+            <p class="text-xs text-slate-400 font-semibold mt-1.5">Pedido: <span id="recAdminPedido" class="font-bold text-white"></span></p>
+          </div>
+          <div class="space-y-2 text-xs mb-5">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Cliente:</span><strong id="recAdminCliente" class="text-white font-extrabold truncate max-w-[200px]"></strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Operador:</span><strong id="recAdminOperador" class="text-indigo-400 font-bold"></strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-400">Data Emissão:</span><strong id="recAdminData" class="text-slate-200 font-semibold"></strong></div>
+          </div>
+          <div class="receipt-inner-box rounded-xl p-4 space-y-2.5 text-xs mb-5">
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Custo Mercadoria:</span><strong id="recAdminMercadoria" class="text-white font-extrabold">R$ 0,00</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-slate-300">Sua Margem Bruta:</span><strong id="recAdminMargem" class="text-blue-400 font-extrabold">R$ 0,00</strong></div>
+            <div class="flex justify-between items-center gap-2"><span class="text-rose-400">(-) Custo Frete (Conta a Pagar):</span><strong id="recAdminFrete" class="text-rose-400 font-extrabold">R$ 0,00</strong></div>
+            <div class="border-t border-slate-700/80 pt-2.5 flex justify-between items-center gap-2"><span class="text-emerald-400 font-extrabold">Lucro Líquido:</span><strong id="recAdminLucro" class="text-emerald-400 text-sm font-black">R$ 0,00</strong></div>
+            <div class="flex justify-between items-center gap-2 pt-0.5"><span class="text-white font-extrabold">Total Faturado:</span><strong id="recAdminFaturado" class="text-white text-sm font-black">R$ 0,00</strong></div>
+          </div>
+          <div>
+            <h4 class="text-[11px] uppercase font-extrabold text-slate-400 mb-3 tracking-wider">RASTREIO DETALHADO</h4>
+            <div class="space-y-2.5 text-xs" id="recAdminTrajeto"></div>
           </div>
         </div>
-        <div class="text-center pt-8 text-xs text-slate-400 leading-relaxed">Documento gerado eletronicamente.<br>Obrigado pela preferência!</div>
       </div>
     </div>
   </div>
@@ -1049,10 +1051,10 @@ let patrimonioBens = [];
 
 function createDefaultCreditCards() {
   return [
-    { id: 'riachuelo', name: 'Riachuelo', limit: 0, currentBill: 0, dueDay: 23, color: '#059669' },
-    { id: 'htn', name: 'HTN Card', limit: 0, currentBill: 0, dueDay: 25, color: '#16a34a' },
-    { id: 'neon', name: 'NEON', limit: 0, currentBill: 0, dueDay: 23, color: '#0284c7' },
-    { id: 'pernambucanas', name: 'Pernambucanas', limit: 0, currentBill: 0, dueDay: 25, color: '#1d4ed8' }
+    { id: 'riachuelo', name: 'Riachuelo', limit: 0, currentBill: 0, dueDay: 23, locked: false, color: '#059669' },
+    { id: 'pernambucanas', name: 'Pernambucanas', limit: 0, currentBill: 0, dueDay: 25, locked: false, color: '#1d4ed8' },
+    { id: 'neon', name: 'NEON', limit: 0, currentBill: 0, dueDay: 23, locked: false, color: '#0284c7' },
+    { id: 'htn', name: 'HTN Card', limit: 0, currentBill: 0, dueDay: 25, locked: false, color: '#16a34a' }
   ];
 }
 
@@ -1739,18 +1741,19 @@ function saveAll() {
 function normalizeCreditCardsList(rawCards) {
   const defaults = createDefaultCreditCards();
   if (!Array.isArray(rawCards) || !rawCards.length) return defaults;
-  return rawCards.map((c, idx) => {
-    const base = defaults[idx] || { id: `card_${idx + 1}`, name: `Cartão ${idx + 1}`, limit: 0, currentBill: 0, dueDay: 10, color: '#4f46e5' };
-    const limitNum = Number(c && c.limit);
-    const billNum = Number(c && c.currentBill);
-    const dueNum = parseInt(c && c.dueDay, 10);
+  return defaults.map((base, idx) => {
+    const found = rawCards.find(c => c && String(c.id).toLowerCase() === base.id) || rawCards[idx];
+    const limitNum = Number(found && found.limit);
+    const billNum = Number(found && found.currentBill);
+    const dueNum = parseInt(found && found.dueDay, 10);
     return {
-      id: (c && c.id) ? String(c.id) : base.id,
-      name: (c && c.name) ? String(c.name) : base.name,
+      id: base.id,
+      name: (found && found.name) ? String(found.name) : base.name,
       limit: Number.isFinite(limitNum) && limitNum >= 0 ? limitNum : 0,
       currentBill: Number.isFinite(billNum) && billNum >= 0 ? billNum : 0,
       dueDay: Number.isFinite(dueNum) && dueNum >= 1 && dueNum <= 31 ? dueNum : base.dueDay,
-      color: (c && c.color) ? String(c.color) : base.color
+      locked: !!(found && found.locked),
+      color: (found && found.color) ? String(found.color) : base.color
     };
   });
 }
@@ -2754,7 +2757,7 @@ function renderFinance() {
   const acc = document.getElementById('accounts-container');
   if (acc) acc.innerHTML = ACCOUNTS.map(a => `<div class="min-w-[155px] flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-xs border border-slate-200/70 dark:border-slate-700" style="${a.style}"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 truncate">${escapeHtml(a.name)}</p><p class="text-sm font-black text-slate-900 dark:text-white mt-1">${money(getAccountBalance(a.id))}</p><button type="button" onclick="openEditBalance('${a.id}')" class="mt-1.5 text-[11px] text-brand-600 dark:text-brand-400 font-bold cursor-pointer">Ajustar</button></div>`).join('');
   const cards = document.getElementById('cards-container');
-  if (cards) cards.innerHTML = creditCards.map(c => `<div role="button" tabindex="0" onclick="openCardDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="min-w-[175px] flex-shrink-0 rounded-xl p-3 shadow-xs text-white cursor-pointer" style="background:linear-gradient(135deg, ${c.color}, ${c.color}cc);"><p class="text-[10px] font-bold uppercase opacity-90 truncate">${escapeHtml(c.name)}</p><p class="text-sm font-black mt-1">${money(Math.max(0, c.limit - c.currentBill))}</p><p class="text-[10px] opacity-90 mt-0.5">Fatura: ${money(c.currentBill)}</p></div>`).join('');
+  if (cards) cards.innerHTML = creditCards.map(c => `<div role="button" tabindex="0" onclick="openCardDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="min-w-[175px] flex-shrink-0 rounded-xl p-3 shadow-xs text-white cursor-pointer relative" style="background:linear-gradient(135deg, ${c.color}, ${c.color}cc);"><div class="flex items-center justify-between gap-1"><p class="text-[10px] font-bold uppercase opacity-90 truncate">${escapeHtml(c.name)}</p>${c.locked ? '<span class="text-[10px]" title="Cartão Bloqueado">🔒</span>' : ''}</div><p class="text-sm font-black mt-1">${money(Math.max(0, c.limit - c.currentBill))}</p><p class="text-[10px] opacity-90 mt-0.5">Fatura: ${money(c.currentBill)}</p></div>`).join('');
   const pendLucroTotal = getPendingLucros().reduce((a, t) => a + t.amount, 0);
   const patr = document.getElementById('fin-patrimonio'); if (patr) patr.textContent = money(getTotalBankBalance() + pendLucroTotal);
   const pend = document.getElementById('fin-pending-lucro'); if (pend) pend.textContent = money(pendLucroTotal);
@@ -2894,43 +2897,35 @@ function saveEditBalance(e) {
   const atual = getAccountBalance(accId);
   const diff = novo - atual;
   if (diff !== 0) txs.unshift({ id: genId(), desc: `Ajuste de saldo (${diff > 0 ? '+' : ''}${money(diff)})`, amount: Math.abs(diff), type: diff > 0 ? 'income' : 'expense', cat: diff > 0 ? 'Ajuste' : 'Transferência', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, status: 'paid' });
-  saveAll();
-  document.getElementById('editBalanceModal').classList.add('hidden');
-  renderFinance();
-  showToast('Saldo ajustado.', 'success');
-}
-
-// Cartões de crédito: detalhes, ciclo de ajuste em 3 etapas e pagamento de fatura
-function openCardDetail(cardId) {
-  const c = creditCards.find(x => x.id === cardId);
-  if (!c) return;
-  document.getElementById('detCardId').value = cardId;
-  document.getElementById('detCardTitle').textContent = `Cartão ${c.name}`;
-  document.getElementById('detCardLimit').textContent = money(c.limit);
-  document.getElementById('detCardBill').textContent = money(c.currentBill);
-  document.getElementById('detCardAvail').textContent = money(Math.max(0, c.limit - c.currentBill));
-  document.getElementById('detCardDue').textContent = `Dia ${c.dueDay}`;
-  document.getElementById('cardDetailModal').classList.remove('hidden');
-}
-
-function applyCardDueDayStage(stage) {
+function applyCardDueDayStage(stage, cardObj) {
+  const limitInput = document.getElementById('cardLimit');
+  const billInput = document.getElementById('cardCurrentBill');
   const dueInput = document.getElementById('cardDueDay');
   const dueLabel = document.getElementById('cardDueDayLabel');
   const stageHint = document.getElementById('cardAdjustStageHint');
   if (!dueInput) return;
 
   if (stage === 0) {
+    if (limitInput) limitInput.disabled = false;
+    if (billInput) billInput.disabled = false;
     dueInput.disabled = true;
+    if (cardObj) cardObj.locked = false;
     if (dueLabel) dueLabel.textContent = 'Vencimento (Travado 🔒)';
     if (stageHint) stageHint.textContent = 'Etapa 1/3: Limite e fatura liberados; vencimento travado.';
   } else if (stage === 1) {
+    if (limitInput) limitInput.disabled = true;
+    if (billInput) billInput.disabled = true;
     dueInput.disabled = false;
+    if (cardObj) cardObj.locked = false;
     if (dueLabel) dueLabel.textContent = 'Vencimento (Liberado)';
-    if (stageHint) stageHint.textContent = 'Etapa 2/3: Vencimento liberado para edição.';
+    if (stageHint) stageHint.textContent = 'Etapa 2/3: Dia de vencimento liberado para edição.';
   } else {
+    if (limitInput) limitInput.disabled = true;
+    if (billInput) billInput.disabled = true;
     dueInput.disabled = true;
-    if (dueLabel) dueLabel.textContent = 'Vencimento (Travado 🔒)';
-    if (stageHint) stageHint.textContent = 'Etapa 3/3: Vencimento travado novamente.';
+    if (cardObj) cardObj.locked = true;
+    if (dueLabel) dueLabel.textContent = 'Cartão Bloqueado 🔒';
+    if (stageHint) stageHint.textContent = 'Etapa 3/3: Cartão bloqueado para alterações. Toque novamente para desbloquear.';
   }
 }
 
@@ -2943,7 +2938,7 @@ function openEditCardFromDetail() {
 function openCardModal(cardId) {
   const c = creditCards.find(x => x.id === cardId);
   if (!c) return;
-  const currentCycle = cardAdjustCycle[cardId] || 0;
+  const currentCycle = cardAdjustCycle[cardId] !== undefined ? cardAdjustCycle[cardId] : -1;
   const nextCycle = (currentCycle + 1) % 3;
   cardAdjustCycle[cardId] = nextCycle;
 
@@ -2952,7 +2947,9 @@ function openCardModal(cardId) {
   document.getElementById('cardLimit').value = c.limit;
   document.getElementById('cardCurrentBill').value = c.currentBill;
   document.getElementById('cardDueDay').value = c.dueDay;
-  applyCardDueDayStage(nextCycle);
+  applyCardDueDayStage(nextCycle, c);
+  saveAll();
+  renderFinance();
   document.getElementById('cardModal').classList.remove('hidden');
 }
 
@@ -2961,13 +2958,19 @@ function saveCardConfig(e) {
   const id = document.getElementById('cardId').value;
   const c = creditCards.find(x => x.id === id);
   if (!c) return;
-  const limitVal = parseFloat(document.getElementById('cardLimit').value);
-  const billVal = parseFloat(document.getElementById('cardCurrentBill').value);
+  const limitInput = document.getElementById('cardLimit');
+  const billInput = document.getElementById('cardCurrentBill');
   const dueInput = document.getElementById('cardDueDay');
+  const limitVal = parseFloat(limitInput.value);
+  const billVal = parseFloat(billInput.value);
   const dueVal = parseInt(dueInput.value, 10);
 
-  c.limit = Number.isFinite(limitVal) && limitVal >= 0 ? limitVal : 0;
-  c.currentBill = Number.isFinite(billVal) && billVal >= 0 ? billVal : 0;
+  if (!limitInput.disabled && Number.isFinite(limitVal) && limitVal >= 0) {
+    c.limit = limitVal;
+  }
+  if (!billInput.disabled && Number.isFinite(billVal) && billVal >= 0) {
+    c.currentBill = billVal;
+  }
   if (!dueInput.disabled && Number.isFinite(dueVal) && dueVal >= 1 && dueVal <= 31) {
     c.dueDay = dueVal;
   }
@@ -3345,68 +3348,48 @@ function renderColumnCharts() {
   });
   const incEl = document.getElementById('chart-month-income');
   const expEl = document.getElementById('chart-month-expense');
-  const scaleEl = document.getElementById('chart-scale-max');
-  if (incEl) incEl.textContent = money(tIn);
-  if (expEl) expEl.textContent = money(tOut);
-
-  const maxV = Math.max(tIn, tOut, ...Object.values(stats).map(s => Math.max(s.inc, s.exp)), 1);
-  if (scaleEl) scaleEl.textContent = `Escala: ${money(maxV)}`;
-
-  const box = document.getElementById('column-charts-container');
-  box.innerHTML = Object.values(stats).map(s => {
-    const hIn = Math.max(6, Math.round((s.inc / maxV) * 96));
-    const hOut = Math.max(6, Math.round((s.exp / maxV) * 96));
-    return `
-      <div class="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2.5">
-        <div class="flex items-center justify-between gap-2">
-          <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200">${escapeHtml(s.name)}</span>
-          <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Saldo Líquido: <b class="${(s.inc - s.exp) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${money(s.inc - s.exp)}</b></span>
-        </div>
-        <div class="grid grid-cols-2 gap-4 items-end h-28 pt-3 px-2 bg-white/70 dark:bg-slate-800/60 rounded-lg border border-slate-100 dark:border-slate-700/60">
-          <div class="flex flex-col items-center justify-end h-full">
-            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mb-1">${money(s.inc)}</span>
-            <div class="w-10 rounded-t-md bg-emerald-500 transition-all duration-300" style="height:${s.inc > 0 ? hIn : 3}px;opacity:${s.inc > 0 ? 1 : 0.25};"></div>
-            <span class="text-[10px] font-bold text-slate-500 mt-1">Entradas</span>
-          </div>
-          <div class="flex flex-col items-center justify-end h-full">
-            <span class="text-[10px] font-bold text-rose-600 dark:text-rose-400 mb-1">${money(s.exp)}</span>
-            <div class="w-10 rounded-t-md bg-rose-500 transition-all duration-300" style="height:${s.exp > 0 ? hOut : 3}px;opacity:${s.exp > 0 ? 1 : 0.25};"></div>
-            <span class="text-[10px] font-bold text-slate-500 mt-1">Saídas</span>
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-// Comprovante de Transporte: oculta valor quando frete está pendente e mostra líquido quando quitado
+// Comprovantes da aba Pedidos: Recibo do Cliente (sempre exibe Valor do Serviço = Sua Margem) + Recibo Administrativo
 function openReceipt(id) {
   const o = orders.find(x => x.id === id);
   if (!o) return;
   activeReceiptOrderId = id;
+  const v = calcValores(o);
+  const opLabel = normalizeOperator(o.operador);
+  const isFreteQuitado = !!(o.pagoFrete && o.freightStatus !== 'pending');
+
+  // 1. Preenchimento do Comprovante de Transporte (Recibo do Cliente)
   document.getElementById('recPedidoCliente').textContent = o.pedido || '—';
   document.getElementById('recClienteCliente').textContent = o.cliente || '—';
 
-  const v = calcValores(o);
-  const isFreteQuitado = !!(o.pagoFrete && o.freightStatus !== 'pending');
   const servicoRow = document.getElementById('recServicoRow');
+  const servicoLabel = document.getElementById('recServicoLabel');
   const recFreteEl = document.getElementById('recFreteCliente');
   const statusEl = document.getElementById('recStatusFrete');
 
+  servicoRow.classList.remove('hidden');
+  servicoLabel.innerHTML = 'Valor do<br>Serviço:';
+  recFreteEl.classList.remove('hidden');
+  recFreteEl.textContent = money(v.margemVal);
+
   if (isFreteQuitado) {
-    servicoRow.classList.remove('hidden');
-    recFreteEl.classList.remove('hidden');
-    recFreteEl.textContent = money(v.lucroLiq);
     statusEl.textContent = 'FRETE PAGO';
     statusEl.className = 'text-[10px] font-black uppercase tracking-wide text-[#34d399] bg-[#064e3b] border border-[#10b981]/30 px-2.5 py-1 rounded';
   } else {
-    servicoRow.classList.add('hidden');
-    recFreteEl.classList.add('hidden');
-    recFreteEl.textContent = '';
     statusEl.textContent = 'FRETE PENDENTE';
     statusEl.className = 'text-[10px] font-black uppercase tracking-wide text-amber-300 bg-amber-950/80 border border-amber-500/40 px-2.5 py-1 rounded';
   }
 
-  const trajClient = document.getElementById('recTrajetoCliente');
+  // 2. Preenchimento do Recibo Administrativo (Controle Operacional)
+  document.getElementById('recAdminPedido').textContent = o.pedido || '—';
+  document.getElementById('recAdminCliente').textContent = o.cliente || '—';
+  document.getElementById('recAdminOperador').textContent = opLabel;
+  document.getElementById('recAdminData').textContent = fmtDT(o.saida);
+  document.getElementById('recAdminMercadoria').textContent = money(v.inv);
+  document.getElementById('recAdminMargem').textContent = money(v.margemVal);
+  document.getElementById('recAdminFrete').textContent = money(v.freteVal);
+  document.getElementById('recAdminLucro').textContent = money(v.lucroLiq);
+  document.getElementById('recAdminFaturado').textContent = money(v.faturamento);
+
   const steps = [];
   if (o.cidadeOrigem || o.saida) steps.push({ title: 'Saída / Origem', sub: o.cidadeOrigem || '—', time: fmtDT(o.saida), done: !!o.saida });
   if (o.transportadora || o.subiuTransp) steps.push({ title: `Subiu na ${o.transportadora || 'Transportadora'}`, sub: o.transportadora || '—', time: fmtDT(o.subiuTransp), done: !!o.subiuTransp });
@@ -3415,6 +3398,8 @@ function openReceipt(id) {
   if (o.cidade3 || o.cidade3Hora) steps.push({ title: '3ª Passagem', sub: o.cidade3 || '—', time: fmtDT(o.cidade3Hora), done: !!o.cidade3Hora });
   if (o.desceuSP) steps.push({ title: 'Desceu em SP', sub: 'São Paulo', time: fmtDT(o.desceuSP), done: !!o.desceuSP });
   if (o.clienteRecebeu) steps.push({ title: 'Entregue ao Cliente', sub: o.cliente || '—', time: fmtDT(o.clienteRecebeu), done: !!o.clienteRecebeu });
+
+  const trajClient = document.getElementById('recTrajetoCliente');
   trajClient.innerHTML = steps.map((s, idx) => {
     const isLast = idx === steps.length - 1;
     const dot = s.done
@@ -3435,12 +3420,30 @@ function openReceipt(id) {
         </div>
       </div>`;
   }).join('');
+
+  const trajAdmin = document.getElementById('recAdminTrajeto');
+  if (trajAdmin) {
+    trajAdmin.innerHTML = steps.map(s => `
+      <div class="flex justify-between items-start gap-2 border-b border-slate-700/50 pb-2 last:border-none">
+        <div class="min-w-0">
+          <p class="font-extrabold text-white truncate">${escapeHtml(s.title)}</p>
+          <p class="text-[11px] text-slate-400 truncate">${escapeHtml(s.sub)}</p>
+        </div>
+        <span class="text-[11px] text-slate-300 shrink-0">${escapeHtml(s.time)}</span>
+      </div>
+    `).join('');
+  }
+
   document.getElementById('receiptModal').classList.remove('hidden');
 }
 function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
 function printReceipt(mode) {
-  document.body.classList.remove('printing-client');
-  if (mode === 'client') document.body.classList.add('printing-client');
+  document.body.classList.remove('printing-client', 'printing-admin');
+  if (mode === 'admin') {
+    document.body.classList.add('printing-admin');
+  } else {
+    document.body.classList.add('printing-client');
+  }
   window.print();
 }
 
