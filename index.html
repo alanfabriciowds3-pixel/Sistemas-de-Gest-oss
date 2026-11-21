@@ -54,7 +54,6 @@
   .nav-item.active svg { stroke-width: 2.5; filter: drop-shadow(0 4px 6px rgba(99,102,241,0.4)); }
   .scroll-x { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .scroll-x::-webkit-scrollbar { display: none; }
-  /* Dimensões padronizadas e idênticas para todos os cards bancários e cartões */
   .fin-account-card { width: 176px; min-width: 176px; max-width: 176px; height: 112px; min-height: 112px; max-height: 112px; flex: 0 0 176px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow: hidden; }
   .fin-credit-card { width: 224px; min-width: 224px; max-width: 224px; height: 132px; min-height: 132px; max-height: 132px; flex: 0 0 224px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow: hidden; }
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -76,7 +75,6 @@
   .qr-chip.selected { background: rgba(91, 77, 245, 0.18); border-color: #6366f1; color: #4338ca; }
   .dark .qr-chip.selected { color: #c7d2fe; }
   .hidden { display: none !important; }
-  /* Posicionamento dos 2 botões flutuantes na Busca Rápida */
   .qr-pct-fab { position: fixed; left: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 9999px; border: none; background: #10b981; color: #ffffff; font-size: 15px; font-weight: 900; box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35); cursor: pointer; z-index: 45; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.2s ease, background 0.3s ease; }
   .qr-pct-fab:hover { transform: scale(1.05); }
   .qr-nav-fab { position: fixed; right: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 9999px; background: #1e293b; color: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.25); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.45); cursor: pointer; z-index: 45; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.2s ease, border-color 0.2s ease; }
@@ -178,8 +176,11 @@
               <span class="shrink-0" aria-hidden="true">💾</span><span class="truncate">Baixar Sistema (.html)</span>
             </button>
           </div>
-          <div class="border-t border-slate-300/60 dark:border-slate-600/40 pt-1">
-            <button type="button" role="menuitem" onclick="resetData()" class="w-full px-3.5 py-2 text-[13px] font-bold text-rose-600 dark:text-rose-300 hover:bg-white/60 dark:hover:bg-slate-700/50 flex items-center gap-2.5 transition cursor-pointer">
+          <div class="border-t border-slate-300/60 dark:border-slate-600/40 pt-1 space-y-0.5">
+            <button type="button" role="menuitem" onclick="resetAllToZero()" class="w-full px-3.5 py-2 text-[13px] font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 flex items-center gap-2.5 transition cursor-pointer">
+              <span class="shrink-0" aria-hidden="true">🧨</span><span class="truncate">Zerar Tudo (Do Zero)</span>
+            </button>
+            <button type="button" role="menuitem" onclick="resetData()" class="w-full px-3.5 py-2 text-[13px] font-bold text-slate-700 dark:text-slate-200 hover:bg-white/60 dark:hover:bg-slate-700/50 flex items-center gap-2.5 transition cursor-pointer">
               <span class="shrink-0" aria-hidden="true">🔄</span><span class="truncate">Restaurar Padrão</span>
             </button>
           </div>
@@ -343,7 +344,7 @@
           <button type="button" onclick="qrConfirmarDespesa()" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold cursor-pointer transition">Registrar</button>
         </div>
 
-        <!-- Campos de Compra no Cartão de Crédito (Entra no teto e não duplica ao pagar fatura) -->
+        <!-- Campos de Compra no Cartão de Crédito -->
         <div id="qrCardFields" class="hidden space-y-2">
           <div>
             <label class="lbl" for="qrCardNote">Observação da Compra</label>
@@ -366,7 +367,7 @@
       </div>
     </section>
 
-    <!-- Agenda de Vencimentos na Busca Rápida (Modo 100% Passivo, recolhida por padrão) -->
+    <!-- Agenda de Vencimentos na Busca Rápida -->
     <section id="qrDueScheduleCard" aria-label="Agenda de Vencimentos" class="hidden fume-menu rounded-2xl p-3.5 transition-all num-align">
       <div class="flex items-start justify-between gap-2 mb-2">
         <div class="min-w-0">
@@ -828,7 +829,7 @@
   </div>
 </div>
 
-<!-- Modal Recibo (Cliente Simplificado Sem Valores / Admin Simples Restrito a Pedidos) -->
+<!-- Modal Recibo -->
 <div id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="recPedidoCliente" class="hidden fixed inset-0 bg-[#0b101b]/85 backdrop-blur-xs z-50 flex items-center justify-center p-3 overflow-y-auto">
   <div class="w-full max-w-md my-auto space-y-3 pb-8">
     <div class="no-print grid grid-cols-2 gap-2">
@@ -840,7 +841,6 @@
       <button type="button" onclick="closeReceipt()" class="px-5 py-3.5 rounded-xl font-extrabold text-sm text-slate-900 bg-white hover:bg-slate-100 shadow-lg cursor-pointer shrink-0">Fechar</button>
     </div>
 
-    <!-- Comprovante do Cliente: versão enxuta (origem -> destino, destinatário e pedido; sem valores) -->
     <div id="printClientWrapper" class="receipt-surface rounded-xl p-6 shadow-2xl relative">
       <div class="text-center mb-5 border-b border-slate-600/60 pb-3">
         <h2 class="text-lg font-black uppercase tracking-wide">COMPROVANTE DE ENTREGA</h2>
@@ -865,7 +865,6 @@
       </div>
     </div>
 
-    <!-- Comprovante Administrativo: visualização simples e restrita a Pedidos -->
     <div id="printAdminWrapper" class="hidden receipt-surface rounded-xl p-6 shadow-2xl relative">
       <div class="text-center mb-4 border-b border-slate-600 pb-3">
         <h2 class="text-lg font-extrabold">COMPROVANTE ADMINISTRATIVO</h2>
@@ -905,10 +904,10 @@ const STORAGE = {
   teto: 'gestao_premium_teto',
   profile: 'gestao_premium_profile',
   theme: 'gestao_premium_theme',
-  seenNotifs: 'gestao_premium_seen_notifs'
+  seenNotifs: 'gestao_premium_seen_notifs',
+  wipedToZero: 'gestao_premium_wiped_to_zero'
 };
 
-// Contas bancárias estritamente separadas dos cartões de crédito
 const ACCOUNTS = [
   { id: 'cash', name: 'Dinheiro em Caixa', color: 'bg-emerald-500' },
   { id: 'caixa', name: 'Caixa Econômica', color: 'bg-blue-600' },
@@ -917,7 +916,6 @@ const ACCOUNTS = [
   { id: 'inter', name: 'Inter', color: 'bg-orange-500' }
 ];
 
-// Cartões de crédito oficiais do sistema
 const DEFAULT_CREDIT_CARDS = [
   { id: 'card_riachuelo', name: 'Riachuelo', limit: 2500, currentBill: 0, dueDay: 10, history: [] },
   { id: 'card_neon', name: 'Neon', limit: 3500, currentBill: 0, dueDay: 15, history: [] },
@@ -934,7 +932,6 @@ let activeOrderFreightPayments = [];
 let confirmResolver = null;
 let cardSingleClickTimer = null;
 
-// Utilitários de data, moeda e armazenamento local
 function pad(n){ return String(n).padStart(2,'0'); }
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function offsetISO(days){ const d=new Date(); d.setDate(d.getDate()+days); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -968,7 +965,6 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 function getLocal(k, def){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch(e){ return def; } }
 function setLocal(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 
-// Feedback não-bloqueante
 function showAppToast(msg, type='success') {
   const el = document.getElementById('appToast');
   const inner = document.getElementById('appToastInner');
@@ -998,7 +994,6 @@ function resolveAppConfirm(res) {
   confirmResolver = null;
 }
 
-// Normaliza cartões de crédito garantindo Riachuelo, Neon, HTN e Pernambucana
 function normalizeCardsConfig(rawCards) {
   const source = Array.isArray(rawCards) && rawCards.length > 0 ? rawCards : [];
   const byId = new Map();
@@ -1043,8 +1038,9 @@ function normalizeCardsConfig(rawCards) {
   return normalized;
 }
 
-// Dados iniciais apenas quando o localStorage estiver vazio
 function seedInitialDataIfEmpty() {
+  if (localStorage.getItem(STORAGE.wipedToZero) === 'true') return;
+
   const hasOrders = localStorage.getItem(STORAGE.orders) !== null;
   const hasTxs = localStorage.getItem(STORAGE.txs) !== null;
   const hasCards = localStorage.getItem(STORAGE.cards) !== null;
@@ -1201,7 +1197,58 @@ function seedInitialDataIfEmpty() {
   setLocal(STORAGE.history, sampleHist);
 }
 
-// Inicialização e persistência
+function applyZeroState() {
+  const existingTeto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
+  const tetoLimit = Number(existingTeto.limit) > 0 ? Number(existingTeto.limit) : 3000;
+
+  const baseCards = Array.isArray(cardsConfig) && cardsConfig.length > 0
+    ? normalizeCardsConfig(cardsConfig)
+    : DEFAULT_CREDIT_CARDS;
+
+  const zeroedCards = baseCards.map(c => ({
+    ...c,
+    currentBill: 0,
+    history: []
+  }));
+
+  orders = [];
+  txs = [];
+  cardsConfig = zeroedCards;
+  bensData = [];
+  historyData = { clients: [], cities: [], carriers: [] };
+  seenNotifKeys = [];
+  selectedAdminClientName = null;
+  activeOrderFreightPayments = [];
+
+  setLocal(STORAGE.wipedToZero, true);
+  setLocal(STORAGE.orders, []);
+  setLocal(STORAGE.txs, []);
+  setLocal(STORAGE.cards, zeroedCards);
+  setLocal(STORAGE.bens, []);
+  setLocal(STORAGE.history, { clients: [], cities: [], carriers: [] });
+  setLocal(STORAGE.seenNotifs, []);
+  setLocal(STORAGE.teto, { limit: tetoLimit, cycleExpenses: [] });
+
+  qrLimparBuscaCompleta();
+  renderDatalists();
+  populateSelects();
+  updateNotificationBadge();
+  updateTetoFab();
+  switchTab(currentTab || 'quick');
+}
+
+function resetAllToZero() {
+  closeMenu();
+  askAppConfirm(
+    'Zerar Tudo (Do Zero)',
+    'Isso vai zerar todos os valores das contas bancárias, faturas e histórico dos cartões de crédito, histórico de pedidos, extratos, bens e gastos do teto. Deseja continuar?'
+  ).then(res => {
+    if (!res) return;
+    applyZeroState();
+    showAppToast('Sistema zerado do zero com sucesso!');
+  });
+}
+
 function load() {
   seedInitialDataIfEmpty();
 
@@ -1230,6 +1277,7 @@ function load() {
 }
 
 function saveAll() {
+  localStorage.removeItem(STORAGE.wipedToZero);
   setLocal(STORAGE.orders, orders);
   setLocal(STORAGE.txs, txs);
   setLocal(STORAGE.history, historyData);
@@ -1240,7 +1288,6 @@ function saveAll() {
   updateTetoFab();
 }
 
-// Ajusta dinamicamente a altura da Agenda de Vencimentos sem invadir os botões flutuantes inferiores
 function updateQuickScheduleViewportFit() {
   const listEl = document.getElementById('qrDueScheduleList');
   const cardEl = document.getElementById('qrDueScheduleCard');
@@ -1255,7 +1302,18 @@ function updateQuickScheduleViewportFit() {
 }
 window.addEventListener('resize', updateQuickScheduleViewportFit);
 
-// Navegação entre abas principais
+function updateHeaderTabIcon(tab) {
+  const slot = document.getElementById('header-tab-icon-slot');
+  if (!slot) return;
+  const icons = {
+    quick: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"></circle><path d="M11 7.5a3.5 3.5 0 0 0-3.5 3.5"></path><line x1="20.5" y1="20.5" x2="16.4" y2="16.4"></line></svg>',
+    finance: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+    orders: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+    admin: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>'
+  };
+  slot.innerHTML = icons[tab] || icons.quick;
+}
+
 function switchTab(tab) {
   currentTab = tab;
   ['quick', 'orders', 'finance', 'admin'].forEach(t => {
@@ -1266,6 +1324,7 @@ function switchTab(tab) {
   viewEl.classList.remove('hidden');
   viewEl.classList.add('animate-in');
   document.getElementById(`nav-${tab}`).classList.add('active');
+  updateHeaderTabIcon(tab);
 
   const bottomNav = document.getElementById('bottom-nav');
   const title = document.getElementById('header-title');
@@ -1320,7 +1379,13 @@ function switchAdminTab(tab) {
   }
 }
 
-function toggleMenu(e){ if(e) e.stopPropagation(); document.getElementById('menu').classList.toggle('hidden'); }
+function toggleMenu(e){
+  if(e) e.stopPropagation();
+  const menu = document.getElementById('menu');
+  const isHidden = menu.classList.toggle('hidden');
+  const btn = e?.currentTarget;
+  if (btn) btn.setAttribute('aria-expanded', String(!isHidden));
+}
 function closeMenu(){ document.getElementById('menu').classList.add('hidden'); }
 document.addEventListener('click', e => { const m = document.getElementById('menu'); if(m && !m.classList.contains('hidden') && !m.contains(e.target) && !e.target.closest('button[onclick*="toggleMenu"]')) closeMenu(); });
 
@@ -1334,7 +1399,6 @@ function updateThemeLabel(){
   document.getElementById('menu-theme-label').textContent = document.documentElement.classList.contains('dark') ? 'Modo Claro' : 'Modo Escuro';
 }
 
-// Perfil e Notificações (Janela estrita de 5, 2 e 1 dia + Silenciamento Após Abrir + 100% Passivo)
 function openProfileModal() {
   closeMenu();
   const p = getLocal(STORAGE.profile, { name: '', cpf: '', rg: '' });
@@ -1430,7 +1494,6 @@ function openNotificationsFromMenu() {
     }).join('');
   }
 
-  // Silencia o badge/alerta para os avisos abertos neste ciclo de diffDays
   const seenSet = new Set(Array.isArray(seenNotifKeys) ? seenNotifKeys : []);
   allMatching.forEach(n => seenSet.add(n.key));
   seenNotifKeys = Array.from(seenSet);
@@ -1442,7 +1505,6 @@ function openNotificationsFromMenu() {
 
 function toggleNotifications(){ document.getElementById('notification-modal').classList.add('hidden'); }
 
-// Busca Rápida, palavra-chave de cartão, filtragem ao vivo e lançamentos expressos
 let qrCurrentMode = null;
 let qrSelectedEtapa = 'Despacho';
 let qrSelectedClientName = '';
@@ -1697,11 +1759,11 @@ function qrAtualizarResumoCard() {
     : 'font-extrabold text-emerald-600 dark:text-emerald-400 shrink-0 text-right';
 }
 
-// Registra compra no cartão de crédito e contabiliza no teto (sem duplicar ao pagar fatura)
 function addTetoCycleExpense(item) {
   const teto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
   if (!Array.isArray(teto.cycleExpenses)) teto.cycleExpenses = [];
   teto.cycleExpenses.push(item);
+  localStorage.removeItem(STORAGE.wipedToZero);
   setLocal(STORAGE.teto, teto);
 }
 
@@ -1729,7 +1791,6 @@ function qrConfirmarCompraCartao() {
     status: 'open'
   });
 
-  // Compra no cartão entra na porcentagem do teto mensal
   addTetoCycleExpense({
     id: histId,
     desc: `${card.name}: ${note}`,
@@ -1791,7 +1852,6 @@ function qrAoMudarInstituicaoSelect(type, accId) {
   if (type === 'gasto') qrAtualizarResumoGasto();
 }
 
-// Operação: não contabiliza na porcentagem do teto
 function qrConfirmarOperacao() {
   const v = parseMoney(document.getElementById('qrOpValor').value);
   if (v <= 0) return showAppToast('Digite um valor válido.', 'error');
@@ -1849,7 +1909,6 @@ function qrConfirmarCliente() {
   if (currentTab === 'finance') renderFinance();
 }
 
-// Gasto / Despesa diária: entra na porcentagem do teto
 function qrConfirmarDespesa() {
   const v = parseMoney(document.getElementById('qrGastoValor').value);
   if (v <= 0) return showAppToast('Digite um valor válido.', 'error');
@@ -1887,7 +1946,6 @@ function qrConfirmarDespesa() {
   if (currentTab === 'finance') renderFinance();
 }
 
-// Controle de Teto Mensal (%): gastos diários + compras no cartão; sem operações e sem duplicar quitação de fatura
 function getTetoConsumedAmount(tetoObj) {
   const teto = tetoObj || getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
   return (Array.isArray(teto.cycleExpenses) ? teto.cycleExpenses : []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
@@ -1990,7 +2048,6 @@ function qrZerarCicloTeto() {
   });
 }
 
-// Agenda de Vencimentos na Busca Rápida (Modo 100% Passivo, recolhida por padrão)
 let qrDueScheduleExpanded = false;
 
 function renderQuickSearchSchedule() {
@@ -2058,7 +2115,6 @@ function reopenQuickDueSchedule() {
   requestAnimationFrame(updateQuickScheduleViewportFit);
 }
 
-// Pedidos e cálculo de margens
 function getOrderFreightPaidTotal(o) {
   if (Array.isArray(o.freightPayments) && o.freightPayments.length > 0) {
     return o.freightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
@@ -2093,7 +2149,6 @@ function isOrderFinalizedInHistory(o) {
   return Boolean(o.clienteRecebeu && linkedPaidIncome);
 }
 
-// Lista unificada de recebimentos pendentes (A Receber) sincronizada entre transações e pedidos
 function getPendingReceivablesList() {
   const items = [];
   const coveredOrderIds = new Set();
@@ -2133,7 +2188,6 @@ function getPendingReceivablesList() {
   return items.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 }
 
-// Ativos no topo com ações; pagos/finalizados ao final como histórico passivo
 function renderOrders() {
   let inv=0, fat=0, lucro=0;
   orders.forEach(o => { const v = calcValores(o); inv+=v.inv; fat+=v.faturamento; lucro+=v.lucroLiq; });
@@ -2219,7 +2273,6 @@ function renderOrders() {
 function handleOrdersSearchInput(){ renderOrders(); }
 function clearFinanceSearchPriority(){ document.getElementById('fin-search-banner').classList.add('hidden'); }
 
-// Painel Financeiro, Contas e Cartões
 function getAccountBalance(accId) {
   let bal = 0;
   txs.forEach(t => {
@@ -2231,7 +2284,6 @@ function getAccountBalance(accId) {
   return bal;
 }
 
-// Cards bancários e de cartões de crédito com dimensões uniformes e rolagem horizontal
 function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   accContainer.innerHTML = ACCOUNTS.map(acc => {
@@ -2388,7 +2440,6 @@ function confirmPayPending(e) {
   showAppToast('Pagamento efetuado!');
 }
 
-// Clique simples vs Duplo clique/toque nos cartões de crédito
 function handleCreditCardClick(id) {
   clearTimeout(cardSingleClickTimer);
   cardSingleClickTimer = setTimeout(() => {
@@ -2505,7 +2556,6 @@ function updatePayCardValidationUI() {
   }
 }
 
-// Quitação da fatura do cartão: desconta da conta bancária e restaura limite, SEM adicionar ao teto para não duplicar
 function confirmPayCard(e) {
   e.preventDefault();
   const id = document.getElementById('payCardId').value;
@@ -2544,410 +2594,452 @@ function confirmPayCard(e) {
     createdAt: new Date().toISOString(),
     accountId: accId,
     paymentMethod: 'À Vista',
-    status: 'paid',
-    isCardSettlement: true
+    status: 'paid'
   });
+
   saveAll();
   closePayCardModal();
   switchTab('finance');
-  showAppToast(`Fatura ${c.name} paga à vista pela ${accName}!`);
+  showAppToast(`Fatura do ${c.name} paga com ${accName}!`);
 }
 
-// Inventário de Bens e Patrimônio
-function openPatrimonioBensModal() {
-  document.getElementById('patrimonioBensModal').classList.remove('hidden');
-  renderPatrimonioBensList();
-}
-function renderPatrimonioBensList() {
-  const list = document.getElementById('patrimonioBensList');
-  const total = bensData.reduce((s, b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('patrimonioBensTotal').textContent = money(total);
-
-  if (!bensData.length) {
-    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum bem cadastrado.</p>';
-    return;
-  }
-  list.innerHTML = bensData.map(b => `
-    <div class="flex justify-between items-center py-2.5">
-      <div>
-        <p class="font-bold text-sm text-slate-800 dark:text-slate-200">${escapeHtml(b.name)}</p>
-        <p class="text-[10px] text-slate-500">${escapeHtml(b.category)}</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="font-black text-emerald-600">${money(b.value)}</span>
-        <button type="button" onclick="delBem('${b.id}')" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer">🗑️</button>
-      </div>
-    </div>
-  `).join('');
-}
-function openAddBemForm() {
-  document.getElementById('formAddBem').classList.remove('hidden');
-  document.getElementById('bemName').value = '';
-  document.getElementById('bemVal').value = '';
-}
-function saveBemItem() {
-  const name = document.getElementById('bemName').value.trim();
-  const val = parseMoney(document.getElementById('bemVal').value);
-  const cat = document.getElementById('bemCat').value;
-  if (!name || val <= 0) return showAppToast('Preencha nome e valor.', 'error');
-  bensData.push({ id: genId(), name, value: val, category: cat });
-  saveAll();
-  renderPatrimonioBensList();
-  document.getElementById('formAddBem').classList.add('hidden');
-  if (currentTab === 'finance') renderFinance();
-  showAppToast('Bem adicionado!');
-}
-function delBem(id) {
-  askAppConfirm('Remover Bem', 'Deseja remover este bem do inventário?').then(res => {
-    if (!res) return;
-    bensData = bensData.filter(b => b.id !== id);
-    saveAll();
-    renderPatrimonioBensList();
-    if (currentTab === 'finance') renderFinance();
-  });
-}
-
-// Modais de Patrimônio e A Receber
 function openPatrimonioModal() {
-  let totalAccountsBal = 0;
-  ACCOUNTS.forEach(acc => { totalAccountsBal += getAccountBalance(acc.id); });
+  let bal = 0; ACCOUNTS.forEach(a => bal += getAccountBalance(a.id));
   const receivables = getPendingReceivablesList();
   const pendingLucro = receivables.reduce((s, item) => s + (Number(item.amount) || 0), 0);
-  const bensTotal = bensData.reduce((s, b) => s + (Number(b.value) || 0), 0);
-
-  document.getElementById('detSaldoBancos').textContent = money(totalAccountsBal);
+  const bensTotal = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
+  document.getElementById('detSaldoBancos').textContent = money(bal);
   document.getElementById('detReceber').textContent = money(pendingLucro);
-  document.getElementById('detPatrimonioTotal').textContent = money(totalAccountsBal + pendingLucro + bensTotal);
+  document.getElementById('detPatrimonioTotal').textContent = money(bal + pendingLucro + bensTotal);
   document.getElementById('patrimonioModal').classList.remove('hidden');
 }
 
 function openPendingLucrosModal() {
-  const list = document.getElementById('pending-lucros-list');
-  const receivables = getPendingReceivablesList();
-
-  if (!receivables.length) {
-    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum lucro/pedido pendente de recebimento.</p>';
-  } else {
-    list.innerHTML = receivables.map(item => `
-      <div class="bg-slate-50 dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-3">
-        <div class="min-w-0">
-          <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.title)}</p>
-          <p class="text-[11px] text-slate-500 truncate">${escapeHtml(item.subtitle)}</p>
-        </div>
-        <div class="text-right shrink-0">
-          <p class="font-black text-emerald-600 dark:text-emerald-400 text-sm mb-1.5">${money(item.amount)}</p>
-          <button type="button" onclick="receivePendingProfit('${item.kind}', '${item.txId || ''}', '${item.orderId || ''}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Receber & Finalizar</button>
-        </div>
-      </div>
-    `).join('');
-  }
   document.getElementById('pendingLucrosModal').classList.remove('hidden');
-}
+  const list = document.getElementById('pending-lucros-list');
+  const items = getPendingReceivablesList();
 
-function receivePendingProfit(kind, txId, orderId) {
-  const settledAt = nowLocal();
-  const settledDate = todayISO();
-
-  if (kind === 'tx' && txId) {
-    const t = txs.find(x => x.id === txId);
-    if (t) {
-      t.status = 'paid';
-      t.date = settledDate;
-      t.createdAt = new Date().toISOString();
-      if (t.refId) {
-        const ord = orders.find(o => o.id === t.refId);
-        if (ord) {
-          ord.isFinalized = true;
-          ord.finalizedAt = settledAt;
-          if (!ord.clienteRecebeu) ord.clienteRecebeu = settledAt;
-        }
-      }
-    }
-  } else if (orderId) {
-    const ord = orders.find(o => o.id === orderId);
-    if (ord) {
-      const v = calcValores(ord);
-      const existingIncome = txs.find(t => t.refId === ord.id && t.type === 'income' && t.cat === 'Vendas');
-      if (existingIncome) {
-        existingIncome.status = 'paid';
-        existingIncome.date = settledDate;
-        existingIncome.createdAt = new Date().toISOString();
-      } else if (v.faturamento > 0) {
-        txs.unshift({
-          id: genId(),
-          refId: ord.id,
-          desc: `Pedido ${ord.pedido || 'S/N'} - ${ord.cliente || 'Cliente'}`,
-          amount: v.faturamento,
-          type: 'income',
-          cat: 'Vendas',
-          date: settledDate,
-          createdAt: new Date().toISOString(),
-          accountId: 'nubank',
-          paymentMethod: ord.paymentMethod || 'Pix',
-          status: 'paid'
-        });
-      }
-      ord.isFinalized = true;
-      ord.finalizedAt = settledAt;
-      if (!ord.clienteRecebeu) ord.clienteRecebeu = settledAt;
-    }
-  }
-
-  saveAll();
-  renderFinance();
-  if (currentTab === 'orders') renderOrders();
-  openPendingLucrosModal();
-  showAppToast('Recebimento confirmado e pedido movido para o histórico!');
-}
-
-// Lançamento Financeiro e Transferências
-function setFinType(t) {
-  document.getElementById('fType').value = t;
-  const bInc = document.getElementById('btn-type-income');
-  const bExp = document.getElementById('btn-type-expense');
-  if (t === 'income') {
-    bInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer';
-    bExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
-  } else {
-    bExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 flex items-center justify-center gap-1.5 cursor-pointer';
-    bInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
-  }
-}
-
-function openFinModal() {
-  document.getElementById('finModal').classList.remove('hidden');
-  document.getElementById('fDesc').value = '';
-  document.getElementById('fAmount').value = '';
-  document.getElementById('fDate').value = todayISO();
-  document.getElementById('fStatus').value = 'paid';
-  setFinType('expense');
-  populateAccountSelect('fAccount');
-}
-
-function saveFinTx(e) {
-  e.preventDefault();
-  const type = document.getElementById('fType').value;
-  const desc = document.getElementById('fDesc').value.trim();
-  const amount = parseMoney(document.getElementById('fAmount').value);
-  const date = document.getElementById('fDate').value;
-  const accId = document.getElementById('fAccount').value;
-  const status = document.getElementById('fStatus').value;
-  if (!desc || amount <= 0) return showAppToast('Preencha descrição e valor.', 'error');
-
-  const newTx = { id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: accId, status };
-  txs.unshift(newTx);
-
-  if (type === 'expense' && status === 'paid') {
-    addTetoCycleExpense({ id: newTx.id, desc: newTx.desc, amount, date, source: 'tx' });
-  }
-
-  saveAll();
-  document.getElementById('finModal').classList.add('hidden');
-  renderFinance();
-  showAppToast('Lançamento salvo!');
-}
-
-function openTransferModal() {
-  document.getElementById('transferModal').classList.remove('hidden');
-  populateAccountSelect('tFrom');
-  populateAccountSelect('tTo');
-  document.getElementById('tTo').value = 'nubank';
-  document.getElementById('tAmount').value = '';
-  document.getElementById('tDate').value = todayISO();
-}
-
-function saveTransfer(e) {
-  e.preventDefault();
-  const from = document.getElementById('tFrom').value;
-  const to = document.getElementById('tTo').value;
-  const amt = parseMoney(document.getElementById('tAmount').value);
-  const date = document.getElementById('tDate').value;
-  if (from === to) return showAppToast('Escolha contas diferentes.', 'error');
-  if (amt <= 0) return showAppToast('Valor inválido.', 'error');
-  const fromName = ACCOUNTS.find(a=>a.id===from)?.name || '?';
-  const toName = ACCOUNTS.find(a=>a.id===to)?.name || '?';
-  const ts = new Date().toISOString();
-  txs.unshift({ id: genId(), desc: `Transferência para ${toName}`, amount: amt, type: 'transfer_out', cat: 'Transferência', date, createdAt: ts, accountId: from, status: 'paid' });
-  txs.unshift({ id: genId(), desc: `Transferência de ${fromName}`, amount: amt, type: 'transfer_in', cat: 'Transferência', date, createdAt: ts, accountId: to, status: 'paid' });
-  saveAll();
-  document.getElementById('transferModal').classList.add('hidden');
-  renderFinance();
-  showAppToast('Transferência realizada!');
-}
-
-function openEditBalance(accId) {
-  const acc = ACCOUNTS.find(a => a.id === accId);
-  if (!acc) return;
-  const cur = getAccountBalance(accId);
-  document.getElementById('editBalAccId').value = acc.id;
-  document.getElementById('editBalTitle').textContent = `Ajustar: ${acc.name}`;
-  document.getElementById('editBalCurrent').textContent = money(cur);
-  document.getElementById('editBalNew').value = cur.toFixed(2).replace('.', ',');
-  document.getElementById('editBalanceModal').classList.remove('hidden');
-}
-
-function saveEditBalance(e) {
-  e.preventDefault();
-  const accId = document.getElementById('editBalAccId').value;
-  const cur = getAccountBalance(accId);
-  const next = parseMoney(document.getElementById('editBalNew').value);
-  const diff = Number((next - cur).toFixed(2));
-  if (Math.abs(diff) > 0.001) {
-    txs.unshift({ id: genId(), desc: 'Ajuste de Saldo', amount: Math.abs(diff), type: diff > 0 ? 'income' : 'expense', cat: 'Ajuste', date: todayISO(), createdAt: new Date().toISOString(), accountId: accId, status: 'paid', isAdjustment: true });
-    saveAll();
-  }
-  document.getElementById('editBalanceModal').classList.add('hidden');
-  renderFinance();
-  showAppToast('Saldo atualizado!');
-}
-
-function delFinTx(id) {
-  askAppConfirm('Excluir Lançamento', 'Deseja excluir este lançamento financeiro?').then(res => {
-    if (!res) return;
-    txs = txs.filter(t => t.id !== id);
-    const teto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
-    if (Array.isArray(teto.cycleExpenses)) {
-      teto.cycleExpenses = teto.cycleExpenses.filter(e => e.id !== id);
-      setLocal(STORAGE.teto, teto);
-    }
-    saveAll();
-    renderFinance();
-    showAppToast('Lançamento excluído.');
-  });
-}
-
-// Modal de Pedido, frete e rastreio
-function getActiveOrderFreightPaid() {
-  return activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-}
-
-function handleFreightStatusChange() {
-  const st = document.getElementById('oFreightStatus').value;
-  const pagoFreteChk = document.getElementById('oPagoFrete');
-  if (st === 'pending') {
-    pagoFreteChk.checked = false;
-  }
-  togglePaymentOptions();
-  updatePreview();
-  renderOrderFreightInstallmentBox();
-}
-
-function handlePagoFreteCheckboxChange() {
-  const pagoFreteChk = document.getElementById('oPagoFrete');
-  const stSelect = document.getElementById('oFreightStatus');
-  if (pagoFreteChk.checked && stSelect.value === 'pending') {
-    stSelect.value = 'paid';
-  }
-  togglePaymentOptions();
-  updatePreview();
-  renderOrderFreightInstallmentBox();
-}
-
-function renderOrderFreightInstallmentBox() {
-  const box = document.getElementById('orderFreightInstallmentBox');
-  const freteEst = Math.max(0, parseMoney(document.getElementById('oFrete').value));
-  const st = document.getElementById('oFreightStatus').value;
-  const paidTotal = getActiveOrderFreightPaid();
-  const due = Math.max(0, Number((freteEst - paidTotal).toFixed(2)));
-
-  if (freteEst > 0 && (st === 'pending' || paidTotal > 0)) {
-    box.classList.remove('hidden');
-  } else {
-    box.classList.add('hidden');
+  if (!items.length) {
+    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum lucro/pedido pendente a receber no momento.</p>';
     return;
   }
 
-  document.getElementById('ordFreteTotalSummary').textContent = money(freteEst);
-  document.getElementById('ordFretePaidSummary').textContent = money(paidTotal);
-  document.getElementById('ordFreteDueSummary').textContent = money(due);
-  document.getElementById('ordFreteRemainingBadge').textContent = due > 0 ? `Falta: ${money(due)}` : 'Frete Quitado!';
+  list.innerHTML = items.map(item => `
+    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
+      <div class="min-w-0">
+        <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.title)}</p>
+        <p class="text-[11px] text-slate-500 truncate">${escapeHtml(item.subtitle)}</p>
+      </div>
+      <div class="text-right shrink-0">
+        <p class="font-black text-emerald-600 text-sm mb-1">${money(item.amount)}</p>
+        <button type="button" onclick="receiveOrderPending('${item.orderId || ''}', '${item.txId || ''}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Receber</button>
+      </div>
+    </div>
+  `).join('');
+}
 
-  const histEl = document.getElementById('ordFreteInstallmentsHistory');
-  if (activeOrderFreightPayments.length > 0) {
-    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
-      const accName = ACCOUNTS.find(a => a.id === p.accountId)?.name || 'Conta';
+function receiveOrderPending(orderId, txId) {
+  let targetTx = txId ? txs.find(x => x.id === txId) : null;
+  if (!targetTx && orderId) {
+    targetTx = txs.find(x => x.refId === orderId && x.type === 'income' && x.cat === 'Vendas');
+  }
+  const ord = orderId ? orders.find(o => o.id === orderId) : (targetTx && targetTx.refId ? orders.find(o => o.id === targetTx.refId) : null);
+
+  if (targetTx) {
+    targetTx.status = 'paid';
+    if (!targetTx.accountId) targetTx.accountId = 'nubank';
+  } else if (ord) {
+    const v = calcValores(ord);
+    txs.unshift({
+      id: genId(),
+      refId: ord.id,
+      desc: `Pedido ${ord.pedido || 'S/N'} - ${ord.cliente || 'Cliente'}`,
+      amount: v.faturamento,
+      type: 'income',
+      cat: 'Vendas',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: 'nubank',
+      paymentMethod: ord.paymentMethod || 'Pix',
+      status: 'paid'
+    });
+  }
+
+  if (ord) {
+    if (!ord.clienteRecebeu) ord.clienteRecebeu = nowLocal();
+    ord.isFinalized = true;
+    ord.finalizedAt = nowLocal();
+  }
+
+  saveAll();
+  document.getElementById('pendingLucrosModal').classList.add('hidden');
+  if (currentTab === 'orders') renderOrders();
+  else switchTab('finance');
+  showAppToast('Recebimento confirmado e pedido movido para o histórico!');
+}
+
+function openPatrimonioBensModal() { document.getElementById('patrimonioBensModal').classList.remove('hidden'); renderPatrimonioBensList(); }
+function openAddBemForm() {
+  document.getElementById('formAddBem').classList.remove('hidden');
+  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
+  document.getElementById('bemId').value = '';
+  document.getElementById('bemName').value = '';
+  document.getElementById('bemVal').value = '';
+  document.getElementById('bemCat').value = 'Imóvel / Terreno';
+}
+function saveBemItem() {
+  const id = document.getElementById('bemId').value;
+  const name = document.getElementById('bemName').value.trim();
+  const val = parseMoney(document.getElementById('bemVal').value);
+  const cat = document.getElementById('bemCat').value;
+  if (!name || val <= 0) return showAppToast('Preencha nome e valor válido.', 'error');
+  if (id) {
+    const idx = bensData.findIndex(b => b.id === id);
+    if (idx !== -1) bensData[idx] = { id, name, value: val, category: cat };
+  } else {
+    bensData.push({ id: genId(), name, value: val, category: cat });
+  }
+  saveAll();
+  document.getElementById('formAddBem').classList.add('hidden');
+  renderPatrimonioBensList();
+  renderFinance();
+  showAppToast('Bem salvo!');
+}
+function editBemItem(id) {
+  const b = bensData.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('formAddBem').classList.remove('hidden');
+  document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
+  document.getElementById('bemId').value = b.id;
+  document.getElementById('bemName').value = b.name;
+  document.getElementById('bemVal').value = Number(b.value || 0).toFixed(2).replace('.', ',');
+  document.getElementById('bemCat').value = b.category || 'Imóvel / Terreno';
+}
+function delBemItem(id) {
+  askAppConfirm('Excluir Bem', 'Deseja excluir este bem do inventário?', true).then(res => {
+    if (!res) return;
+    bensData = bensData.filter(b => b.id !== id);
+    saveAll();
+    renderPatrimonioBensList();
+    renderFinance();
+    showAppToast('Bem removido.');
+  });
+}
+function renderPatrimonioBensList() {
+  const total = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
+  document.getElementById('patrimonioBensTotal').textContent = money(total);
+  const list = document.getElementById('patrimonioBensList');
+  if (!bensData.length) { list.innerHTML = '<p class="text-center text-sm text-slate-400 py-4">Nenhum bem cadastrado.</p>'; return; }
+  list.innerHTML = bensData.map(b => `
+    <div class="py-3 flex justify-between items-center gap-2">
+      <div class="min-w-0"><p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500 uppercase font-semibold">${escapeHtml(b.category)}</p></div>
+      <div class="text-right flex items-center gap-1.5 shrink-0">
+        <span class="font-black text-emerald-600 text-sm mr-1">${money(b.value)}</span>
+        <button type="button" onclick="editBemItem('${b.id}')" aria-label="Editar bem" class="text-slate-400 hover:text-brand-600 text-xs font-bold px-1.5 py-1 rounded bg-slate-100 dark:bg-slate-700 cursor-pointer">✏️</button>
+        <button type="button" onclick="delBemItem('${b.id}')" aria-label="Excluir bem" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-1.5 py-1 rounded bg-rose-50 dark:bg-rose-900/20 cursor-pointer">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+let selectedAdminClientName = null;
+
+function getClientContinuativeStats() {
+  const map = new Map();
+
+  orders.forEach(o => {
+    const cli = (o.cliente || '').trim();
+    if (!cli) return;
+    const key = cli.toLowerCase();
+    const ym = (o.saida || o.clienteRecebeu || todayISO()).slice(0, 7);
+    const v = calcValores(o);
+    if (!map.has(key)) {
+      map.set(key, {
+        name: cli,
+        ordersCount: 0,
+        totalLucro: 0,
+        totalFat: 0,
+        months: new Map()
+      });
+    }
+    const entry = map.get(key);
+    entry.ordersCount += 1;
+    entry.totalLucro += v.lucroLiq;
+    entry.totalFat += v.faturamento;
+
+    if (!entry.months.has(ym)) {
+      entry.months.set(ym, { ym, count: 0, lucro: 0, fat: 0 });
+    }
+    const mEntry = entry.months.get(ym);
+    mEntry.count += 1;
+    mEntry.lucro += v.lucroLiq;
+    mEntry.fat += v.faturamento;
+  });
+
+  return Array.from(map.values()).sort((a, b) => b.totalLucro - a.totalLucro);
+}
+
+function selectAdminClientDetail(clientKeyLower) {
+  const stats = getClientContinuativeStats();
+  const target = stats.find(s => s.name.toLowerCase() === clientKeyLower);
+  const box = document.getElementById('adm-client-detail-report');
+  if (!target) {
+    box.classList.add('hidden');
+    return;
+  }
+  selectedAdminClientName = clientKeyLower;
+  const monthRows = Array.from(target.months.values()).sort((a, b) => b.ym.localeCompare(a.ym));
+  box.innerHTML = `
+    <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-200 dark:border-slate-700">
+      <div>
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">HISTÓRICO MENSAL CONTINUATIVO</span>
+        <h4 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(target.name)}</h4>
+      </div>
+      <button type="button" onclick="selectedAdminClientName=null; document.getElementById('adm-client-detail-report').classList.add('hidden');" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer">Fechar</button>
+    </div>
+    <div class="divide-y divide-slate-200/70 dark:divide-slate-800">
+      ${monthRows.map(m => `
+        <div class="py-1.5 flex items-center justify-between gap-2">
+          <div>
+            <strong class="text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)}</strong>
+            <span class="text-slate-500 dark:text-slate-400 ml-1.5">${m.count} pedido(s) · Fat. ${money(m.fat)}</span>
+          </div>
+          <span class="font-extrabold text-emerald-600 dark:text-emerald-400">${money(m.lucro)}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  box.classList.remove('hidden');
+}
+
+function renderAdminOrders() {
+  let totProfit=0, totFat=0;
+  orders.forEach(o => { const v = calcValores(o); totProfit+=v.lucroLiq; totFat+=v.faturamento; });
+  document.getElementById('adm-total-profit').textContent = money(totProfit);
+  document.getElementById('adm-total-fat').textContent = money(totFat);
+
+  const detList = document.getElementById('adm-detailed-list');
+  if (!orders.length) detList.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido registrado.</p>';
+  else {
+    detList.innerHTML = orders.map(o => {
+      const v = calcValores(o);
+      const st = statusOf(o);
       return `
-        <div class="flex justify-between items-center gap-2 text-[11px] bg-white/70 dark:bg-slate-900/40 px-2.5 py-1 rounded-md border border-amber-200/50 dark:border-amber-800/30">
-          <span class="truncate">Parcela ${idx + 1} (${escapeHtml(accName)})</span>
-          <div class="flex items-center gap-2 shrink-0">
-            <strong class="text-emerald-600 dark:text-emerald-400">${money(p.amount)}</strong>
-            <button type="button" onclick="removeOrderFreightInstallment(${idx})" aria-label="Remover parcela ${idx + 1}" class="text-rose-500 hover:text-rose-700 font-bold px-1 cursor-pointer">✕</button>
+        <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex justify-between items-center gap-3">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs text-slate-900 dark:text-white">${escapeHtml(o.pedido || 'S/N')}</span>
+              <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${st.cls}">${st.label}</span>
+            </div>
+            <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(o.cliente || 'Cliente')}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="font-black text-emerald-600 text-xs">${money(v.lucroLiq)}</p>
+            <p class="text-[10px] text-slate-400">Fat: ${money(v.faturamento)}</p>
           </div>
         </div>`;
     }).join('');
+  }
+
+  const clientStats = getClientContinuativeStats();
+  const tbody = document.getElementById('adm-client-table');
+  if (!clientStats.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-sm text-slate-400">Nenhum cliente com pedidos.</td></tr>';
   } else {
-    histEl.innerHTML = '';
+    tbody.innerHTML = clientStats.map(c => `
+      <tr onclick="selectAdminClientDetail('${escapeHtml(c.name.toLowerCase().replace(/'/g, "\\'"))}')" class="hover:bg-indigo-50/50 dark:hover:bg-slate-800/70 transition cursor-pointer">
+        <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td>
+        <td class="px-4 py-3 text-center"><span class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-bold text-xs px-2 py-0.5 rounded-full">${c.ordersCount}x · ${c.months.size}m</span></td>
+        <td class="px-4 py-3 text-right font-black text-emerald-600">${money(c.totalLucro)}</td>
+      </tr>`).join('');
   }
 }
 
-function removeOrderFreightInstallment(idx) {
-  if (idx < 0 || idx >= activeOrderFreightPayments.length) return;
-  activeOrderFreightPayments.splice(idx, 1);
-  const freteEst = Math.max(0, parseMoney(document.getElementById('oFrete').value));
-  const newPaidTotal = getActiveOrderFreightPaid();
-  if (newPaidTotal < freteEst - 0.009) {
-    document.getElementById('oFreightStatus').value = 'pending';
+function renderAdminFinance() {
+  const filter = document.getElementById('adm-fin-filter').value;
+  let listTxs = txs.filter(t => !t.isAdjustment && t.cat !== 'Ajuste');
+  if (filter === 'income') listTxs = listTxs.filter(t => t.type === 'income');
+  if (filter === 'expense') listTxs = listTxs.filter(t => t.type === 'expense');
+
+  const container = document.getElementById('adm-fin-list');
+  if (!listTxs.length) { container.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Sem registros financeiros para exibir.</p>'; return; }
+
+  container.innerHTML = listTxs.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(t => {
+    const isInc = t.type === 'income';
+    const isPending = t.status === 'pending';
+    return `
+      <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex justify-between items-center">
+        <div><p class="font-bold text-xs text-slate-800 dark:text-slate-200">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-400 mt-0.5">${(t.date || '').split('-').reverse().join('/')} · ${escapeHtml(t.cat || 'Outro')}</p></div>
+        <div class="text-right"><p class="font-black text-xs ${isInc ? 'text-emerald-600' : 'text-rose-600'} ${isPending ? 'line-through opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p></div>
+      </div>`;
+  }).join('');
+}
+
+function getAvailableMonths() {
+  const set = new Set();
+  const d = new Date();
+  set.add(d.getFullYear() + '-' + pad(d.getMonth()+1));
+  orders.forEach(o => { if(o.saida) set.add(o.saida.slice(0,7)); });
+  txs.forEach(t => { if(t.date) set.add(t.date.slice(0,7)); });
+  return Array.from(set).sort().reverse();
+}
+
+function renderMonthlyClosingContent() {
+  const ym = document.getElementById('chartMonthSelector').value;
+  if (!ym) return;
+
+  let monthOrdersFat = 0, monthOrdersMargin = 0, monthOrdersFreightEst = 0;
+  orders.filter(o => o.saida && o.saida.startsWith(ym)).forEach(o => {
+    const v = calcValores(o);
+    monthOrdersFat += v.faturamento;
+    monthOrdersMargin += v.margemVal;
+    monthOrdersFreightEst += (Number(o.frete) || 0);
+  });
+
+  const monthPaidTxs = txs.filter(t => t.date && t.date.startsWith(ym) && t.status !== 'pending' && !t.isAdjustment && t.cat !== 'Ajuste');
+  const incomeTxs = monthPaidTxs.filter(t => t.type === 'income').reduce((s,t) => s + (Number(t.amount) || 0), 0);
+  const opExpTxs = monthPaidTxs.filter(t => t.type === 'expense' && (t.cat === 'Fornecedores' || t.cat === 'Logística' || t.cat === 'Operação')).reduce((s,t) => s + (Number(t.amount) || 0), 0);
+  const otherExpTxs = monthPaidTxs.filter(t => t.type === 'expense' && t.cat !== 'Fornecedores' && t.cat !== 'Logística' && t.cat !== 'Operação').reduce((s,t) => s + (Number(t.amount) || 0), 0);
+
+  const grossRevMonth = incomeTxs > 0 ? incomeTxs : monthOrdersFat;
+  const grossProfitMonth = monthOrdersMargin > 0 ? monthOrdersMargin : Math.max(0, grossRevMonth - opExpTxs);
+  const opOutMonth = opExpTxs > 0 ? opExpTxs : monthOrdersFreightEst;
+  const diverseOutMonth = otherExpTxs;
+  const totalOutMonth = opOutMonth + diverseOutMonth;
+  const netProfitMonth = grossRevMonth - totalOutMonth;
+
+  document.getElementById('chart-month-gross-rev').textContent = money(grossRevMonth);
+  document.getElementById('chart-month-gross-profit').textContent = money(grossProfitMonth);
+  document.getElementById('chart-month-income').textContent = money(netProfitMonth);
+  document.getElementById('chart-month-forecast-rev').textContent = money(opOutMonth);
+  document.getElementById('chart-month-balance').textContent = money(diverseOutMonth);
+  document.getElementById('chart-month-expense').textContent = money(totalOutMonth);
+
+  const maxVal = Math.max(grossRevMonth, grossProfitMonth, Math.abs(netProfitMonth), opOutMonth, diverseOutMonth, totalOutMonth, 1);
+  const bars = [
+    { label: 'Receitas / Entradas do Mês', val: grossRevMonth, color: 'bg-brand-600' },
+    { label: 'Lucro Bruto (Margem Vendas)', val: grossProfitMonth, color: 'bg-blue-500' },
+    { label: 'Lucro Líquido do Mês', val: netProfitMonth, color: netProfitMonth >= 0 ? 'bg-emerald-500' : 'bg-rose-500' },
+    { label: 'Saídas Operacionais (Merc./Frete/Op.)', val: opOutMonth, color: 'bg-amber-500' },
+    { label: 'Saídas Diversas & Cartão', val: diverseOutMonth, color: 'bg-purple-500' },
+    { label: 'Total Geral de Saídas', val: totalOutMonth, color: 'bg-rose-500' }
+  ];
+
+  document.getElementById('column-charts-container').innerHTML = bars.map(b => {
+    const pct = Math.min(100, Math.max(2, (Math.abs(b.val) / maxVal) * 100));
+    return `
+      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-700 space-y-1.5">
+        <div class="flex justify-between text-xs"><span class="font-bold text-slate-700 dark:text-slate-300">${b.label}</span><span class="font-black text-slate-900 dark:text-white">${money(b.val)}</span></div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden"><div class="${b.color} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function openChartsModal() {
+  const months = getAvailableMonths();
+  const sel = document.getElementById('chartMonthSelector');
+  sel.innerHTML = months.map(m => `<option value="${m}">${fmtMonthYearLabel(m)}</option>`).join('');
+  if (months.length) sel.value = months[0];
+  renderMonthlyClosingContent();
+  document.getElementById('chartsModal').classList.remove('hidden');
+}
+
+function renderOrderFreightInstallmentBox() {
+  const freteStatus = document.getElementById('oFreightStatus').value;
+  const box = document.getElementById('orderFreightInstallmentBox');
+  if (freteStatus !== 'pending') {
+    box.classList.add('hidden');
+    return;
   }
-  togglePaymentOptions();
-  updatePreview();
+  box.classList.remove('hidden');
+
+  const estimated = parseMoney(document.getElementById('oFrete').value);
+  const paid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const remaining = Math.max(0, Number((estimated - paid).toFixed(2)));
+
+  document.getElementById('ordFreteTotalSummary').textContent = money(estimated);
+  document.getElementById('ordFretePaidSummary').textContent = money(paid);
+  document.getElementById('ordFreteDueSummary').textContent = money(remaining);
+  document.getElementById('ordFreteRemainingBadge').textContent = remaining > 0 ? `Falta: ${money(remaining)}` : 'Quitado';
+
+  const histEl = document.getElementById('ordFreteInstallmentsHistory');
+  if (!activeOrderFreightPayments.length) {
+    histEl.innerHTML = '<p class="text-[10px] text-slate-500 dark:text-slate-400">Nenhum pagamento parcial lançado ainda.</p>';
+  } else {
+    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
+      const accName = ACCOUNTS.find(a => a.id === p.accountId)?.name || 'Conta';
+      return `<div class="flex justify-between items-center text-[11px] bg-white/70 dark:bg-slate-900/50 px-2.5 py-1 rounded-lg border border-amber-200/50 dark:border-amber-800/30"><span>Parcela ${idx + 1} (${accName}) · ${(p.date || todayISO()).split('-').reverse().join('/')}</span><strong class="text-emerald-600 dark:text-emerald-400">${money(p.amount)}</strong></div>`;
+    }).join('');
+  }
+}
+
+function handleFreightStatusChange() {
   renderOrderFreightInstallmentBox();
-  showAppToast('Parcela removida do rascunho.');
+  updatePreview();
+}
+
+function handlePagoFreteCheckboxChange() {
+  const checked = document.getElementById('oPagoFrete').checked;
+  document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !checked);
+  if (checked && activeOrderFreightPayments.length === 0) {
+    const est = parseMoney(document.getElementById('oFrete').value);
+    if (est > 0 && document.getElementById('oFreightStatus').value === 'paid') {
+      activeOrderFreightPayments = [{ id: genId(), amount: est, accountId: document.getElementById('oAccOutFrete').value || 'c6', date: todayISO() }];
+    }
+  }
+  renderOrderFreightInstallmentBox();
+  updatePreview();
 }
 
 function applyOrderFreightInstallment() {
-  const freteEst = Math.max(0, parseMoney(document.getElementById('oFrete').value));
-  const payInput = document.getElementById('ordFretePayAmt');
-  const payAmt = parseMoney(payInput.value);
-  const payAcc = document.getElementById('ordFretePayAcc').value || 'cash';
-  const paidTotal = getActiveOrderFreightPaid();
-  const remaining = Math.max(0, Number((freteEst - paidTotal).toFixed(2)));
+  const payAmt = parseMoney(document.getElementById('ordFretePayAmt').value);
+  const accId = document.getElementById('ordFretePayAcc').value || 'c6';
+  const est = parseMoney(document.getElementById('oFrete').value);
+  const paidSoFar = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const rem = Math.max(0, Number((est - paidSoFar).toFixed(2)));
 
-  if (freteEst <= 0) return showAppToast('Informe o valor estimado do frete primeiro.', 'error');
-  if (payAmt <= 0) return showAppToast('Digite o valor pago agora.', 'error');
-  if (remaining <= 0.009) return showAppToast('O frete já está totalmente quitado.', 'error');
-  if (payAmt > remaining + 0.009) {
-    return showAppToast(`Valor maior que o restante do frete (${money(remaining)}).`, 'error');
+  if (payAmt <= 0) return showAppToast('Informe o valor da parcela/pagamento do frete.', 'error');
+  if (rem > 0 && payAmt > rem + 0.009) {
+    return showAppToast(`Valor excede o restante do frete (${money(rem)}).`, 'error');
   }
 
   activeOrderFreightPayments.push({
     id: genId(),
     amount: payAmt,
-    accountId: payAcc,
+    accountId: accId,
     date: todayISO()
   });
 
-  payInput.value = '';
-  const newPaidTotal = getActiveOrderFreightPaid();
-  if (newPaidTotal >= freteEst - 0.009) {
+  document.getElementById('oPagoFrete').checked = true;
+  document.getElementById('wrapAccOutFrete').classList.remove('hidden');
+  document.getElementById('oAccOutFrete').value = accId;
+  document.getElementById('ordFretePayAmt').value = '';
+
+  const newPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  if (est > 0 && newPaid >= est - 0.009) {
     document.getElementById('oFreightStatus').value = 'paid';
-    document.getElementById('oPagoFrete').checked = true;
   }
 
-  togglePaymentOptions();
-  updatePreview();
   renderOrderFreightInstallmentBox();
-  showAppToast(`Abatimento de ${money(payAmt)} lançado no frete!`);
+  updatePreview();
+  showAppToast(`Pagamento de ${money(payAmt)} abatido do frete!`);
 }
 
 function openModal(id = null) {
   document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('oId').value = id || '';
   populateAccountSelect('oAccOutMerc');
   populateAccountSelect('oAccOutFrete');
   populateAccountSelect('oAccIn');
   populateAccountSelect('ordFretePayAcc');
-  document.getElementById('oAccOutMerc').value = 'c6';
-  document.getElementById('oAccOutFrete').value = 'cash';
-  document.getElementById('oAccIn').value = 'nubank';
-  document.getElementById('ordFretePayAcc').value = 'cash';
 
   if (id) {
     const o = orders.find(x => x.id === id);
     if (!o) return;
     document.getElementById('modalTitle').textContent = 'Editar Pedido';
+    document.getElementById('oId').value = o.id;
+    document.getElementById('oDriveLink').value = o.driveLink || '';
     document.getElementById('oPedido').value = o.pedido || '';
     document.getElementById('oCliente').value = o.cliente || '';
-    document.getElementById('oDriveLink').value = o.driveLink || '';
     document.getElementById('oUSD').value = o.valorUSD || '';
     document.getElementById('oCot').value = o.cotacao || '';
     document.getElementById('oMargem').value = o.margem || '';
@@ -2957,9 +3049,16 @@ function openModal(id = null) {
     document.getElementById('oPagoMerc').checked = o.pagoMerc !== false;
     document.getElementById('oPagoFrete').checked = o.pagoFrete !== false;
     document.getElementById('oSyncFin').checked = o.syncFin !== false;
-    activeOrderFreightPayments = Array.isArray(o.freightPayments)
-      ? o.freightPayments.map(p => ({ ...p }))
-      : ((Number(o.freightPaid) > 0) ? [{ id: genId(), amount: Number(o.freightPaid), accountId: 'cash', date: todayISO() }] : []);
+
+    if (Array.isArray(o.freightPayments) && o.freightPayments.length > 0) {
+      activeOrderFreightPayments = o.freightPayments.map(p => ({ ...p }));
+    } else if ((Number(o.freightPaid) || 0) > 0) {
+      activeOrderFreightPayments = [{ id: genId(), amount: Number(o.freightPaid), accountId: 'c6', date: (o.saida || todayISO()).split('T')[0] }];
+    } else if (o.pagoFrete && (Number(o.frete) || 0) > 0 && (o.freightStatus || 'paid') === 'paid') {
+      activeOrderFreightPayments = [{ id: genId(), amount: Number(o.frete), accountId: 'c6', date: (o.saida || todayISO()).split('T')[0] }];
+    } else {
+      activeOrderFreightPayments = [];
+    }
 
     document.getElementById('oOrigem').value = o.cidadeOrigem || '';
     document.getElementById('oSaida').value = o.saida || '';
@@ -2973,88 +3072,106 @@ function openModal(id = null) {
     document.getElementById('oC3H').value = o.cidade3Hora || '';
     document.getElementById('oSP').value = o.desceuSP || '';
     document.getElementById('oRec').value = o.clienteRecebeu || '';
+
+    const linkedOutMerc = txs.find(t => t.refId === o.id && t.cat === 'Fornecedores');
+    if (linkedOutMerc) document.getElementById('oAccOutMerc').value = linkedOutMerc.accountId;
+    const linkedOutFrete = txs.find(t => t.refId === o.id && t.cat === 'Logística');
+    if (linkedOutFrete) {
+      document.getElementById('oAccOutFrete').value = linkedOutFrete.accountId;
+      document.getElementById('ordFretePayAcc').value = linkedOutFrete.accountId;
+    }
+    const linkedIn = txs.find(t => t.refId === o.id && t.type === 'income');
+    if (linkedIn) document.getElementById('oAccIn').value = linkedIn.accountId;
   } else {
     document.getElementById('modalTitle').textContent = 'Novo Pedido';
-    ['oPedido','oCliente','oDriveLink','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec'].forEach(f => { document.getElementById(f).value = ''; });
+    document.getElementById('oId').value = '';
+    ['oDriveLink','oPedido','oCliente','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec','ordFretePayAmt'].forEach(k => document.getElementById(k).value = '');
     document.getElementById('oPaymentMethod').value = 'Pix';
     document.getElementById('oFreightStatus').value = 'paid';
     document.getElementById('oPagoMerc').checked = true;
     document.getElementById('oPagoFrete').checked = true;
     document.getElementById('oSyncFin').checked = true;
-    document.getElementById('ordFretePayAmt').value = '';
     activeOrderFreightPayments = [];
   }
   togglePaymentOptions();
-  updatePreview();
   renderOrderFreightInstallmentBox();
+  updatePreview();
 }
-
 function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
-function setNow(id){ document.getElementById(id).value = nowLocal(); }
-
 function togglePaymentOptions() {
-  document.getElementById('wrapAccOutMerc').style.display = document.getElementById('oPagoMerc').checked ? 'block' : 'none';
-  document.getElementById('wrapAccOutFrete').style.display = document.getElementById('oPagoFrete').checked ? 'block' : 'none';
-  document.getElementById('wrapAccIn').style.display = document.getElementById('oSyncFin').checked ? 'block' : 'none';
+  document.getElementById('wrapAccOutMerc').classList.toggle('hidden', !document.getElementById('oPagoMerc').checked);
+  document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !document.getElementById('oPagoFrete').checked);
+  document.getElementById('wrapAccIn').classList.toggle('hidden', !document.getElementById('oSyncFin').checked);
 }
 
 function updatePreview() {
   const link = document.getElementById('oDriveLink').value.trim();
-  const btnDrive = document.getElementById('btnTestDrive');
-  if (link) { btnDrive.href = link; btnDrive.classList.remove('hidden'); } else { btnDrive.classList.add('hidden'); }
+  const btn = document.getElementById('btnTestDrive');
+  if (link) { btn.href = link; btn.classList.remove('hidden'); } else btn.classList.add('hidden');
 
-  const oTemp = {
-    valorUSD: parseMoney(document.getElementById('oUSD').value),
-    cotacao: parseMoney(document.getElementById('oCot').value),
-    margem: parseMoney(document.getElementById('oMargem').value),
-    frete: parseMoney(document.getElementById('oFrete').value),
-    freightPaid: getActiveOrderFreightPaid(),
-    freightPayments: activeOrderFreightPayments,
-    pagoMerc: document.getElementById('oPagoMerc').checked,
-    pagoFrete: document.getElementById('oPagoFrete').checked
-  };
-  const v = calcValores(oTemp);
-  document.getElementById('prevBRL').textContent = money(v.inv);
-  document.getElementById('prevMargem').textContent = `+ ${money(v.margemVal)}`;
-  document.getElementById('prevFreteLabel').textContent = `(-) Custo Frete (${document.getElementById('oFreightStatus').value === 'pending' ? 'Pendente' : 'Pago'})`;
-  document.getElementById('prevFrete').textContent = `- ${money(v.meuCustoFrete)}`;
-  document.getElementById('prevLucro').textContent = money(v.lucroLiq);
-  document.getElementById('prevFinal').textContent = money(v.faturamento);
+  const usd = parseMoney(document.getElementById('oUSD').value);
+  const cot = parseMoney(document.getElementById('oCot').value);
+  const margem = parseMoney(document.getElementById('oMargem').value);
+  const frete = parseMoney(document.getElementById('oFrete').value);
+  const pagoMerc = document.getElementById('oPagoMerc').checked;
+  const pagoFrete = document.getElementById('oPagoFrete').checked;
+  const freteStatus = document.getElementById('oFreightStatus').value;
+  const fretePagoParcelas = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  const inv = usd * cot;
+  const margemVal = inv * (margem / 100);
+  const meuCustoMerc = pagoMerc ? inv : 0;
+  const meuCustoFrete = pagoFrete ? Math.max(frete, fretePagoParcelas) : 0;
+  const lucroLiq = (margemVal + meuCustoMerc) - meuCustoMerc - meuCustoFrete;
+  const totalReceber = margemVal + meuCustoMerc;
+
+  document.getElementById('prevBRL').textContent = money(inv);
+  document.getElementById('prevMargem').textContent = money(margemVal);
+  document.getElementById('prevFreteLabel').textContent = (freteStatus === 'pending' && pagoFrete) ? '(-) Custo Frete (Abatido/Est.)' : '(-) Custo Frete';
+  document.getElementById('prevFrete').textContent = money(meuCustoFrete);
+  document.getElementById('prevLucro').textContent = money(lucroLiq);
+  document.getElementById('prevFinal').textContent = money(totalReceber);
 }
 
 function saveOrder(e) {
   e.preventDefault();
-  const id = document.getElementById('oId').value;
-  const existingOrder = id ? orders.find(x => x.id === id) : null;
-  const pedido = document.getElementById('oPedido').value.trim() || 'S/N';
+  const id = document.getElementById('oId').value || genId();
+  const isEdit = !!document.getElementById('oId').value;
+
+  const pedido = document.getElementById('oPedido').value.trim();
   const cliente = document.getElementById('oCliente').value.trim();
-
-  if (cliente && !historyData.clients.includes(cliente)) historyData.clients.push(cliente);
-  ['oOrigem','oC1','oC2','oC3'].forEach(f => { const c = document.getElementById(f).value.trim(); if (c && !historyData.cities.includes(c)) historyData.cities.push(c); });
-  const tr = document.getElementById('oTransportadora').value.trim();
-  if (tr && !historyData.carriers.includes(tr)) historyData.carriers.push(tr);
-
-  const clientReceivedAt = document.getElementById('oRec').value;
+  const valorUSD = parseMoney(document.getElementById('oUSD').value);
+  const cotacao = parseMoney(document.getElementById('oCot').value);
+  const margem = parseMoney(document.getElementById('oMargem').value);
+  const frete = parseMoney(document.getElementById('oFrete').value);
+  const paymentMethod = document.getElementById('oPaymentMethod').value;
+  const freightStatus = document.getElementById('oFreightStatus').value;
+  const pagoMerc = document.getElementById('oPagoMerc').checked;
+  const pagoFrete = document.getElementById('oPagoFrete').checked;
   const syncFin = document.getElementById('oSyncFin').checked;
 
-  const ord = {
-    id: id || genId(),
-    pedido, cliente,
+  const accOutMerc = document.getElementById('oAccOutMerc').value;
+  const accOutFrete = document.getElementById('oAccOutFrete').value;
+  const accIn = document.getElementById('oAccIn').value;
+
+  let freightPayments = activeOrderFreightPayments.map(p => ({ ...p }));
+  let freightPaid = freightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  if (pagoFrete && frete > 0 && freightStatus === 'paid' && freightPaid === 0) {
+    freightPayments = [{ id: genId(), amount: frete, accountId: accOutFrete || 'c6', date: todayISO() }];
+    freightPaid = frete;
+  }
+
+  const clienteRecebeu = document.getElementById('oRec').value;
+  const obj = {
+    id, pedido, cliente,
     driveLink: document.getElementById('oDriveLink').value.trim(),
-    valorUSD: parseMoney(document.getElementById('oUSD').value),
-    cotacao: parseMoney(document.getElementById('oCot').value),
-    margem: parseMoney(document.getElementById('oMargem').value),
-    frete: parseMoney(document.getElementById('oFrete').value),
-    freightPaid: getActiveOrderFreightPaid(),
-    freightPayments: activeOrderFreightPayments.map(p => ({ ...p })),
-    paymentMethod: document.getElementById('oPaymentMethod').value,
-    freightStatus: document.getElementById('oFreightStatus').value,
-    pagoMerc: document.getElementById('oPagoMerc').checked,
-    pagoFrete: document.getElementById('oPagoFrete').checked,
-    syncFin,
+    valorUSD, cotacao, margem, frete, freightPaid, freightPayments,
+    paymentMethod, freightStatus,
+    pagoMerc, pagoFrete, syncFin,
     cidadeOrigem: document.getElementById('oOrigem').value.trim(),
     saida: document.getElementById('oSaida').value,
-    transportadora: tr,
+    transportadora: document.getElementById('oTransportadora').value.trim(),
     subiuTransp: document.getElementById('oSubiu').value,
     cidade1: document.getElementById('oC1').value.trim(),
     cidade1Hora: document.getElementById('oC1H').value,
@@ -3063,119 +3180,103 @@ function saveOrder(e) {
     cidade3: document.getElementById('oC3').value.trim(),
     cidade3Hora: document.getElementById('oC3H').value,
     desceuSP: document.getElementById('oSP').value,
-    clienteRecebeu: clientReceivedAt,
-    isFinalized: Boolean(existingOrder && existingOrder.isFinalized),
-    finalizedAt: existingOrder ? (existingOrder.finalizedAt || '') : ''
+    clienteRecebeu,
+    isFinalized: Boolean(clienteRecebeu),
+    finalizedAt: clienteRecebeu ? (clienteRecebeu.includes('T') ? clienteRecebeu : clienteRecebeu + 'T00:00') : null
   };
 
-  if (id) {
+  if (cliente && !historyData.clients.some(c => c.toLowerCase() === cliente.toLowerCase())) historyData.clients.push(cliente);
+  ['cidadeOrigem','cidade1','cidade2','cidade3'].forEach(k => { if(obj[k] && !historyData.cities.some(c => c.toLowerCase() === obj[k].toLowerCase())) historyData.cities.push(obj[k]); });
+  if (obj.transportadora && !historyData.carriers.some(c => c.toLowerCase() === obj.transportadora.toLowerCase())) historyData.carriers.push(obj.transportadora);
+
+  if (isEdit) {
     const idx = orders.findIndex(x => x.id === id);
-    orders[idx] = ord;
+    if (idx !== -1) orders[idx] = obj;
     txs = txs.filter(t => t.refId !== id);
   } else {
-    orders.push(ord);
+    orders.push(obj);
   }
 
   if (syncFin) {
-    const v = calcValores(ord);
-    const txDate = (ord.saida || todayISO()).split('T')[0];
-    const accIn = document.getElementById('oAccIn').value || 'nubank';
-    const accOutM = document.getElementById('oAccOutMerc').value || 'c6';
-    const accOutF = document.getElementById('oAccOutFrete').value || 'cash';
-    const isReceived = Boolean(clientReceivedAt);
+    const v = calcValores(obj);
+    const txDate = obj.saida ? obj.saida.split('T')[0] : todayISO();
+    const txCreatedAt = obj.saida ? (obj.saida.length === 16 ? obj.saida + ':00' : obj.saida) : new Date().toISOString();
+    const isReceived = !!obj.clienteRecebeu;
 
     if (v.faturamento > 0) {
       txs.unshift({
-        id: genId(),
-        refId: ord.id,
-        desc: `Pedido ${pedido} - ${cliente || 'Cliente'}`,
+        id: genId(), refId: id,
+        desc: `Pedido ${pedido || 'S/N'} - ${cliente || 'Cliente'}`,
         amount: v.faturamento,
-        type: 'income',
-        cat: 'Vendas',
-        date: txDate,
-        createdAt: new Date().toISOString(),
+        type: 'income', cat: 'Vendas',
+        date: txDate, createdAt: txCreatedAt,
         accountId: accIn,
-        paymentMethod: ord.paymentMethod,
+        paymentMethod: paymentMethod,
         status: isReceived ? 'paid' : 'pending'
       });
-      if (isReceived) {
-        ord.isFinalized = true;
-        ord.finalizedAt = ord.finalizedAt || nowLocal();
-      }
     }
 
-    if (v.meuCustoMerc > 0) {
+    if (pagoMerc && v.inv > 0) {
       txs.unshift({
-        id: genId(),
-        refId: ord.id,
-        desc: `Mercadoria - Pedido ${pedido}`,
-        amount: v.meuCustoMerc,
-        type: 'expense',
-        cat: 'Fornecedores',
-        date: txDate,
-        createdAt: new Date().toISOString(),
-        accountId: accOutM,
+        id: genId(), refId: id,
+        desc: `Mercadoria - Pedido ${pedido || 'S/N'}`,
+        amount: v.inv,
+        type: 'expense', cat: 'Fornecedores',
+        date: txDate, createdAt: txCreatedAt,
+        accountId: accOutMerc,
         status: 'paid'
       });
     }
 
-    if (ord.freightPayments && ord.freightPayments.length > 0) {
-      ord.freightPayments.forEach((fp, i) => {
-        if ((Number(fp.amount) || 0) > 0) {
+    if (pagoFrete && frete > 0) {
+      const remainingFreight = Math.max(0, Number((frete - freightPaid).toFixed(2)));
+      if (freightStatus === 'paid') {
+        txs.unshift({
+          id: genId(), refId: id,
+          desc: `Frete - Pedido ${pedido || 'S/N'}`,
+          amount: frete,
+          type: 'expense', cat: 'Logística',
+          date: txDate, createdAt: txCreatedAt,
+          accountId: accOutFrete,
+          status: 'paid'
+        });
+      } else {
+        if (freightPaid > 0) {
           txs.unshift({
-            id: genId(),
-            refId: ord.id,
-            desc: `Frete (${i + 1}ª parc.) - Pedido ${pedido}`,
-            amount: Number(fp.amount),
-            type: 'expense',
-            cat: 'Logística',
-            date: fp.date || txDate,
-            createdAt: new Date().toISOString(),
-            accountId: fp.accountId || accOutF,
+            id: genId(), refId: id,
+            desc: `Frete (Parcela Paga) - Pedido ${pedido || 'S/N'}`,
+            amount: freightPaid,
+            type: 'expense', cat: 'Logística',
+            date: txDate, createdAt: txCreatedAt,
+            accountId: accOutFrete,
             status: 'paid'
           });
         }
-      });
-      const remFreight = Math.max(0, Number(((Number(ord.frete) || 0) - getOrderFreightPaidTotal(ord)).toFixed(2)));
-      if (remFreight > 0) {
-        txs.unshift({
-          id: genId(),
-          refId: ord.id,
-          desc: `Frete (restante) - Pedido ${pedido}`,
-          amount: remFreight,
-          type: 'expense',
-          cat: 'Logística',
-          date: txDate,
-          createdAt: new Date().toISOString(),
-          accountId: accOutF,
-          status: 'pending'
-        });
+        if (remainingFreight > 0) {
+          txs.unshift({
+            id: genId(), refId: id,
+            desc: `Frete (Restante) - Pedido ${pedido || 'S/N'}`,
+            amount: remainingFreight,
+            type: 'expense', cat: 'Logística',
+            date: txDate, createdAt: txCreatedAt,
+            accountId: accOutFrete,
+            status: 'pending'
+          });
+        }
       }
-    } else if (ord.frete > 0) {
-      txs.unshift({
-        id: genId(),
-        refId: ord.id,
-        desc: `Frete - Pedido ${pedido}`,
-        amount: ord.frete,
-        type: 'expense',
-        cat: 'Logística',
-        date: txDate,
-        createdAt: new Date().toISOString(),
-        accountId: accOutF,
-        status: ord.freightStatus === 'pending' ? 'pending' : 'paid'
-      });
     }
   }
 
   saveAll();
-  renderDatalists();
   closeModal();
-  switchTab('orders');
+  renderDatalists();
+  if (currentTab === 'orders') renderOrders();
+  else switchTab('orders');
   showAppToast('Pedido salvo!');
 }
 
 function delOrder(id) {
-  askAppConfirm('Excluir Pedido', 'Deseja excluir este pedido e seus lançamentos vinculados?').then(res => {
+  askAppConfirm('Excluir Pedido', 'Deseja excluir este pedido e seus lançamentos financeiros vinculados?', true).then(res => {
     if (!res) return;
     orders = orders.filter(x => x.id !== id);
     txs = txs.filter(t => t.refId !== id);
@@ -3185,358 +3286,314 @@ function delOrder(id) {
   });
 }
 
-// Comprovante do Cliente simplificado e Comprovante Administrativo restrito a Pedidos
-function openReceipt(id) { openReceiptFromOrders(id); }
-
-function openReceiptFromOrders(id) {
-  const o = orders.find(x => x.id === id);
-  if (!o) return;
-  activeReceiptOrderId = id;
-  const v = calcValores(o);
-
-  const stops = [];
-  if (o.cidadeOrigem) stops.push({ loc: o.cidadeOrigem, dt: o.saida, tag: 'Origem' });
-  if (o.transportadora) stops.push({ loc: `Transp. ${o.transportadora}`, dt: o.subiuTransp, tag: 'Despacho' });
-  if (o.cidade1) stops.push({ loc: o.cidade1, dt: o.cidade1Hora, tag: 'Rota' });
-  if (o.cidade2) stops.push({ loc: o.cidade2, dt: o.cidade2Hora, tag: 'Rota' });
-  if (o.cidade3) stops.push({ loc: o.cidade3, dt: o.cidade3Hora, tag: 'Rota' });
-  if (o.desceuSP) stops.push({ loc: 'São Paulo', dt: o.desceuSP, tag: 'Transbordo' });
-  if (o.clienteRecebeu) stops.push({ loc: 'Entregue ao Cliente', dt: o.clienteRecebeu, tag: 'Finalização' });
-
-  const origemLabel = o.cidadeOrigem || (stops[0] ? stops[0].loc : '—');
-  const destinoLabel = o.clienteRecebeu
-    ? 'Entregue ao Cliente'
-    : (stops.length > 1 ? stops[stops.length - 1].loc : 'Em andamento');
-
-  document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
-  document.getElementById('recClienteCliente').textContent = o.cliente || 'Cliente';
-  document.getElementById('recRotaResumoCliente').textContent = `${origemLabel} → ${destinoLabel}`;
-
-  const trajClientEl = document.getElementById('recTrajetoCliente');
-  if (!stops.length) {
-    trajClientEl.innerHTML = '<p class="text-xs opacity-60">Nenhuma etapa de trajeto registrada.</p>';
-  } else {
-    trajClientEl.innerHTML = stops.map((s, idx) => {
-      const isLast = idx === stops.length - 1;
-      return `
-        <div class="relative pl-6 pb-4 ${isLast ? 'pb-0' : 'border-l border-slate-600/70'}">
-          <span class="w-2.5 h-2.5 rounded-full ${isLast ? 'bg-emerald-400' : 'bg-indigo-400'} absolute -left-[5px] top-1"></span>
-          <div class="flex justify-between items-baseline gap-2">
-            <span class="font-bold text-xs">${escapeHtml(s.loc)}</span>
-            <span class="text-[9px] uppercase font-bold opacity-65 shrink-0">${escapeHtml(s.tag)}</span>
-          </div>
-          <span class="text-[10px] opacity-70 block mt-0.5">${fmtDT(s.dt)}</span>
-        </div>`;
-    }).join('');
-  }
-
-  document.getElementById('recPedido').textContent = o.pedido || 'S/N';
-  document.getElementById('recCliente').textContent = o.cliente || '—';
-  document.getElementById('recData').textContent = todayISO().split('-').reverse().join('/');
-  document.getElementById('recInv').textContent = money(v.inv);
-  document.getElementById('recMargem').textContent = money(v.margemVal);
-  document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
-  document.getElementById('recLucro').textContent = money(v.lucroLiq);
-  document.getElementById('recFat').textContent = money(v.faturamento);
-
-  const trajAdminEl = document.getElementById('recTrajetoAdmin');
-  trajAdminEl.innerHTML = stops.length
-    ? stops.map(s => `<div class="flex justify-between text-[11px] py-1 border-b border-slate-700/60 last:border-0"><span><b>${escapeHtml(s.loc)}</b> (${escapeHtml(s.tag)})</span><span class="opacity-70">${fmtDT(s.dt)}</span></div>`).join('')
-    : '<p class="text-[11px] opacity-60">Sem etapas registradas.</p>';
-
-  setReceiptMode('client');
-  document.getElementById('receiptModal').classList.remove('hidden');
+function openFinModal() {
+  document.getElementById('finModal').classList.remove('hidden');
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fDate').value = todayISO();
+  document.getElementById('fStatus').value = 'paid';
+  populateAccountSelect('fAccount');
+  setFinType('expense');
 }
-
-function setReceiptMode(mode) {
-  currentReceiptMode = mode === 'admin' ? 'admin' : 'client';
-  const btnClient = document.getElementById('btnModeClientReceipt');
-  const btnAdmin = document.getElementById('btnModeAdminReceipt');
-  const wrapClient = document.getElementById('printClientWrapper');
-  const wrapAdmin = document.getElementById('printAdminWrapper');
-  const printBtn = document.getElementById('btnPrintActiveReceipt');
-
-  if (currentReceiptMode === 'admin') {
-    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
-    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-    wrapAdmin.classList.remove('hidden');
-    wrapClient.classList.add('hidden');
-    printBtn.innerHTML = '🖨️ Imprimir Comprovante Admin';
-    printBtn.onclick = () => printReceipt('admin');
+function setFinType(type) {
+  document.getElementById('fType').value = type;
+  const btnInc = document.getElementById('btn-type-income');
+  const btnExp = document.getElementById('btn-type-expense');
+  if (type === 'income') {
+    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-500 flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer';
+    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer';
   } else {
-    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
-    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-    wrapClient.classList.remove('hidden');
-    wrapAdmin.classList.add('hidden');
-    printBtn.innerHTML = '🖨️ Imprimir Comprovante Cliente';
-    printBtn.onclick = () => printReceipt('client');
+    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-500 flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer';
+    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer';
   }
 }
+function saveFinTx(e) {
+  e.preventDefault();
+  const type = document.getElementById('fType').value;
+  const desc = document.getElementById('fDesc').value.trim();
+  const amount = parseMoney(document.getElementById('fAmount').value);
+  const date = document.getElementById('fDate').value;
+  const accountId = document.getElementById('fAccount').value;
+  const status = document.getElementById('fStatus').value;
 
-function printReceipt(mode) {
-  document.body.classList.remove('printing-client', 'printing-admin');
-  if (mode === 'admin') {
-    document.body.classList.add('printing-admin');
-  } else {
-    document.body.classList.add('printing-client');
-  }
-  window.print();
-}
+  if (!desc || amount <= 0) return showAppToast('Preencha descrição e valor válido.', 'error');
 
-window.addEventListener('afterprint', () => {
-  document.body.classList.remove('printing-client', 'printing-admin');
-});
+  const newTx = {
+    id: genId(),
+    desc,
+    amount,
+    type,
+    cat: 'Outros',
+    date,
+    createdAt: new Date().toISOString(),
+    accountId,
+    status
+  };
+  txs.unshift(newTx);
 
-function closeReceipt() {
-  document.getElementById('receiptModal').classList.add('hidden');
-  document.body.classList.remove('printing-client', 'printing-admin');
-  activeReceiptOrderId = null;
-}
-
-// Administração, Fechamento Mensal e Histórico Continuativo de Clientes
-let selectedAdminClientName = null;
-
-function renderAdminOrders() {
-  let fat=0, lucro=0;
-  orders.forEach(o => { const v = calcValores(o); fat+=v.faturamento; lucro+=v.lucroLiq; });
-  document.getElementById('adm-total-profit').textContent = money(lucro);
-  document.getElementById('adm-total-fat').textContent = money(fat);
-
-  const detList = document.getElementById('adm-detailed-list');
-  if (!orders.length) { detList.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido encontrado.</p>'; }
-  else {
-    detList.innerHTML = orders.slice().sort((a,b)=>(b.saida||'').localeCompare(a.saida||'')).map(o => {
-      const v = calcValores(o);
-      return `<div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50"><div class="flex justify-between items-start"><div class="min-w-0 pr-2"><span class="font-bold text-sm text-slate-800 dark:text-white truncate block">${escapeHtml(o.pedido || 'S/N')}</span><p class="text-[11px] text-slate-500 truncate">${escapeHtml(o.cliente || 'Sem nome')}</p></div><span class="font-black text-xs text-emerald-600 shrink-0">${money(v.lucroLiq)}</span></div><div class="text-[10px] text-slate-400 mt-1">Data: ${fmtDT(o.saida)} · Fat.: ${money(v.faturamento)}</div></div>`;
-    }).join('');
+  if (type === 'expense' && status === 'paid') {
+    addTetoCycleExpense({
+      id: newTx.id,
+      desc: newTx.desc,
+      amount: newTx.amount,
+      date: newTx.date,
+      source: 'tx'
+    });
   }
 
-  const map = new Map();
-  orders.forEach(o => {
-    const cli = o.cliente || 'Sem nome';
-    const v = calcValores(o);
-    const ym = (o.saida && o.saida.length >= 7) ? o.saida.slice(0, 7) : todayISO().slice(0, 7);
-    if (!map.has(cli)) map.set(cli, { count: 0, profit: 0, fat: 0, byMonth: new Map() });
-    const entry = map.get(cli);
-    entry.count++;
-    entry.profit += v.lucroLiq;
-    entry.fat += v.faturamento;
+  saveAll();
+  document.getElementById('finModal').classList.add('hidden');
+  switchTab('finance');
+  showAppToast('Lançamento registrado!');
+}
 
-    if (!entry.byMonth.has(ym)) entry.byMonth.set(ym, { ym, count: 0, profit: 0, fat: 0 });
-    const mEntry = entry.byMonth.get(ym);
-    mEntry.count++;
-    mEntry.profit += v.lucroLiq;
-    mEntry.fat += v.faturamento;
-  });
-
-  const sorted = Array.from(map.entries()).sort((a,b) => b[1].profit - a[1].profit);
-  const tbody = document.getElementById('adm-client-table');
-  const detailBox = document.getElementById('adm-client-detail-report');
-
-  if (!sorted.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-slate-400">Sem clientes registrados</td></tr>';
-    detailBox.classList.add('hidden');
-  } else {
-    tbody.innerHTML = sorted.map(([cli, data]) => {
-      const isSelected = selectedAdminClientName === cli;
-      const monthsCount = data.byMonth.size;
-      return `
-        <tr onclick="toggleAdminClientDetail('${escapeHtml(cli.replace(/'/g, "\\'"))}')" class="${isSelected ? 'bg-indigo-50/80 dark:bg-indigo-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'} cursor-pointer transition">
-          <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200 truncate max-w-[140px]">${escapeHtml(cli)}</td>
-          <td class="px-4 py-3 text-center"><span class="font-bold text-slate-700 dark:text-slate-300">${data.count}</span> <span class="text-[10px] text-slate-400">(${monthsCount}m)</span></td>
-          <td class="px-4 py-3 text-right font-black text-emerald-600 dark:text-emerald-400">${money(data.profit)}</td>
-        </tr>`;
-    }).join('');
-
-    if (selectedAdminClientName && map.has(selectedAdminClientName)) {
-      const cData = map.get(selectedAdminClientName);
-      const monthsSorted = Array.from(cData.byMonth.values()).sort((a, b) => b.ym.localeCompare(a.ym));
-      detailBox.classList.remove('hidden');
-      detailBox.innerHTML = `
-        <div class="flex items-center justify-between gap-2">
-          <div>
-            <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">HISTÓRICO CONTINUATIVO DO CLIENTE</p>
-            <h3 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(selectedAdminClientName)}</h3>
-          </div>
-          <button type="button" onclick="selectedAdminClientName=null; renderAdminOrders();" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white px-2 py-1 rounded-lg bg-slate-200/70 dark:bg-slate-800 cursor-pointer">Fechar</button>
-        </div>
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <div class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700"><span class="text-[10px] text-slate-500 block">Faturamento Acumulado</span><strong class="text-xs font-black text-slate-900 dark:text-white">${money(cData.fat)}</strong></div>
-          <div class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700"><span class="text-[10px] text-slate-500 block">Lucro Acumulado</span><strong class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(cData.profit)}</strong></div>
-        </div>
-        <div class="space-y-1.5 pt-1">
-          ${monthsSorted.map(m => `
-            <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700">
-              <div><strong class="text-xs font-bold text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)}</strong><span class="text-[10px] text-slate-500 ml-1.5">${m.count} pedido(s)</span></div>
-              <div class="text-right"><span class="text-[11px] font-semibold text-slate-500 mr-2">Fat: ${money(m.fat)}</span><strong class="text-xs font-black text-emerald-600 dark:text-emerald-400">${money(m.profit)}</strong></div>
-            </div>
-          `).join('')}
-        </div>`;
-    } else {
-      detailBox.classList.add('hidden');
-      detailBox.innerHTML = '';
+function delFinTx(id) {
+  askAppConfirm('Excluir Lançamento', 'Deseja excluir este lançamento financeiro?', true).then(res => {
+    if (!res) return;
+    txs = txs.filter(t => t.id !== id);
+    const teto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
+    if (Array.isArray(teto.cycleExpenses)) {
+      teto.cycleExpenses = teto.cycleExpenses.filter(e => e.id !== id);
+      setLocal(STORAGE.teto, teto);
     }
-  }
-}
-
-function toggleAdminClientDetail(clientName) {
-  selectedAdminClientName = (selectedAdminClientName === clientName) ? null : clientName;
-  renderAdminOrders();
-}
-
-function renderAdminFinance() {
-  const f = document.getElementById('adm-fin-filter').value;
-  let list = txs.filter(t => {
-    if (t.isAdjustment || t.cat === 'Ajuste') return false;
-    if (f === 'all') return true;
-    if (f === 'income') return t.type === 'income' || t.type === 'transfer_in';
-    if (f === 'expense') return t.type === 'expense' || t.type === 'transfer_out';
-    return true;
-  }).sort((a,b) => (b.date||'').localeCompare(a.date||''));
-  const el = document.getElementById('adm-fin-list');
-  if (!list.length) { el.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento encontrado.</p>'; return; }
-  el.innerHTML = list.map(t => {
-    const isInc = t.type === 'income' || t.type === 'transfer_in';
-    return `<div class="flex justify-between items-center p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50"><div class="min-w-0 pr-2"><p class="font-bold text-sm text-slate-800 dark:text-white truncate">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-500">${(t.date||'').split('-').reverse().join('/')} · ${escapeHtml(t.cat || '')}</p></div><span class="font-black text-sm shrink-0 ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'} ${money(t.amount)}</span></div>`;
-  }).join('');
-}
-
-// Fechamento Mensal Detalhado com receitas, margens, saídas operacionais e pagamentos
-function openChartsModal() {
-  const selector = document.getElementById('chartMonthSelector');
-  const monthSet = new Set([todayISO().slice(0, 7)]);
-  orders.forEach(o => { if (o.saida && o.saida.length >= 7) monthSet.add(o.saida.slice(0, 7)); });
-  txs.forEach(t => { if (t.date && t.date.length >= 7) monthSet.add(t.date.slice(0, 7)); });
-  const sortedMonths = Array.from(monthSet).sort((a, b) => b.localeCompare(a));
-
-  selector.innerHTML = sortedMonths.map(ym => `<option value="${ym}">${fmtMonthYearLabel(ym)}</option>`).join('');
-  selector.value = sortedMonths[0] || todayISO().slice(0, 7);
-
-  renderMonthlyClosingContent();
-  document.getElementById('chartsModal').classList.remove('hidden');
-}
-
-function renderMonthlyClosingContent() {
-  const selector = document.getElementById('chartMonthSelector');
-  const ym = (selector && selector.value) ? selector.value : todayISO().slice(0, 7);
-
-  let grossRev = 0, grossProfit = 0, netProfit = 0, operationalOut = 0, otherOut = 0;
-
-  txs.forEach(t => {
-    if (!t.date || !t.date.startsWith(ym) || t.status === 'pending' || t.isAdjustment || t.cat === 'Ajuste') return;
-    const amt = Number(t.amount) || 0;
-    if (t.type === 'income') {
-      grossRev += amt;
-    } else if (t.type === 'expense') {
-      if (t.cat === 'Fornecedores' || t.cat === 'Logística' || t.cat === 'Operação') {
-        operationalOut += amt;
-      } else {
-        otherOut += amt;
-      }
-    }
+    saveAll();
+    renderFinance();
+    showAppToast('Lançamento excluído.');
   });
+}
 
-  orders.forEach(o => {
-    const oYm = (o.saida && o.saida.length >= 7) ? o.saida.slice(0, 7) : '';
-    if (oYm !== ym) return;
-    const v = calcValores(o);
-    grossProfit += v.margemVal;
-    netProfit += v.lucroLiq;
-  });
+function openTransferModal() {
+  document.getElementById('transferModal').classList.remove('hidden');
+  document.getElementById('tAmount').value = '';
+  document.getElementById('tDate').value = todayISO();
+  populateAccountSelect('tFrom'); populateAccountSelect('tTo');
+}
+function saveTransfer(e) {
+  e.preventDefault();
+  const from = document.getElementById('tFrom').value;
+  const to = document.getElementById('tTo').value;
+  const amount = parseMoney(document.getElementById('tAmount').value);
+  const date = document.getElementById('tDate').value;
+  if (from === to) return showAppToast('Origem e destino iguais.', 'error');
+  if (amount <= 0) return showAppToast('Valor inválido.', 'error');
 
-  if (netProfit === 0 && (grossRev > 0 || operationalOut > 0 || otherOut > 0)) {
-    netProfit = grossRev - operationalOut - otherOut;
+  const fromName = ACCOUNTS.find(a => a.id === from)?.name;
+  const toName = ACCOUNTS.find(a => a.id === to)?.name;
+  const createdAt = new Date().toISOString();
+
+  txs.unshift({ id: genId(), desc: `Transf. p/ ${toName}`, amount, type: 'transfer_out', cat: 'Transferência', date, createdAt, accountId: from, status: 'paid' });
+  txs.unshift({ id: genId(), desc: `Transf. de ${fromName}`, amount, type: 'transfer_in', cat: 'Transferência', date, createdAt, accountId: to, status: 'paid' });
+
+  saveAll();
+  document.getElementById('transferModal').classList.add('hidden');
+  switchTab('finance');
+  showAppToast('Transferência realizada!');
+}
+
+function openEditBalance(accId) {
+  const acc = ACCOUNTS.find(a => a.id === accId);
+  if (!acc) return;
+  const curBal = getAccountBalance(accId);
+  document.getElementById('editBalTitle').textContent = `Ajustar Saldo - ${acc.name}`;
+  document.getElementById('editBalAccId').value = accId;
+  document.getElementById('editBalCurrent').textContent = money(curBal);
+  document.getElementById('editBalNew').value = curBal.toFixed(2).replace('.', ',');
+  document.getElementById('editBalanceModal').classList.remove('hidden');
+}
+function saveEditBalance(e) {
+  e.preventDefault();
+  const accId = document.getElementById('editBalAccId').value;
+  const newBal = parseMoney(document.getElementById('editBalNew').value);
+  const curBal = getAccountBalance(accId);
+  const diff = Number((newBal - curBal).toFixed(2));
+
+  if (Math.abs(diff) > 0.001) {
+    txs.unshift({
+      id: genId(),
+      desc: diff > 0 ? 'Ajuste de saldo (+)' : 'Ajuste de saldo (-)',
+      amount: Math.abs(diff),
+      type: diff > 0 ? 'income' : 'expense',
+      cat: 'Ajuste',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accId,
+      status: 'paid',
+      isAdjustment: true
+    });
   }
 
-  const totalOut = operationalOut + otherOut;
-
-  document.getElementById('chart-month-gross-rev').textContent = money(grossRev);
-  document.getElementById('chart-month-gross-profit').textContent = money(grossProfit);
-  document.getElementById('chart-month-income').textContent = money(netProfit);
-  document.getElementById('chart-month-forecast-rev').textContent = money(operationalOut);
-  document.getElementById('chart-month-balance').textContent = money(otherOut);
-  document.getElementById('chart-month-expense').textContent = money(totalOut);
-
-  const metrics = [
-    { label: 'Receitas / Entradas', val: grossRev, color: 'bg-brand-600' },
-    { label: 'Lucro Bruto (Margens)', val: grossProfit, color: 'bg-blue-600' },
-    { label: 'Lucro Líquido', val: netProfit, color: 'bg-emerald-500' },
-    { label: 'Saídas Operacionais', val: operationalOut, color: 'bg-amber-500' },
-    { label: 'Saídas / Cartão', val: otherOut, color: 'bg-purple-500' },
-    { label: 'Total Saídas', val: totalOut, color: 'bg-rose-500' }
-  ];
-  const maxVal = Math.max(...metrics.map(m => Math.abs(m.val)), 1);
-
-  document.getElementById('column-charts-container').innerHTML = metrics.map(m => {
-    const pct = Math.min(100, Math.round((Math.abs(m.val) / maxVal) * 100));
-    return `
-      <div class="space-y-1">
-        <div class="flex justify-between text-[11px] font-bold">
-          <span class="text-slate-600 dark:text-slate-300">${m.label}</span>
-          <span class="text-slate-900 dark:text-white">${money(m.val)}</span>
-        </div>
-        <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-          <div class="h-full ${m.color} rounded-full transition-all duration-300" style="width:${pct}%"></div>
-        </div>
-      </div>`;
-  }).join('');
+  saveAll();
+  document.getElementById('editBalanceModal').classList.add('hidden');
+  switchTab('finance');
+  showAppToast('Saldo ajustado!');
 }
 
-// Datalists, selects e backup/exportação
 function renderDatalists() {
-  const dc = document.getElementById('list-clients');
-  const dci = document.getElementById('list-cities');
-  const dtr = document.getElementById('list-carriers');
-  dc.innerHTML = historyData.clients.map(c => `<option value="${escapeHtml(c)}">`).join('');
-  dci.innerHTML = historyData.cities.map(c => `<option value="${escapeHtml(c)}">`).join('');
-  dtr.innerHTML = historyData.carriers.map(t => `<option value="${escapeHtml(t)}">`).join('');
+  document.getElementById('list-clients').innerHTML = historyData.clients.map(c => `<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-cities').innerHTML = historyData.cities.map(c => `<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-carriers').innerHTML = historyData.carriers.map(c => `<option value="${escapeHtml(c)}">`).join('');
 }
 
 function populateSelects() {
-  ['oAccOutMerc','oAccOutFrete','oAccIn','ordFretePayAcc','fAccount','payAccountSelect','payCardAccount','tFrom','tTo','qrOpInstituicaoSelect','qrCliInstituicaoSelect','qrGastoInstituicaoSelect'].forEach(id => populateAccountSelect(id));
-  if (document.getElementById('qrOpInstituicaoSelect')) document.getElementById('qrOpInstituicaoSelect').value = 'nubank';
-  if (document.getElementById('qrCliInstituicaoSelect')) document.getElementById('qrCliInstituicaoSelect').value = 'nubank';
-  if (document.getElementById('qrGastoInstituicaoSelect')) document.getElementById('qrGastoInstituicaoSelect').value = 'nubank';
+  ['qrOpInstituicaoSelect','qrCliInstituicaoSelect','qrGastoInstituicaoSelect','oAccOutMerc','oAccOutFrete','oAccIn','ordFretePayAcc','fAccount','tFrom','tTo','payAccountSelect','payCardAccount'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+    if (id.startsWith('qr')) el.value = 'nubank';
+  });
 }
-
 function populateAccountSelect(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
 }
 
+function setNow(id){ document.getElementById(id).value = nowLocal(); }
+
+function openReceiptFromOrders(id){ openReceipt(id); }
+
+function setReceiptMode(mode) {
+  currentReceiptMode = mode;
+  const btnClient = document.getElementById('btnModeClientReceipt');
+  const btnAdmin = document.getElementById('btnModeAdminReceipt');
+  const wrapClient = document.getElementById('printClientWrapper');
+  const wrapAdmin = document.getElementById('printAdminWrapper');
+  const btnPrint = document.getElementById('btnPrintActiveReceipt');
+
+  if (mode === 'admin') {
+    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
+    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+    wrapAdmin.classList.remove('hidden');
+    wrapClient.classList.add('hidden');
+    btnPrint.textContent = '🖨️ Imprimir Comprovante Admin';
+    btnPrint.setAttribute('onclick', "printReceipt('admin')");
+  } else {
+    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
+    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+    wrapClient.classList.remove('hidden');
+    wrapAdmin.classList.add('hidden');
+    btnPrint.textContent = '🖨️ Imprimir Comprovante Cliente';
+    btnPrint.setAttribute('onclick', "printReceipt('client')");
+  }
+}
+
+function openReceipt(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  activeReceiptOrderId = o.id;
+  setReceiptMode('client');
+  document.getElementById('receiptModal').classList.remove('hidden');
+
+  document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
+  document.getElementById('recClienteCliente').textContent = o.cliente || 'Cliente';
+
+  document.getElementById('recPedido').textContent = o.pedido || 'S/N';
+  document.getElementById('recCliente').textContent = o.cliente || 'Cliente';
+  document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
+
+  const v = calcValores(o);
+  document.getElementById('recInv').textContent = money(v.inv);
+  document.getElementById('recMargem').textContent = money(v.margemVal);
+  document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
+  document.getElementById('recLucro').textContent = money(v.lucroLiq);
+  document.getElementById('recFat').textContent = money(v.faturamento);
+
+  const steps = [
+    { label: 'Origem', val: o.cidadeOrigem, time: o.saida },
+    { label: 'Transportadora', val: o.transportadora, time: o.subiuTransp },
+    { label: '1ª Cidade', val: o.cidade1, time: o.cidade1Hora },
+    { label: '2ª Cidade', val: o.cidade2, time: o.cidade2Hora },
+    { label: '3ª Cidade', val: o.cidade3, time: o.cidade3Hora },
+    { label: 'Desceu SP', val: o.desceuSP ? 'São Paulo / SP' : '', time: o.desceuSP },
+    { label: 'Finalização', val: o.clienteRecebeu ? 'Recebido pelo Cliente' : '', time: o.clienteRecebeu }
+  ].filter(s => s.val || s.time);
+
+  const firstOrigin = steps.length ? (steps[0].val || steps[0].label) : '—';
+  const lastStep = steps.length ? (steps[steps.length - 1].val || steps[steps.length - 1].label) : '—';
+  document.getElementById('recRotaResumoCliente').textContent = steps.length ? `${firstOrigin} → ${lastStep}` : '—';
+
+  const cliHtml = steps.length
+    ? steps.map((s, idx) => {
+      const isDone = !!s.time;
+      const isLast = idx === steps.length - 1;
+      const lineHtml = !isLast
+        ? `<div class="absolute left-[7px] top-[14px] w-[2px] h-[calc(100%-6px)] ${isDone ? 'bg-emerald-500/70' : 'bg-slate-600/60'}"></div>`
+        : '';
+      return `
+        <div class="relative flex items-start gap-3 pb-3.5 last:pb-0">
+          ${lineHtml}
+          <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 z-10 border-2 ${isDone ? 'bg-emerald-400 border-emerald-200' : 'bg-slate-700 border-slate-500'}"></span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider opacity-70">${escapeHtml(s.label)}</span>
+              <span class="text-[10px] font-mono opacity-75 shrink-0">${s.time ? escapeHtml(fmtDT(s.time)) : 'Aguardando'}</span>
+            </div>
+            <p class="text-xs font-bold mt-0.5 break-words">${escapeHtml(s.val || '—')}</p>
+          </div>
+        </div>`;
+    }).join('')
+    : '<p class="text-xs opacity-60">Nenhuma etapa de trajeto registrada.</p>';
+
+  const admHtml = steps.length
+    ? steps.map(s => `<div class="flex justify-between text-xs py-1 border-b border-slate-700/60 last:border-0"><span>${escapeHtml(s.label)}: <b>${escapeHtml(s.val || '—')}</b></span><span class="font-mono text-[10px] opacity-75">${s.time ? escapeHtml(fmtDT(s.time)) : '—'}</span></div>`).join('')
+    : '<p class="text-xs opacity-60">Sem trajeto.</p>';
+
+  document.getElementById('recTrajetoCliente').innerHTML = cliHtml;
+  document.getElementById('recTrajetoAdmin').innerHTML = admHtml;
+}
+function closeReceipt(){ document.getElementById('receiptModal').classList.add('hidden'); }
+function printReceipt(type) {
+  document.body.classList.remove('printing-client', 'printing-admin');
+  document.body.classList.add(type === 'admin' ? 'printing-admin' : 'printing-client');
+  window.print();
+  setTimeout(() => document.body.classList.remove('printing-client', 'printing-admin'), 500);
+}
+
 function exportJSON() {
   closeMenu();
-  const data = { orders, txs, cardsConfig, bensData, historyData, teto: getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] }), profile: getLocal(STORAGE.profile, {}), seenNotifKeys };
+  const data = {
+    orders,
+    txs,
+    cardsConfig,
+    bensData,
+    teto: getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] }),
+    historyData,
+    seenNotifKeys,
+    profile: getLocal(STORAGE.profile, { name: '' })
+  };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `backup_gestao_${todayISO()}.json`;
-  a.click(); URL.revokeObjectURL(url);
-  showAppToast('Backup JSON exportado!');
+  a.href = URL.createObjectURL(blob);
+  a.download = `backup-sistema-gestao-${todayISO()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showAppToast('Backup exportado!');
 }
 
 function importJSON(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
     try {
       const d = JSON.parse(ev.target.result);
-      if (d.orders) orders = d.orders;
-      if (d.txs) txs = d.txs;
-      if (d.cardsConfig) cardsConfig = normalizeCardsConfig(d.cardsConfig);
-      if (d.bensData) bensData = d.bensData;
-      if (d.historyData) historyData = d.historyData;
-      if (Array.isArray(d.seenNotifKeys)) seenNotifKeys = d.seenNotifKeys;
+      orders = Array.isArray(d.orders) ? d.orders : [];
+      txs = Array.isArray(d.txs) ? d.txs : [];
+      cardsConfig = normalizeCardsConfig(Array.isArray(d.cardsConfig) ? d.cardsConfig : DEFAULT_CREDIT_CARDS);
+      bensData = Array.isArray(d.bensData) ? d.bensData : [];
+      historyData = d.historyData || { clients: [], cities: [], carriers: [] };
+      seenNotifKeys = Array.isArray(d.seenNotifKeys) ? d.seenNotifKeys : [];
       if (d.teto) setLocal(STORAGE.teto, d.teto);
       if (d.profile) setLocal(STORAGE.profile, d.profile);
+      localStorage.removeItem(STORAGE.wipedToZero);
       saveAll();
       load();
       showAppToast('Backup importado com sucesso!');
-    } catch (err) { showAppToast('Arquivo inválido!', 'error'); }
+    } catch (err) {
+      showAppToast('Arquivo inválido!', 'error');
+    }
   };
-  reader.readAsText(file);
+  r.readAsText(f);
   e.target.value = '';
 }
 
@@ -3544,21 +3601,28 @@ function exportSystemCode() {
   closeMenu();
   const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
   const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `sistema_gestao_definitivo_${todayISO()}.html`;
-  a.click(); URL.revokeObjectURL(url);
-  showAppToast('Sistema (.html) baixado!');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sistema-gestao-definitivo-${todayISO()}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showAppToast('Arquivo do sistema (.html) baixado!');
 }
 
 function resetData() {
   closeMenu();
-  askAppConfirm('Restaurar Padrão', 'Deseja apagar todos os dados atuais e restaurar os dados iniciais de exemplo?').then(res => {
+  askAppConfirm('Restaurar Dados Padrão', 'Isso vai recarregar os dados de demonstração iniciais no sistema. Deseja prosseguir?', false).then(res => {
     if (!res) return;
-    Object.values(STORAGE).forEach(k => localStorage.removeItem(k));
-    seedInitialDataIfEmpty();
+    localStorage.removeItem(STORAGE.wipedToZero);
+    localStorage.removeItem(STORAGE.orders);
+    localStorage.removeItem(STORAGE.txs);
+    localStorage.removeItem(STORAGE.cards);
+    localStorage.removeItem(STORAGE.bens);
+    localStorage.removeItem(STORAGE.teto);
+    localStorage.removeItem(STORAGE.history);
+    localStorage.removeItem(STORAGE.seenNotifs);
     load();
-    showAppToast('Dados restaurados para o padrão de exemplo.');
+    showAppToast('Dados padrão restaurados!');
   });
 }
 
