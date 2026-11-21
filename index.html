@@ -528,6 +528,41 @@
   </div>
 </div>
 
+<!-- Modal Extrato da Conta / Banco -->
+<div id="accountStatementModal" role="dialog" aria-modal="true" aria-labelledby="accountStatementTitle" onclick="if(event.target.id==='accountStatementModal')closeAccountStatementModal()" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div onclick="event.stopPropagation()" class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+      <div>
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">ENTRADAS E RETIRADAS DA CONTA</p>
+        <h3 id="accountStatementTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Conta</h3>
+      </div>
+      <button type="button" onclick="closeAccountStatementModal()" aria-label="Fechar extrato da conta" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button>
+    </div>
+    <div class="p-4 overflow-y-auto space-y-4 flex-1 num-align">
+      <div class="bg-slate-50 dark:bg-slate-900/80 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Saldo Atual da Conta</p>
+          <p id="accountStatementBalance" class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ 0,00</p>
+        </div>
+        <div id="accountStatementTotals" class="text-right text-[11px] space-y-0.5"></div>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">ENTRADAS / PAGAMENTOS RECEBIDOS</p>
+        <div id="accountStatementInList" class="divide-y divide-slate-100 dark:divide-slate-700/60 bg-slate-50/60 dark:bg-slate-900/40 rounded-xl border border-slate-200/70 dark:border-slate-700/60 px-3"></div>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">RETIRADAS / SAÍDAS</p>
+        <div id="accountStatementOutList" class="divide-y divide-slate-100 dark:divide-slate-700/60 bg-slate-50/60 dark:bg-slate-900/40 rounded-xl border border-slate-200/70 dark:border-slate-700/60 px-3"></div>
+      </div>
+    </div>
+    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center shrink-0">
+      <button type="button" onclick="closeAccountStatementModal()" class="w-full py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold cursor-pointer">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Inventário de Bens -->
 <div id="patrimonioBensModal" role="dialog" aria-modal="true" aria-labelledby="bensModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[85vh]">
@@ -587,15 +622,15 @@
 <!-- Modal Ajuste de Cartão -->
 <div id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 class="font-bold text-slate-900 dark:text-white text-sm" id="cardModalTitle">Ajustar Limite / Fatura</h3><button type="button" onclick="document.getElementById('cardModal').classList.add('hidden')" aria-label="Fechar ajuste de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><h3 class="font-bold text-slate-900 dark:text-white text-sm" id="cardModalTitle">Ajustar Limite / Vencimento / Fatura</h3><button type="button" onclick="document.getElementById('cardModal').classList.add('hidden')" aria-label="Fechar ajuste de cartão" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
     <form onsubmit="saveCardConfig(event)" class="p-5 space-y-4">
       <input type="hidden" id="cardId">
       <div><label class="lbl" for="cardName">Cartão</label><input type="text" id="cardName" disabled class="field font-bold"></div>
       <div class="grid grid-cols-2 gap-3">
         <div><label class="lbl" for="cardLimit">Limite Total (R$)</label><div class="money-wrap"><span class="money-prefix text-xs font-extrabold text-emerald-600 dark:text-emerald-400">R$</span><input type="text" id="cardLimit" inputmode="decimal" required class="field pl-11 font-bold text-emerald-600 dark:text-emerald-400"></div></div>
-        <div><label class="lbl" for="cardDueDay" id="cardDueDayLabel">Vencimento (Travado 🔒)</label><input type="number" id="cardDueDay" min="1" max="31" step="1" inputmode="numeric" required disabled class="field text-center font-bold"></div>
+        <div><label class="lbl" for="cardDueDay" id="cardDueDayLabel">Dia Vencimento (1-31)</label><input type="number" id="cardDueDay" min="1" max="31" step="1" inputmode="numeric" required class="field text-center font-bold"></div>
       </div>
-      <p id="cardAdjustStageHint" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Limite e fatura ajustáveis; vencimento travado.</p>
+      <p id="cardAdjustStageHint" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Ajuste livre de limite, dia de vencimento e fatura atual.</p>
       <div><label class="lbl" for="cardCurrentBill">Fatura Atual / Aberta (R$)</label><div class="money-wrap"><span class="money-prefix text-xs font-extrabold text-purple-600 dark:text-purple-400">R$</span><input type="text" id="cardCurrentBill" inputmode="decimal" required class="field pl-11 font-bold text-purple-600 dark:text-purple-400"></div></div>
       <button type="submit" class="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md cursor-pointer">Salvar Ajuste</button>
     </form>
@@ -634,25 +669,43 @@
 <!-- Modal Fechamento Mensal Detalhado + Histórico Continuativo de Clientes -->
 <div id="chartsModal" role="dialog" aria-modal="true" aria-labelledby="chartsModalTitle" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">📅</span>
-        <h3 id="chartsModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">Fechamento Mensal Detalhado</h3>
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0 gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-xl shrink-0">📅</span>
+        <h3 id="chartsModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base truncate">Fechamento Mensal Detalhado</h3>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 shrink-0">
         <select id="chartMonthSelector" aria-label="Selecionar mês do fechamento" onchange="renderMonthlyClosingContent()" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-brand-500"></select>
-        <button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" aria-label="Fechar fechamento mensal" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl font-bold px-2 cursor-pointer">×</button>
+        <button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" aria-label="Fechar fechamento mensal" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-2xl font-bold px-1.5 cursor-pointer">×</button>
       </div>
     </div>
     <div class="p-4 sm:p-5 overflow-y-auto space-y-4 num-align flex-1">
+      <div class="flex items-center justify-between gap-2 bg-slate-100/80 dark:bg-slate-900/70 px-3 py-2 rounded-xl border border-slate-200/70 dark:border-slate-700 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400">Competência:</span>
+          <span id="chart-month-status-badge" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">Mês Aberto</span>
+        </div>
+        <button type="button" id="btnToggleMonthClosingStatus" onclick="toggleSelectedMonthClosingStatus()" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white cursor-pointer transition">Fechar Mês</button>
+      </div>
+
       <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2 text-xs">
         <div class="flex justify-between items-center"><span class="text-brand-600 dark:text-indigo-400 font-extrabold uppercase text-[10px]">Receitas / Entradas do Mês</span><strong id="chart-month-gross-rev" class="text-brand-600 dark:text-indigo-400 font-black text-sm">R$ 0,00</strong></div>
         <div class="flex justify-between items-center"><span class="text-blue-600 dark:text-blue-400 font-extrabold uppercase text-[10px]">Lucro Bruto (Margem Vendas)</span><strong id="chart-month-gross-profit" class="text-blue-600 dark:text-blue-400 font-black text-sm">R$ 0,00</strong></div>
         <div class="flex justify-between items-center"><span class="text-emerald-600 dark:text-emerald-400 font-extrabold uppercase text-[10px]">Lucro Líquido do Mês</span><strong id="chart-month-income" class="text-emerald-600 dark:text-emerald-400 font-black text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center"><span class="text-amber-600 dark:text-amber-400 font-extrabold uppercase text-[10px]">Saídas Operacionais (Merc./Frete/Op.)</span><strong id="chart-month-forecast-rev" class="text-amber-600 dark:text-amber-400 font-black text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center"><span class="text-purple-600 dark:text-purple-400 font-extrabold uppercase text-[10px]">Saídas / Pagamentos Diversos & Cartão</span><strong id="chart-month-balance" class="text-purple-600 dark:text-purple-400 font-black text-sm">R$ 0,00</strong></div>
-        <div class="flex justify-between items-center pt-1.5 border-t border-slate-200/70 dark:border-slate-800"><span class="text-rose-600 dark:text-rose-400 font-extrabold uppercase text-[10px]">Total Geral de Saídas / Pagamentos</span><strong id="chart-month-expense" class="text-rose-600 dark:text-rose-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center"><span class="text-amber-600 dark:text-amber-400 font-extrabold uppercase text-[10px]">Despesa de Operação (Merc./Frete/Op.)</span><strong id="chart-month-forecast-rev" class="text-amber-600 dark:text-amber-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center"><span class="text-purple-600 dark:text-purple-400 font-extrabold uppercase text-[10px]">Despesa Mensal / Diversas & Cartão</span><strong id="chart-month-balance" class="text-purple-600 dark:text-purple-400 font-black text-sm">R$ 0,00</strong></div>
+        <div class="flex justify-between items-center pt-1.5 border-t border-slate-200/70 dark:border-slate-800"><span class="text-rose-600 dark:text-rose-400 font-extrabold uppercase text-[10px]">Total Geral de Despesas / Saídas</span><strong id="chart-month-expense" class="text-rose-600 dark:text-rose-400 font-black text-sm">R$ 0,00</strong></div>
       </div>
+
+      <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Lucro por Cliente no Mês</span>
+          <span class="text-[10px] text-slate-400">Toque para histórico continuativo</span>
+        </div>
+        <div id="chart-month-clients-list" class="divide-y divide-slate-200/70 dark:divide-slate-800"></div>
+        <div id="chart-client-continuative-box" class="hidden mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 space-y-1.5"></div>
+      </div>
+
       <div id="column-charts-container" class="space-y-3"></div>
     </div>
     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center shrink-0"><button type="button" onclick="document.getElementById('chartsModal').classList.add('hidden')" class="w-full py-3 bg-brand-600 text-white rounded-xl text-sm font-bold shadow-md cursor-pointer">Fechar Fechamento</button></div>
@@ -684,7 +737,7 @@
 <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between shrink-0 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur"><h3 id="modalTitle" class="font-extrabold text-slate-900 dark:text-white text-lg">Novo Pedido</h3><button type="button" onclick="closeModal()" aria-label="Fechar formulário de pedido" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 flex items-center justify-center hover:bg-slate-300 font-bold cursor-pointer">×</button></div>
-    <form onsubmit="saveOrder(event)" class="p-4 space-y-4 overflow-y-auto">
+    <form onsubmit="saveOrder(event)" class="p-4 space-y-4 overflow-y-auto pb-24">
       <input type="hidden" id="oId">
       <datalist id="list-clients"></datalist>
       <datalist id="list-cities"></datalist>
@@ -905,7 +958,8 @@ const STORAGE = {
   profile: 'gestao_premium_profile',
   theme: 'gestao_premium_theme',
   seenNotifs: 'gestao_premium_seen_notifs',
-  wipedToZero: 'gestao_premium_wiped_to_zero'
+  wipedToZero: 'gestao_premium_wiped_to_zero',
+  closedMonths: 'gestao_premium_closed_months'
 };
 
 const ACCOUNTS = [
@@ -926,6 +980,7 @@ const DEFAULT_CREDIT_CARDS = [
 let orders = [], txs = [], cardsConfig = [], bensData = [];
 let historyData = { clients: [], cities: [], carriers: [] };
 let seenNotifKeys = [];
+let closedMonthsMap = {};
 let currentTab = 'quick', currentAdminTab = 'orders';
 let activeReceiptOrderId = null, currentReceiptMode = 'client';
 let activeOrderFreightPayments = [];
@@ -1217,7 +1272,9 @@ function applyZeroState() {
   bensData = [];
   historyData = { clients: [], cities: [], carriers: [] };
   seenNotifKeys = [];
+  closedMonthsMap = {};
   selectedAdminClientName = null;
+  selectedClosingClientKey = null;
   activeOrderFreightPayments = [];
 
   setLocal(STORAGE.wipedToZero, true);
@@ -1227,6 +1284,7 @@ function applyZeroState() {
   setLocal(STORAGE.bens, []);
   setLocal(STORAGE.history, { clients: [], cities: [], carriers: [] });
   setLocal(STORAGE.seenNotifs, []);
+  setLocal(STORAGE.closedMonths, {});
   setLocal(STORAGE.teto, { limit: tetoLimit, cycleExpenses: [] });
 
   qrLimparBuscaCompleta();
@@ -1260,6 +1318,8 @@ function load() {
   historyData = getLocal(STORAGE.history, { clients: [], cities: [], carriers: [] });
   seenNotifKeys = getLocal(STORAGE.seenNotifs, []);
   if (!Array.isArray(seenNotifKeys)) seenNotifKeys = [];
+  closedMonthsMap = getLocal(STORAGE.closedMonths, {});
+  if (!closedMonthsMap || typeof closedMonthsMap !== 'object') closedMonthsMap = {};
 
   const profile = getLocal(STORAGE.profile, { name: 'Meu Perfil' });
   document.getElementById('menu-user-name').textContent = profile.name || 'Meu Perfil';
@@ -1284,6 +1344,7 @@ function saveAll() {
   setLocal(STORAGE.cards, cardsConfig);
   setLocal(STORAGE.bens, bensData);
   setLocal(STORAGE.seenNotifs, seenNotifKeys);
+  setLocal(STORAGE.closedMonths, closedMonthsMap);
   updateNotificationBadge();
   updateTetoFab();
 }
@@ -2284,16 +2345,75 @@ function getAccountBalance(accId) {
   return bal;
 }
 
+function openAccountStatementModal(accId) {
+  const acc = ACCOUNTS.find(a => a.id === accId);
+  if (!acc) return;
+
+  const bal = getAccountBalance(accId);
+  const accTxs = txs
+    .filter(t => t.accountId === accId && t.status !== 'pending')
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+  const inTxs = accTxs.filter(t => t.type === 'income' || t.type === 'transfer_in');
+  const outTxs = accTxs.filter(t => t.type === 'expense' || t.type === 'transfer_out');
+
+  const totalIn = inTxs.reduce((s, t) => s + (Number(t.amount) || 0), 0);
+  const totalOut = outTxs.reduce((s, t) => s + (Number(t.amount) || 0), 0);
+
+  document.getElementById('accountStatementTitle').textContent = acc.name;
+  document.getElementById('accountStatementBalance').textContent = money(bal);
+  document.getElementById('accountStatementTotals').innerHTML = `
+    <p class="font-bold text-emerald-600 dark:text-emerald-400">Entradas: + ${money(totalIn)}</p>
+    <p class="font-bold text-rose-600 dark:text-rose-400">Retiradas: - ${money(totalOut)}</p>
+  `;
+
+  const inListEl = document.getElementById('accountStatementInList');
+  if (!inTxs.length) {
+    inListEl.innerHTML = '<p class="py-3 text-center text-xs text-slate-400">Nenhuma entrada registrada nesta conta.</p>';
+  } else {
+    inListEl.innerHTML = inTxs.map(t => `
+      <div class="py-2.5 flex justify-between items-center gap-2 text-xs">
+        <div class="min-w-0">
+          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc || 'Entrada')}</p>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(t.cat || 'Receita')}${t.paymentMethod ? ' · ' + escapeHtml(t.paymentMethod) : ''} · ${fmtDateTimeTx(t.createdAt || t.date)}</p>
+        </div>
+        <span class="font-black text-emerald-600 dark:text-emerald-400 shrink-0">+ ${money(t.amount)}</span>
+      </div>
+    `).join('');
+  }
+
+  const outListEl = document.getElementById('accountStatementOutList');
+  if (!outTxs.length) {
+    outListEl.innerHTML = '<p class="py-3 text-center text-xs text-slate-400">Nenhuma retirada/saída registrada nesta conta.</p>';
+  } else {
+    outListEl.innerHTML = outTxs.map(t => `
+      <div class="py-2.5 flex justify-between items-center gap-2 text-xs">
+        <div class="min-w-0">
+          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc || 'Saída')}</p>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(t.cat || 'Despesa')}${t.paymentMethod ? ' · ' + escapeHtml(t.paymentMethod) : ''} · ${fmtDateTimeTx(t.createdAt || t.date)}</p>
+        </div>
+        <span class="font-black text-rose-600 dark:text-rose-400 shrink-0">- ${money(t.amount)}</span>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('accountStatementModal').classList.remove('hidden');
+}
+
+function closeAccountStatementModal() {
+  document.getElementById('accountStatementModal').classList.add('hidden');
+}
+
 function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
     return `
-      <div class="fin-account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+      <div role="button" tabindex="0" onclick="openAccountStatementModal('${acc.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAccountStatementModal('${acc.id}');}" class="fin-account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-brand-500 shadow-sm relative overflow-hidden group cursor-pointer transition">
         <div class="absolute top-0 left-0 w-full h-1 ${acc.color}"></div>
         <div class="flex justify-between items-start gap-1 mt-1">
           <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide truncate">${acc.name}</p>
-          <button type="button" onclick="openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm cursor-pointer shrink-0">✏️</button>
+          <button type="button" onclick="event.stopPropagation(); openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm cursor-pointer shrink-0">✏️</button>
         </div>
         <h3 class="text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
       </div>`;
@@ -2387,903 +2507,120 @@ function openPendingModal() {
     <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
       <div class="min-w-0">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[11px] text-slate-500">Vencimento: ${t.date.split('-').reverse().join('/')}</p>
+        <p class="text-[10px] text-slate-500">Vence: ${(t.date||'').split('-').reverse().join('/')} · ${ACCOUNTS.find(a=>a.id===t.accountId)?.name || '?'}</p>
+        <p class="font-black text-rose-500 text-sm mt-0.5">${money(t.amount)}</p>
       </div>
-      <div class="text-right shrink-0">
-        <p class="font-black text-rose-600 text-sm mb-1">${money(t.amount)}</p>
-        <button type="button" onclick="payPending('${t.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Pagar</button>
-      </div>
-    </div>
-  `).join('');
+      <button type="button" onclick="openPayModal('${t.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold shrink-0 cursor-pointer">Pagar / Baixar</button>
+    </div>`).join('');
 }
 
-function payPending(id) {
-  const t = txs.find(x => x.id === id);
-  if (!t) return;
-  document.getElementById('payTxId').value = t.id;
-  document.getElementById('payTxAmountDesc').textContent = money(t.amount);
-  document.getElementById('payTxAmountInput').value = t.amount.toFixed(2).replace('.', ',');
-  populateAccountSelect('payAccountSelect');
+function openPayModal(txId) {
+  const tx = txs.find(t => t.id === txId);
+  if (!tx) return;
+  document.getElementById('payTxId').value = txId;
+  document.getElementById('payTxAmountDesc').textContent = money(tx.amount);
+  document.getElementById('payTxAmountInput').value = Number(tx.amount || 0).toFixed(2).replace('.', ',');
+  const sel = document.getElementById('payAccountSelect');
+  sel.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}" ${a.id===tx.accountId?'selected':''}>${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
   document.getElementById('payAccountModal').classList.remove('hidden');
 }
 
 function confirmPayPending(e) {
   e.preventDefault();
-  const id = document.getElementById('payTxId').value;
-  const t = txs.find(x => x.id === id);
-  if (!t) return;
-  const amount = parseMoney(document.getElementById('payTxAmountInput').value);
-  const acc = document.getElementById('payAccountSelect').value;
-  if (amount <= 0 || amount > t.amount + 0.009) return showAppToast('Valor inválido.', 'error');
+  const txId = document.getElementById('payTxId').value;
+  const accId = document.getElementById('payAccountSelect').value;
+  const paidAmt = parseMoney(document.getElementById('payTxAmountInput').value);
+  const tx = txs.find(t => t.id === txId);
+  if (!tx) return;
+  const remaining = Number(tx.amount) || 0;
+  if (paidAmt <= 0) return showAppToast('Informe um valor maior que zero.', 'error');
+  if (paidAmt > remaining + 0.009) return showAppToast('Valor maior que o saldo pendente.', 'error');
 
-  if (amount < t.amount - 0.009) {
-    t.amount = Number((t.amount - amount).toFixed(2));
-    t.status = 'pending';
-    const paidPart = { id: genId(), desc: `Baixa parcial: ${t.desc}`, amount, type: t.type, cat: t.cat, date: todayISO(), createdAt: new Date().toISOString(), accountId: acc, status: 'paid' };
-    txs.unshift(paidPart);
-    if (t.type === 'expense' && t.cat !== 'Operação' && t.cat !== 'Fornecedores' && t.cat !== 'Logística' && t.cat !== 'Cartão') {
-      addTetoCycleExpense({ id: paidPart.id, desc: paidPart.desc, amount, date: paidPart.date, source: 'tx' });
-    }
+  if (paidAmt < remaining - 0.009) {
+    tx.amount = Number((remaining - paidAmt).toFixed(2));
+    tx.accountId = accId;
+    txs.unshift({
+      id: genId(),
+      desc: `Parcela paga: ${tx.desc}`,
+      amount: paidAmt,
+      type: tx.type,
+      cat: tx.cat,
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accId,
+      status: 'paid'
+    });
+    showAppToast(`Parcela de ${money(paidAmt)} baixada! Restante: ${money(tx.amount)}`);
   } else {
-    t.status = 'paid';
-    t.accountId = acc;
-    if (t.type === 'expense' && t.cat !== 'Operação' && t.cat !== 'Fornecedores' && t.cat !== 'Logística' && t.cat !== 'Cartão') {
-      addTetoCycleExpense({ id: t.id, desc: t.desc, amount: t.amount, date: todayISO(), source: 'tx' });
-    }
+    tx.status = 'paid';
+    tx.accountId = accId;
+    tx.date = todayISO();
+    showAppToast('Conta quitada e baixada no extrato!');
   }
 
-  saveAll();
   document.getElementById('payAccountModal').classList.add('hidden');
-  document.getElementById('pendingModal').classList.add('hidden');
-  if (currentTab === 'quick') renderQuickSearchSchedule();
-  else switchTab('finance');
-  showAppToast('Pagamento efetuado!');
-}
-
-function handleCreditCardClick(id) {
-  clearTimeout(cardSingleClickTimer);
-  cardSingleClickTimer = setTimeout(() => {
-    openCardDetail(id);
-  }, 220);
-}
-
-function handleCreditCardDblClick(e, id) {
-  if (e) e.stopPropagation();
-  clearTimeout(cardSingleClickTimer);
-  openCardHistoryBubble(id);
-}
-
-function openCardHistoryBubble(id) {
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
-  document.getElementById('cardHistoryBubbleTitle').textContent = `${c.name} · Histórico de Compras`;
-  const hist = Array.isArray(c.history) ? c.history : [];
-  const list = document.getElementById('cardHistoryBubbleList');
-
-  if (!hist.length) {
-    list.innerHTML = '<p class="py-8 text-center text-xs text-slate-400">Nenhuma compra registrada neste cartão.</p>';
-  } else {
-    list.innerHTML = hist.map(item => {
-      const isSettled = item.status === 'settled';
-      return `
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 flex justify-between items-start gap-2">
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded ${isSettled ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-purple-500/15 text-purple-600 dark:text-purple-400'}">${isSettled ? 'Fatura Paga' : 'Em Aberto'}</span>
-            </div>
-            <p class="text-xs font-bold text-slate-900 dark:text-white break-words">${escapeHtml(item.note || 'Compra')}</p>
-            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">${fmtDateTimeTx(item.createdAt)}</p>
-          </div>
-          <span class="text-xs font-black text-purple-600 dark:text-purple-400 shrink-0">${money(item.amount)}</span>
-        </div>
-      `;
-    }).join('');
-  }
-  document.getElementById('cardHistoryBubbleModal').classList.remove('hidden');
-}
-
-function closeCardHistoryBubble() {
-  document.getElementById('cardHistoryBubbleModal').classList.add('hidden');
-}
-
-function openCardDetail(id) {
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
-  document.getElementById('detCardId').value = c.id;
-  document.getElementById('detCardTitle').textContent = c.name;
-  document.getElementById('detCardLimit').textContent = money(c.limit);
-  document.getElementById('detCardBill').textContent = money(c.currentBill);
-  document.getElementById('detCardAvail').textContent = money(c.limit - c.currentBill);
-  document.getElementById('detCardDue').textContent = `Dia ${c.dueDay}`;
-  document.getElementById('cardDetailModal').classList.remove('hidden');
-}
-function openEditCardFromDetail() {
-  const id = document.getElementById('detCardId').value;
-  document.getElementById('cardDetailModal').classList.add('hidden');
-  openEditCard(id);
-}
-function openPayCardFromDetail() {
-  const id = document.getElementById('detCardId').value;
-  document.getElementById('cardDetailModal').classList.add('hidden');
-  openPayCardModal(id);
-}
-function openEditCard(id) {
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
-  document.getElementById('cardId').value = c.id;
-  document.getElementById('cardName').value = c.name;
-  document.getElementById('cardLimit').value = c.limit.toFixed(2).replace('.', ',');
-  document.getElementById('cardDueDay').value = c.dueDay;
-  document.getElementById('cardCurrentBill').value = c.currentBill.toFixed(2).replace('.', ',');
-  document.getElementById('cardModal').classList.remove('hidden');
-}
-function saveCardConfig(e) {
-  e.preventDefault();
-  const id = document.getElementById('cardId').value;
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
-  c.limit = parseMoney(document.getElementById('cardLimit').value);
-  c.currentBill = parseMoney(document.getElementById('cardCurrentBill').value);
   saveAll();
-  document.getElementById('cardModal').classList.add('hidden');
-  switchTab('finance');
-  showAppToast('Cartão atualizado!');
-}
-function openPayCardModal(id) {
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c || c.currentBill <= 0) return showAppToast('Fatura zerada.', 'error');
-  document.getElementById('payCardId').value = c.id;
-  document.getElementById('payCardNameDesc').textContent = c.name;
-  document.getElementById('payCardAmountDesc').textContent = money(c.currentBill);
-  document.getElementById('payCardAmountInput').value = c.currentBill.toFixed(2).replace('.', ',');
-  document.getElementById('payCardAvailPreview').textContent = `Limite total restaurado ao quitar: ${money(c.limit)}`;
-  populateAccountSelect('payCardAccount');
-  updatePayCardValidationUI();
-  document.getElementById('payCardModal').classList.remove('hidden');
-}
-function closePayCardModal(){ document.getElementById('payCardModal').classList.add('hidden'); }
-function updatePayCardValidationUI() {
-  const accId = document.getElementById('payCardAccount').value;
-  const bal = getAccountBalance(accId);
-  const amt = parseMoney(document.getElementById('payCardAmountInput').value);
-  const msg = document.getElementById('payCardValidationMsg');
-  document.getElementById('payCardAccountBalanceHint').textContent = `Saldo na conta selecionada: ${money(bal)}`;
-  if (amt > bal) {
-    msg.textContent = `Saldo insuficiente na conta (${money(bal)}).`;
-    msg.classList.remove('hidden');
-  } else {
-    msg.classList.add('hidden');
-  }
-}
-
-function confirmPayCard(e) {
-  e.preventDefault();
-  const id = document.getElementById('payCardId').value;
-  const c = cardsConfig.find(x => x.id === id);
-  const amount = parseMoney(document.getElementById('payCardAmountInput').value);
-  const accId = document.getElementById('payCardAccount').value;
-  if (!c || amount <= 0 || amount > c.currentBill + 0.009) return showAppToast('Valor inválido.', 'error');
-
-  const bal = getAccountBalance(accId);
-  if (amount > bal + 0.009) return showAppToast('Saldo insuficiente na conta selecionada.', 'error');
-
-  c.currentBill = Math.max(0, Number((c.currentBill - amount).toFixed(2)));
-  if (Array.isArray(c.history)) {
-    if (c.currentBill === 0) {
-      c.history.forEach(h => { if (h.status === 'open') h.status = 'settled'; });
-    } else {
-      let remToSettle = amount;
-      for (let i = c.history.length - 1; i >= 0 && remToSettle > 0; i--) {
-        const item = c.history[i];
-        if (item.status === 'open' && (Number(item.amount) || 0) <= remToSettle + 0.009) {
-          item.status = 'settled';
-          remToSettle = Number((remToSettle - (Number(item.amount) || 0)).toFixed(2));
-        }
-      }
-    }
-  }
-
-  const accName = ACCOUNTS.find(a => a.id === accId)?.name || 'Conta';
-  txs.unshift({
-    id: genId(),
-    desc: `Pagamento Fatura ${c.name} (${accName})`,
-    amount,
-    type: 'expense',
-    cat: 'Cartão',
-    date: todayISO(),
-    createdAt: new Date().toISOString(),
-    accountId: accId,
-    paymentMethod: 'À Vista',
-    status: 'paid'
-  });
-
-  saveAll();
-  closePayCardModal();
-  switchTab('finance');
-  showAppToast(`Fatura do ${c.name} paga com ${accName}!`);
-}
-
-function openPatrimonioModal() {
-  let bal = 0; ACCOUNTS.forEach(a => bal += getAccountBalance(a.id));
-  const receivables = getPendingReceivablesList();
-  const pendingLucro = receivables.reduce((s, item) => s + (Number(item.amount) || 0), 0);
-  const bensTotal = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('detSaldoBancos').textContent = money(bal);
-  document.getElementById('detReceber').textContent = money(pendingLucro);
-  document.getElementById('detPatrimonioTotal').textContent = money(bal + pendingLucro + bensTotal);
-  document.getElementById('patrimonioModal').classList.remove('hidden');
+  openPendingModal();
+  renderFinance();
 }
 
 function openPendingLucrosModal() {
   document.getElementById('pendingLucrosModal').classList.remove('hidden');
   const list = document.getElementById('pending-lucros-list');
   const items = getPendingReceivablesList();
-
-  if (!items.length) {
-    list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum lucro/pedido pendente a receber no momento.</p>';
-    return;
-  }
-
+  if (!items.length) { list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum lucro/pedido pendente a receber.</p>'; return; }
   list.innerHTML = items.map(item => `
     <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
       <div class="min-w-0">
         <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.title)}</p>
-        <p class="text-[11px] text-slate-500 truncate">${escapeHtml(item.subtitle)}</p>
+        <p class="text-[10px] text-slate-500 truncate">${escapeHtml(item.subtitle)}</p>
+        <p class="font-black text-emerald-600 text-sm mt-0.5">${money(item.amount)}</p>
       </div>
-      <div class="text-right shrink-0">
-        <p class="font-black text-emerald-600 text-sm mb-1">${money(item.amount)}</p>
-        <button type="button" onclick="receiveOrderPending('${item.orderId || ''}', '${item.txId || ''}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm cursor-pointer">Receber</button>
-      </div>
-    </div>
-  `).join('');
+      <button type="button" onclick="confirmReceivePending('${item.txId || ''}', '${item.orderId || ''}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold shrink-0 cursor-pointer">Receber</button>
+    </div>`).join('');
 }
 
-function receiveOrderPending(orderId, txId) {
-  let targetTx = txId ? txs.find(x => x.id === txId) : null;
-  if (!targetTx && orderId) {
-    targetTx = txs.find(x => x.refId === orderId && x.type === 'income' && x.cat === 'Vendas');
-  }
-  const ord = orderId ? orders.find(o => o.id === orderId) : (targetTx && targetTx.refId ? orders.find(o => o.id === targetTx.refId) : null);
+function confirmReceivePending(txId, orderId = '') {
+  const nowStr = nowLocal();
+  const todayStr = todayISO();
+  let targetOrder = orderId ? orders.find(o => o.id === orderId) : null;
+  let tx = txId ? txs.find(t => t.id === txId) : null;
 
-  if (targetTx) {
-    targetTx.status = 'paid';
-    if (!targetTx.accountId) targetTx.accountId = 'nubank';
-  } else if (ord) {
-    const v = calcValores(ord);
+  if (!targetOrder && tx && tx.refId) {
+    targetOrder = orders.find(o => o.id === tx.refId);
+  }
+
+  if (tx) {
+    tx.status = 'paid';
+    tx.date = todayStr;
+  } else if (targetOrder) {
+    const v = calcValores(targetOrder);
     txs.unshift({
       id: genId(),
-      refId: ord.id,
-      desc: `Pedido ${ord.pedido || 'S/N'} - ${ord.cliente || 'Cliente'}`,
+      refId: targetOrder.id,
+      desc: `Pedido ${targetOrder.pedido || 'S/N'} - ${targetOrder.cliente || 'Cliente'}`,
       amount: v.faturamento,
       type: 'income',
       cat: 'Vendas',
-      date: todayISO(),
+      date: todayStr,
       createdAt: new Date().toISOString(),
-      accountId: 'nubank',
-      paymentMethod: ord.paymentMethod || 'Pix',
+      accountId: targetOrder.accIn || 'nubank',
+      paymentMethod: targetOrder.paymentMethod || 'Pix',
       status: 'paid'
     });
   }
 
-  if (ord) {
-    if (!ord.clienteRecebeu) ord.clienteRecebeu = nowLocal();
-    ord.isFinalized = true;
-    ord.finalizedAt = nowLocal();
+  if (targetOrder) {
+    if (!targetOrder.clienteRecebeu) targetOrder.clienteRecebeu = nowStr;
+    targetOrder.isFinalized = true;
+    targetOrder.finalizedAt = nowStr;
   }
 
   saveAll();
-  document.getElementById('pendingLucrosModal').classList.add('hidden');
-  if (currentTab === 'orders') renderOrders();
-  else switchTab('finance');
-  showAppToast('Recebimento confirmado e pedido movido para o histórico!');
-}
-
-function openPatrimonioBensModal() { document.getElementById('patrimonioBensModal').classList.remove('hidden'); renderPatrimonioBensList(); }
-function openAddBemForm() {
-  document.getElementById('formAddBem').classList.remove('hidden');
-  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
-  document.getElementById('bemId').value = '';
-  document.getElementById('bemName').value = '';
-  document.getElementById('bemVal').value = '';
-  document.getElementById('bemCat').value = 'Imóvel / Terreno';
-}
-function saveBemItem() {
-  const id = document.getElementById('bemId').value;
-  const name = document.getElementById('bemName').value.trim();
-  const val = parseMoney(document.getElementById('bemVal').value);
-  const cat = document.getElementById('bemCat').value;
-  if (!name || val <= 0) return showAppToast('Preencha nome e valor válido.', 'error');
-  if (id) {
-    const idx = bensData.findIndex(b => b.id === id);
-    if (idx !== -1) bensData[idx] = { id, name, value: val, category: cat };
-  } else {
-    bensData.push({ id: genId(), name, value: val, category: cat });
-  }
-  saveAll();
-  document.getElementById('formAddBem').classList.add('hidden');
-  renderPatrimonioBensList();
+  openPendingLucrosModal();
   renderFinance();
-  showAppToast('Bem salvo!');
-}
-function editBemItem(id) {
-  const b = bensData.find(x => x.id === id);
-  if (!b) return;
-  document.getElementById('formAddBem').classList.remove('hidden');
-  document.getElementById('bemFormTitle').textContent = 'Editar Bem / Investimento';
-  document.getElementById('bemId').value = b.id;
-  document.getElementById('bemName').value = b.name;
-  document.getElementById('bemVal').value = Number(b.value || 0).toFixed(2).replace('.', ',');
-  document.getElementById('bemCat').value = b.category || 'Imóvel / Terreno';
-}
-function delBemItem(id) {
-  askAppConfirm('Excluir Bem', 'Deseja excluir este bem do inventário?', true).then(res => {
-    if (!res) return;
-    bensData = bensData.filter(b => b.id !== id);
-    saveAll();
-    renderPatrimonioBensList();
-    renderFinance();
-    showAppToast('Bem removido.');
-  });
-}
-function renderPatrimonioBensList() {
-  const total = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('patrimonioBensTotal').textContent = money(total);
-  const list = document.getElementById('patrimonioBensList');
-  if (!bensData.length) { list.innerHTML = '<p class="text-center text-sm text-slate-400 py-4">Nenhum bem cadastrado.</p>'; return; }
-  list.innerHTML = bensData.map(b => `
-    <div class="py-3 flex justify-between items-center gap-2">
-      <div class="min-w-0"><p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500 uppercase font-semibold">${escapeHtml(b.category)}</p></div>
-      <div class="text-right flex items-center gap-1.5 shrink-0">
-        <span class="font-black text-emerald-600 text-sm mr-1">${money(b.value)}</span>
-        <button type="button" onclick="editBemItem('${b.id}')" aria-label="Editar bem" class="text-slate-400 hover:text-brand-600 text-xs font-bold px-1.5 py-1 rounded bg-slate-100 dark:bg-slate-700 cursor-pointer">✏️</button>
-        <button type="button" onclick="delBemItem('${b.id}')" aria-label="Excluir bem" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-1.5 py-1 rounded bg-rose-50 dark:bg-rose-900/20 cursor-pointer">✕</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-let selectedAdminClientName = null;
-
-function getClientContinuativeStats() {
-  const map = new Map();
-
-  orders.forEach(o => {
-    const cli = (o.cliente || '').trim();
-    if (!cli) return;
-    const key = cli.toLowerCase();
-    const ym = (o.saida || o.clienteRecebeu || todayISO()).slice(0, 7);
-    const v = calcValores(o);
-    if (!map.has(key)) {
-      map.set(key, {
-        name: cli,
-        ordersCount: 0,
-        totalLucro: 0,
-        totalFat: 0,
-        months: new Map()
-      });
-    }
-    const entry = map.get(key);
-    entry.ordersCount += 1;
-    entry.totalLucro += v.lucroLiq;
-    entry.totalFat += v.faturamento;
-
-    if (!entry.months.has(ym)) {
-      entry.months.set(ym, { ym, count: 0, lucro: 0, fat: 0 });
-    }
-    const mEntry = entry.months.get(ym);
-    mEntry.count += 1;
-    mEntry.lucro += v.lucroLiq;
-    mEntry.fat += v.faturamento;
-  });
-
-  return Array.from(map.values()).sort((a, b) => b.totalLucro - a.totalLucro);
-}
-
-function selectAdminClientDetail(clientKeyLower) {
-  const stats = getClientContinuativeStats();
-  const target = stats.find(s => s.name.toLowerCase() === clientKeyLower);
-  const box = document.getElementById('adm-client-detail-report');
-  if (!target) {
-    box.classList.add('hidden');
-    return;
-  }
-  selectedAdminClientName = clientKeyLower;
-  const monthRows = Array.from(target.months.values()).sort((a, b) => b.ym.localeCompare(a.ym));
-  box.innerHTML = `
-    <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-200 dark:border-slate-700">
-      <div>
-        <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">HISTÓRICO MENSAL CONTINUATIVO</span>
-        <h4 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(target.name)}</h4>
-      </div>
-      <button type="button" onclick="selectedAdminClientName=null; document.getElementById('adm-client-detail-report').classList.add('hidden');" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer">Fechar</button>
-    </div>
-    <div class="divide-y divide-slate-200/70 dark:divide-slate-800">
-      ${monthRows.map(m => `
-        <div class="py-1.5 flex items-center justify-between gap-2">
-          <div>
-            <strong class="text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)}</strong>
-            <span class="text-slate-500 dark:text-slate-400 ml-1.5">${m.count} pedido(s) · Fat. ${money(m.fat)}</span>
-          </div>
-          <span class="font-extrabold text-emerald-600 dark:text-emerald-400">${money(m.lucro)}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-  box.classList.remove('hidden');
-}
-
-function renderAdminOrders() {
-  let totProfit=0, totFat=0;
-  orders.forEach(o => { const v = calcValores(o); totProfit+=v.lucroLiq; totFat+=v.faturamento; });
-  document.getElementById('adm-total-profit').textContent = money(totProfit);
-  document.getElementById('adm-total-fat').textContent = money(totFat);
-
-  const detList = document.getElementById('adm-detailed-list');
-  if (!orders.length) detList.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido registrado.</p>';
-  else {
-    detList.innerHTML = orders.map(o => {
-      const v = calcValores(o);
-      const st = statusOf(o);
-      return `
-        <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex justify-between items-center gap-3">
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-xs text-slate-900 dark:text-white">${escapeHtml(o.pedido || 'S/N')}</span>
-              <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${st.cls}">${st.label}</span>
-            </div>
-            <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(o.cliente || 'Cliente')}</p>
-          </div>
-          <div class="text-right shrink-0">
-            <p class="font-black text-emerald-600 text-xs">${money(v.lucroLiq)}</p>
-            <p class="text-[10px] text-slate-400">Fat: ${money(v.faturamento)}</p>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  const clientStats = getClientContinuativeStats();
-  const tbody = document.getElementById('adm-client-table');
-  if (!clientStats.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-6 text-center text-sm text-slate-400">Nenhum cliente com pedidos.</td></tr>';
-  } else {
-    tbody.innerHTML = clientStats.map(c => `
-      <tr onclick="selectAdminClientDetail('${escapeHtml(c.name.toLowerCase().replace(/'/g, "\\'"))}')" class="hover:bg-indigo-50/50 dark:hover:bg-slate-800/70 transition cursor-pointer">
-        <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td>
-        <td class="px-4 py-3 text-center"><span class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-bold text-xs px-2 py-0.5 rounded-full">${c.ordersCount}x · ${c.months.size}m</span></td>
-        <td class="px-4 py-3 text-right font-black text-emerald-600">${money(c.totalLucro)}</td>
-      </tr>`).join('');
-  }
-}
-
-function renderAdminFinance() {
-  const filter = document.getElementById('adm-fin-filter').value;
-  let listTxs = txs.filter(t => !t.isAdjustment && t.cat !== 'Ajuste');
-  if (filter === 'income') listTxs = listTxs.filter(t => t.type === 'income');
-  if (filter === 'expense') listTxs = listTxs.filter(t => t.type === 'expense');
-
-  const container = document.getElementById('adm-fin-list');
-  if (!listTxs.length) { container.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Sem registros financeiros para exibir.</p>'; return; }
-
-  container.innerHTML = listTxs.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(t => {
-    const isInc = t.type === 'income';
-    const isPending = t.status === 'pending';
-    return `
-      <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex justify-between items-center">
-        <div><p class="font-bold text-xs text-slate-800 dark:text-slate-200">${escapeHtml(t.desc)}</p><p class="text-[10px] text-slate-400 mt-0.5">${(t.date || '').split('-').reverse().join('/')} · ${escapeHtml(t.cat || 'Outro')}</p></div>
-        <div class="text-right"><p class="font-black text-xs ${isInc ? 'text-emerald-600' : 'text-rose-600'} ${isPending ? 'line-through opacity-50' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p></div>
-      </div>`;
-  }).join('');
-}
-
-function getAvailableMonths() {
-  const set = new Set();
-  const d = new Date();
-  set.add(d.getFullYear() + '-' + pad(d.getMonth()+1));
-  orders.forEach(o => { if(o.saida) set.add(o.saida.slice(0,7)); });
-  txs.forEach(t => { if(t.date) set.add(t.date.slice(0,7)); });
-  return Array.from(set).sort().reverse();
-}
-
-function renderMonthlyClosingContent() {
-  const ym = document.getElementById('chartMonthSelector').value;
-  if (!ym) return;
-
-  let monthOrdersFat = 0, monthOrdersMargin = 0, monthOrdersFreightEst = 0;
-  orders.filter(o => o.saida && o.saida.startsWith(ym)).forEach(o => {
-    const v = calcValores(o);
-    monthOrdersFat += v.faturamento;
-    monthOrdersMargin += v.margemVal;
-    monthOrdersFreightEst += (Number(o.frete) || 0);
-  });
-
-  const monthPaidTxs = txs.filter(t => t.date && t.date.startsWith(ym) && t.status !== 'pending' && !t.isAdjustment && t.cat !== 'Ajuste');
-  const incomeTxs = monthPaidTxs.filter(t => t.type === 'income').reduce((s,t) => s + (Number(t.amount) || 0), 0);
-  const opExpTxs = monthPaidTxs.filter(t => t.type === 'expense' && (t.cat === 'Fornecedores' || t.cat === 'Logística' || t.cat === 'Operação')).reduce((s,t) => s + (Number(t.amount) || 0), 0);
-  const otherExpTxs = monthPaidTxs.filter(t => t.type === 'expense' && t.cat !== 'Fornecedores' && t.cat !== 'Logística' && t.cat !== 'Operação').reduce((s,t) => s + (Number(t.amount) || 0), 0);
-
-  const grossRevMonth = incomeTxs > 0 ? incomeTxs : monthOrdersFat;
-  const grossProfitMonth = monthOrdersMargin > 0 ? monthOrdersMargin : Math.max(0, grossRevMonth - opExpTxs);
-  const opOutMonth = opExpTxs > 0 ? opExpTxs : monthOrdersFreightEst;
-  const diverseOutMonth = otherExpTxs;
-  const totalOutMonth = opOutMonth + diverseOutMonth;
-  const netProfitMonth = grossRevMonth - totalOutMonth;
-
-  document.getElementById('chart-month-gross-rev').textContent = money(grossRevMonth);
-  document.getElementById('chart-month-gross-profit').textContent = money(grossProfitMonth);
-  document.getElementById('chart-month-income').textContent = money(netProfitMonth);
-  document.getElementById('chart-month-forecast-rev').textContent = money(opOutMonth);
-  document.getElementById('chart-month-balance').textContent = money(diverseOutMonth);
-  document.getElementById('chart-month-expense').textContent = money(totalOutMonth);
-
-  const maxVal = Math.max(grossRevMonth, grossProfitMonth, Math.abs(netProfitMonth), opOutMonth, diverseOutMonth, totalOutMonth, 1);
-  const bars = [
-    { label: 'Receitas / Entradas do Mês', val: grossRevMonth, color: 'bg-brand-600' },
-    { label: 'Lucro Bruto (Margem Vendas)', val: grossProfitMonth, color: 'bg-blue-500' },
-    { label: 'Lucro Líquido do Mês', val: netProfitMonth, color: netProfitMonth >= 0 ? 'bg-emerald-500' : 'bg-rose-500' },
-    { label: 'Saídas Operacionais (Merc./Frete/Op.)', val: opOutMonth, color: 'bg-amber-500' },
-    { label: 'Saídas Diversas & Cartão', val: diverseOutMonth, color: 'bg-purple-500' },
-    { label: 'Total Geral de Saídas', val: totalOutMonth, color: 'bg-rose-500' }
-  ];
-
-  document.getElementById('column-charts-container').innerHTML = bars.map(b => {
-    const pct = Math.min(100, Math.max(2, (Math.abs(b.val) / maxVal) * 100));
-    return `
-      <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-700 space-y-1.5">
-        <div class="flex justify-between text-xs"><span class="font-bold text-slate-700 dark:text-slate-300">${b.label}</span><span class="font-black text-slate-900 dark:text-white">${money(b.val)}</span></div>
-        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden"><div class="${b.color} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div></div>
-      </div>`;
-  }).join('');
-}
-
-function openChartsModal() {
-  const months = getAvailableMonths();
-  const sel = document.getElementById('chartMonthSelector');
-  sel.innerHTML = months.map(m => `<option value="${m}">${fmtMonthYearLabel(m)}</option>`).join('');
-  if (months.length) sel.value = months[0];
-  renderMonthlyClosingContent();
-  document.getElementById('chartsModal').classList.remove('hidden');
-}
-
-function renderOrderFreightInstallmentBox() {
-  const freteStatus = document.getElementById('oFreightStatus').value;
-  const box = document.getElementById('orderFreightInstallmentBox');
-  if (freteStatus !== 'pending') {
-    box.classList.add('hidden');
-    return;
-  }
-  box.classList.remove('hidden');
-
-  const estimated = parseMoney(document.getElementById('oFrete').value);
-  const paid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  const remaining = Math.max(0, Number((estimated - paid).toFixed(2)));
-
-  document.getElementById('ordFreteTotalSummary').textContent = money(estimated);
-  document.getElementById('ordFretePaidSummary').textContent = money(paid);
-  document.getElementById('ordFreteDueSummary').textContent = money(remaining);
-  document.getElementById('ordFreteRemainingBadge').textContent = remaining > 0 ? `Falta: ${money(remaining)}` : 'Quitado';
-
-  const histEl = document.getElementById('ordFreteInstallmentsHistory');
-  if (!activeOrderFreightPayments.length) {
-    histEl.innerHTML = '<p class="text-[10px] text-slate-500 dark:text-slate-400">Nenhum pagamento parcial lançado ainda.</p>';
-  } else {
-    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
-      const accName = ACCOUNTS.find(a => a.id === p.accountId)?.name || 'Conta';
-      return `<div class="flex justify-between items-center text-[11px] bg-white/70 dark:bg-slate-900/50 px-2.5 py-1 rounded-lg border border-amber-200/50 dark:border-amber-800/30"><span>Parcela ${idx + 1} (${accName}) · ${(p.date || todayISO()).split('-').reverse().join('/')}</span><strong class="text-emerald-600 dark:text-emerald-400">${money(p.amount)}</strong></div>`;
-    }).join('');
-  }
-}
-
-function handleFreightStatusChange() {
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-}
-
-function handlePagoFreteCheckboxChange() {
-  const checked = document.getElementById('oPagoFrete').checked;
-  document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !checked);
-  if (checked && activeOrderFreightPayments.length === 0) {
-    const est = parseMoney(document.getElementById('oFrete').value);
-    if (est > 0 && document.getElementById('oFreightStatus').value === 'paid') {
-      activeOrderFreightPayments = [{ id: genId(), amount: est, accountId: document.getElementById('oAccOutFrete').value || 'c6', date: todayISO() }];
-    }
-  }
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-}
-
-function applyOrderFreightInstallment() {
-  const payAmt = parseMoney(document.getElementById('ordFretePayAmt').value);
-  const accId = document.getElementById('ordFretePayAcc').value || 'c6';
-  const est = parseMoney(document.getElementById('oFrete').value);
-  const paidSoFar = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  const rem = Math.max(0, Number((est - paidSoFar).toFixed(2)));
-
-  if (payAmt <= 0) return showAppToast('Informe o valor da parcela/pagamento do frete.', 'error');
-  if (rem > 0 && payAmt > rem + 0.009) {
-    return showAppToast(`Valor excede o restante do frete (${money(rem)}).`, 'error');
-  }
-
-  activeOrderFreightPayments.push({
-    id: genId(),
-    amount: payAmt,
-    accountId: accId,
-    date: todayISO()
-  });
-
-  document.getElementById('oPagoFrete').checked = true;
-  document.getElementById('wrapAccOutFrete').classList.remove('hidden');
-  document.getElementById('oAccOutFrete').value = accId;
-  document.getElementById('ordFretePayAmt').value = '';
-
-  const newPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  if (est > 0 && newPaid >= est - 0.009) {
-    document.getElementById('oFreightStatus').value = 'paid';
-  }
-
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-  showAppToast(`Pagamento de ${money(payAmt)} abatido do frete!`);
-}
-
-function openModal(id = null) {
-  document.getElementById('modal').classList.remove('hidden');
-  populateAccountSelect('oAccOutMerc');
-  populateAccountSelect('oAccOutFrete');
-  populateAccountSelect('oAccIn');
-  populateAccountSelect('ordFretePayAcc');
-
-  if (id) {
-    const o = orders.find(x => x.id === id);
-    if (!o) return;
-    document.getElementById('modalTitle').textContent = 'Editar Pedido';
-    document.getElementById('oId').value = o.id;
-    document.getElementById('oDriveLink').value = o.driveLink || '';
-    document.getElementById('oPedido').value = o.pedido || '';
-    document.getElementById('oCliente').value = o.cliente || '';
-    document.getElementById('oUSD').value = o.valorUSD || '';
-    document.getElementById('oCot').value = o.cotacao || '';
-    document.getElementById('oMargem').value = o.margem || '';
-    document.getElementById('oFrete').value = o.frete || '';
-    document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
-    document.getElementById('oFreightStatus').value = o.freightStatus || 'paid';
-    document.getElementById('oPagoMerc').checked = o.pagoMerc !== false;
-    document.getElementById('oPagoFrete').checked = o.pagoFrete !== false;
-    document.getElementById('oSyncFin').checked = o.syncFin !== false;
-
-    if (Array.isArray(o.freightPayments) && o.freightPayments.length > 0) {
-      activeOrderFreightPayments = o.freightPayments.map(p => ({ ...p }));
-    } else if ((Number(o.freightPaid) || 0) > 0) {
-      activeOrderFreightPayments = [{ id: genId(), amount: Number(o.freightPaid), accountId: 'c6', date: (o.saida || todayISO()).split('T')[0] }];
-    } else if (o.pagoFrete && (Number(o.frete) || 0) > 0 && (o.freightStatus || 'paid') === 'paid') {
-      activeOrderFreightPayments = [{ id: genId(), amount: Number(o.frete), accountId: 'c6', date: (o.saida || todayISO()).split('T')[0] }];
-    } else {
-      activeOrderFreightPayments = [];
-    }
-
-    document.getElementById('oOrigem').value = o.cidadeOrigem || '';
-    document.getElementById('oSaida').value = o.saida || '';
-    document.getElementById('oTransportadora').value = o.transportadora || '';
-    document.getElementById('oSubiu').value = o.subiuTransp || '';
-    document.getElementById('oC1').value = o.cidade1 || '';
-    document.getElementById('oC1H').value = o.cidade1Hora || '';
-    document.getElementById('oC2').value = o.cidade2 || '';
-    document.getElementById('oC2H').value = o.cidade2Hora || '';
-    document.getElementById('oC3').value = o.cidade3 || '';
-    document.getElementById('oC3H').value = o.cidade3Hora || '';
-    document.getElementById('oSP').value = o.desceuSP || '';
-    document.getElementById('oRec').value = o.clienteRecebeu || '';
-
-    const linkedOutMerc = txs.find(t => t.refId === o.id && t.cat === 'Fornecedores');
-    if (linkedOutMerc) document.getElementById('oAccOutMerc').value = linkedOutMerc.accountId;
-    const linkedOutFrete = txs.find(t => t.refId === o.id && t.cat === 'Logística');
-    if (linkedOutFrete) {
-      document.getElementById('oAccOutFrete').value = linkedOutFrete.accountId;
-      document.getElementById('ordFretePayAcc').value = linkedOutFrete.accountId;
-    }
-    const linkedIn = txs.find(t => t.refId === o.id && t.type === 'income');
-    if (linkedIn) document.getElementById('oAccIn').value = linkedIn.accountId;
-  } else {
-    document.getElementById('modalTitle').textContent = 'Novo Pedido';
-    document.getElementById('oId').value = '';
-    ['oDriveLink','oPedido','oCliente','oUSD','oCot','oMargem','oFrete','oOrigem','oSaida','oTransportadora','oSubiu','oC1','oC1H','oC2','oC2H','oC3','oC3H','oSP','oRec','ordFretePayAmt'].forEach(k => document.getElementById(k).value = '');
-    document.getElementById('oPaymentMethod').value = 'Pix';
-    document.getElementById('oFreightStatus').value = 'paid';
-    document.getElementById('oPagoMerc').checked = true;
-    document.getElementById('oPagoFrete').checked = true;
-    document.getElementById('oSyncFin').checked = true;
-    activeOrderFreightPayments = [];
-  }
-  togglePaymentOptions();
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-}
-function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
-function togglePaymentOptions() {
-  document.getElementById('wrapAccOutMerc').classList.toggle('hidden', !document.getElementById('oPagoMerc').checked);
-  document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !document.getElementById('oPagoFrete').checked);
-  document.getElementById('wrapAccIn').classList.toggle('hidden', !document.getElementById('oSyncFin').checked);
-}
-
-function updatePreview() {
-  const link = document.getElementById('oDriveLink').value.trim();
-  const btn = document.getElementById('btnTestDrive');
-  if (link) { btn.href = link; btn.classList.remove('hidden'); } else btn.classList.add('hidden');
-
-  const usd = parseMoney(document.getElementById('oUSD').value);
-  const cot = parseMoney(document.getElementById('oCot').value);
-  const margem = parseMoney(document.getElementById('oMargem').value);
-  const frete = parseMoney(document.getElementById('oFrete').value);
-  const pagoMerc = document.getElementById('oPagoMerc').checked;
-  const pagoFrete = document.getElementById('oPagoFrete').checked;
-  const freteStatus = document.getElementById('oFreightStatus').value;
-  const fretePagoParcelas = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-
-  const inv = usd * cot;
-  const margemVal = inv * (margem / 100);
-  const meuCustoMerc = pagoMerc ? inv : 0;
-  const meuCustoFrete = pagoFrete ? Math.max(frete, fretePagoParcelas) : 0;
-  const lucroLiq = (margemVal + meuCustoMerc) - meuCustoMerc - meuCustoFrete;
-  const totalReceber = margemVal + meuCustoMerc;
-
-  document.getElementById('prevBRL').textContent = money(inv);
-  document.getElementById('prevMargem').textContent = money(margemVal);
-  document.getElementById('prevFreteLabel').textContent = (freteStatus === 'pending' && pagoFrete) ? '(-) Custo Frete (Abatido/Est.)' : '(-) Custo Frete';
-  document.getElementById('prevFrete').textContent = money(meuCustoFrete);
-  document.getElementById('prevLucro').textContent = money(lucroLiq);
-  document.getElementById('prevFinal').textContent = money(totalReceber);
-}
-
-function saveOrder(e) {
-  e.preventDefault();
-  const id = document.getElementById('oId').value || genId();
-  const isEdit = !!document.getElementById('oId').value;
-
-  const pedido = document.getElementById('oPedido').value.trim();
-  const cliente = document.getElementById('oCliente').value.trim();
-  const valorUSD = parseMoney(document.getElementById('oUSD').value);
-  const cotacao = parseMoney(document.getElementById('oCot').value);
-  const margem = parseMoney(document.getElementById('oMargem').value);
-  const frete = parseMoney(document.getElementById('oFrete').value);
-  const paymentMethod = document.getElementById('oPaymentMethod').value;
-  const freightStatus = document.getElementById('oFreightStatus').value;
-  const pagoMerc = document.getElementById('oPagoMerc').checked;
-  const pagoFrete = document.getElementById('oPagoFrete').checked;
-  const syncFin = document.getElementById('oSyncFin').checked;
-
-  const accOutMerc = document.getElementById('oAccOutMerc').value;
-  const accOutFrete = document.getElementById('oAccOutFrete').value;
-  const accIn = document.getElementById('oAccIn').value;
-
-  let freightPayments = activeOrderFreightPayments.map(p => ({ ...p }));
-  let freightPaid = freightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-
-  if (pagoFrete && frete > 0 && freightStatus === 'paid' && freightPaid === 0) {
-    freightPayments = [{ id: genId(), amount: frete, accountId: accOutFrete || 'c6', date: todayISO() }];
-    freightPaid = frete;
-  }
-
-  const clienteRecebeu = document.getElementById('oRec').value;
-  const obj = {
-    id, pedido, cliente,
-    driveLink: document.getElementById('oDriveLink').value.trim(),
-    valorUSD, cotacao, margem, frete, freightPaid, freightPayments,
-    paymentMethod, freightStatus,
-    pagoMerc, pagoFrete, syncFin,
-    cidadeOrigem: document.getElementById('oOrigem').value.trim(),
-    saida: document.getElementById('oSaida').value,
-    transportadora: document.getElementById('oTransportadora').value.trim(),
-    subiuTransp: document.getElementById('oSubiu').value,
-    cidade1: document.getElementById('oC1').value.trim(),
-    cidade1Hora: document.getElementById('oC1H').value,
-    cidade2: document.getElementById('oC2').value.trim(),
-    cidade2Hora: document.getElementById('oC2H').value,
-    cidade3: document.getElementById('oC3').value.trim(),
-    cidade3Hora: document.getElementById('oC3H').value,
-    desceuSP: document.getElementById('oSP').value,
-    clienteRecebeu,
-    isFinalized: Boolean(clienteRecebeu),
-    finalizedAt: clienteRecebeu ? (clienteRecebeu.includes('T') ? clienteRecebeu : clienteRecebeu + 'T00:00') : null
-  };
-
-  if (cliente && !historyData.clients.some(c => c.toLowerCase() === cliente.toLowerCase())) historyData.clients.push(cliente);
-  ['cidadeOrigem','cidade1','cidade2','cidade3'].forEach(k => { if(obj[k] && !historyData.cities.some(c => c.toLowerCase() === obj[k].toLowerCase())) historyData.cities.push(obj[k]); });
-  if (obj.transportadora && !historyData.carriers.some(c => c.toLowerCase() === obj.transportadora.toLowerCase())) historyData.carriers.push(obj.transportadora);
-
-  if (isEdit) {
-    const idx = orders.findIndex(x => x.id === id);
-    if (idx !== -1) orders[idx] = obj;
-    txs = txs.filter(t => t.refId !== id);
-  } else {
-    orders.push(obj);
-  }
-
-  if (syncFin) {
-    const v = calcValores(obj);
-    const txDate = obj.saida ? obj.saida.split('T')[0] : todayISO();
-    const txCreatedAt = obj.saida ? (obj.saida.length === 16 ? obj.saida + ':00' : obj.saida) : new Date().toISOString();
-    const isReceived = !!obj.clienteRecebeu;
-
-    if (v.faturamento > 0) {
-      txs.unshift({
-        id: genId(), refId: id,
-        desc: `Pedido ${pedido || 'S/N'} - ${cliente || 'Cliente'}`,
-        amount: v.faturamento,
-        type: 'income', cat: 'Vendas',
-        date: txDate, createdAt: txCreatedAt,
-        accountId: accIn,
-        paymentMethod: paymentMethod,
-        status: isReceived ? 'paid' : 'pending'
-      });
-    }
-
-    if (pagoMerc && v.inv > 0) {
-      txs.unshift({
-        id: genId(), refId: id,
-        desc: `Mercadoria - Pedido ${pedido || 'S/N'}`,
-        amount: v.inv,
-        type: 'expense', cat: 'Fornecedores',
-        date: txDate, createdAt: txCreatedAt,
-        accountId: accOutMerc,
-        status: 'paid'
-      });
-    }
-
-    if (pagoFrete && frete > 0) {
-      const remainingFreight = Math.max(0, Number((frete - freightPaid).toFixed(2)));
-      if (freightStatus === 'paid') {
-        txs.unshift({
-          id: genId(), refId: id,
-          desc: `Frete - Pedido ${pedido || 'S/N'}`,
-          amount: frete,
-          type: 'expense', cat: 'Logística',
-          date: txDate, createdAt: txCreatedAt,
-          accountId: accOutFrete,
-          status: 'paid'
-        });
-      } else {
-        if (freightPaid > 0) {
-          txs.unshift({
-            id: genId(), refId: id,
-            desc: `Frete (Parcela Paga) - Pedido ${pedido || 'S/N'}`,
-            amount: freightPaid,
-            type: 'expense', cat: 'Logística',
-            date: txDate, createdAt: txCreatedAt,
-            accountId: accOutFrete,
-            status: 'paid'
-          });
-        }
-        if (remainingFreight > 0) {
-          txs.unshift({
-            id: genId(), refId: id,
-            desc: `Frete (Restante) - Pedido ${pedido || 'S/N'}`,
-            amount: remainingFreight,
-            type: 'expense', cat: 'Logística',
-            date: txDate, createdAt: txCreatedAt,
-            accountId: accOutFrete,
-            status: 'pending'
-          });
-        }
-      }
-    }
-  }
-
-  saveAll();
-  closeModal();
-  renderDatalists();
-  if (currentTab === 'orders') renderOrders();
-  else switchTab('orders');
-  showAppToast('Pedido salvo!');
-}
-
-function delOrder(id) {
-  askAppConfirm('Excluir Pedido', 'Deseja excluir este pedido e seus lançamentos financeiros vinculados?', true).then(res => {
-    if (!res) return;
-    orders = orders.filter(x => x.id !== id);
-    txs = txs.filter(t => t.refId !== id);
-    saveAll();
-    renderOrders();
-    showAppToast('Pedido excluído.');
-  });
+  renderOrders();
+  showAppToast('Recebimento confirmado e pedido enviado para o histórico!');
 }
 
 function openFinModal() {
@@ -3292,63 +2629,64 @@ function openFinModal() {
   document.getElementById('fAmount').value = '';
   document.getElementById('fDate').value = todayISO();
   document.getElementById('fStatus').value = 'paid';
-  populateAccountSelect('fAccount');
   setFinType('expense');
 }
+
 function setFinType(type) {
   document.getElementById('fType').value = type;
-  const btnInc = document.getElementById('btn-type-income');
-  const btnExp = document.getElementById('btn-type-expense');
+  const incBtn = document.getElementById('btn-type-income');
+  const expBtn = document.getElementById('btn-type-expense');
   if (type === 'income') {
-    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-500 flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer';
-    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer';
+    incBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer';
+    expBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
   } else {
-    btnExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-500 flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer';
-    btnInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer';
+    expBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-amber-500 bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 flex items-center justify-center gap-1.5 cursor-pointer';
+    incBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
   }
 }
+
 function saveFinTx(e) {
   e.preventDefault();
   const type = document.getElementById('fType').value;
   const desc = document.getElementById('fDesc').value.trim();
   const amount = parseMoney(document.getElementById('fAmount').value);
-  const date = document.getElementById('fDate').value;
+  const date = document.getElementById('fDate').value || todayISO();
   const accountId = document.getElementById('fAccount').value;
   const status = document.getElementById('fStatus').value;
 
   if (!desc || amount <= 0) return showAppToast('Preencha descrição e valor válido.', 'error');
 
-  const newTx = {
-    id: genId(),
+  const txId = genId();
+  txs.unshift({
+    id: txId,
     desc,
     amount,
     type,
-    cat: 'Outros',
+    cat: type === 'income' ? 'Receita' : 'Outros',
     date,
     createdAt: new Date().toISOString(),
     accountId,
     status
-  };
-  txs.unshift(newTx);
+  });
 
-  if (type === 'expense' && status === 'paid') {
+  if (type === 'expense') {
     addTetoCycleExpense({
-      id: newTx.id,
-      desc: newTx.desc,
-      amount: newTx.amount,
-      date: newTx.date,
+      id: txId,
+      desc,
+      amount,
+      date,
       source: 'tx'
     });
   }
 
-  saveAll();
   document.getElementById('finModal').classList.add('hidden');
-  switchTab('finance');
+  saveAll();
+  renderFinance();
   showAppToast('Lançamento registrado!');
 }
 
 function delFinTx(id) {
-  askAppConfirm('Excluir Lançamento', 'Deseja excluir este lançamento financeiro?', true).then(res => {
+  askAppConfirm('Excluir Lançamento', 'Deseja excluir este lançamento financeiro?').then(res => {
     if (!res) return;
     txs = txs.filter(t => t.id !== id);
     const teto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
@@ -3366,53 +2704,62 @@ function openTransferModal() {
   document.getElementById('transferModal').classList.remove('hidden');
   document.getElementById('tAmount').value = '';
   document.getElementById('tDate').value = todayISO();
-  populateAccountSelect('tFrom'); populateAccountSelect('tTo');
+  const selFrom = document.getElementById('tFrom');
+  const selTo = document.getElementById('tTo');
+  selFrom.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
+  selTo.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  if (selTo.options.length > 1) selTo.selectedIndex = 1;
 }
+
 function saveTransfer(e) {
   e.preventDefault();
-  const from = document.getElementById('tFrom').value;
-  const to = document.getElementById('tTo').value;
+  const fromId = document.getElementById('tFrom').value;
+  const toId = document.getElementById('tTo').value;
   const amount = parseMoney(document.getElementById('tAmount').value);
-  const date = document.getElementById('tDate').value;
-  if (from === to) return showAppToast('Origem e destino iguais.', 'error');
-  if (amount <= 0) return showAppToast('Valor inválido.', 'error');
+  const date = document.getElementById('tDate').value || todayISO();
 
-  const fromName = ACCOUNTS.find(a => a.id === from)?.name;
-  const toName = ACCOUNTS.find(a => a.id === to)?.name;
-  const createdAt = new Date().toISOString();
+  if (fromId === toId) return showAppToast('Origem e destino devem ser diferentes.', 'error');
+  if (amount <= 0) return showAppToast('Digite um valor válido.', 'error');
 
-  txs.unshift({ id: genId(), desc: `Transf. p/ ${toName}`, amount, type: 'transfer_out', cat: 'Transferência', date, createdAt, accountId: from, status: 'paid' });
-  txs.unshift({ id: genId(), desc: `Transf. de ${fromName}`, amount, type: 'transfer_in', cat: 'Transferência', date, createdAt, accountId: to, status: 'paid' });
+  const fromName = ACCOUNTS.find(a => a.id === fromId)?.name || 'Origem';
+  const toName = ACCOUNTS.find(a => a.id === toId)?.name || 'Destino';
+  const nowIso = new Date().toISOString();
 
-  saveAll();
+  txs.unshift(
+    { id: genId(), desc: `Transferência para ${toName}`, amount, type: 'transfer_out', cat: 'Transfer', date, createdAt: nowIso, accountId: fromId, status: 'paid' },
+    { id: genId(), desc: `Transferência de ${fromName}`, amount, type: 'transfer_in', cat: 'Transfer', date, createdAt: nowIso, accountId: toId, status: 'paid' }
+  );
+
   document.getElementById('transferModal').classList.add('hidden');
-  switchTab('finance');
+  saveAll();
+  renderFinance();
   showAppToast('Transferência realizada!');
 }
 
 function openEditBalance(accId) {
   const acc = ACCOUNTS.find(a => a.id === accId);
   if (!acc) return;
-  const curBal = getAccountBalance(accId);
-  document.getElementById('editBalTitle').textContent = `Ajustar Saldo - ${acc.name}`;
+  const currentBal = getAccountBalance(accId);
   document.getElementById('editBalAccId').value = accId;
-  document.getElementById('editBalCurrent').textContent = money(curBal);
-  document.getElementById('editBalNew').value = curBal.toFixed(2).replace('.', ',');
+  document.getElementById('editBalTitle').textContent = `Ajustar Saldo · ${acc.name}`;
+  document.getElementById('editBalCurrent').textContent = money(currentBal);
+  document.getElementById('editBalNew').value = currentBal.toFixed(2).replace('.', ',');
   document.getElementById('editBalanceModal').classList.remove('hidden');
 }
+
 function saveEditBalance(e) {
   e.preventDefault();
   const accId = document.getElementById('editBalAccId').value;
-  const newBal = parseMoney(document.getElementById('editBalNew').value);
-  const curBal = getAccountBalance(accId);
-  const diff = Number((newBal - curBal).toFixed(2));
+  const targetBal = parseMoney(document.getElementById('editBalNew').value);
+  const currentBal = getAccountBalance(accId);
+  const diff = Number((targetBal - currentBal).toFixed(2));
 
   if (Math.abs(diff) > 0.001) {
     txs.unshift({
       id: genId(),
-      desc: diff > 0 ? 'Ajuste de saldo (+)' : 'Ajuste de saldo (-)',
+      desc: 'Ajuste manual de saldo',
       amount: Math.abs(diff),
-      type: diff > 0 ? 'income' : 'expense',
+      type: diff >= 0 ? 'income' : 'expense',
       cat: 'Ajuste',
       date: todayISO(),
       createdAt: new Date().toISOString(),
@@ -3422,10 +2769,1095 @@ function saveEditBalance(e) {
     });
   }
 
-  saveAll();
   document.getElementById('editBalanceModal').classList.add('hidden');
-  switchTab('finance');
-  showAppToast('Saldo ajustado!');
+  saveAll();
+  renderFinance();
+  showAppToast('Saldo atualizado!');
+}
+
+function handleCreditCardClick(cardId) {
+  clearTimeout(cardSingleClickTimer);
+  cardSingleClickTimer = setTimeout(() => {
+    openCardDetail(cardId);
+  }, 220);
+}
+
+function handleCreditCardDblClick(e, cardId) {
+  if (e) e.stopPropagation();
+  clearTimeout(cardSingleClickTimer);
+  openCardHistoryBubble(cardId);
+}
+
+function openCardHistoryBubble(cardId) {
+  const card = cardsConfig.find(c => c.id === cardId);
+  if (!card) return;
+  document.getElementById('cardHistoryBubbleTitle').textContent = `${card.name} · Fatura ${money(card.currentBill)}`;
+  const hist = Array.isArray(card.history) ? card.history : [];
+  const listEl = document.getElementById('cardHistoryBubbleList');
+  if (!hist.length) {
+    listEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Nenhuma compra registrada no histórico deste cartão.</p>';
+  } else {
+    listEl.innerHTML = hist.map(h => {
+      const paidBadge = h.status === 'paid'
+        ? '<span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">Pago</span>'
+        : '<span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400">Fatura</span>';
+      return `
+        <div class="bg-slate-50 dark:bg-slate-900/70 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 text-xs">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <p class="font-bold text-slate-900 dark:text-white truncate">${escapeHtml(h.note || 'Compra')}</p>
+              ${paidBadge}
+            </div>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">${fmtDateTimeTx(h.createdAt)}</p>
+          </div>
+          <span class="font-black text-purple-600 dark:text-purple-400 shrink-0">${money(h.amount)}</span>
+        </div>`;
+    }).join('');
+  }
+  document.getElementById('cardHistoryBubbleModal').classList.remove('hidden');
+}
+
+function closeCardHistoryBubble() {
+  document.getElementById('cardHistoryBubbleModal').classList.add('hidden');
+}
+
+function openCardDetail(cardId) {
+  const c = cardsConfig.find(x => x.id === cardId);
+  if (!c) return;
+  const avail = (Number(c.limit) || 0) - (Number(c.currentBill) || 0);
+  document.getElementById('detCardId').value = c.id;
+  document.getElementById('detCardTitle').textContent = `Cartão · ${c.name}`;
+  document.getElementById('detCardLimit').textContent = money(c.limit);
+  document.getElementById('detCardBill').textContent = money(c.currentBill);
+  document.getElementById('detCardAvail').textContent = money(avail);
+  document.getElementById('detCardDue').textContent = `Dia ${c.dueDay}`;
+  document.getElementById('cardDetailModal').classList.remove('hidden');
+}
+
+function openEditCardFromDetail() {
+  const id = document.getElementById('detCardId').value;
+  const c = cardsConfig.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('cardDetailModal').classList.add('hidden');
+  document.getElementById('cardId').value = c.id;
+  document.getElementById('cardName').value = c.name;
+  document.getElementById('cardLimit').value = (Number(c.limit) || 0).toFixed(2).replace('.', ',');
+  document.getElementById('cardDueDay').value = Number(c.dueDay) || 10;
+  document.getElementById('cardCurrentBill').value = (Number(c.currentBill) || 0).toFixed(2).replace('.', ',');
+  document.getElementById('cardModal').classList.remove('hidden');
+}
+
+function saveCardConfig(e) {
+  e.preventDefault();
+  const id = document.getElementById('cardId').value;
+  const c = cardsConfig.find(x => x.id === id);
+  if (!c) return;
+  const limit = parseMoney(document.getElementById('cardLimit').value);
+  const dueDay = parseInt(document.getElementById('cardDueDay').value, 10);
+  const currentBill = parseMoney(document.getElementById('cardCurrentBill').value);
+
+  if (limit <= 0) return showAppToast('Limite inválido.', 'error');
+  if (!dueDay || dueDay < 1 || dueDay > 31) return showAppToast('Informe um dia de vencimento válido (1 a 31).', 'error');
+
+  c.limit = limit;
+  c.dueDay = dueDay;
+  c.currentBill = Math.max(0, currentBill);
+
+  document.getElementById('cardModal').classList.add('hidden');
+  saveAll();
+  renderFinance();
+  showAppToast(`Cartão ${c.name} atualizado (Venc. dia ${c.dueDay})!`);
+}
+
+function openPayCardFromDetail() {
+  const id = document.getElementById('detCardId').value;
+  const c = cardsConfig.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('cardDetailModal').classList.add('hidden');
+  document.getElementById('payCardId').value = c.id;
+  const bill = Number(c.currentBill) || 0;
+  const availAfterAll = Math.max(0, Number(c.limit) || 0);
+  document.getElementById('payCardNameDesc').textContent = c.name;
+  document.getElementById('payCardAmountDesc').textContent = money(bill);
+  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(availAfterAll)}`;
+  document.getElementById('payCardAmountInput').value = bill.toFixed(2).replace('.', ',');
+  const sel = document.getElementById('payCardAccount');
+  sel.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
+  updatePayCardValidationUI();
+  document.getElementById('payCardModal').classList.remove('hidden');
+}
+
+function closePayCardModal() {
+  document.getElementById('payCardModal').classList.add('hidden');
+}
+
+function updatePayCardValidationUI() {
+  const cardId = document.getElementById('payCardId').value;
+  const card = cardsConfig.find(x => x.id === cardId);
+  const accId = document.getElementById('payCardAccount').value;
+  const payAmt = parseMoney(document.getElementById('payCardAmountInput').value);
+  const accBal = getAccountBalance(accId);
+  const bill = card ? (Number(card.currentBill) || 0) : 0;
+
+  document.getElementById('payCardAccountBalanceHint').textContent = `Saldo na conta selecionada: ${money(accBal)}`;
+  const msgEl = document.getElementById('payCardValidationMsg');
+  const btn = document.getElementById('btnConfirmPayCard');
+
+  if (payAmt > accBal + 0.009) {
+    msgEl.textContent = `Saldo insuficiente na conta (${money(accBal)}) para pagar ${money(payAmt)}.`;
+    msgEl.classList.remove('hidden');
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+  } else if (payAmt > bill + 0.009) {
+    msgEl.textContent = `Valor maior que a fatura aberta (${money(bill)}).`;
+    msgEl.classList.remove('hidden');
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+  } else {
+    msgEl.classList.add('hidden');
+    btn.disabled = false;
+    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+  }
+}
+
+function confirmPayCard(e) {
+  e.preventDefault();
+  const cardId = document.getElementById('payCardId').value;
+  const accId = document.getElementById('payCardAccount').value;
+  const payAmt = parseMoney(document.getElementById('payCardAmountInput').value);
+  const c = cardsConfig.find(x => x.id === cardId);
+  if (!c) return;
+  const bill = Number(c.currentBill) || 0;
+  const accBal = getAccountBalance(accId);
+
+  if (payAmt <= 0) return showAppToast('Informe um valor maior que zero.', 'error');
+  if (payAmt > bill + 0.009) return showAppToast('Valor maior que a fatura aberta.', 'error');
+  if (payAmt > accBal + 0.009) return showAppToast('Saldo insuficiente na conta selecionada.', 'error');
+
+  const accName = ACCOUNTS.find(a => a.id === accId)?.name || 'Conta';
+  c.currentBill = Number(Math.max(0, bill - payAmt).toFixed(2));
+  if (Array.isArray(c.history)) {
+    let rem = payAmt;
+    c.history.forEach(h => {
+      if (rem > 0.009 && h.status !== 'paid') {
+        h.status = 'paid';
+        rem -= (Number(h.amount) || 0);
+      }
+    });
+  }
+
+  txs.unshift({
+    id: genId(),
+    desc: `Pagamento Fatura Cartão ${c.name} (${accName})`,
+    amount: payAmt,
+    type: 'expense',
+    cat: 'Cartão',
+    date: todayISO(),
+    createdAt: new Date().toISOString(),
+    accountId: accId,
+    status: 'paid'
+  });
+
+  closePayCardModal();
+  saveAll();
+  renderFinance();
+  showAppToast(`Pagamento de ${money(payAmt)} do cartão ${c.name} confirmado!`);
+}
+
+function openPatrimonioModal() {
+  let totalAcc = 0;
+  ACCOUNTS.forEach(a => totalAcc += getAccountBalance(a.id));
+  const receivables = getPendingReceivablesList();
+  const rec = receivables.reduce((s, item) => s + (Number(item.amount) || 0), 0);
+  const bensTotal = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
+  document.getElementById('detSaldoBancos').textContent = money(totalAcc);
+  document.getElementById('detReceber').textContent = money(rec);
+  document.getElementById('detPatrimonioTotal').textContent = money(totalAcc + rec + bensTotal);
+  document.getElementById('patrimonioModal').classList.remove('hidden');
+}
+
+function openPatrimonioBensModal() {
+  document.getElementById('patrimonioBensModal').classList.remove('hidden');
+  document.getElementById('formAddBem').classList.add('hidden');
+  renderPatrimonioBens();
+}
+function openAddBemForm() {
+  document.getElementById('bemId').value = '';
+  document.getElementById('bemName').value = '';
+  document.getElementById('bemVal').value = '';
+  document.getElementById('bemCat').value = 'Imóvel / Terreno';
+  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
+  document.getElementById('formAddBem').classList.remove('hidden');
+}
+function saveBemItem() {
+  const id = document.getElementById('bemId').value;
+  const name = document.getElementById('bemName').value.trim();
+  const val = parseMoney(document.getElementById('bemVal').value);
+  const cat = document.getElementById('bemCat').value;
+  if (!name || val <= 0) return showAppToast('Preencha nome e valor válido.', 'error');
+
+  if (id) {
+    const idx = bensData.findIndex(b => b.id === id);
+    if (idx >= 0) bensData[idx] = { id, name, value: val, category: cat };
+  } else {
+    bensData.push({ id: genId(), name, value: val, category: cat });
+  }
+  document.getElementById('formAddBem').classList.add('hidden');
+  saveAll();
+  renderPatrimonioBens();
+  if (currentTab === 'finance') renderFinance();
+  showAppToast('Bem salvo!');
+}
+function renderPatrimonioBens() {
+  const list = document.getElementById('patrimonioBensList');
+  const tot = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
+  document.getElementById('patrimonioBensTotal').textContent = money(tot);
+  if (!bensData.length) { list.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Nenhum bem cadastrado.</p>'; return; }
+  list.innerHTML = bensData.map(b => `
+    <div class="py-3 flex justify-between items-center text-xs">
+      <div class="min-w-0">
+        <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p>
+        <p class="text-[10px] text-slate-500">${escapeHtml(b.category)}</p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="font-black text-emerald-600">${money(b.value)}</span>
+        <button type="button" onclick="editBemItem('${b.id}')" class="text-slate-400 hover:text-brand-600 text-sm cursor-pointer">✏️</button>
+        <button type="button" onclick="delBemItem('${b.id}')" class="text-slate-400 hover:text-rose-600 text-sm cursor-pointer">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+function editBemItem(id) {
+  const b = bensData.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('bemId').value = b.id;
+  document.getElementById('bemName').value = b.name;
+  document.getElementById('bemVal').value = b.value.toFixed(2).replace('.', ',');
+  document.getElementById('bemCat').value = b.category;
+  document.getElementById('bemFormTitle').textContent = 'Editar Bem';
+  document.getElementById('formAddBem').classList.remove('hidden');
+}
+function delBemItem(id) {
+  askAppConfirm('Excluir Bem', 'Deseja excluir este bem do inventário?').then(res => {
+    if (!res) return;
+    bensData = bensData.filter(x => x.id !== id);
+    saveAll();
+    renderPatrimonioBens();
+    if (currentTab === 'finance') renderFinance();
+    showAppToast('Bem excluído.');
+  });
+}
+
+function getOrderCompetencyYM(o) {
+  const raw = o.finalizedAt || o.clienteRecebeu || o.saida || '';
+  if (raw && raw.length >= 7 && raw.includes('-')) return raw.slice(0, 7);
+  return todayISO().slice(0, 7);
+}
+
+let selectedAdminClientName = null;
+let selectedClosingClientKey = null;
+
+function renderAdminOrders() {
+  let totProfit = 0, totFat = 0;
+  orders.forEach(o => { const v = calcValores(o); totProfit+=v.lucroLiq; totFat+=v.faturamento; });
+  document.getElementById('adm-total-profit').textContent = money(totProfit);
+  document.getElementById('adm-total-fat').textContent = money(totFat);
+
+  const list = document.getElementById('adm-detailed-list');
+  const sorted = orders.slice().sort((a,b) => (b.saida||'').localeCompare(a.saida||''));
+  if (!sorted.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido encontrado.</p>'; }
+  else {
+    list.innerHTML = sorted.map(o => {
+      const v = calcValores(o);
+      const fretePagoParcelas = getOrderFreightPaidTotal(o);
+      const freteEst = Number(o.frete) || 0;
+      const excedente = Math.max(0, fretePagoParcelas - freteEst);
+      const excBadge = excedente > 0.009
+        ? `<span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 ml-1">Excedente Frete +${money(excedente)}</span>`
+        : '';
+      return `
+        <div class="p-4 flex justify-between items-center text-xs hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+          <div class="min-w-0">
+            <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'S/N')} · ${escapeHtml(o.cliente || 'Cliente')}${excBadge}</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">${fmtDT(o.saida)} · Fat: ${money(v.faturamento)}</p>
+          </div>
+          <div class="text-right shrink-0 ml-2"><p class="font-black text-emerald-600 text-sm">${money(v.lucroLiq)}</p><p class="text-[10px] text-slate-400">lucro</p></div>
+        </div>`;
+    }).join('');
+  }
+
+  const clientMap = {};
+  orders.forEach(o => {
+    const cli = (o.cliente || 'Sem Nome').trim();
+    const ym = getOrderCompetencyYM(o);
+    const v = calcValores(o);
+    if (!clientMap[cli]) clientMap[cli] = { name: cli, count: 0, profit: 0, fat: 0, months: {} };
+    clientMap[cli].count += 1;
+    clientMap[cli].profit += v.lucroLiq;
+    clientMap[cli].fat += v.faturamento;
+    if (!clientMap[cli].months[ym]) clientMap[cli].months[ym] = { ym, count: 0, profit: 0, fat: 0, orders: [] };
+    clientMap[cli].months[ym].count += 1;
+    clientMap[cli].months[ym].profit += v.lucroLiq;
+    clientMap[cli].months[ym].fat += v.faturamento;
+    clientMap[cli].months[ym].orders.push({ pedido: o.pedido || 'S/N', profit: v.lucroLiq, fat: v.faturamento, date: o.saida || '' });
+  });
+
+  const clientRows = Object.values(clientMap).sort((a,b) => b.profit - a.profit);
+  const tbody = document.getElementById('adm-client-table');
+  const detailBox = document.getElementById('adm-client-detail-report');
+
+  if (!clientRows.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
+    detailBox.classList.add('hidden');
+  } else {
+    tbody.innerHTML = clientRows.map(c => {
+      const mCount = Object.keys(c.months).length;
+      const isSel = selectedAdminClientName === c.name;
+      return `
+        <tr onclick="toggleAdminClientDetail('${escapeHtml(c.name.replace(/'/g, "\\'"))}')" class="${isSel ? 'bg-brand-50/70 dark:bg-indigo-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'} cursor-pointer transition">
+          <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td>
+          <td class="px-4 py-3 text-center text-xs">${c.count} <span class="text-[10px] text-slate-400">(${mCount}m)</span></td>
+          <td class="px-4 py-3 text-right font-black text-emerald-600 text-xs">${money(c.profit)}</td>
+        </tr>`;
+    }).join('');
+
+    if (selectedAdminClientName && clientMap[selectedAdminClientName]) {
+      const selCli = clientMap[selectedAdminClientName];
+      const monthsList = Object.values(selCli.months).sort((a,b) => b.ym.localeCompare(a.ym));
+      detailBox.innerHTML = `
+        <div class="flex items-center justify-between gap-2">
+          <p class="font-extrabold text-slate-900 dark:text-white">Histórico Continuativo: ${escapeHtml(selCli.name)}</p>
+          <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Total: ${money(selCli.profit)} (${selCli.count} pedidos)</span>
+        </div>
+        <div class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
+          ${monthsList.map(m => `
+            <div class="py-2 flex items-center justify-between gap-2">
+              <div>
+                <p class="font-bold text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)} · ${m.count} pedido(s)</p>
+                <p class="text-[10px] text-slate-500">Faturamento: ${money(m.fat)}</p>
+              </div>
+              <span class="font-black text-emerald-600 dark:text-emerald-400">${money(m.profit)}</span>
+            </div>
+          `).join('')}
+        </div>`;
+      detailBox.classList.remove('hidden');
+    } else {
+      detailBox.classList.add('hidden');
+    }
+  }
+}
+
+function toggleAdminClientDetail(clientName) {
+  selectedAdminClientName = selectedAdminClientName === clientName ? null : clientName;
+  renderAdminOrders();
+}
+
+function renderAdminFinance() {
+  const list = document.getElementById('adm-fin-list');
+  const filter = document.getElementById('adm-fin-filter').value;
+
+  let filtered = txs.filter(t => t.type !== 'transfer_in' && t.type !== 'transfer_out' && t.status !== 'pending');
+  if (filter === 'income') filtered = filtered.filter(t => t.type === 'income');
+  if (filter === 'expense') filtered = filtered.filter(t => t.type === 'expense');
+
+  filtered.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  if (!filtered.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum dado financeiro registrado.</p>'; return; }
+
+  list.innerHTML = filtered.slice(0, 100).map(t => {
+    const isInc = t.type === 'income';
+    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+    return `
+      <div class="flex items-center justify-between px-5 py-3.5 text-xs hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+        <div class="min-w-0">
+          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
+          <p class="text-[10px] text-slate-500">${(t.date||'').split('-').reverse().join('/')} · ${accName} · <span class="font-semibold">${escapeHtml(t.cat || 'Outro')}</span></p>
+        </div>
+        <span class="font-black text-sm ${isInc ? 'text-emerald-600' : 'text-rose-600'} shrink-0 ml-2">${isInc ? '+' : '-'} ${money(t.amount)}</span>
+      </div>`;
+  }).join('');
+}
+
+function openChartsModal() {
+  const sel = document.getElementById('chartMonthSelector');
+  const currYM = todayISO().slice(0, 7);
+  const ymSet = new Set([currYM, ...Object.keys(closedMonthsMap || {})]);
+
+  orders.forEach(o => {
+    const ym = getOrderCompetencyYM(o);
+    if (ym && ym.includes('-')) ymSet.add(ym);
+  });
+  txs.forEach(t => {
+    if (t.date && t.date.length >= 7 && t.date.includes('-')) ymSet.add(t.date.slice(0, 7));
+  });
+
+  const sortedYMs = Array.from(ymSet).sort((a, b) => b.localeCompare(a));
+  const prevValue = sel.value;
+  sel.innerHTML = sortedYMs.map(ym => `<option value="${ym}">${fmtMonthYearLabel(ym)} (${ym})${closedMonthsMap[ym] ? ' [Fechado]' : ''}</option>`).join('');
+  sel.value = sortedYMs.includes(prevValue) ? prevValue : currYM;
+
+  selectedClosingClientKey = null;
+  document.getElementById('chartsModal').classList.remove('hidden');
+  renderMonthlyClosingContent();
+}
+
+function toggleSelectedMonthClosingStatus() {
+  const ym = document.getElementById('chartMonthSelector').value || todayISO().slice(0, 7);
+  if (closedMonthsMap[ym]) {
+    delete closedMonthsMap[ym];
+    saveAll();
+    renderMonthlyClosingContent();
+    showAppToast(`Mês ${fmtMonthYearLabel(ym)} reaberto.`);
+  } else {
+    closedMonthsMap[ym] = {
+      closedAt: new Date().toISOString(),
+      status: 'closed'
+    };
+    saveAll();
+    renderMonthlyClosingContent();
+    showAppToast(`Fechamento do mês ${fmtMonthYearLabel(ym)} salvo e bloqueado!`);
+  }
+}
+
+function renderMonthlyClosingContent() {
+  const ym = document.getElementById('chartMonthSelector').value || todayISO().slice(0, 7);
+  const isClosed = Boolean(closedMonthsMap[ym]);
+
+  const badge = document.getElementById('chart-month-status-badge');
+  const toggleBtn = document.getElementById('btnToggleMonthClosingStatus');
+  if (isClosed) {
+    badge.textContent = 'Mês Fechado';
+    badge.className = 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400';
+    toggleBtn.textContent = 'Reabrir Mês';
+    toggleBtn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 cursor-pointer transition';
+  } else {
+    badge.textContent = 'Mês Aberto';
+    badge.className = 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
+    toggleBtn.textContent = 'Fechar Mês';
+    toggleBtn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white cursor-pointer transition';
+  }
+
+  let monthGrossRev = 0;
+  let monthGrossProfit = 0;
+  let monthOrdersProfit = 0;
+  let monthOpExpense = 0;
+  let monthGeneralExpense = 0;
+
+  const monthOrders = orders.filter(o => getOrderCompetencyYM(o) === ym);
+  const clientMonthMap = {};
+
+  monthOrders.forEach(o => {
+    const v = calcValores(o);
+    monthGrossRev += v.faturamento;
+    monthGrossProfit += v.margemVal;
+    monthOrdersProfit += v.lucroLiq;
+    monthOpExpense += (v.meuCustoMerc + v.meuCustoFrete);
+
+    const cliName = (o.cliente || 'Sem Nome').trim();
+    if (!clientMonthMap[cliName]) clientMonthMap[cliName] = { name: cliName, count: 0, profit: 0, fat: 0 };
+    clientMonthMap[cliName].count += 1;
+    clientMonthMap[cliName].profit += v.lucroLiq;
+    clientMonthMap[cliName].fat += v.faturamento;
+  });
+
+  const monthTxs = txs.filter(t => t.date && t.date.startsWith(ym) && t.status !== 'pending');
+  monthTxs.forEach(t => {
+    if (t.type === 'transfer_in' || t.type === 'transfer_out' || t.isAdjustment || t.cat === 'Ajuste') return;
+    if (t.cat === 'Vendas' && t.refId) return;
+    if (t.cat === 'Fornecedores' || t.cat === 'Logística' || t.cat === 'Operação') return;
+
+    if (t.type === 'income') {
+      monthGrossRev += (Number(t.amount) || 0);
+    } else if (t.type === 'expense') {
+      monthGeneralExpense += (Number(t.amount) || 0);
+    }
+  });
+
+  const totalMonthExpense = monthOpExpense + monthGeneralExpense;
+  const monthNetProfit = monthOrdersProfit - monthGeneralExpense;
+
+  document.getElementById('chart-month-gross-rev').textContent = money(monthGrossRev);
+  document.getElementById('chart-month-gross-profit').textContent = money(monthGrossProfit);
+  document.getElementById('chart-month-income').textContent = money(monthNetProfit);
+  document.getElementById('chart-month-forecast-rev').textContent = money(monthOpExpense);
+  document.getElementById('chart-month-balance').textContent = money(monthGeneralExpense);
+  document.getElementById('chart-month-expense').textContent = money(totalMonthExpense);
+
+  const clientsListEl = document.getElementById('chart-month-clients-list');
+  const continuativeBox = document.getElementById('chart-client-continuative-box');
+  const sortedMonthClients = Object.values(clientMonthMap).sort((a, b) => b.profit - a.profit);
+
+  if (!sortedMonthClients.length) {
+    clientsListEl.innerHTML = '<p class="py-2 text-center text-slate-400">Nenhum pedido registrado neste mês.</p>';
+    continuativeBox.classList.add('hidden');
+  } else {
+    clientsListEl.innerHTML = sortedMonthClients.map(c => {
+      const active = selectedClosingClientKey === c.name;
+      return `
+        <button type="button" onclick="toggleClosingClientContinuative('${escapeHtml(c.name.replace(/'/g, "\\'"))}')" class="w-full py-2 flex items-center justify-between gap-2 text-left hover:bg-slate-100/70 dark:hover:bg-slate-800/60 px-1.5 rounded-lg cursor-pointer transition ${active ? 'bg-brand-500/10' : ''}">
+          <div class="min-w-0">
+            <span class="font-bold text-slate-800 dark:text-slate-100">${escapeHtml(c.name)}</span>
+            <span class="text-[10px] text-slate-500 ml-1.5">(${c.count} pedido${c.count > 1 ? 's' : ''})</span>
+          </div>
+          <span class="font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(c.profit)}</span>
+        </button>`;
+    }).join('');
+
+    if (selectedClosingClientKey && clientMonthMap[selectedClosingClientKey]) {
+      const cliHistoryMonths = {};
+      orders
+        .filter(o => (o.cliente || 'Sem Nome').trim() === selectedClosingClientKey)
+        .forEach(o => {
+          const mKey = getOrderCompetencyYM(o);
+          const v = calcValores(o);
+          if (!cliHistoryMonths[mKey]) cliHistoryMonths[mKey] = { ym: mKey, count: 0, profit: 0, fat: 0 };
+          cliHistoryMonths[mKey].count += 1;
+          cliHistoryMonths[mKey].profit += v.lucroLiq;
+          cliHistoryMonths[mKey].fat += v.faturamento;
+        });
+
+      const orderedMonths = Object.values(cliHistoryMonths).sort((a, b) => b.ym.localeCompare(a.ym));
+      continuativeBox.innerHTML = `
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">Histórico Continuativo · ${escapeHtml(selectedClosingClientKey)}</p>
+        ${orderedMonths.map(item => `
+          <div class="flex items-center justify-between text-[11px] py-0.5">
+            <span class="font-semibold text-slate-700 dark:text-slate-300">${fmtMonthYearLabel(item.ym)} (${item.count} ped.)</span>
+            <span class="font-extrabold text-emerald-600 dark:text-emerald-400">${money(item.profit)}</span>
+          </div>
+        `).join('')}`;
+      continuativeBox.classList.remove('hidden');
+    } else {
+      continuativeBox.classList.add('hidden');
+    }
+  }
+
+  const maxBar = Math.max(monthGrossRev, monthGrossProfit, monthNetProfit, totalMonthExpense, 1);
+  const bars = [
+    { label: 'Receitas', val: monthGrossRev, color: 'bg-indigo-500' },
+    { label: 'Lucro Bruto', val: monthGrossProfit, color: 'bg-blue-500' },
+    { label: 'Lucro Líquido', val: Math.max(0, monthNetProfit), color: 'bg-emerald-500' },
+    { label: 'Despesas', val: totalMonthExpense, color: 'bg-rose-500' }
+  ];
+
+  document.getElementById('column-charts-container').innerHTML = `
+    <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2.5">
+      <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Comparativo Visual (${fmtMonthYearLabel(ym)})</p>
+      ${bars.map(b => {
+        const pct = Math.min(100, Math.max(0, (b.val / maxBar) * 100));
+        return `
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between items-center"><span class="font-semibold text-slate-700 dark:text-slate-300">${b.label}</span><strong class="font-bold text-slate-900 dark:text-white">${money(b.val)}</strong></div>
+            <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><div class="h-full ${b.color} rounded-full transition-all duration-300" style="width:${pct.toFixed(1)}%"></div></div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function toggleClosingClientContinuative(clientName) {
+  selectedClosingClientKey = selectedClosingClientKey === clientName ? null : clientName;
+  renderMonthlyClosingContent();
+}
+
+function renderOrderFreightInstallmentBox() {
+  const box = document.getElementById('orderFreightInstallmentBox');
+  const statusSel = document.getElementById('oFreightStatus');
+  if (!box || !statusSel) return;
+
+  const isPending = statusSel.value === 'pending';
+  if (!isPending) {
+    box.classList.add('hidden');
+    return;
+  }
+
+  box.classList.remove('hidden');
+  const estFrete = parseMoney(document.getElementById('oFrete').value);
+  const paidTotal = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const remaining = estFrete - paidTotal;
+
+  document.getElementById('ordFreteTotalSummary').textContent = money(estFrete);
+  document.getElementById('ordFretePaidSummary').textContent = money(paidTotal);
+
+  const dueSummaryEl = document.getElementById('ordFreteDueSummary');
+  const badgeEl = document.getElementById('ordFreteRemainingBadge');
+  if (remaining < -0.009) {
+    const excess = Math.abs(remaining);
+    dueSummaryEl.textContent = `+${money(excess)} (Exc.)`;
+    dueSummaryEl.className = 'text-rose-600 dark:text-rose-400 font-black';
+    badgeEl.textContent = `Excedente: +${money(excess)}`;
+    badgeEl.className = 'text-[11px] font-black text-rose-600 dark:text-rose-400';
+  } else {
+    dueSummaryEl.textContent = money(Math.max(0, remaining));
+    dueSummaryEl.className = remaining <= 0.009 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+    badgeEl.textContent = remaining <= 0.009 ? 'Quitado' : `Falta: ${money(remaining)}`;
+    badgeEl.className = remaining <= 0.009 ? 'text-[11px] font-black text-emerald-600 dark:text-emerald-400' : 'text-[11px] font-black text-rose-600 dark:text-rose-400';
+  }
+
+  const histEl = document.getElementById('ordFreteInstallmentsHistory');
+  if (!activeOrderFreightPayments.length) {
+    histEl.innerHTML = '<p class="text-[10px] text-slate-500">Nenhuma parcela paga ainda.</p>';
+  } else {
+    let runningPaid = 0;
+    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
+      runningPaid += (Number(p.amount) || 0);
+      const isOverEstimated = estFrete > 0 && runningPaid > estFrete + 0.009;
+      const accName = ACCOUNTS.find(a => a.id === p.accountId)?.name || 'Conta';
+      return `
+        <div class="flex items-center justify-between gap-2 bg-white/90 dark:bg-slate-900/80 px-2.5 py-1.5 rounded-lg border ${isOverEstimated ? 'border-rose-400/70' : 'border-amber-200/60 dark:border-amber-800/40'}">
+          <div class="min-w-0">
+            <span class="font-bold text-slate-800 dark:text-slate-200">Parcela ${idx + 1}: ${money(p.amount)}</span>
+            ${isOverEstimated ? '<span class="ml-1 text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400">Acima do estimado</span>' : ''}
+            <span class="block text-[10px] text-slate-500">${escapeHtml(accName)} · ${(p.date || todayISO()).split('-').reverse().join('/')}</span>
+          </div>
+          <button type="button" onclick="removeOrderFreightInstallment('${p.id}')" title="Remover parcela" class="px-2 py-1 rounded-md bg-rose-500/15 hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 text-[10px] font-extrabold cursor-pointer shrink-0">✕</button>
+        </div>`;
+    }).join('');
+  }
+}
+
+function applyOrderFreightInstallment() {
+  const estFrete = parseMoney(document.getElementById('oFrete').value);
+  const payAmt = parseMoney(document.getElementById('ordFretePayAmt').value);
+  const accId = document.getElementById('ordFretePayAcc').value || 'cash';
+  const currentPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  if (payAmt <= 0) return showAppToast('Informe o valor pago agora/parcela do frete.', 'error');
+
+  if (estFrete > 0 && currentPaid + payAmt > estFrete + 0.009) {
+    const allowedRemaining = Math.max(0, Number((estFrete - currentPaid).toFixed(2)));
+    return showAppToast(`Bloqueado: o pagamento (${money(payAmt)}) ultrapassa o valor estimado do frete (${money(estFrete)}). Restante estimado: ${money(allowedRemaining)}.`, 'error');
+  }
+
+  activeOrderFreightPayments.push({
+    id: genId(),
+    amount: payAmt,
+    accountId: accId,
+    date: todayISO()
+  });
+
+  document.getElementById('ordFretePayAmt').value = '';
+  document.getElementById('oPagoFrete').checked = true;
+  if (estFrete > 0 && (currentPaid + payAmt) >= estFrete - 0.009) {
+    document.getElementById('oFreightStatus').value = 'paid';
+  }
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+  showAppToast(`Parcela de ${money(payAmt)} lançada no frete!`);
+}
+
+function removeOrderFreightInstallment(payId) {
+  const idx = activeOrderFreightPayments.findIndex(p => p.id === payId);
+  if (idx < 0) return;
+  const removed = activeOrderFreightPayments[idx];
+  activeOrderFreightPayments.splice(idx, 1);
+
+  const estFrete = parseMoney(document.getElementById('oFrete').value);
+  const newPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  if (estFrete > 0 && newPaid < estFrete - 0.009) {
+    document.getElementById('oFreightStatus').value = 'pending';
+  }
+
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+  showAppToast(`Parcela de ${money(removed.amount)} removida e totais recalculados.`);
+}
+
+function handleFreightStatusChange() {
+  const status = document.getElementById('oFreightStatus').value;
+  if (status === 'paid') {
+    document.getElementById('oPagoFrete').checked = true;
+  }
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+}
+
+function handlePagoFreteCheckboxChange() {
+  const checked = document.getElementById('oPagoFrete').checked;
+  if (checked) {
+    document.getElementById('oFreightStatus').value = 'paid';
+  } else {
+    document.getElementById('oFreightStatus').value = 'pending';
+  }
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+}
+
+function openModal(id = null) {
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('oId').value = id || '';
+  document.getElementById('modalTitle').textContent = id ? 'Editar Pedido' : 'Novo Pedido';
+
+  if (id) {
+    const o = orders.find(x => x.id === id);
+    if (!o) return;
+    document.getElementById('oPedido').value = o.pedido || '';
+    document.getElementById('oCliente').value = o.cliente || '';
+    document.getElementById('oDriveLink').value = o.driveLink || '';
+    document.getElementById('oUSD').value = o.valorUSD || '';
+    document.getElementById('oCot').value = o.cotacao || '';
+    document.getElementById('oMargem').value = o.margem || '';
+    document.getElementById('oFrete').value = o.frete || '';
+    document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
+    document.getElementById('oFreightStatus').value = o.freightStatus || (o.pagoFrete ? 'paid' : 'pending');
+    document.getElementById('oPagoMerc').checked = Boolean(o.pagoMerc);
+    document.getElementById('oPagoFrete').checked = Boolean(o.pagoFrete);
+    document.getElementById('oSyncFin').checked = Boolean(o.syncFin !== false);
+    if (o.accOutMerc) document.getElementById('oAccOutMerc').value = o.accOutMerc;
+    if (o.accOutFrete) document.getElementById('oAccOutFrete').value = o.accOutFrete;
+    if (o.accIn) document.getElementById('oAccIn').value = o.accIn;
+    document.getElementById('oOrigem').value = o.cidadeOrigem || '';
+    document.getElementById('oSaida').value = o.saida || '';
+    document.getElementById('oTransportadora').value = o.transportadora || '';
+    document.getElementById('oSubiu').value = o.subiuTransp || '';
+    document.getElementById('oC1').value = o.cidade1 || '';
+    document.getElementById('oC1H').value = o.cidade1Hora || '';
+    document.getElementById('oC2').value = o.cidade2 || '';
+    document.getElementById('oC2H').value = o.cidade2Hora || '';
+    document.getElementById('oC3').value = o.cidade3 || '';
+    document.getElementById('oC3H').value = o.cidade3Hora || '';
+    document.getElementById('oSP').value = o.desceuSP || '';
+    document.getElementById('oRec').value = o.clienteRecebeu || '';
+
+    if (Array.isArray(o.freightPayments) && o.freightPayments.length > 0) {
+      activeOrderFreightPayments = o.freightPayments.map(p => ({ ...p }));
+    } else if ((Number(o.freightPaid) || 0) > 0) {
+      activeOrderFreightPayments = [{
+        id: genId(),
+        amount: Number(o.freightPaid),
+        accountId: o.accOutFrete || 'cash',
+        date: (o.saida || todayISO()).split('T')[0]
+      }];
+    } else {
+      activeOrderFreightPayments = [];
+    }
+  } else {
+    document.getElementById('oPedido').value = '';
+    document.getElementById('oCliente').value = '';
+    document.getElementById('oDriveLink').value = '';
+    document.getElementById('oUSD').value = '';
+    document.getElementById('oCot').value = '';
+    document.getElementById('oMargem').value = '';
+    document.getElementById('oFrete').value = '';
+    document.getElementById('oPaymentMethod').value = 'Pix';
+    document.getElementById('oFreightStatus').value = 'paid';
+    document.getElementById('oPagoMerc').checked = true;
+    document.getElementById('oPagoFrete').checked = true;
+    document.getElementById('oSyncFin').checked = true;
+    document.getElementById('oOrigem').value = '';
+    document.getElementById('oSaida').value = '';
+    document.getElementById('oTransportadora').value = '';
+    document.getElementById('oSubiu').value = '';
+    document.getElementById('oC1').value = '';
+    document.getElementById('oC1H').value = '';
+    document.getElementById('oC2').value = '';
+    document.getElementById('oC2H').value = '';
+    document.getElementById('oC3').value = '';
+    document.getElementById('oC3H').value = '';
+    document.getElementById('oSP').value = '';
+    document.getElementById('oRec').value = '';
+    activeOrderFreightPayments = [];
+  }
+
+  document.getElementById('ordFretePayAmt').value = '';
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+}
+
+function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+function setNow(id){ document.getElementById(id).value = nowLocal(); updatePreview(); }
+
+function togglePaymentOptions() {
+  document.getElementById('wrapAccOutMerc').style.display = document.getElementById('oPagoMerc').checked ? 'block' : 'none';
+  const isFretePending = document.getElementById('oFreightStatus').value === 'pending';
+  document.getElementById('wrapAccOutFrete').style.display = (!isFretePending && document.getElementById('oPagoFrete').checked) ? 'block' : 'none';
+  document.getElementById('wrapAccIn').style.display = document.getElementById('oSyncFin').checked ? 'block' : 'none';
+}
+
+function updatePreview() {
+  const link = document.getElementById('oDriveLink').value.trim();
+  const btnDrive = document.getElementById('btnTestDrive');
+  if (link) {
+    btnDrive.classList.remove('hidden');
+    btnDrive.href = link;
+  } else {
+    btnDrive.classList.add('hidden');
+  }
+
+  const usd = parseMoney(document.getElementById('oUSD').value);
+  const cot = parseMoney(document.getElementById('oCot').value);
+  const margemPct = parseMoney(document.getElementById('oMargem').value);
+  const frete = parseMoney(document.getElementById('oFrete').value);
+  const pagoMerc = document.getElementById('oPagoMerc').checked;
+  const pagoFrete = document.getElementById('oPagoFrete').checked;
+
+  const inv = usd * cot;
+  const margemVal = inv * (margemPct / 100);
+  const meuCustoMerc = pagoMerc ? inv : 0;
+  const fretePagoParcelas = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const meuCustoFrete = pagoFrete ? Math.max(frete, fretePagoParcelas) : 0;
+  const faturamento = margemVal + meuCustoMerc;
+  const lucroLiq = faturamento - meuCustoMerc - meuCustoFrete;
+
+  document.getElementById('prevBRL').textContent = money(inv);
+  document.getElementById('prevMargem').textContent = money(margemVal);
+  document.getElementById('prevFrete').textContent = money(meuCustoFrete);
+  document.getElementById('prevLucro').textContent = money(lucroLiq);
+  document.getElementById('prevFinal').textContent = money(faturamento);
+}
+
+function saveOrder(e) {
+  e.preventDefault();
+  const id = document.getElementById('oId').value;
+  const pedido = document.getElementById('oPedido').value.trim();
+  const cliente = document.getElementById('oCliente').value.trim();
+  const driveLink = document.getElementById('oDriveLink').value.trim();
+  const valorUSD = parseMoney(document.getElementById('oUSD').value);
+  const cotacao = parseMoney(document.getElementById('oCot').value);
+  const margem = parseMoney(document.getElementById('oMargem').value);
+  const frete = parseMoney(document.getElementById('oFrete').value);
+  const paymentMethod = document.getElementById('oPaymentMethod').value;
+  const freightStatus = document.getElementById('oFreightStatus').value;
+  const pagoMerc = document.getElementById('oPagoMerc').checked;
+  const pagoFrete = document.getElementById('oPagoFrete').checked;
+  const syncFin = document.getElementById('oSyncFin').checked;
+  const accOutMerc = document.getElementById('oAccOutMerc').value;
+  const accOutFrete = document.getElementById('oAccOutFrete').value;
+  const accIn = document.getElementById('oAccIn').value;
+  const cidadeOrigem = document.getElementById('oOrigem').value.trim();
+  const saida = document.getElementById('oSaida').value;
+  const transportadora = document.getElementById('oTransportadora').value.trim();
+  const subiuTransp = document.getElementById('oSubiu').value;
+  const cidade1 = document.getElementById('oC1').value.trim();
+  const cidade1Hora = document.getElementById('oC1H').value;
+  const cidade2 = document.getElementById('oC2').value.trim();
+  const cidade2Hora = document.getElementById('oC2H').value;
+  const cidade3 = document.getElementById('oC3').value.trim();
+  const cidade3Hora = document.getElementById('oC3H').value;
+  const desceuSP = document.getElementById('oSP').value;
+  const clienteRecebeu = document.getElementById('oRec').value;
+
+  const existingOrder = id ? orders.find(o => o.id === id) : null;
+  const orderId = id || genId();
+  const freightPaidTotal = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  const orderData = {
+    id: orderId,
+    pedido, cliente, driveLink, valorUSD, cotacao, margem, frete,
+    freightPaid: freightPaidTotal,
+    freightPayments: activeOrderFreightPayments.map(p => ({ ...p })),
+    paymentMethod, freightStatus, pagoMerc, pagoFrete, syncFin,
+    accOutMerc, accOutFrete, accIn,
+    cidadeOrigem, saida, transportadora, subiuTransp,
+    cidade1, cidade1Hora, cidade2, cidade2Hora, cidade3, cidade3Hora,
+    desceuSP, clienteRecebeu,
+    isFinalized: existingOrder ? Boolean(existingOrder.isFinalized) : false,
+    finalizedAt: existingOrder ? (existingOrder.finalizedAt || '') : ''
+  };
+
+  [cliente].forEach(c => { if(c && !historyData.clients.some(x=>x.toLowerCase()===c.toLowerCase())) historyData.clients.push(c); });
+  [cidadeOrigem, cidade1, cidade2, cidade3].forEach(ct => { if(ct && !historyData.cities.some(x=>x.toLowerCase()===ct.toLowerCase())) historyData.cities.push(ct); });
+  [transportadora].forEach(tr => { if(tr && !historyData.carriers.some(x=>x.toLowerCase()===tr.toLowerCase())) historyData.carriers.push(tr); });
+
+  if (id) {
+    const idx = orders.findIndex(o => o.id === id);
+    if (idx >= 0) orders[idx] = orderData;
+    txs = txs.filter(t => t.refId !== id);
+  } else {
+    orders.push(orderData);
+  }
+
+  if (syncFin) {
+    const v = calcValores(orderData);
+    const txDate = (saida || nowLocal()).split('T')[0];
+    const nowIso = new Date().toISOString();
+
+    if (v.faturamento > 0) {
+      const hasPaidIncome = existingOrder && isOrderFinalizedInHistory(existingOrder);
+      txs.unshift({
+        id: genId(),
+        refId: orderId,
+        desc: `Pedido ${pedido || 'S/N'} - ${cliente || 'Cliente'}`,
+        amount: v.faturamento,
+        type: 'income',
+        cat: 'Vendas',
+        date: txDate,
+        createdAt: nowIso,
+        accountId: accIn,
+        paymentMethod: paymentMethod,
+        status: hasPaidIncome ? 'paid' : 'pending'
+      });
+    }
+    if (pagoMerc && v.inv > 0) {
+      txs.unshift({
+        id: genId(),
+        refId: orderId,
+        desc: `Mercadoria - Pedido ${pedido || 'S/N'}`,
+        amount: v.inv,
+        type: 'expense',
+        cat: 'Fornecedores',
+        date: txDate,
+        createdAt: nowIso,
+        accountId: accOutMerc,
+        status: 'paid'
+      });
+    }
+
+    if (activeOrderFreightPayments.length > 0) {
+      activeOrderFreightPayments.forEach((p, idx) => {
+        if ((Number(p.amount) || 0) > 0) {
+          txs.unshift({
+            id: genId(),
+            refId: orderId,
+            desc: `Frete (Parc. ${idx + 1}) - Pedido ${pedido || 'S/N'}`,
+            amount: Number(p.amount),
+            type: 'expense',
+            cat: 'Logística',
+            date: p.date || txDate,
+            createdAt: nowIso,
+            accountId: p.accountId || accOutFrete || 'cash',
+            status: 'paid'
+          });
+        }
+      });
+      const remFrete = Math.max(0, frete - freightPaidTotal);
+      if (freightStatus === 'pending' && remFrete > 0.009) {
+        txs.unshift({
+          id: genId(),
+          refId: orderId,
+          desc: `Frete (Restante) - Pedido ${pedido || 'S/N'}`,
+          amount: remFrete,
+          type: 'expense',
+          cat: 'Logística',
+          date: txDate,
+          createdAt: nowIso,
+          accountId: accOutFrete || 'cash',
+          status: 'pending'
+        });
+      }
+    } else if (frete > 0) {
+      txs.unshift({
+        id: genId(),
+        refId: orderId,
+        desc: `Frete - Pedido ${pedido || 'S/N'}`,
+        amount: frete,
+        type: 'expense',
+        cat: 'Logística',
+        date: txDate,
+        createdAt: nowIso,
+        accountId: accOutFrete || 'cash',
+        status: freightStatus === 'pending' ? 'pending' : 'paid'
+      });
+    }
+  }
+
+  closeModal();
+  saveAll();
+  renderDatalists();
+  if (currentTab === 'orders') renderOrders();
+  if (currentTab === 'finance') renderFinance();
+  showAppToast('Pedido salvo! Finalização e recebimento ficam disponíveis em A Receber (Lucros).');
+}
+
+function delOrder(id) {
+  askAppConfirm('Excluir Pedido', 'Deseja excluir este pedido e seus lançamentos vinculados?').then(res => {
+    if (!res) return;
+    orders = orders.filter(o => o.id !== id);
+    txs = txs.filter(t => t.refId !== id);
+    saveAll();
+    renderOrders();
+    if (currentTab === 'finance') renderFinance();
+    showAppToast('Pedido excluído.');
+  });
+}
+
+function openReceiptFromOrders(id){ openReceipt(id); }
+function openReceipt(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  activeReceiptOrderId = id;
+  const v = calcValores(o);
+
+  document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
+  document.getElementById('recClienteCliente').textContent = o.cliente || 'Sem nome';
+
+  const stops = [
+    { lbl: 'Origem / Saída', val: o.cidadeOrigem, dt: o.saida },
+    { lbl: 'Transportadora', val: o.transportadora, dt: o.subiuTransp },
+    { lbl: '1ª Cidade', val: o.cidade1, dt: o.cidade1Hora },
+    { lbl: '2ª Cidade', val: o.cidade2, dt: o.cidade2Hora },
+    { lbl: '3ª Cidade', val: o.cidade3, dt: o.cidade3Hora },
+    { lbl: 'Desceu SP', val: o.desceuSP ? 'São Paulo / SP' : '', dt: o.desceuSP },
+    { lbl: 'Entrega Cliente', val: o.clienteRecebeu ? (o.cliente || 'Recebido') : '', dt: o.clienteRecebeu }
+  ].filter(s => s.val || s.dt);
+
+  const firstOrigin = o.cidadeOrigem || stops[0]?.val || 'Origem';
+  const lastDest = o.clienteRecebeu
+    ? (o.cliente || 'Entregue')
+    : (stops.length ? (stops[stops.length - 1].val || 'Em trânsito') : 'Em aberto');
+  document.getElementById('recRotaResumoCliente').textContent = `${firstOrigin} → ${lastDest}`;
+
+  document.getElementById('recTrajetoCliente').innerHTML = stops.length
+    ? stops.map(s => `<div class="mb-3 pl-4 border-l-2 border-slate-500/60"><p class="text-xs font-bold">${escapeHtml(s.val || '—')} <span class="font-normal opacity-75">(${escapeHtml(s.lbl)})</span></p><p class="text-[10px] opacity-70">${fmtDT(s.dt)}</p></div>`).join('')
+    : '<p class="text-xs opacity-60">Sem atualizações de trajeto.</p>';
+
+  document.getElementById('recPedido').textContent = o.pedido || 'S/N';
+  document.getElementById('recCliente').textContent = o.cliente || 'Sem nome';
+  document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
+  document.getElementById('recInv').textContent = money(v.inv);
+  document.getElementById('recMargem').textContent = money(v.margemVal);
+  document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
+  document.getElementById('recLucro').textContent = money(v.lucroLiq);
+  document.getElementById('recFat').textContent = money(v.faturamento);
+  document.getElementById('recTrajetoAdmin').innerHTML = stops.length
+    ? stops.map(s => `<div class="flex justify-between text-[11px] py-1 border-b border-slate-700/60"><span><b>${escapeHtml(s.val || '—')}</b> (${escapeHtml(s.lbl)})</span><span class="opacity-75">${fmtDT(s.dt)}</span></div>`).join('')
+    : '<p class="text-xs opacity-60">Sem registro de trajeto.</p>';
+
+  setReceiptMode('client');
+  document.getElementById('receiptModal').classList.remove('hidden');
+}
+
+function setReceiptMode(mode) {
+  currentReceiptMode = mode;
+  const isClient = mode === 'client';
+  document.getElementById('printClientWrapper').classList.toggle('hidden', !isClient);
+  document.getElementById('printAdminWrapper').classList.toggle('hidden', isClient);
+  document.getElementById('btnModeClientReceipt').className = isClient
+    ? 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition'
+    : 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+  document.getElementById('btnModeAdminReceipt').className = !isClient
+    ? 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition'
+    : 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+  document.getElementById('btnPrintActiveReceipt').textContent = isClient ? '🖨️ Imprimir Comprovante Cliente' : '🖨️ Imprimir Comprovante Admin';
+}
+
+function printReceipt(mode) {
+  const targetMode = mode || currentReceiptMode || 'client';
+  setReceiptMode(targetMode);
+  document.body.classList.remove('printing-client', 'printing-admin');
+  document.body.classList.add(targetMode === 'admin' ? 'printing-admin' : 'printing-client');
+  window.print();
+  setTimeout(() => {
+    document.body.classList.remove('printing-client', 'printing-admin');
+  }, 500);
+}
+function closeReceipt(){ document.getElementById('receiptModal').classList.add('hidden'); activeReceiptOrderId = null; }
+
+function populateSelects() {
+  const optionsHtml = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'ordFretePayAcc'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = optionsHtml;
+  });
+  ['qrOpInstituicaoSelect', 'qrCliInstituicaoSelect', 'qrGastoInstituicaoSelect'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.innerHTML = optionsHtml;
+      if ([...el.options].some(o => o.value === 'nubank')) el.value = 'nubank';
+    }
+  });
 }
 
 function renderDatalists() {
@@ -3434,166 +3866,40 @@ function renderDatalists() {
   document.getElementById('list-carriers').innerHTML = historyData.carriers.map(c => `<option value="${escapeHtml(c)}">`).join('');
 }
 
-function populateSelects() {
-  ['qrOpInstituicaoSelect','qrCliInstituicaoSelect','qrGastoInstituicaoSelect','oAccOutMerc','oAccOutFrete','oAccIn','ordFretePayAcc','fAccount','tFrom','tTo','payAccountSelect','payCardAccount'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-    if (id.startsWith('qr')) el.value = 'nubank';
-  });
-}
-function populateAccountSelect(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-}
-
-function setNow(id){ document.getElementById(id).value = nowLocal(); }
-
-function openReceiptFromOrders(id){ openReceipt(id); }
-
-function setReceiptMode(mode) {
-  currentReceiptMode = mode;
-  const btnClient = document.getElementById('btnModeClientReceipt');
-  const btnAdmin = document.getElementById('btnModeAdminReceipt');
-  const wrapClient = document.getElementById('printClientWrapper');
-  const wrapAdmin = document.getElementById('printAdminWrapper');
-  const btnPrint = document.getElementById('btnPrintActiveReceipt');
-
-  if (mode === 'admin') {
-    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
-    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-    wrapAdmin.classList.remove('hidden');
-    wrapClient.classList.add('hidden');
-    btnPrint.textContent = '🖨️ Imprimir Comprovante Admin';
-    btnPrint.setAttribute('onclick', "printReceipt('admin')");
-  } else {
-    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
-    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-    wrapClient.classList.remove('hidden');
-    wrapAdmin.classList.add('hidden');
-    btnPrint.textContent = '🖨️ Imprimir Comprovante Cliente';
-    btnPrint.setAttribute('onclick', "printReceipt('client')");
-  }
-}
-
-function openReceipt(id) {
-  const o = orders.find(x => x.id === id);
-  if (!o) return;
-  activeReceiptOrderId = o.id;
-  setReceiptMode('client');
-  document.getElementById('receiptModal').classList.remove('hidden');
-
-  document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
-  document.getElementById('recClienteCliente').textContent = o.cliente || 'Cliente';
-
-  document.getElementById('recPedido').textContent = o.pedido || 'S/N';
-  document.getElementById('recCliente').textContent = o.cliente || 'Cliente';
-  document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
-
-  const v = calcValores(o);
-  document.getElementById('recInv').textContent = money(v.inv);
-  document.getElementById('recMargem').textContent = money(v.margemVal);
-  document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
-  document.getElementById('recLucro').textContent = money(v.lucroLiq);
-  document.getElementById('recFat').textContent = money(v.faturamento);
-
-  const steps = [
-    { label: 'Origem', val: o.cidadeOrigem, time: o.saida },
-    { label: 'Transportadora', val: o.transportadora, time: o.subiuTransp },
-    { label: '1ª Cidade', val: o.cidade1, time: o.cidade1Hora },
-    { label: '2ª Cidade', val: o.cidade2, time: o.cidade2Hora },
-    { label: '3ª Cidade', val: o.cidade3, time: o.cidade3Hora },
-    { label: 'Desceu SP', val: o.desceuSP ? 'São Paulo / SP' : '', time: o.desceuSP },
-    { label: 'Finalização', val: o.clienteRecebeu ? 'Recebido pelo Cliente' : '', time: o.clienteRecebeu }
-  ].filter(s => s.val || s.time);
-
-  const firstOrigin = steps.length ? (steps[0].val || steps[0].label) : '—';
-  const lastStep = steps.length ? (steps[steps.length - 1].val || steps[steps.length - 1].label) : '—';
-  document.getElementById('recRotaResumoCliente').textContent = steps.length ? `${firstOrigin} → ${lastStep}` : '—';
-
-  const cliHtml = steps.length
-    ? steps.map((s, idx) => {
-      const isDone = !!s.time;
-      const isLast = idx === steps.length - 1;
-      const lineHtml = !isLast
-        ? `<div class="absolute left-[7px] top-[14px] w-[2px] h-[calc(100%-6px)] ${isDone ? 'bg-emerald-500/70' : 'bg-slate-600/60'}"></div>`
-        : '';
-      return `
-        <div class="relative flex items-start gap-3 pb-3.5 last:pb-0">
-          ${lineHtml}
-          <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 z-10 border-2 ${isDone ? 'bg-emerald-400 border-emerald-200' : 'bg-slate-700 border-slate-500'}"></span>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider opacity-70">${escapeHtml(s.label)}</span>
-              <span class="text-[10px] font-mono opacity-75 shrink-0">${s.time ? escapeHtml(fmtDT(s.time)) : 'Aguardando'}</span>
-            </div>
-            <p class="text-xs font-bold mt-0.5 break-words">${escapeHtml(s.val || '—')}</p>
-          </div>
-        </div>`;
-    }).join('')
-    : '<p class="text-xs opacity-60">Nenhuma etapa de trajeto registrada.</p>';
-
-  const admHtml = steps.length
-    ? steps.map(s => `<div class="flex justify-between text-xs py-1 border-b border-slate-700/60 last:border-0"><span>${escapeHtml(s.label)}: <b>${escapeHtml(s.val || '—')}</b></span><span class="font-mono text-[10px] opacity-75">${s.time ? escapeHtml(fmtDT(s.time)) : '—'}</span></div>`).join('')
-    : '<p class="text-xs opacity-60">Sem trajeto.</p>';
-
-  document.getElementById('recTrajetoCliente').innerHTML = cliHtml;
-  document.getElementById('recTrajetoAdmin').innerHTML = admHtml;
-}
-function closeReceipt(){ document.getElementById('receiptModal').classList.add('hidden'); }
-function printReceipt(type) {
-  document.body.classList.remove('printing-client', 'printing-admin');
-  document.body.classList.add(type === 'admin' ? 'printing-admin' : 'printing-client');
-  window.print();
-  setTimeout(() => document.body.classList.remove('printing-client', 'printing-admin'), 500);
-}
-
 function exportJSON() {
   closeMenu();
-  const data = {
-    orders,
-    txs,
-    cardsConfig,
-    bensData,
-    teto: getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] }),
-    historyData,
-    seenNotifKeys,
-    profile: getLocal(STORAGE.profile, { name: '' })
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const backup = { orders, txs, historyData, cardsConfig, bensData, teto: getLocal(STORAGE.teto, {limit:3000,cycleExpenses:[]}), closedMonthsMap, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `backup-sistema-gestao-${todayISO()}.json`;
+  a.download = `gestao_backup_${todayISO()}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
-  showAppToast('Backup exportado!');
+  showAppToast('Backup JSON exportado!');
 }
 
 function importJSON(e) {
-  const f = e.target.files[0];
-  if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
     try {
-      const d = JSON.parse(ev.target.result);
-      orders = Array.isArray(d.orders) ? d.orders : [];
-      txs = Array.isArray(d.txs) ? d.txs : [];
-      cardsConfig = normalizeCardsConfig(Array.isArray(d.cardsConfig) ? d.cardsConfig : DEFAULT_CREDIT_CARDS);
-      bensData = Array.isArray(d.bensData) ? d.bensData : [];
-      historyData = d.historyData || { clients: [], cities: [], carriers: [] };
-      seenNotifKeys = Array.isArray(d.seenNotifKeys) ? d.seenNotifKeys : [];
-      if (d.teto) setLocal(STORAGE.teto, d.teto);
-      if (d.profile) setLocal(STORAGE.profile, d.profile);
-      localStorage.removeItem(STORAGE.wipedToZero);
+      const data = JSON.parse(ev.target.result);
+      if (data.orders) orders = data.orders;
+      if (data.txs) txs = data.txs;
+      if (data.historyData) historyData = data.historyData;
+      if (data.cardsConfig) cardsConfig = normalizeCardsConfig(data.cardsConfig);
+      if (data.bensData) bensData = data.bensData;
+      if (data.teto) setLocal(STORAGE.teto, data.teto);
+      if (data.closedMonthsMap) closedMonthsMap = data.closedMonthsMap;
       saveAll();
       load();
       showAppToast('Backup importado com sucesso!');
     } catch (err) {
-      showAppToast('Arquivo inválido!', 'error');
+      showAppToast('Erro ao importar arquivo JSON.', 'error');
     }
   };
-  r.readAsText(f);
+  reader.readAsText(file);
   e.target.value = '';
 }
 
@@ -3603,24 +3909,21 @@ function exportSystemCode() {
   const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `sistema-gestao-definitivo-${todayISO()}.html`;
+  a.download = `sistema_gestao_definitivo_${todayISO()}.html`;
   a.click();
   URL.revokeObjectURL(a.href);
-  showAppToast('Arquivo do sistema (.html) baixado!');
+  showAppToast('Arquivo HTML do sistema baixado!');
 }
 
 function resetData() {
   closeMenu();
-  askAppConfirm('Restaurar Dados Padrão', 'Isso vai recarregar os dados de demonstração iniciais no sistema. Deseja prosseguir?', false).then(res => {
+  askAppConfirm('Restaurar Dados Padrão', 'Deseja restaurar os dados padrão de exemplo?').then(res => {
     if (!res) return;
-    localStorage.removeItem(STORAGE.wipedToZero);
-    localStorage.removeItem(STORAGE.orders);
-    localStorage.removeItem(STORAGE.txs);
-    localStorage.removeItem(STORAGE.cards);
-    localStorage.removeItem(STORAGE.bens);
-    localStorage.removeItem(STORAGE.teto);
-    localStorage.removeItem(STORAGE.history);
-    localStorage.removeItem(STORAGE.seenNotifs);
+    Object.values(STORAGE).forEach(k => localStorage.removeItem(k));
+    orders = []; txs = []; cardsConfig = []; bensData = [];
+    historyData = { clients: [], cities: [], carriers: [] };
+    seenNotifKeys = [];
+    closedMonthsMap = {};
     load();
     showAppToast('Dados padrão restaurados!');
   });
