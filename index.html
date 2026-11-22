@@ -44,9 +44,6 @@
   .btn-now:hover { background: #c7d2fe; }
   .dark .btn-now { background: #312e81; color: #c7d2fe; }
   .dark .btn-now:hover { background: #3730a3; }
-  .order-action-btn { width: 32px; height: 32px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s ease, filter 0.15s ease; }
-  .order-action-btn:hover { transform: scale(1.06); filter: brightness(0.97); }
-  .order-action-btn:active { transform: scale(0.95); }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 54px; padding: 8px 4px; color: #64748b; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: none; background: transparent; }
   .dark .nav-item { color: #94a3b8; }
   .nav-item.active { color: #4f46e5; transform: translateY(-2px); }
@@ -54,8 +51,30 @@
   .nav-item.active svg { stroke-width: 2.5; filter: drop-shadow(0 4px 6px rgba(99,102,241,0.4)); }
   .scroll-x { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .scroll-x::-webkit-scrollbar { display: none; }
-  .fin-account-card { width: 176px; min-width: 176px; max-width: 176px; height: 112px; min-height: 112px; max-height: 112px; flex: 0 0 176px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow: hidden; }
-  .fin-credit-card { width: 224px; min-width: 224px; max-width: 224px; height: 132px; min-height: 132px; max-height: 132px; flex: 0 0 224px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow: hidden; }
+
+  /* Ponto 5: Mesmo tamanho entre cards de bancos e cartões */
+  .fin-card-uniform {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    height: 122px;
+    min-height: 122px;
+    max-height: 122px;
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Ponto 1: Aumento leve nos números dos cards */
+  .card-num-boost {
+    font-size: clamp(1.05rem, 1.85vw, 1.25rem) !important;
+    line-height: 1.15 !important;
+    font-variant-numeric: tabular-nums;
+  }
+
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .animate-in { animation: fadeSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   .qr-card { background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 20px; padding: 12px; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
@@ -80,8 +99,6 @@
   .qr-nav-fab { position: fixed; right: 18px; bottom: 22px; width: 56px; height: 56px; border-radius: 9999px; background: #1e293b; color: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.25); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.45); cursor: pointer; z-index: 45; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.2s ease, border-color 0.2s ease; }
   html:not(.dark) .qr-nav-fab { background: #ffffff; color: #1e293b; border-color: rgba(15, 23, 42, 0.14); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16); }
   .qr-nav-fab:hover { transform: scale(1.05); border-color: #6366f1; }
-  .receipt-edge { position: relative; background: #172033; }
-  .receipt-edge::after { content: ''; position: absolute; bottom: -10px; left: 0; right: 0; height: 10px; background-size: 20px 20px; background-image: radial-gradient(circle at 10px 0, transparent 10px, #172033 11px); }
   .receipt-surface { background: #1e283c; color: #f1f5f9; border: 1px solid rgba(148, 163, 184, 0.16); font-variant-numeric: tabular-nums; }
   .receipt-inner-box { background: #161e2e; border: 1px solid rgba(148, 163, 184, 0.14); }
   .money-wrap { position: relative; display: flex; align-items: center; width: 100%; }
@@ -204,7 +221,7 @@
   </div>
 </div>
 
-<!-- Modal de Central de Notificações (Apenas Contas a Pagar - Modo 100% Passivo) -->
+<!-- Modal de Central de Notificações -->
 <div id="notification-modal" role="dialog" aria-modal="true" aria-labelledby="notifModalTitle" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
   <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
     <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"><div class="flex items-center gap-2"><span class="text-lg">🔔</span><h3 id="notifModalTitle" class="font-bold text-slate-900 dark:text-white text-sm">Alertas de Contas a Pagar</h3></div><button type="button" onclick="toggleNotifications()" aria-label="Fechar notificações" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button></div>
@@ -213,6 +230,40 @@
     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 text-center flex gap-2">
       <button type="button" onclick="toggleNotifications(); switchTab('finance'); openPendingModal();" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-extrabold cursor-pointer">Ir para Contas a Pagar</button>
       <button type="button" onclick="toggleNotifications()" class="flex-1 py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold cursor-pointer">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ponto 4: Modal de Cor Personalizada (Contas e Cartões) -->
+<div id="entityColorModal" role="dialog" aria-modal="true" aria-labelledby="entityColorModalTitle" onclick="if(event.target.id==='entityColorModal')closeEntityColorModal()" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 no-print animate-in">
+  <div onclick="event.stopPropagation()" class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col max-h-[88vh]">
+    <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+      <div>
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">PERSONALIZAÇÃO VISUAL</p>
+        <h3 id="entityColorModalTitle" class="font-extrabold text-slate-900 dark:text-white text-sm">Cor do Card</h3>
+      </div>
+      <button type="button" onclick="closeEntityColorModal()" aria-label="Fechar seletor de cor" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl font-bold px-2 cursor-pointer">×</button>
+    </div>
+    <div class="p-4 space-y-4 overflow-y-auto flex-1 text-xs">
+      <input type="hidden" id="colorTargetId">
+      <input type="hidden" id="colorTargetKind">
+
+      <div>
+        <label class="lbl" for="customColorPicker">Cor Livre (Gradiente automático a partir da cor)</label>
+        <div class="flex items-center gap-2.5">
+          <input type="color" id="customColorPicker" value="#4f46e5" onchange="previewCustomEntityColor(this.value)" class="w-12 h-11 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent cursor-pointer p-0.5 shrink-0">
+          <button type="button" onclick="applyCustomColorFromPicker()" class="flex-1 py-2.5 px-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold cursor-pointer transition">Aplicar Cor Livre</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="lbl mb-2">Instituições e Bandeiras</p>
+        <div id="entityColorPresetsGrid" class="grid grid-cols-2 gap-1.5"></div>
+      </div>
+    </div>
+    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 flex gap-2 shrink-0">
+      <button type="button" onclick="resetEntityColor()" class="flex-1 py-2.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold cursor-pointer">Padrão</button>
+      <button type="button" onclick="closeEntityColorModal()" class="flex-1 py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold cursor-pointer">Concluir</button>
     </div>
   </div>
 </div>
@@ -240,7 +291,7 @@
         </div>
         <div id="qrPanelTitle" class="text-xs font-extrabold text-slate-900 dark:text-white mb-1.5 truncate text-left"></div>
 
-        <!-- Campos de Operação (Não entra na porcentagem do teto) -->
+        <!-- Campos de Operação -->
         <div id="qrOpFields" class="hidden space-y-2">
           <div class="flex flex-wrap gap-1.5" id="qrOpEtapas">
             <button type="button" class="qr-chip selected" onclick="qrSelecionarEtapaOp(this, 'Despacho')">Despacho</button>
@@ -311,7 +362,7 @@
           <button type="button" onclick="qrConfirmarCliente()" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold cursor-pointer transition">Confirmar Cliente</button>
         </div>
 
-        <!-- Campos de Gasto / Despesa Diária (Entra na porcentagem do teto) -->
+        <!-- Campos de Gasto / Despesa Diária -->
         <div id="qrGastoFields" class="hidden space-y-1.5">
           <div>
             <label class="lbl" for="qrGastoValor">Valor da Compra / Despesa (R$)</label>
@@ -389,11 +440,11 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 num-align">
       <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between">
         <div class="flex items-center justify-start"><button type="button" id="btn-new" onclick="openModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1 rounded-xl text-[11px] font-bold shadow-md shadow-brand-500/25 active:scale-95 transition cursor-pointer shrink-0">+ Pedido</button></div>
-        <h3 id="ord-count" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">0</h3>
+        <h3 id="ord-count" class="card-num-boost font-black text-slate-900 dark:text-white truncate">0</h3>
       </div>
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Investimento</p><h3 id="ord-inv" class="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3></div>
-      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-brand-600 dark:text-brand-400 tracking-wider truncate">Faturamento</p><h3 id="ord-fat" class="text-sm sm:text-base font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3></div>
-      <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-200/70 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 tracking-wider truncate">Lucro Líq.</p><h3 id="ord-profit" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-400 truncate">R$ 0</h3></div>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Investimento</p><h3 id="ord-inv" class="card-num-boost font-black text-slate-800 dark:text-slate-200 truncate">R$ 0</h3></div>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-brand-600 dark:text-brand-400 tracking-wider truncate">Faturamento</p><h3 id="ord-fat" class="card-num-boost font-black text-brand-600 dark:text-brand-400 truncate">R$ 0</h3></div>
+      <div class="bg-gradient-to-br from-white/95 to-emerald-50/90 dark:from-slate-800/95 dark:to-emerald-900/40 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-200/70 dark:border-emerald-800/50 shadow-xs relative overflow-hidden min-w-0 h-24 sm:h-28 flex flex-col justify-between"><p class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 tracking-wider truncate">Lucro Líq.</p><h3 id="ord-profit" class="card-num-boost font-black text-emerald-700 dark:text-emerald-400 truncate">R$ 0</h3></div>
     </div>
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
       <div class="p-3 sm:p-4 border-b border-slate-100 dark:border-slate-700 flex flex-row items-center justify-between gap-2 bg-white/50 dark:bg-slate-800/50">
@@ -431,8 +482,18 @@
       <div class="scroll-x num-align" id="cards-container"></div>
     </div>
     <div class="grid grid-cols-2 gap-3 num-align">
-      <div role="button" tabindex="0" onclick="openPatrimonioModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPatrimonioModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p><h3 id="fin-patrimonio" class="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate mt-1">R$ 0,00</h3></div>
-      <div role="button" tabindex="0" onclick="openPendingLucrosModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPendingLucrosModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0"><p class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 tracking-wider truncate">A Receber (Lucros) ℹ️</p><h3 id="fin-pending-lucro" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0,00</h3></div>
+      <!-- Ponto 2: Card PATRIMÔNIO TOTAL com valor bruto + botão de olhinho -->
+      <div role="button" tabindex="0" onclick="openPatrimonioModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPatrimonioModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-indigo-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
+        <div class="flex items-center justify-between gap-1">
+          <p class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider truncate">Patrimônio Total ℹ️</p>
+          <button type="button" id="btn-toggle-patrimonio-eye" onclick="event.stopPropagation(); togglePatrimonioVisibility();" aria-label="Ocultar ou mostrar Patrimônio Total" title="Ocultar / Mostrar Patrimônio" class="text-xs px-1.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 cursor-pointer shrink-0 leading-none">👁️</button>
+        </div>
+        <h3 id="fin-patrimonio" class="card-num-boost font-black text-slate-900 dark:text-white truncate mt-1">R$ 0,00</h3>
+      </div>
+      <div role="button" tabindex="0" onclick="openPendingLucrosModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPendingLucrosModal();}" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs p-3.5 rounded-2xl border-l-4 border-amber-500 border-y border-r border-slate-200/70 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-500 transition min-w-0 flex flex-col justify-between">
+        <p class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 tracking-wider truncate">A Receber (Lucros) ℹ️</p>
+        <h3 id="fin-pending-lucro" class="card-num-boost font-black text-amber-600 dark:text-amber-400 truncate mt-1">R$ 0,00</h3>
+      </div>
     </div>
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 shadow-xs overflow-hidden">
       <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex justify-between items-center gap-2">
@@ -449,8 +510,8 @@
       <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:scale-110 transition pointer-events-none">📊</div>
       <div class="flex justify-between items-center gap-2 mb-3.5 relative z-10"><h2 class="text-xs sm:text-sm font-bold truncate">Resumo Geral do Negócio</h2><span class="text-[11px] bg-brand-600/80 text-indigo-100 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30 shrink-0">Fechamento Mensal 📅</span></div>
       <div class="grid grid-cols-2 gap-3 relative z-10 num-align">
-        <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p><p id="adm-total-profit" class="text-sm sm:text-base font-black mt-1 text-emerald-400 truncate">R$ 0,00</p></div>
-        <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p><p id="adm-total-fat" class="text-sm sm:text-base font-black mt-1 text-white truncate">R$ 0,00</p></div>
+        <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Lucro Líquido Real</p><p id="adm-total-profit" class="card-num-boost font-black mt-1 text-emerald-400 truncate">R$ 0,00</p></div>
+        <div class="min-w-0"><p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider truncate">Faturamento Total</p><p id="adm-total-fat" class="card-num-boost font-black mt-1 text-white truncate">R$ 0,00</p></div>
       </div>
     </div>
     <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-700 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -690,6 +751,8 @@
 
       <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2 text-xs">
         <div class="flex justify-between items-center"><span class="text-brand-600 dark:text-indigo-400 font-extrabold uppercase text-[10px]">Receitas / Entradas do Mês</span><strong id="chart-month-gross-rev" class="text-brand-600 dark:text-indigo-400 font-black text-sm">R$ 0,00</strong></div>
+        <!-- Ponto 3: Linha INVESTIMENTO no Fechamento Mensal Detalhado -->
+        <div class="flex justify-between items-center"><span class="text-cyan-600 dark:text-cyan-400 font-extrabold uppercase text-[10px]">Investimento</span><strong id="chart-month-investment" class="text-cyan-600 dark:text-cyan-400 font-black text-sm">R$ 0,00</strong></div>
         <div class="flex justify-between items-center"><span class="text-blue-600 dark:text-blue-400 font-extrabold uppercase text-[10px]">Lucro Bruto (Margem Vendas)</span><strong id="chart-month-gross-profit" class="text-blue-600 dark:text-blue-400 font-black text-sm">R$ 0,00</strong></div>
         <div class="flex justify-between items-center"><span class="text-emerald-600 dark:text-emerald-400 font-extrabold uppercase text-[10px]">Lucro Líquido do Mês</span><strong id="chart-month-income" class="text-emerald-600 dark:text-emerald-400 font-black text-sm">R$ 0,00</strong></div>
         <div class="flex justify-between items-center"><span class="text-amber-600 dark:text-amber-400 font-extrabold uppercase text-[10px]">Despesa de Operação (Merc./Frete/Op.)</span><strong id="chart-month-forecast-rev" class="text-amber-600 dark:text-amber-400 font-black text-sm">R$ 0,00</strong></div>
@@ -786,7 +849,7 @@
       <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 text-sm space-y-2 border border-indigo-100 dark:border-indigo-800/50 num-align">
         <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Custo Mercadoria</span><b class="text-slate-900 dark:text-white text-right" id="prevBRL">R$ 0,00</b></div>
         <div class="flex justify-between items-center gap-2"><span class="text-slate-600 dark:text-slate-400">Sua Margem (+)</span><b class="text-blue-600 dark:text-blue-400 text-right" id="prevMargem">R$ 0,00</b></div>
-        <div class="flex justify-between items-center gap-2 text-rose-600 dark:text-rose-400"><span id="prevFreteLabel">(-) Custo Frete</span><b id="prevFrete" class="text-right">R$ 0,00</b></div>
+        <div class="flex justify-between items-center gap-2 text-rose-600 dark:text-rose-400"><span>(-) Custo Frete</span><b id="prevFrete" class="text-right">R$ 0,00</b></div>
         <div class="border-t border-indigo-200 dark:border-indigo-700/50 pt-2 mt-2 flex justify-between items-center gap-2 bg-white dark:bg-slate-800 rounded-lg px-3 py-2 shadow-xs border border-emerald-100 dark:border-emerald-900/30"><span class="text-emerald-700 dark:text-emerald-400 font-bold">Lucro Líquido</span><b class="text-emerald-700 dark:text-emerald-400 text-base text-right" id="prevLucro">R$ 0,00</b></div>
         <div class="flex justify-between items-center gap-2 pt-1 font-bold"><span class="text-brand-800 dark:text-indigo-300">Total a Receber</span><b class="text-brand-900 dark:text-white text-base text-right" id="prevFinal">R$ 0,00</b></div>
       </div>
@@ -959,7 +1022,9 @@ const STORAGE = {
   theme: 'gestao_premium_theme',
   seenNotifs: 'gestao_premium_seen_notifs',
   wipedToZero: 'gestao_premium_wiped_to_zero',
-  closedMonths: 'gestao_premium_closed_months'
+  closedMonths: 'gestao_premium_closed_months',
+  hidePatrimonio: 'gestao_premium_hide_patrimonio',
+  entityColors: 'gestao_premium_entity_colors'
 };
 
 const ACCOUNTS = [
@@ -977,10 +1042,28 @@ const DEFAULT_CREDIT_CARDS = [
   { id: 'card_pernambucana', name: 'Pernambucana', limit: 3000, currentBill: 0, dueDay: 25, history: [] }
 ];
 
+// Ponto 4: Presets de instituições e bandeiras
+const ENTITY_COLOR_PRESETS = [
+  { label: 'Riachuelo', start: '#18181b', end: '#3f3f46' },
+  { label: 'Neon', start: '#00a8ff', end: '#0369a1' },
+  { label: 'HTN', start: '#0f766e', end: '#115e59' },
+  { label: 'Pernambucana', start: '#b91c1c', end: '#7f1d1d' },
+  { label: 'Caixa Econômica', start: '#005ca9', end: '#1d4ed8' },
+  { label: 'Nubank', start: '#820ad1', end: '#4c1d95' },
+  { label: 'C6 Bank', start: '#1e293b', end: '#0f172a' },
+  { label: 'Inter', start: '#ff7a00', end: '#c2410c' },
+  { label: 'Dinheiro em Caixa', start: '#059669', end: '#047857' },
+  { label: 'Visa', start: '#1a1f71', end: '#2563eb' },
+  { label: 'Mastercard', start: '#dc2626', end: '#ea580c' },
+  { label: 'Elo', start: '#0284c7', end: '#ca8a04' }
+];
+
 let orders = [], txs = [], cardsConfig = [], bensData = [];
 let historyData = { clients: [], cities: [], carriers: [] };
 let seenNotifKeys = [];
 let closedMonthsMap = {};
+let isPatrimonioHidden = false;
+let entityColorsMap = {};
 let currentTab = 'quick', currentAdminTab = 'orders';
 let activeReceiptOrderId = null, currentReceiptMode = 'client';
 let activeOrderFreightPayments = [];
@@ -1019,6 +1102,16 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 
 function getLocal(k, def){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch(e){ return def; } }
 function setLocal(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+
+function darkenHex(hex, amount = 38) {
+  const clean = String(hex || '#4f46e5').replace('#', '');
+  if (clean.length !== 6) return '#1e1b4b';
+  const num = parseInt(clean, 16);
+  const r = Math.max(0, ((num >> 16) & 0xff) - amount);
+  const g = Math.max(0, ((num >> 8) & 0xff) - amount);
+  const b = Math.max(0, (num & 0xff) - amount);
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
 
 function showAppToast(msg, type='success') {
   const el = document.getElementById('appToast');
@@ -1320,6 +1413,9 @@ function load() {
   if (!Array.isArray(seenNotifKeys)) seenNotifKeys = [];
   closedMonthsMap = getLocal(STORAGE.closedMonths, {});
   if (!closedMonthsMap || typeof closedMonthsMap !== 'object') closedMonthsMap = {};
+  isPatrimonioHidden = Boolean(getLocal(STORAGE.hidePatrimonio, false));
+  entityColorsMap = getLocal(STORAGE.entityColors, {});
+  if (!entityColorsMap || typeof entityColorsMap !== 'object') entityColorsMap = {};
 
   const profile = getLocal(STORAGE.profile, { name: 'Meu Perfil' });
   document.getElementById('menu-user-name').textContent = profile.name || 'Meu Perfil';
@@ -1345,8 +1441,78 @@ function saveAll() {
   setLocal(STORAGE.bens, bensData);
   setLocal(STORAGE.seenNotifs, seenNotifKeys);
   setLocal(STORAGE.closedMonths, closedMonthsMap);
+  setLocal(STORAGE.hidePatrimonio, isPatrimonioHidden);
+  setLocal(STORAGE.entityColors, entityColorsMap);
   updateNotificationBadge();
   updateTetoFab();
+}
+
+function togglePatrimonioVisibility() {
+  isPatrimonioHidden = !isPatrimonioHidden;
+  setLocal(STORAGE.hidePatrimonio, isPatrimonioHidden);
+  renderFinance();
+}
+
+function openEntityColorModal(entityId, kind, titleText) {
+  document.getElementById('colorTargetId').value = entityId;
+  document.getElementById('colorTargetKind').value = kind;
+  document.getElementById('entityColorModalTitle').textContent = `Cor · ${titleText || 'Card'}`;
+
+  const current = entityColorsMap[entityId];
+  const initialHex = (current && current.start) ? current.start : (kind === 'card' ? '#7e22ce' : '#4f46e5');
+  document.getElementById('customColorPicker').value = initialHex;
+
+  const grid = document.getElementById('entityColorPresetsGrid');
+  grid.innerHTML = ENTITY_COLOR_PRESETS.map(p => {
+    const isSelected = current && current.start === p.start && current.end === p.end;
+    return `
+      <button type="button" onclick="applyEntityColorPreset('${escapeHtml(p.start)}', '${escapeHtml(p.end)}', '${escapeHtml(p.label)}')" class="flex items-center gap-2 p-2 rounded-xl border text-left font-bold cursor-pointer transition ${isSelected ? 'border-brand-500 bg-brand-500/15 text-slate-900 dark:text-white' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 text-slate-700 dark:text-slate-200 hover:border-brand-400'}">
+        <span class="w-4 h-4 rounded-full shrink-0 border border-white/30" style="background: linear-gradient(135deg, ${p.start}, ${p.end});"></span>
+        <span class="truncate text-[11px]">${escapeHtml(p.label)}</span>
+      </button>`;
+  }).join('');
+
+  document.getElementById('entityColorModal').classList.remove('hidden');
+}
+
+function closeEntityColorModal() {
+  document.getElementById('entityColorModal').classList.add('hidden');
+}
+
+function previewCustomEntityColor(hex) {
+  document.getElementById('customColorPicker').value = hex;
+}
+
+function applyCustomColorFromPicker() {
+  const id = document.getElementById('colorTargetId').value;
+  const start = document.getElementById('customColorPicker').value || '#4f46e5';
+  const end = darkenHex(start, 42);
+  if (!id) return;
+  entityColorsMap[id] = { start, end };
+  saveAll();
+  renderFinance();
+  showAppToast('Cor personalizada aplicada!');
+}
+
+function applyEntityColorPreset(start, end, label) {
+  const id = document.getElementById('colorTargetId').value;
+  if (!id) return;
+  entityColorsMap[id] = { start, end, presetLabel: label };
+  document.getElementById('customColorPicker').value = start;
+  saveAll();
+  renderFinance();
+  openEntityColorModal(id, document.getElementById('colorTargetKind').value, document.getElementById('entityColorModalTitle').textContent.replace(/^Cor ·\s*/, ''));
+  showAppToast(`Estilo ${label} aplicado!`);
+}
+
+function resetEntityColor() {
+  const id = document.getElementById('colorTargetId').value;
+  if (!id) return;
+  delete entityColorsMap[id];
+  saveAll();
+  renderFinance();
+  closeEntityColorModal();
+  showAppToast('Cor restaurada para o padrão.');
 }
 
 function updateQuickScheduleViewportFit() {
@@ -2384,12 +2550,12 @@ function openAccountStatementModal(accId) {
 
   const outListEl = document.getElementById('accountStatementOutList');
   if (!outTxs.length) {
-    outListEl.innerHTML = '<p class="py-3 text-center text-xs text-slate-400">Nenhuma retirada/saída registrada nesta conta.</p>';
+    outListEl.innerHTML = '<p class="py-3 text-center text-xs text-slate-400">Nenhuma retirada registrada nesta conta.</p>';
   } else {
     outListEl.innerHTML = outTxs.map(t => `
       <div class="py-2.5 flex justify-between items-center gap-2 text-xs">
         <div class="min-w-0">
-          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc || 'Saída')}</p>
+          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc || 'Retirada')}</p>
           <p class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(t.cat || 'Despesa')}${t.paymentMethod ? ' · ' + escapeHtml(t.paymentMethod) : ''} · ${fmtDateTimeTx(t.createdAt || t.date)}</p>
         </div>
         <span class="font-black text-rose-600 dark:text-rose-400 shrink-0">- ${money(t.amount)}</span>
@@ -2404,416 +2570,178 @@ function closeAccountStatementModal() {
   document.getElementById('accountStatementModal').classList.add('hidden');
 }
 
+function getAccountCardStyle(acc) {
+  const custom = entityColorsMap[acc.id];
+  if (custom && custom.start) {
+    return {
+      cls: 'text-white relative cursor-pointer transition hover:scale-[1.02] shadow-md',
+      style: `background: linear-gradient(135deg, ${custom.start}, ${custom.end || darkenHex(custom.start, 40)});`
+    };
+  }
+  return {
+    cls: `${acc.color} text-white relative cursor-pointer transition hover:scale-[1.02] shadow-md`,
+    style: ''
+  };
+}
+
+function getCreditCardStyle(card) {
+  const custom = entityColorsMap[card.id];
+  if (custom && custom.start) {
+    return {
+      cls: 'text-white relative cursor-pointer transition hover:scale-[1.02] shadow-md',
+      style: `background: linear-gradient(135deg, ${custom.start}, ${custom.end || darkenHex(custom.start, 40)});`
+    };
+  }
+  return {
+    cls: 'bg-gradient-to-br from-purple-700 to-indigo-900 text-white relative cursor-pointer transition hover:scale-[1.02] shadow-md',
+    style: ''
+  };
+}
+
 function renderFinance() {
   const accContainer = document.getElementById('accounts-container');
+  let totalCash = 0;
+
   accContainer.innerHTML = ACCOUNTS.map(acc => {
     const bal = getAccountBalance(acc.id);
+    totalCash += bal;
+    const st = getAccountCardStyle(acc);
+    const safeName = escapeHtml(acc.name.replace(/'/g, "\\'"));
     return `
-      <div role="button" tabindex="0" onclick="openAccountStatementModal('${acc.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAccountStatementModal('${acc.id}');}" class="fin-account-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-brand-500 shadow-sm relative overflow-hidden group cursor-pointer transition">
-        <div class="absolute top-0 left-0 w-full h-1 ${acc.color}"></div>
-        <div class="flex justify-between items-start gap-1 mt-1">
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide truncate">${acc.name}</p>
-          <button type="button" onclick="event.stopPropagation(); openEditBalance('${acc.id}')" class="text-slate-300 hover:text-brand-500 transition p-0.5 -mr-1 -mt-1 text-sm cursor-pointer shrink-0">✏️</button>
+      <div onclick="openAccountStatementModal('${acc.id}')" class="${st.cls} fin-card-uniform rounded-2xl p-3.5" style="${st.style}">
+        <div class="flex justify-between items-start gap-1">
+          <p class="text-[11px] font-bold opacity-95 truncate">${escapeHtml(acc.name)}</p>
+          <div class="flex items-center gap-1 shrink-0">
+            <button type="button" onclick="event.stopPropagation(); openEntityColorModal('${acc.id}', 'account', '${safeName}');" title="Cor do card" aria-label="Escolher cor de ${escapeHtml(acc.name)}" class="text-[11px] leading-none bg-white/15 hover:bg-white/25 rounded-md px-1.5 py-1 cursor-pointer">🎨</button>
+            <button type="button" onclick="event.stopPropagation(); openEditBalance('${acc.id}')" title="Ajustar saldo" aria-label="Ajustar saldo de ${escapeHtml(acc.name)}" class="text-[11px] leading-none bg-white/15 hover:bg-white/25 rounded-md px-1.5 py-1 cursor-pointer">✏️</button>
+          </div>
         </div>
-        <h3 class="text-base font-black text-slate-900 dark:text-white truncate">${money(bal)}</h3>
+        <p class="card-num-boost font-black truncate">${money(bal)}</p>
+        <p class="text-[9px] opacity-80 truncate">Toque para entradas e retiradas</p>
       </div>`;
   }).join('');
 
   const cardsContainer = document.getElementById('cards-container');
   cardsContainer.innerHTML = cardsConfig.map(c => {
-    const avail = (Number(c.limit) || 0) - (Number(c.currentBill) || 0);
+    const limit = Number(c.limit) || 0;
+    const bill = Number(c.currentBill) || 0;
+    const avail = Math.max(0, limit - bill);
+    const st = getCreditCardStyle(c);
+    const safeName = escapeHtml(c.name.replace(/'/g, "\\'"));
     return `
-      <div role="button" tabindex="0" onclick="handleCreditCardClick('${c.id}')" ondblclick="handleCreditCardDblClick(event, '${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCardDetail('${c.id}');}" class="fin-credit-card bg-gradient-to-br from-purple-700 to-indigo-900 p-3.5 rounded-2xl shadow-md text-white relative overflow-hidden group cursor-pointer select-none">
+      <div onclick="handleCardClick('${c.id}')" ondblclick="handleCardDoubleClick('${c.id}')" class="${st.cls} fin-card-uniform rounded-2xl p-3.5" style="${st.style}">
         <div class="flex justify-between items-start gap-1">
-          <p class="text-xs font-bold uppercase tracking-wider truncate">${escapeHtml(c.name)}</p>
-          <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded shrink-0">Dia ${c.dueDay}</span>
+          <p class="text-[11px] font-bold opacity-95 truncate">${escapeHtml(c.name)}</p>
+          <div class="flex items-center gap-1 shrink-0">
+            <button type="button" onclick="event.stopPropagation(); openEntityColorModal('${c.id}', 'card', '${safeName}');" title="Cor do cartão" aria-label="Escolher cor do cartão ${escapeHtml(c.name)}" class="text-[11px] leading-none bg-white/15 hover:bg-white/25 rounded-md px-1.5 py-1 cursor-pointer">🎨</button>
+            <span class="text-[9px] font-bold bg-black/25 px-1.5 py-0.5 rounded-full shrink-0">Dia ${c.dueDay || 10}</span>
+          </div>
         </div>
-        <div>
-          <p class="text-[10px] text-purple-200 truncate">Fatura Atual</p>
-          <h3 class="text-lg font-black truncate">${money(c.currentBill)}</h3>
-        </div>
-        <div class="flex justify-between gap-2 text-[10px] text-purple-200">
-          <span class="truncate">Lim: ${money(c.limit)}</span>
-          <span class="truncate">Disp: ${money(avail)}</span>
-        </div>
+        <p class="card-num-boost font-black truncate">${money(avail)}</p>
+        <p class="text-[9px] opacity-85 truncate">Fatura: ${money(bill)} · Lim: ${money(limit)}</p>
       </div>`;
   }).join('');
 
-  let totalAccountsBal = 0;
-  ACCOUNTS.forEach(acc => { totalAccountsBal += getAccountBalance(acc.id); });
+  const pendingReceivables = getPendingReceivablesList();
+  const pendingIncome = pendingReceivables.reduce((s, r) => s + (Number(r.amount) || 0), 0);
+  const bensTotal = bensData.reduce((s, b) => s + (Number(b.value) || 0), 0);
 
-  const receivables = getPendingReceivablesList();
-  const pendingLucro = receivables.reduce((s, item) => s + (Number(item.amount) || 0), 0);
+  // Ponto 2: Patrimônio Total exibe valor bruto (contas + pendentes a receber + bens), sem subtrair fatura de cartão
+  const patrimonioBruto = totalCash + pendingIncome + bensTotal;
 
-  const bensTotal = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('fin-patrimonio').textContent = money(totalAccountsBal + bensTotal);
-  document.getElementById('fin-pending-lucro').textContent = money(pendingLucro);
+  const eyeBtn = document.getElementById('btn-toggle-patrimonio-eye');
+  if (eyeBtn) {
+    eyeBtn.textContent = isPatrimonioHidden ? '🙈' : '👁️';
+    eyeBtn.setAttribute('aria-label', isPatrimonioHidden ? 'Mostrar Patrimônio Total' : 'Ocultar Patrimônio Total');
+  }
 
-  const list = document.getElementById('fin-list');
+  document.getElementById('fin-patrimonio').textContent = isPatrimonioHidden ? 'R$ ••••••' : money(patrimonioBruto);
+  document.getElementById('fin-pending-lucro').textContent = money(pendingIncome);
+
+  document.getElementById('detSaldoBancos').textContent = money(totalCash);
+  document.getElementById('detReceber').textContent = money(pendingIncome);
+  document.getElementById('detPatrimonioTotal').textContent = money(patrimonioBruto);
+
   const period = document.getElementById('fin-period-filter').value;
-
-  let filteredTxs = txs.slice().sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.createdAt||'').localeCompare(a.createdAt||''));
+  let listItems = [...txs].sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.createdAt||'').localeCompare(a.createdAt||''));
   if (period === '30d') {
     const d = new Date(); d.setDate(d.getDate() - 30);
     const iso = d.toISOString().split('T')[0];
-    filteredTxs = filteredTxs.filter(t => t.date >= iso);
+    listItems = listItems.filter(t => t.date >= iso);
   } else if (period === 'prev_month') {
     const d = new Date(); d.setMonth(d.getMonth() - 1);
     const ym = d.getFullYear() + '-' + pad(d.getMonth()+1);
-    filteredTxs = filteredTxs.filter(t => t.date && t.date.startsWith(ym));
+    listItems = listItems.filter(t => t.date && t.date.startsWith(ym));
   }
 
-  if (!filteredTxs.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento registrado.</p>'; return; }
+  const list = document.getElementById('fin-list');
+  if (!listItems.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento encontrado neste período.</p>'; return; }
 
-  list.innerHTML = filteredTxs.slice(0, 100).map(t => {
+  list.innerHTML = listItems.map(t => {
     const isInc = t.type === 'income' || t.type === 'transfer_in';
-    const isTransfer = t.type === 'transfer_in' || t.type === 'transfer_out';
-    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
     const isPending = t.status === 'pending';
-    let tagColor = 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
-    let tagName = t.cat || 'Outro';
-    let icon = isInc ? '↑' : '↓';
-    if (isTransfer) { tagColor = 'bg-slate-200 text-slate-700'; tagName = 'Transfer'; icon = '↔️'; }
-    else if (t.cat === 'Vendas') { tagColor = 'bg-indigo-100 text-indigo-700'; tagName = 'Venda'; icon = '💰'; }
-    else if (t.cat === 'Fornecedores') { tagColor = 'bg-rose-100 text-rose-700'; tagName = 'Custo'; icon = '📦'; }
-    else if (t.cat === 'Logística') { tagColor = 'bg-amber-100 text-amber-700'; tagName = 'Frete'; icon = '🚚'; }
-    else if (t.isAdjustment || t.cat === 'Ajuste') { tagColor = 'bg-cyan-100 text-cyan-700'; tagName = 'Ajuste'; icon = '⚖️'; }
-    const dateTimeStr = fmtDateTimeTx(t.createdAt || t.date);
-    const pendingLabel = isPending ? '<span class="text-[9px] font-bold bg-rose-500 text-white px-1.5 py-0.5 rounded ml-2">PENDENTE</span>' : '';
-    const payMethodLabel = t.paymentMethod ? `<span class="text-[9px] font-semibold text-slate-500 ml-2 border border-slate-200 px-1 rounded">${escapeHtml(t.paymentMethod)}</span>` : '';
-
+    const acc = ACCOUNTS.find(a => a.id === t.accountId);
+    const badge = isPending ? '<span class="text-[9px] font-extrabold uppercase bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 px-2 py-0.5 rounded-full ml-1.5">Pendente</span>' : '';
+    const pmBadge = t.paymentMethod ? `<span class="text-[9px] font-bold uppercase bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 px-1.5 py-0.5 rounded-md ml-1">${escapeHtml(t.paymentMethod)}</span>` : '';
+    const amountCls = isInc ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+    const sign = isInc ? '+' : '-';
+    const dtLabel = fmtDateTimeTx(t.createdAt || t.date);
     return `
-      <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50 last:border-0 transition">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${isInc ? 'bg-emerald-50 text-emerald-600' : (isTransfer ? 'bg-slate-100 text-slate-600' : 'bg-rose-50 text-rose-600')}">${icon}</div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-1 mb-1 flex-wrap"><span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md ${tagColor}">${escapeHtml(tagName)}</span>${payMethodLabel}${pendingLabel}</div>
-          <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(t.desc)}</p>
-          <p class="text-[11px] font-medium text-slate-500 mt-0.5">${dateTimeStr} · ${accName}</p>
+      <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition flex items-center justify-between gap-3">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center flex-wrap gap-y-1">
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</h4>
+            ${badge}${pmBadge}
+          </div>
+          <p class="text-[10px] text-slate-400 mt-0.5 truncate">${escapeHtml(t.cat || 'Geral')} · ${acc ? escapeHtml(acc.name) : 'Conta'} · ${dtLabel}</p>
         </div>
         <div class="text-right shrink-0">
-          <p class="font-black text-sm ${isInc ? 'text-emerald-600' : (isTransfer ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600')} ${isPending ? 'opacity-50 line-through' : ''}">${isInc ? '+' : '-'} ${money(t.amount)}</p>
-          <button type="button" onclick="delFinTx('${t.id}')" class="text-[10px] font-semibold text-slate-400 hover:text-rose-600 mt-1 underline decoration-transparent hover:decoration-rose-600 transition cursor-pointer">excluir</button>
+          <p class="text-sm font-black ${amountCls}">${sign} ${money(t.amount)}</p>
+          <button type="button" onclick="delTx('${t.id}')" class="text-[10px] text-slate-400 hover:text-rose-500 mt-0.5 font-semibold cursor-pointer">Excluir</button>
         </div>
       </div>`;
   }).join('');
 }
 
-function openPendingModal() {
-  document.getElementById('pendingModal').classList.remove('hidden');
-  const list = document.getElementById('pending-list');
-  const pendingTxs = txs.filter(t => t.status === 'pending' && t.type === 'expense');
-  if (!pendingTxs.length) { list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhuma conta pendente no momento.</p>'; return; }
-  list.innerHTML = pendingTxs.map(t => `
-    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-      <div class="min-w-0">
-        <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-        <p class="text-[10px] text-slate-500">Vence: ${(t.date||'').split('-').reverse().join('/')} · ${ACCOUNTS.find(a=>a.id===t.accountId)?.name || '?'}</p>
-        <p class="font-black text-rose-500 text-sm mt-0.5">${money(t.amount)}</p>
-      </div>
-      <button type="button" onclick="openPayModal('${t.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold shrink-0 cursor-pointer">Pagar / Baixar</button>
-    </div>`).join('');
-}
-
-function openPayModal(txId) {
-  const tx = txs.find(t => t.id === txId);
-  if (!tx) return;
-  document.getElementById('payTxId').value = txId;
-  document.getElementById('payTxAmountDesc').textContent = money(tx.amount);
-  document.getElementById('payTxAmountInput').value = Number(tx.amount || 0).toFixed(2).replace('.', ',');
-  const sel = document.getElementById('payAccountSelect');
-  sel.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}" ${a.id===tx.accountId?'selected':''}>${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
-  document.getElementById('payAccountModal').classList.remove('hidden');
-}
-
-function confirmPayPending(e) {
-  e.preventDefault();
-  const txId = document.getElementById('payTxId').value;
-  const accId = document.getElementById('payAccountSelect').value;
-  const paidAmt = parseMoney(document.getElementById('payTxAmountInput').value);
-  const tx = txs.find(t => t.id === txId);
-  if (!tx) return;
-  const remaining = Number(tx.amount) || 0;
-  if (paidAmt <= 0) return showAppToast('Informe um valor maior que zero.', 'error');
-  if (paidAmt > remaining + 0.009) return showAppToast('Valor maior que o saldo pendente.', 'error');
-
-  if (paidAmt < remaining - 0.009) {
-    tx.amount = Number((remaining - paidAmt).toFixed(2));
-    tx.accountId = accId;
-    txs.unshift({
-      id: genId(),
-      desc: `Parcela paga: ${tx.desc}`,
-      amount: paidAmt,
-      type: tx.type,
-      cat: tx.cat,
-      date: todayISO(),
-      createdAt: new Date().toISOString(),
-      accountId: accId,
-      status: 'paid'
-    });
-    showAppToast(`Parcela de ${money(paidAmt)} baixada! Restante: ${money(tx.amount)}`);
-  } else {
-    tx.status = 'paid';
-    tx.accountId = accId;
-    tx.date = todayISO();
-    showAppToast('Conta quitada e baixada no extrato!');
-  }
-
-  document.getElementById('payAccountModal').classList.add('hidden');
-  saveAll();
-  openPendingModal();
-  renderFinance();
-}
-
-function openPendingLucrosModal() {
-  document.getElementById('pendingLucrosModal').classList.remove('hidden');
-  const list = document.getElementById('pending-lucros-list');
-  const items = getPendingReceivablesList();
-  if (!items.length) { list.innerHTML = '<p class="text-center text-sm text-slate-500 py-4">Nenhum lucro/pedido pendente a receber.</p>'; return; }
-  list.innerHTML = items.map(item => `
-    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
-      <div class="min-w-0">
-        <p class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.title)}</p>
-        <p class="text-[10px] text-slate-500 truncate">${escapeHtml(item.subtitle)}</p>
-        <p class="font-black text-emerald-600 text-sm mt-0.5">${money(item.amount)}</p>
-      </div>
-      <button type="button" onclick="confirmReceivePending('${item.txId || ''}', '${item.orderId || ''}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold shrink-0 cursor-pointer">Receber</button>
-    </div>`).join('');
-}
-
-function confirmReceivePending(txId, orderId = '') {
-  const nowStr = nowLocal();
-  const todayStr = todayISO();
-  let targetOrder = orderId ? orders.find(o => o.id === orderId) : null;
-  let tx = txId ? txs.find(t => t.id === txId) : null;
-
-  if (!targetOrder && tx && tx.refId) {
-    targetOrder = orders.find(o => o.id === tx.refId);
-  }
-
-  if (tx) {
-    tx.status = 'paid';
-    tx.date = todayStr;
-  } else if (targetOrder) {
-    const v = calcValores(targetOrder);
-    txs.unshift({
-      id: genId(),
-      refId: targetOrder.id,
-      desc: `Pedido ${targetOrder.pedido || 'S/N'} - ${targetOrder.cliente || 'Cliente'}`,
-      amount: v.faturamento,
-      type: 'income',
-      cat: 'Vendas',
-      date: todayStr,
-      createdAt: new Date().toISOString(),
-      accountId: targetOrder.accIn || 'nubank',
-      paymentMethod: targetOrder.paymentMethod || 'Pix',
-      status: 'paid'
-    });
-  }
-
-  if (targetOrder) {
-    if (!targetOrder.clienteRecebeu) targetOrder.clienteRecebeu = nowStr;
-    targetOrder.isFinalized = true;
-    targetOrder.finalizedAt = nowStr;
-  }
-
-  saveAll();
-  openPendingLucrosModal();
-  renderFinance();
-  renderOrders();
-  showAppToast('Recebimento confirmado e pedido enviado para o histórico!');
-}
-
-function openFinModal() {
-  document.getElementById('finModal').classList.remove('hidden');
-  document.getElementById('fDesc').value = '';
-  document.getElementById('fAmount').value = '';
-  document.getElementById('fDate').value = todayISO();
-  document.getElementById('fStatus').value = 'paid';
-  setFinType('expense');
-}
-
-function setFinType(type) {
-  document.getElementById('fType').value = type;
-  const incBtn = document.getElementById('btn-type-income');
-  const expBtn = document.getElementById('btn-type-expense');
-  if (type === 'income') {
-    incBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer';
-    expBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
-  } else {
-    expBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-amber-500 bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 flex items-center justify-center gap-1.5 cursor-pointer';
-    incBtn.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 border-slate-200 dark:border-slate-700 text-slate-500 flex items-center justify-center gap-1.5 cursor-pointer';
-  }
-}
-
-function saveFinTx(e) {
-  e.preventDefault();
-  const type = document.getElementById('fType').value;
-  const desc = document.getElementById('fDesc').value.trim();
-  const amount = parseMoney(document.getElementById('fAmount').value);
-  const date = document.getElementById('fDate').value || todayISO();
-  const accountId = document.getElementById('fAccount').value;
-  const status = document.getElementById('fStatus').value;
-
-  if (!desc || amount <= 0) return showAppToast('Preencha descrição e valor válido.', 'error');
-
-  const txId = genId();
-  txs.unshift({
-    id: txId,
-    desc,
-    amount,
-    type,
-    cat: type === 'income' ? 'Receita' : 'Outros',
-    date,
-    createdAt: new Date().toISOString(),
-    accountId,
-    status
-  });
-
-  if (type === 'expense') {
-    addTetoCycleExpense({
-      id: txId,
-      desc,
-      amount,
-      date,
-      source: 'tx'
-    });
-  }
-
-  document.getElementById('finModal').classList.add('hidden');
-  saveAll();
-  renderFinance();
-  showAppToast('Lançamento registrado!');
-}
-
-function delFinTx(id) {
-  askAppConfirm('Excluir Lançamento', 'Deseja excluir este lançamento financeiro?').then(res => {
-    if (!res) return;
-    txs = txs.filter(t => t.id !== id);
-    const teto = getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] });
-    if (Array.isArray(teto.cycleExpenses)) {
-      teto.cycleExpenses = teto.cycleExpenses.filter(e => e.id !== id);
-      setLocal(STORAGE.teto, teto);
-    }
-    saveAll();
-    renderFinance();
-    showAppToast('Lançamento excluído.');
-  });
-}
-
-function openTransferModal() {
-  document.getElementById('transferModal').classList.remove('hidden');
-  document.getElementById('tAmount').value = '';
-  document.getElementById('tDate').value = todayISO();
-  const selFrom = document.getElementById('tFrom');
-  const selTo = document.getElementById('tTo');
-  selFrom.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
-  selTo.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-  if (selTo.options.length > 1) selTo.selectedIndex = 1;
-}
-
-function saveTransfer(e) {
-  e.preventDefault();
-  const fromId = document.getElementById('tFrom').value;
-  const toId = document.getElementById('tTo').value;
-  const amount = parseMoney(document.getElementById('tAmount').value);
-  const date = document.getElementById('tDate').value || todayISO();
-
-  if (fromId === toId) return showAppToast('Origem e destino devem ser diferentes.', 'error');
-  if (amount <= 0) return showAppToast('Digite um valor válido.', 'error');
-
-  const fromName = ACCOUNTS.find(a => a.id === fromId)?.name || 'Origem';
-  const toName = ACCOUNTS.find(a => a.id === toId)?.name || 'Destino';
-  const nowIso = new Date().toISOString();
-
-  txs.unshift(
-    { id: genId(), desc: `Transferência para ${toName}`, amount, type: 'transfer_out', cat: 'Transfer', date, createdAt: nowIso, accountId: fromId, status: 'paid' },
-    { id: genId(), desc: `Transferência de ${fromName}`, amount, type: 'transfer_in', cat: 'Transfer', date, createdAt: nowIso, accountId: toId, status: 'paid' }
-  );
-
-  document.getElementById('transferModal').classList.add('hidden');
-  saveAll();
-  renderFinance();
-  showAppToast('Transferência realizada!');
-}
-
-function openEditBalance(accId) {
-  const acc = ACCOUNTS.find(a => a.id === accId);
-  if (!acc) return;
-  const currentBal = getAccountBalance(accId);
-  document.getElementById('editBalAccId').value = accId;
-  document.getElementById('editBalTitle').textContent = `Ajustar Saldo · ${acc.name}`;
-  document.getElementById('editBalCurrent').textContent = money(currentBal);
-  document.getElementById('editBalNew').value = currentBal.toFixed(2).replace('.', ',');
-  document.getElementById('editBalanceModal').classList.remove('hidden');
-}
-
-function saveEditBalance(e) {
-  e.preventDefault();
-  const accId = document.getElementById('editBalAccId').value;
-  const targetBal = parseMoney(document.getElementById('editBalNew').value);
-  const currentBal = getAccountBalance(accId);
-  const diff = Number((targetBal - currentBal).toFixed(2));
-
-  if (Math.abs(diff) > 0.001) {
-    txs.unshift({
-      id: genId(),
-      desc: 'Ajuste manual de saldo',
-      amount: Math.abs(diff),
-      type: diff >= 0 ? 'income' : 'expense',
-      cat: 'Ajuste',
-      date: todayISO(),
-      createdAt: new Date().toISOString(),
-      accountId: accId,
-      status: 'paid',
-      isAdjustment: true
-    });
-  }
-
-  document.getElementById('editBalanceModal').classList.add('hidden');
-  saveAll();
-  renderFinance();
-  showAppToast('Saldo atualizado!');
-}
-
-function handleCreditCardClick(cardId) {
-  clearTimeout(cardSingleClickTimer);
+function handleCardClick(cardId) {
+  if (cardSingleClickTimer) clearTimeout(cardSingleClickTimer);
   cardSingleClickTimer = setTimeout(() => {
-    openCardDetail(cardId);
-  }, 220);
+    cardSingleClickTimer = null;
+    openCardDetailModal(cardId);
+  }, 210);
 }
 
-function handleCreditCardDblClick(e, cardId) {
-  if (e) e.stopPropagation();
-  clearTimeout(cardSingleClickTimer);
+function handleCardDoubleClick(cardId) {
+  if (cardSingleClickTimer) {
+    clearTimeout(cardSingleClickTimer);
+    cardSingleClickTimer = null;
+  }
   openCardHistoryBubble(cardId);
 }
 
 function openCardHistoryBubble(cardId) {
   const card = cardsConfig.find(c => c.id === cardId);
   if (!card) return;
-  document.getElementById('cardHistoryBubbleTitle').textContent = `${card.name} · Fatura ${money(card.currentBill)}`;
   const hist = Array.isArray(card.history) ? card.history : [];
+  document.getElementById('cardHistoryBubbleTitle').textContent = `${card.name} · Compras`;
   const listEl = document.getElementById('cardHistoryBubbleList');
+
   if (!hist.length) {
-    listEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Nenhuma compra registrada no histórico deste cartão.</p>';
+    listEl.innerHTML = '<p class="py-6 text-center text-xs text-slate-400">Nenhuma compra registrada neste cartão ainda.</p>';
   } else {
     listEl.innerHTML = hist.map(h => {
-      const paidBadge = h.status === 'paid'
-        ? '<span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">Pago</span>'
-        : '<span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400">Fatura</span>';
+      const isPaid = h.status === 'paid';
       return `
-        <div class="bg-slate-50 dark:bg-slate-900/70 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 text-xs">
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-between gap-2 text-xs">
           <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <p class="font-bold text-slate-900 dark:text-white truncate">${escapeHtml(h.note || 'Compra')}</p>
-              ${paidBadge}
-            </div>
-            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">${fmtDateTimeTx(h.createdAt)}</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(h.note || 'Compra')}</p>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">${fmtDateTimeTx(h.createdAt)} · <span class="${isPaid ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-purple-600 dark:text-purple-400 font-bold'}">${isPaid ? 'Paga' : 'Na fatura'}</span></p>
           </div>
-          <span class="font-black text-purple-600 dark:text-purple-400 shrink-0">${money(h.amount)}</span>
+          <span class="font-black text-rose-600 dark:text-rose-400 shrink-0">${money(h.amount)}</span>
         </div>`;
     }).join('');
   }
+
   document.getElementById('cardHistoryBubbleModal').classList.remove('hidden');
 }
 
@@ -2821,29 +2749,38 @@ function closeCardHistoryBubble() {
   document.getElementById('cardHistoryBubbleModal').classList.add('hidden');
 }
 
-function openCardDetail(cardId) {
+function openCardDetailModal(cardId) {
   const c = cardsConfig.find(x => x.id === cardId);
   if (!c) return;
-  const avail = (Number(c.limit) || 0) - (Number(c.currentBill) || 0);
+  const limit = Number(c.limit) || 0;
+  const bill = Number(c.currentBill) || 0;
+  const avail = Math.max(0, limit - bill);
   document.getElementById('detCardId').value = c.id;
-  document.getElementById('detCardTitle').textContent = `Cartão · ${c.name}`;
-  document.getElementById('detCardLimit').textContent = money(c.limit);
-  document.getElementById('detCardBill').textContent = money(c.currentBill);
+  document.getElementById('detCardTitle').textContent = `Cartão ${c.name}`;
+  document.getElementById('detCardLimit').textContent = money(limit);
+  document.getElementById('detCardBill').textContent = money(bill);
   document.getElementById('detCardAvail').textContent = money(avail);
-  document.getElementById('detCardDue').textContent = `Dia ${c.dueDay}`;
+  document.getElementById('detCardDue').textContent = `Dia ${c.dueDay || 10}`;
   document.getElementById('cardDetailModal').classList.remove('hidden');
 }
 
 function openEditCardFromDetail() {
   const id = document.getElementById('detCardId').value;
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
   document.getElementById('cardDetailModal').classList.add('hidden');
+  openCardModal(id);
+}
+
+function openCardModal(cardId) {
+  const c = cardsConfig.find(x => x.id === cardId);
+  if (!c) return;
   document.getElementById('cardId').value = c.id;
   document.getElementById('cardName').value = c.name;
   document.getElementById('cardLimit').value = (Number(c.limit) || 0).toFixed(2).replace('.', ',');
-  document.getElementById('cardDueDay').value = Number(c.dueDay) || 10;
+  document.getElementById('cardDueDay').value = c.dueDay || 10;
   document.getElementById('cardCurrentBill').value = (Number(c.currentBill) || 0).toFixed(2).replace('.', ',');
+  document.getElementById('cardModalTitle').textContent = `Ajustar Cartão · ${c.name}`;
+  document.getElementById('cardDueDayLabel').textContent = 'Dia Vencimento (1-31)';
+  document.getElementById('cardAdjustStageHint').textContent = 'Ajuste livre de limite, dia de vencimento e fatura atual.';
   document.getElementById('cardModal').classList.remove('hidden');
 }
 
@@ -2852,37 +2789,43 @@ function saveCardConfig(e) {
   const id = document.getElementById('cardId').value;
   const c = cardsConfig.find(x => x.id === id);
   if (!c) return;
-  const limit = parseMoney(document.getElementById('cardLimit').value);
-  const dueDay = parseInt(document.getElementById('cardDueDay').value, 10);
-  const currentBill = parseMoney(document.getElementById('cardCurrentBill').value);
+  const newLimit = Math.max(0, parseMoney(document.getElementById('cardLimit').value));
+  const newDue = Math.min(31, Math.max(1, parseInt(document.getElementById('cardDueDay').value, 10) || 10));
+  const newBill = Math.max(0, parseMoney(document.getElementById('cardCurrentBill').value));
 
-  if (limit <= 0) return showAppToast('Limite inválido.', 'error');
-  if (!dueDay || dueDay < 1 || dueDay > 31) return showAppToast('Informe um dia de vencimento válido (1 a 31).', 'error');
+  c.limit = newLimit;
+  c.dueDay = newDue;
+  c.currentBill = newBill;
 
-  c.limit = limit;
-  c.dueDay = dueDay;
-  c.currentBill = Math.max(0, currentBill);
-
-  document.getElementById('cardModal').classList.add('hidden');
   saveAll();
+  document.getElementById('cardModal').classList.add('hidden');
   renderFinance();
-  showAppToast(`Cartão ${c.name} atualizado (Venc. dia ${c.dueDay})!`);
+  showAppToast(`Cartão ${c.name} atualizado!`);
 }
 
 function openPayCardFromDetail() {
   const id = document.getElementById('detCardId').value;
-  const c = cardsConfig.find(x => x.id === id);
-  if (!c) return;
   document.getElementById('cardDetailModal').classList.add('hidden');
-  document.getElementById('payCardId').value = c.id;
+  openPayCardModal(id);
+}
+
+function openPayCardModal(cardId) {
+  const c = cardsConfig.find(x => x.id === cardId);
+  if (!c) return;
   const bill = Number(c.currentBill) || 0;
-  const availAfterAll = Math.max(0, Number(c.limit) || 0);
-  document.getElementById('payCardNameDesc').textContent = c.name;
+  if (bill <= 0) {
+    return showAppToast(`A fatura do cartão ${c.name} já está zerada!`, 'error');
+  }
+
+  document.getElementById('payCardId').value = c.id;
+  document.getElementById('payCardNameDesc').textContent = `Fatura Aberta · ${c.name}`;
   document.getElementById('payCardAmountDesc').textContent = money(bill);
-  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(availAfterAll)}`;
+  document.getElementById('payCardAvailPreview').textContent = `Limite disponível após baixar tudo: ${money(Math.max(0, Number(c.limit) || 0))}`;
   document.getElementById('payCardAmountInput').value = bill.toFixed(2).replace('.', ',');
+
   const sel = document.getElementById('payCardAccount');
   sel.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
+
   updatePayCardValidationUI();
   document.getElementById('payCardModal').classList.remove('hidden');
 }
@@ -2893,108 +2836,379 @@ function closePayCardModal() {
 
 function updatePayCardValidationUI() {
   const cardId = document.getElementById('payCardId').value;
-  const card = cardsConfig.find(x => x.id === cardId);
+  const c = cardsConfig.find(x => x.id === cardId);
   const accId = document.getElementById('payCardAccount').value;
-  const payAmt = parseMoney(document.getElementById('payCardAmountInput').value);
+  const amountToPay = parseMoney(document.getElementById('payCardAmountInput').value);
+
   const accBal = getAccountBalance(accId);
-  const bill = card ? (Number(card.currentBill) || 0) : 0;
+  const currentBill = c ? (Number(c.currentBill) || 0) : 0;
 
-  document.getElementById('payCardAccountBalanceHint').textContent = `Saldo na conta selecionada: ${money(accBal)}`;
+  const balHint = document.getElementById('payCardAccountBalanceHint');
   const msgEl = document.getElementById('payCardValidationMsg');
-  const btn = document.getElementById('btnConfirmPayCard');
+  const submitBtn = document.getElementById('btnConfirmPayCard');
 
-  if (payAmt > accBal + 0.009) {
-    msgEl.textContent = `Saldo insuficiente na conta (${money(accBal)}) para pagar ${money(payAmt)}.`;
+  balHint.textContent = `Saldo na conta selecionada: ${money(accBal)}`;
+  balHint.className = accBal < amountToPay
+    ? 'text-[11px] font-bold text-rose-600 dark:text-rose-400 mt-1.5'
+    : 'text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1.5';
+
+  if (amountToPay <= 0) {
+    msgEl.textContent = 'Informe um valor maior que R$ 0,00 para pagar.';
     msgEl.classList.remove('hidden');
-    btn.disabled = true;
-    btn.classList.add('opacity-50', 'cursor-not-allowed');
-  } else if (payAmt > bill + 0.009) {
-    msgEl.textContent = `Valor maior que a fatura aberta (${money(bill)}).`;
-    msgEl.classList.remove('hidden');
-    btn.disabled = true;
-    btn.classList.add('opacity-50', 'cursor-not-allowed');
-  } else {
-    msgEl.classList.add('hidden');
-    btn.disabled = false;
-    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    return;
   }
+
+  if (amountToPay > currentBill + 0.009) {
+    msgEl.textContent = `O valor (${money(amountToPay)}) é maior que a fatura atual (${money(currentBill)}).`;
+    msgEl.classList.remove('hidden');
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    return;
+  }
+
+  if (amountToPay > accBal + 0.009) {
+    msgEl.textContent = `Saldo insuficiente na conta selecionada (${money(accBal)} disponível).`;
+    msgEl.classList.remove('hidden');
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    return;
+  }
+
+  msgEl.classList.add('hidden');
+  submitBtn.disabled = false;
+  submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
 }
 
 function confirmPayCard(e) {
   e.preventDefault();
   const cardId = document.getElementById('payCardId').value;
   const accId = document.getElementById('payCardAccount').value;
-  const payAmt = parseMoney(document.getElementById('payCardAmountInput').value);
   const c = cardsConfig.find(x => x.id === cardId);
   if (!c) return;
-  const bill = Number(c.currentBill) || 0;
+
+  const currentBill = Number(c.currentBill) || 0;
+  const amountToPay = parseMoney(document.getElementById('payCardAmountInput').value);
   const accBal = getAccountBalance(accId);
 
-  if (payAmt <= 0) return showAppToast('Informe um valor maior que zero.', 'error');
-  if (payAmt > bill + 0.009) return showAppToast('Valor maior que a fatura aberta.', 'error');
-  if (payAmt > accBal + 0.009) return showAppToast('Saldo insuficiente na conta selecionada.', 'error');
-
-  const accName = ACCOUNTS.find(a => a.id === accId)?.name || 'Conta';
-  c.currentBill = Number(Math.max(0, bill - payAmt).toFixed(2));
-  if (Array.isArray(c.history)) {
-    let rem = payAmt;
-    c.history.forEach(h => {
-      if (rem > 0.009 && h.status !== 'paid') {
-        h.status = 'paid';
-        rem -= (Number(h.amount) || 0);
-      }
-    });
+  if (amountToPay <= 0) {
+    return showAppToast('Informe um valor válido para pagar.', 'error');
+  }
+  if (amountToPay > currentBill + 0.009) {
+    return showAppToast('Valor excede a fatura atual do cartão.', 'error');
+  }
+  if (amountToPay > accBal + 0.009) {
+    return showAppToast('Saldo insuficiente na conta selecionada.', 'error');
   }
 
   txs.unshift({
     id: genId(),
-    desc: `Pagamento Fatura Cartão ${c.name} (${accName})`,
-    amount: payAmt,
+    desc: `Pagamento Fatura Cartão ${c.name}`,
+    amount: amountToPay,
     type: 'expense',
-    cat: 'Cartão',
+    cat: 'Cartão de Crédito',
     date: todayISO(),
     createdAt: new Date().toISOString(),
     accountId: accId,
     status: 'paid'
   });
 
+  c.currentBill = Math.max(0, Number((currentBill - amountToPay).toFixed(2)));
+  if (c.currentBill === 0 && Array.isArray(c.history)) {
+    c.history.forEach(h => { h.status = 'paid'; });
+  }
+
+  saveAll();
   closePayCardModal();
+  renderFinance();
+  showAppToast(`Pagamento de ${money(amountToPay)} do cartão ${c.name} realizado!`);
+}
+
+function openPatrimonioModal(){ document.getElementById('patrimonioModal').classList.remove('hidden'); }
+function openPendingLucrosModal() {
+  const list = document.getElementById('pending-lucros-list');
+  const items = getPendingReceivablesList();
+  if (!items.length) {
+    list.innerHTML = '<p class="text-center text-sm text-slate-400 py-4">Nenhum recebimento pendente!</p>';
+  } else {
+    list.innerHTML = items.map(item => `
+      <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
+        <div class="min-w-0 flex-1">
+          <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200 truncate">${escapeHtml(item.title)}</h4>
+          <p class="text-[10px] text-slate-500 mt-0.5 truncate">${escapeHtml(item.subtitle)}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-xs font-black text-amber-600">${money(item.amount)}</p>
+          <button type="button" onclick="finalizePendingReceivable('${escapeHtml(item.txId || '')}', '${escapeHtml(item.orderId || '')}', '${escapeHtml(item.accountId)}')" class="mt-1 px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold cursor-pointer">Receber</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('pendingLucrosModal').classList.remove('hidden');
+}
+
+function finalizePendingReceivable(txId, orderId, preferredAccId) {
+  const accId = preferredAccId || 'nubank';
+  if (txId) {
+    const tx = txs.find(t => t.id === txId);
+    if (tx) {
+      tx.status = 'paid';
+      tx.date = todayISO();
+      tx.createdAt = new Date().toISOString();
+      if (!tx.accountId) tx.accountId = accId;
+    }
+  }
+  if (orderId) {
+    const ord = orders.find(o => o.id === orderId);
+    if (ord) {
+      ord.isFinalized = true;
+      ord.finalizedAt = nowLocal();
+      if (!ord.clienteRecebeu) ord.clienteRecebeu = nowLocal();
+      const v = calcValores(ord);
+      const hasPaidIncome = txs.some(t => t.refId === ord.id && t.type === 'income' && t.cat === 'Vendas' && t.status === 'paid');
+      if (!hasPaidIncome && v.faturamento > 0) {
+        txs.unshift({
+          id: genId(),
+          refId: ord.id,
+          desc: `Pedido ${ord.pedido || 'S/N'} - ${ord.cliente || 'Cliente'}`,
+          amount: v.faturamento,
+          type: 'income',
+          cat: 'Vendas',
+          date: todayISO(),
+          createdAt: new Date().toISOString(),
+          accountId: accId,
+          paymentMethod: ord.paymentMethod || 'Pix',
+          status: 'paid'
+        });
+      }
+    }
+  }
   saveAll();
   renderFinance();
-  showAppToast(`Pagamento de ${money(payAmt)} do cartão ${c.name} confirmado!`);
+  renderOrders();
+  openPendingLucrosModal();
+  showAppToast('Recebimento finalizado e enviado ao histórico!');
 }
 
-function openPatrimonioModal() {
-  let totalAcc = 0;
-  ACCOUNTS.forEach(a => totalAcc += getAccountBalance(a.id));
-  const receivables = getPendingReceivablesList();
-  const rec = receivables.reduce((s, item) => s + (Number(item.amount) || 0), 0);
-  const bensTotal = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('detSaldoBancos').textContent = money(totalAcc);
-  document.getElementById('detReceber').textContent = money(rec);
-  document.getElementById('detPatrimonioTotal').textContent = money(totalAcc + rec + bensTotal);
-  document.getElementById('patrimonioModal').classList.remove('hidden');
+function openFinModal(){
+  document.getElementById('finModal').classList.remove('hidden');
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fDate').value = todayISO();
+  document.getElementById('fStatus').value = 'paid';
+  setFinType('expense');
+}
+function setFinType(type){
+  document.getElementById('fType').value = type;
+  const bInc = document.getElementById('btn-type-income');
+  const bExp = document.getElementById('btn-type-expense');
+  if (type === 'income') {
+    bInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition cursor-pointer bg-emerald-50 border-emerald-500 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300';
+    bExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition cursor-pointer bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400';
+  } else {
+    bExp.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition cursor-pointer bg-amber-50 border-amber-500 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200';
+    bInc.className = 'py-2.5 px-2.5 rounded-xl text-xs font-bold border-2 flex items-center justify-center gap-1.5 transition cursor-pointer bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400';
+  }
+}
+function saveFinTx(e){
+  e.preventDefault();
+  const type = document.getElementById('fType').value;
+  const desc = document.getElementById('fDesc').value.trim();
+  const amount = parseMoney(document.getElementById('fAmount').value);
+  const date = document.getElementById('fDate').value || todayISO();
+  const acc = document.getElementById('fAccount').value;
+  const status = document.getElementById('fStatus').value;
+
+  if (!desc || amount <= 0) return showAppToast('Preencha descrição e valor válido.', 'error');
+
+  txs.unshift({
+    id: genId(), desc, amount, type, cat: 'Outros', date, createdAt: new Date().toISOString(), accountId: acc, status
+  });
+  saveAll();
+  document.getElementById('finModal').classList.add('hidden');
+  renderFinance();
+  if (currentTab === 'quick') renderQuickSearchSchedule();
+  showAppToast('Lançamento salvo!');
 }
 
-function openPatrimonioBensModal() {
+function openPendingModal(){
+  const list = document.getElementById('pending-list');
+  const pendings = txs.filter(t => t.status === 'pending' && t.type === 'expense');
+  if (!pendings.length) {
+    list.innerHTML = '<p class="text-center text-sm text-slate-400 py-4">Nenhuma conta a pagar pendente!</p>';
+  } else {
+    list.innerHTML = pendings.map(t => {
+      const acc = ACCOUNTS.find(a => a.id === t.accountId);
+      return `
+        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
+          <div class="min-w-0 flex-1">
+            <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</h4>
+            <p class="text-[10px] text-slate-500 mt-0.5 truncate">Venc: ${t.date.split('-').reverse().join('/')} · ${acc ? escapeHtml(acc.name) : 'Conta'}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="text-xs font-black text-rose-600">${money(t.amount)}</p>
+            <button type="button" onclick="openPayPendingModal('${t.id}')" class="mt-1 px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold cursor-pointer">Pagar</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  document.getElementById('pendingModal').classList.remove('hidden');
+}
+
+function openPayPendingModal(txId){
+  const t = txs.find(x => x.id === txId);
+  if (!t) return;
+  document.getElementById('pendingModal').classList.add('hidden');
+  document.getElementById('payTxId').value = t.id;
+  document.getElementById('payTxAmountDesc').textContent = money(t.amount);
+  document.getElementById('payTxAmountInput').value = (Number(t.amount) || 0).toFixed(2).replace('.', ',');
+  const sel = document.getElementById('payAccountSelect');
+  sel.innerHTML = ACCOUNTS.map(a => `<option value="${a.id}">${a.name} (${money(getAccountBalance(a.id))})</option>`).join('');
+  if (t.accountId && ACCOUNTS.some(a => a.id === t.accountId)) {
+    sel.value = t.accountId;
+  }
+  document.getElementById('payAccountModal').classList.remove('hidden');
+}
+
+function confirmPayPending(e){
+  e.preventDefault();
+  const txId = document.getElementById('payTxId').value;
+  const accId = document.getElementById('payAccountSelect').value;
+  const payAmt = parseMoney(document.getElementById('payTxAmountInput').value);
+  const t = txs.find(x => x.id === txId);
+  if (!t) return;
+
+  const remaining = Number(t.amount) || 0;
+  if (payAmt <= 0) return showAppToast('Informe um valor válido para baixar.', 'error');
+  if (payAmt > remaining + 0.009) return showAppToast('Valor maior que o saldo restante da conta.', 'error');
+
+  if (payAmt < remaining - 0.009) {
+    txs.unshift({
+      id: genId(),
+      refId: t.refId || t.id,
+      desc: `${t.desc} (Parcela/Abatimento)`,
+      amount: payAmt,
+      type: t.type,
+      cat: t.cat || 'Outros',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accId,
+      status: 'paid'
+    });
+    t.amount = Number((remaining - payAmt).toFixed(2));
+  } else {
+    t.status = 'paid';
+    t.accountId = accId;
+    t.date = todayISO();
+    t.createdAt = new Date().toISOString();
+  }
+
+  saveAll();
+  document.getElementById('payAccountModal').classList.add('hidden');
+  renderFinance();
+  if (currentTab === 'quick') renderQuickSearchSchedule();
+  showAppToast('Pagamento registrado!');
+}
+
+function openTransferModal(){
+  document.getElementById('transferModal').classList.remove('hidden');
+  document.getElementById('tAmount').value = '';
+  document.getElementById('tDate').value = todayISO();
+  const opts = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  document.getElementById('tFrom').innerHTML = opts;
+  document.getElementById('tTo').innerHTML = opts;
+  document.getElementById('tFrom').value = 'nubank';
+  document.getElementById('tTo').value = 'cash';
+}
+function saveTransfer(e){
+  e.preventDefault();
+  const from = document.getElementById('tFrom').value;
+  const to = document.getElementById('tTo').value;
+  const amt = parseMoney(document.getElementById('tAmount').value);
+  const date = document.getElementById('tDate').value || todayISO();
+
+  if (from === to) return showAppToast('Escolha contas diferentes.', 'error');
+  if (amt <= 0) return showAppToast('Valor inválido.', 'error');
+
+  const fName = ACCOUNTS.find(a=>a.id===from).name;
+  const tName = ACCOUNTS.find(a=>a.id===to).name;
+
+  txs.unshift({ id: genId(), desc: `Transf. p/ ${tName}`, amount: amt, type: 'transfer_out', cat: 'Transferência', date, createdAt: new Date().toISOString(), accountId: from, status: 'paid' });
+  txs.unshift({ id: genId(), desc: `Transf. de ${fName}`, amount: amt, type: 'transfer_in', cat: 'Transferência', date, createdAt: new Date().toISOString(), accountId: to, status: 'paid' });
+
+  saveAll();
+  document.getElementById('transferModal').classList.add('hidden');
+  renderFinance();
+  showAppToast('Transferência realizada!');
+}
+
+function openEditBalance(accId){
+  const acc = ACCOUNTS.find(a=>a.id===accId);
+  if (!acc) return;
+  const cur = getAccountBalance(accId);
+  document.getElementById('editBalAccId').value = accId;
+  document.getElementById('editBalTitle').textContent = `Ajustar ${acc.name}`;
+  document.getElementById('editBalCurrent').textContent = money(cur);
+  document.getElementById('editBalNew').value = cur.toFixed(2).replace('.', ',');
+  document.getElementById('editBalanceModal').classList.remove('hidden');
+}
+function saveEditBalance(e){
+  e.preventDefault();
+  const accId = document.getElementById('editBalAccId').value;
+  const newBal = parseMoney(document.getElementById('editBalNew').value);
+  const curBal = getAccountBalance(accId);
+  const diff = newBal - curBal;
+
+  if (Math.abs(diff) > 0.001) {
+    txs.unshift({
+      id: genId(),
+      desc: `Ajuste de Saldo (${ACCOUNTS.find(a=>a.id===accId).name})`,
+      amount: Math.abs(diff),
+      type: diff > 0 ? 'income' : 'expense',
+      cat: 'Ajuste',
+      date: todayISO(),
+      createdAt: new Date().toISOString(),
+      accountId: accId,
+      status: 'paid',
+      isAdjustment: true
+    });
+    saveAll();
+    renderFinance();
+    showAppToast('Saldo ajustado!');
+  }
+  document.getElementById('editBalanceModal').classList.add('hidden');
+}
+
+function delTx(id){
+  askAppConfirm('Excluir lançamento', 'Deseja excluir este lançamento do extrato?').then(res => {
+    if (!res) return;
+    txs = txs.filter(t => t.id !== id);
+    saveAll();
+    renderFinance();
+    if (currentTab === 'quick') renderQuickSearchSchedule();
+    showAppToast('Lançamento excluído.');
+  });
+}
+
+function openPatrimonioBensModal(){
   document.getElementById('patrimonioBensModal').classList.remove('hidden');
   document.getElementById('formAddBem').classList.add('hidden');
-  renderPatrimonioBens();
+  renderBensList();
 }
-function openAddBemForm() {
+function openAddBemForm(){
+  document.getElementById('formAddBem').classList.remove('hidden');
+  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
   document.getElementById('bemId').value = '';
   document.getElementById('bemName').value = '';
   document.getElementById('bemVal').value = '';
-  document.getElementById('bemCat').value = 'Imóvel / Terreno';
-  document.getElementById('bemFormTitle').textContent = 'Novo Bem / Investimento';
-  document.getElementById('formAddBem').classList.remove('hidden');
 }
-function saveBemItem() {
+function saveBemItem(){
   const id = document.getElementById('bemId').value;
   const name = document.getElementById('bemName').value.trim();
   const val = parseMoney(document.getElementById('bemVal').value);
   const cat = document.getElementById('bemCat').value;
-  if (!name || val <= 0) return showAppToast('Preencha nome e valor válido.', 'error');
+  if (!name || val <= 0) return showAppToast('Preencha nome e valor do bem.', 'error');
 
   if (id) {
     const idx = bensData.findIndex(b => b.id === id);
@@ -3002,351 +3216,343 @@ function saveBemItem() {
   } else {
     bensData.push({ id: genId(), name, value: val, category: cat });
   }
-  document.getElementById('formAddBem').classList.add('hidden');
   saveAll();
-  renderPatrimonioBens();
+  renderBensList();
   if (currentTab === 'finance') renderFinance();
-  showAppToast('Bem salvo!');
+  document.getElementById('formAddBem').classList.add('hidden');
+  showAppToast('Bem salvo no inventário!');
 }
-function renderPatrimonioBens() {
-  const list = document.getElementById('patrimonioBensList');
-  const tot = bensData.reduce((s,b) => s + (Number(b.value) || 0), 0);
-  document.getElementById('patrimonioBensTotal').textContent = money(tot);
-  if (!bensData.length) { list.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Nenhum bem cadastrado.</p>'; return; }
-  list.innerHTML = bensData.map(b => `
-    <div class="py-3 flex justify-between items-center text-xs">
-      <div class="min-w-0">
-        <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p>
-        <p class="text-[10px] text-slate-500">${escapeHtml(b.category)}</p>
-      </div>
-      <div class="flex items-center gap-2 shrink-0">
-        <span class="font-black text-emerald-600">${money(b.value)}</span>
-        <button type="button" onclick="editBemItem('${b.id}')" class="text-slate-400 hover:text-brand-600 text-sm cursor-pointer">✏️</button>
-        <button type="button" onclick="delBemItem('${b.id}')" class="text-slate-400 hover:text-rose-600 text-sm cursor-pointer">🗑️</button>
-      </div>
-    </div>`).join('');
-}
-function editBemItem(id) {
-  const b = bensData.find(x => x.id === id);
-  if (!b) return;
-  document.getElementById('bemId').value = b.id;
-  document.getElementById('bemName').value = b.name;
-  document.getElementById('bemVal').value = b.value.toFixed(2).replace('.', ',');
-  document.getElementById('bemCat').value = b.category;
-  document.getElementById('bemFormTitle').textContent = 'Editar Bem';
-  document.getElementById('formAddBem').classList.remove('hidden');
-}
-function delBemItem(id) {
-  askAppConfirm('Excluir Bem', 'Deseja excluir este bem do inventário?').then(res => {
+function delBem(id){
+  askAppConfirm('Remover bem', 'Deseja remover este bem do inventário?').then(res => {
     if (!res) return;
-    bensData = bensData.filter(x => x.id !== id);
+    bensData = bensData.filter(b => b.id !== id);
     saveAll();
-    renderPatrimonioBens();
+    renderBensList();
     if (currentTab === 'finance') renderFinance();
-    showAppToast('Bem excluído.');
+    showAppToast('Bem removido.');
   });
 }
-
-function getOrderCompetencyYM(o) {
-  const raw = o.finalizedAt || o.clienteRecebeu || o.saida || '';
-  if (raw && raw.length >= 7 && raw.includes('-')) return raw.slice(0, 7);
-  return todayISO().slice(0, 7);
+function renderBensList(){
+  const tot = bensData.reduce((s, b) => s + (Number(b.value) || 0), 0);
+  document.getElementById('patrimonioBensTotal').textContent = money(tot);
+  const el = document.getElementById('patrimonioBensList');
+  if (!bensData.length) { el.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">Nenhum bem cadastrado.</p>'; return; }
+  el.innerHTML = bensData.map(b => `
+    <div class="py-2.5 flex justify-between items-center gap-2 text-xs">
+      <div class="min-w-0"><p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(b.name)}</p><p class="text-[10px] text-slate-500">${escapeHtml(b.category)}</p></div>
+      <div class="flex items-center gap-2 shrink-0"><b class="text-slate-900 dark:text-white">${money(b.value)}</b><button type="button" onclick="delBem('${b.id}')" class="text-rose-500 hover:text-rose-600 font-bold px-1 cursor-pointer">×</button></div>
+    </div>
+  `).join('');
 }
 
 let selectedAdminClientName = null;
-let selectedClosingClientKey = null;
+
+function buildClientContinuativeData() {
+  const clientMap = new Map();
+
+  orders.forEach(o => {
+    const cname = (o.cliente || 'Cliente não informado').trim();
+    const v = calcValores(o);
+    const ym = (o.saida && o.saida.length >= 7)
+      ? o.saida.slice(0, 7)
+      : (o.clienteRecebeu && o.clienteRecebeu.length >= 7 ? o.clienteRecebeu.slice(0, 7) : todayISO().slice(0, 7));
+
+    if (!clientMap.has(cname)) {
+      clientMap.set(cname, {
+        name: cname,
+        ordersCount: 0,
+        profit: 0,
+        faturamento: 0,
+        months: new Map()
+      });
+    }
+
+    const entry = clientMap.get(cname);
+    entry.ordersCount += 1;
+    entry.profit += v.lucroLiq;
+    entry.faturamento += v.faturamento;
+
+    if (!entry.months.has(ym)) {
+      entry.months.set(ym, { ym, ordersCount: 0, profit: 0, faturamento: 0, orderIds: [] });
+    }
+    const mEntry = entry.months.get(ym);
+    mEntry.ordersCount += 1;
+    mEntry.profit += v.lucroLiq;
+    mEntry.faturamento += v.faturamento;
+    mEntry.orderIds.push(o.pedido || 'S/N');
+  });
+
+  return Array.from(clientMap.values()).sort((a, b) => b.profit - a.profit);
+}
+
+function renderAdminClientDetailReport(clientsList) {
+  const box = document.getElementById('adm-client-detail-report');
+  if (!box) return;
+  if (!selectedAdminClientName) {
+    box.classList.add('hidden');
+    box.innerHTML = '';
+    return;
+  }
+  const client = clientsList.find(c => c.name === selectedAdminClientName);
+  if (!client) {
+    box.classList.add('hidden');
+    return;
+  }
+
+  const monthsSorted = Array.from(client.months.values()).sort((a, b) => b.ym.localeCompare(a.ym));
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <div>
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">HISTÓRICO CONTINUATIVO POR MÊS</p>
+        <h4 class="text-sm font-black text-slate-900 dark:text-white">${escapeHtml(client.name)}</h4>
+      </div>
+      <button type="button" onclick="selectedAdminClientName=null; renderAdminOrders();" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer">Fechar</button>
+    </div>
+    <div class="grid grid-cols-3 gap-2 text-center bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-700">
+      <div><span class="text-[9px] uppercase font-bold text-slate-400 block">Pedidos</span><strong class="text-slate-800 dark:text-white">${client.ordersCount}</strong></div>
+      <div><span class="text-[9px] uppercase font-bold text-slate-400 block">Faturamento</span><strong class="text-brand-600 dark:text-indigo-400">${money(client.faturamento)}</strong></div>
+      <div><span class="text-[9px] uppercase font-bold text-slate-400 block">Lucro Total</span><strong class="text-emerald-600 dark:text-emerald-400">${money(client.profit)}</strong></div>
+    </div>
+    <div class="divide-y divide-slate-200/70 dark:divide-slate-800 bg-white dark:bg-slate-800 rounded-xl border border-slate-200/70 dark:border-slate-700 px-3">
+      ${monthsSorted.map(m => `
+        <div class="py-2 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-bold text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)} · ${m.ordersCount} pedido(s)</p>
+            <p class="text-[10px] text-slate-500 truncate">Pedidos: ${escapeHtml(m.orderIds.join(', '))}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="font-black text-emerald-600 dark:text-emerald-400">${money(m.profit)}</p>
+            <p class="text-[10px] text-slate-400">Fat: ${money(m.faturamento)}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
 function renderAdminOrders() {
-  let totProfit = 0, totFat = 0;
-  orders.forEach(o => { const v = calcValores(o); totProfit+=v.lucroLiq; totFat+=v.faturamento; });
+  let totProfit=0, totFat=0;
+  orders.forEach(o => { const v = calcValores(o); totProfit += v.lucroLiq; totFat += v.faturamento; });
   document.getElementById('adm-total-profit').textContent = money(totProfit);
   document.getElementById('adm-total-fat').textContent = money(totFat);
 
   const list = document.getElementById('adm-detailed-list');
-  const sorted = orders.slice().sort((a,b) => (b.saida||'').localeCompare(a.saida||''));
-  if (!sorted.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido encontrado.</p>'; }
-  else {
-    list.innerHTML = sorted.map(o => {
+  if (!orders.length) {
+    list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum pedido encontrado.</p>';
+  } else {
+    list.innerHTML = [...orders].sort((a,b)=>(b.saida||'').localeCompare(a.saida||'')).map(o => {
       const v = calcValores(o);
-      const fretePagoParcelas = getOrderFreightPaidTotal(o);
-      const freteEst = Number(o.frete) || 0;
-      const excedente = Math.max(0, fretePagoParcelas - freteEst);
-      const excBadge = excedente > 0.009
-        ? `<span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 ml-1">Excedente Frete +${money(excedente)}</span>`
-        : '';
       return `
-        <div class="p-4 flex justify-between items-center text-xs hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-          <div class="min-w-0">
-            <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${escapeHtml(o.pedido || 'S/N')} · ${escapeHtml(o.cliente || 'Cliente')}${excBadge}</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">${fmtDT(o.saida)} · Fat: ${money(v.faturamento)}</p>
+        <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center gap-3">
+          <div class="min-w-0 flex-1">
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(o.pedido || 'S/N')} · ${escapeHtml(o.cliente || 'Sem nome')}</h4>
+            <p class="text-[10px] text-slate-500 mt-0.5 truncate">${o.saida ? o.saida.split('T')[0].split('-').reverse().join('/') : 'Sem data'} · Margem: ${o.margem || 0}%</p>
           </div>
-          <div class="text-right shrink-0 ml-2"><p class="font-black text-emerald-600 text-sm">${money(v.lucroLiq)}</p><p class="text-[10px] text-slate-400">lucro</p></div>
+          <div class="text-right shrink-0"><p class="text-sm font-black text-emerald-600 dark:text-emerald-400">${money(v.lucroLiq)}</p><p class="text-[10px] text-slate-400">Fat: ${money(v.faturamento)}</p></div>
         </div>`;
     }).join('');
   }
 
-  const clientMap = {};
-  orders.forEach(o => {
-    const cli = (o.cliente || 'Sem Nome').trim();
-    const ym = getOrderCompetencyYM(o);
-    const v = calcValores(o);
-    if (!clientMap[cli]) clientMap[cli] = { name: cli, count: 0, profit: 0, fat: 0, months: {} };
-    clientMap[cli].count += 1;
-    clientMap[cli].profit += v.lucroLiq;
-    clientMap[cli].fat += v.faturamento;
-    if (!clientMap[cli].months[ym]) clientMap[cli].months[ym] = { ym, count: 0, profit: 0, fat: 0, orders: [] };
-    clientMap[cli].months[ym].count += 1;
-    clientMap[cli].months[ym].profit += v.lucroLiq;
-    clientMap[cli].months[ym].fat += v.faturamento;
-    clientMap[cli].months[ym].orders.push({ pedido: o.pedido || 'S/N', profit: v.lucroLiq, fat: v.faturamento, date: o.saida || '' });
-  });
-
-  const clientRows = Object.values(clientMap).sort((a,b) => b.profit - a.profit);
   const tbody = document.getElementById('adm-client-table');
-  const detailBox = document.getElementById('adm-client-detail-report');
+  const clientsList = buildClientContinuativeData();
 
-  if (!clientRows.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-xs text-slate-400">Nenhum cliente registrado.</td></tr>';
-    detailBox.classList.add('hidden');
+  if (!clientsList.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sm text-slate-400">Nenhum cliente encontrado.</td></tr>';
   } else {
-    tbody.innerHTML = clientRows.map(c => {
-      const mCount = Object.keys(c.months).length;
-      const isSel = selectedAdminClientName === c.name;
+    tbody.innerHTML = clientsList.map(c => {
+      const isSelected = selectedAdminClientName === c.name;
+      const safeName = escapeHtml(c.name.replace(/'/g, "\\'"));
       return `
-        <tr onclick="toggleAdminClientDetail('${escapeHtml(c.name.replace(/'/g, "\\'"))}')" class="${isSel ? 'bg-brand-50/70 dark:bg-indigo-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'} cursor-pointer transition">
+        <tr onclick="selectedAdminClientName='${safeName}'; renderAdminOrders();" class="cursor-pointer transition ${isSelected ? 'bg-brand-50/80 dark:bg-indigo-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}">
           <td class="px-4 py-3 font-bold text-slate-800 dark:text-slate-200">${escapeHtml(c.name)}</td>
-          <td class="px-4 py-3 text-center text-xs">${c.count} <span class="text-[10px] text-slate-400">(${mCount}m)</span></td>
-          <td class="px-4 py-3 text-right font-black text-emerald-600 text-xs">${money(c.profit)}</td>
+          <td class="px-4 py-3 text-center">${c.ordersCount} · ${c.months.size}m</td>
+          <td class="px-4 py-3 text-right font-black text-emerald-600 dark:text-emerald-400">${money(c.profit)}</td>
         </tr>`;
     }).join('');
-
-    if (selectedAdminClientName && clientMap[selectedAdminClientName]) {
-      const selCli = clientMap[selectedAdminClientName];
-      const monthsList = Object.values(selCli.months).sort((a,b) => b.ym.localeCompare(a.ym));
-      detailBox.innerHTML = `
-        <div class="flex items-center justify-between gap-2">
-          <p class="font-extrabold text-slate-900 dark:text-white">Histórico Continuativo: ${escapeHtml(selCli.name)}</p>
-          <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Total: ${money(selCli.profit)} (${selCli.count} pedidos)</span>
-        </div>
-        <div class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
-          ${monthsList.map(m => `
-            <div class="py-2 flex items-center justify-between gap-2">
-              <div>
-                <p class="font-bold text-slate-800 dark:text-slate-200">${fmtMonthYearLabel(m.ym)} · ${m.count} pedido(s)</p>
-                <p class="text-[10px] text-slate-500">Faturamento: ${money(m.fat)}</p>
-              </div>
-              <span class="font-black text-emerald-600 dark:text-emerald-400">${money(m.profit)}</span>
-            </div>
-          `).join('')}
-        </div>`;
-      detailBox.classList.remove('hidden');
-    } else {
-      detailBox.classList.add('hidden');
-    }
   }
-}
 
-function toggleAdminClientDetail(clientName) {
-  selectedAdminClientName = selectedAdminClientName === clientName ? null : clientName;
-  renderAdminOrders();
+  renderAdminClientDetailReport(clientsList);
 }
 
 function renderAdminFinance() {
-  const list = document.getElementById('adm-fin-list');
   const filter = document.getElementById('adm-fin-filter').value;
+  let items = [...txs].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if (filter === 'income') items = items.filter(t => t.type === 'income' || t.type === 'transfer_in');
+  if (filter === 'expense') items = items.filter(t => t.type === 'expense' || t.type === 'transfer_out');
 
-  let filtered = txs.filter(t => t.type !== 'transfer_in' && t.type !== 'transfer_out' && t.status !== 'pending');
-  if (filter === 'income') filtered = filtered.filter(t => t.type === 'income');
-  if (filter === 'expense') filtered = filtered.filter(t => t.type === 'expense');
+  const list = document.getElementById('adm-fin-list');
+  if (!items.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum lançamento encontrado.</p>'; return; }
 
-  filtered.sort((a,b) => (b.date||'').localeCompare(a.date||''));
-
-  if (!filtered.length) { list.innerHTML = '<p class="p-6 text-center text-sm text-slate-400">Nenhum dado financeiro registrado.</p>'; return; }
-
-  list.innerHTML = filtered.slice(0, 100).map(t => {
-    const isInc = t.type === 'income';
-    const accName = ACCOUNTS.find(a => a.id === t.accountId)?.name || '?';
+  list.innerHTML = items.map(t => {
+    const isInc = t.type === 'income' || t.type === 'transfer_in';
+    const acc = ACCOUNTS.find(a=>a.id===t.accountId);
+    const sign = isInc ? '+' : '-';
+    const cls = isInc ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
     return `
-      <div class="flex items-center justify-between px-5 py-3.5 text-xs hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-        <div class="min-w-0">
-          <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</p>
-          <p class="text-[10px] text-slate-500">${(t.date||'').split('-').reverse().join('/')} · ${accName} · <span class="font-semibold">${escapeHtml(t.cat || 'Outro')}</span></p>
-        </div>
-        <span class="font-black text-sm ${isInc ? 'text-emerald-600' : 'text-rose-600'} shrink-0 ml-2">${isInc ? '+' : '-'} ${money(t.amount)}</span>
+      <div class="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center gap-3">
+        <div class="min-w-0 flex-1"><h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(t.desc)}</h4><p class="text-[10px] text-slate-500 mt-0.5 truncate">${t.date ? t.date.split('-').reverse().join('/') : ''} · ${acc ? escapeHtml(acc.name) : 'Conta'}</p></div>
+        <span class="text-sm font-black ${cls} shrink-0">${sign} ${money(t.amount)}</span>
       </div>`;
   }).join('');
 }
 
-function openChartsModal() {
-  const sel = document.getElementById('chartMonthSelector');
-  const currYM = todayISO().slice(0, 7);
-  const ymSet = new Set([currYM, ...Object.keys(closedMonthsMap || {})]);
+let selectedClosingClientKey = null;
 
+function getAvailableMonthsForClosing() {
+  const set = new Set([todayISO().slice(0, 7)]);
   orders.forEach(o => {
-    const ym = getOrderCompetencyYM(o);
-    if (ym && ym.includes('-')) ymSet.add(ym);
+    if (o.saida && o.saida.length >= 7) set.add(o.saida.slice(0, 7));
+    if (o.clienteRecebeu && o.clienteRecebeu.length >= 7) set.add(o.clienteRecebeu.slice(0, 7));
   });
   txs.forEach(t => {
-    if (t.date && t.date.length >= 7 && t.date.includes('-')) ymSet.add(t.date.slice(0, 7));
+    if (t.date && t.date.length >= 7) set.add(t.date.slice(0, 7));
   });
+  Object.keys(closedMonthsMap || {}).forEach(ym => {
+    if (/^\d{4}-\d{2}$/.test(ym)) set.add(ym);
+  });
+  return Array.from(set).sort((a, b) => b.localeCompare(a));
+}
 
-  const sortedYMs = Array.from(ymSet).sort((a, b) => b.localeCompare(a));
-  const prevValue = sel.value;
-  sel.innerHTML = sortedYMs.map(ym => `<option value="${ym}">${fmtMonthYearLabel(ym)} (${ym})${closedMonthsMap[ym] ? ' [Fechado]' : ''}</option>`).join('');
-  sel.value = sortedYMs.includes(prevValue) ? prevValue : currYM;
-
+function openChartsModal(){
   selectedClosingClientKey = null;
-  document.getElementById('chartsModal').classList.remove('hidden');
+  const sel = document.getElementById('chartMonthSelector');
+  const months = getAvailableMonthsForClosing();
+  const currentYm = todayISO().slice(0, 7);
+
+  sel.innerHTML = months.map(ym => `<option value="${ym}">${fmtMonthYearLabel(ym)}</option>`).join('');
+  sel.value = months.includes(currentYm) ? currentYm : months[0];
+
   renderMonthlyClosingContent();
+  document.getElementById('chartsModal').classList.remove('hidden');
 }
 
 function toggleSelectedMonthClosingStatus() {
   const ym = document.getElementById('chartMonthSelector').value || todayISO().slice(0, 7);
-  if (closedMonthsMap[ym]) {
-    delete closedMonthsMap[ym];
-    saveAll();
-    renderMonthlyClosingContent();
-    showAppToast(`Mês ${fmtMonthYearLabel(ym)} reaberto.`);
-  } else {
-    closedMonthsMap[ym] = {
-      closedAt: new Date().toISOString(),
-      status: 'closed'
-    };
-    saveAll();
-    renderMonthlyClosingContent();
-    showAppToast(`Fechamento do mês ${fmtMonthYearLabel(ym)} salvo e bloqueado!`);
-  }
+  closedMonthsMap[ym] = !closedMonthsMap[ym];
+  saveAll();
+  renderMonthlyClosingContent();
+  showAppToast(closedMonthsMap[ym] ? `Mês ${fmtMonthYearLabel(ym)} marcado como fechado.` : `Mês ${fmtMonthYearLabel(ym)} reaberto.`);
 }
 
 function renderMonthlyClosingContent() {
   const ym = document.getElementById('chartMonthSelector').value || todayISO().slice(0, 7);
   const isClosed = Boolean(closedMonthsMap[ym]);
-
   const badge = document.getElementById('chart-month-status-badge');
-  const toggleBtn = document.getElementById('btnToggleMonthClosingStatus');
-  if (isClosed) {
-    badge.textContent = 'Mês Fechado';
-    badge.className = 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400';
-    toggleBtn.textContent = 'Reabrir Mês';
-    toggleBtn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 cursor-pointer transition';
-  } else {
-    badge.textContent = 'Mês Aberto';
-    badge.className = 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
-    toggleBtn.textContent = 'Fechar Mês';
-    toggleBtn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white cursor-pointer transition';
+  const btn = document.getElementById('btnToggleMonthClosingStatus');
+  if (badge) {
+    badge.textContent = isClosed ? 'Mês Fechado' : 'Mês Aberto';
+    badge.className = isClosed
+      ? 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400'
+      : 'text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
   }
+  if (btn) btn.textContent = isClosed ? 'Reabrir Mês' : 'Fechar Mês';
 
-  let monthGrossRev = 0;
-  let monthGrossProfit = 0;
-  let monthOrdersProfit = 0;
-  let monthOpExpense = 0;
-  let monthGeneralExpense = 0;
+  const monthOrders = orders.filter(o => {
+    const dt = o.saida || o.clienteRecebeu || '';
+    return dt.startsWith(ym);
+  });
 
-  const monthOrders = orders.filter(o => getOrderCompetencyYM(o) === ym);
-  const clientMonthMap = {};
+  const monthTxs = txs.filter(t => (t.date || '').startsWith(ym) && t.status !== 'pending');
+
+  let grossRev = 0;
+  let investmentSum = 0; // Ponto 3: Soma v.inv dos pedidos do mês
+  let grossProfit = 0;
+  let orderNetProfit = 0;
+  let opExpense = 0;
+  const monthClientProfits = new Map();
 
   monthOrders.forEach(o => {
     const v = calcValores(o);
-    monthGrossRev += v.faturamento;
-    monthGrossProfit += v.margemVal;
-    monthOrdersProfit += v.lucroLiq;
-    monthOpExpense += (v.meuCustoMerc + v.meuCustoFrete);
+    investmentSum += v.inv;
+    grossProfit += v.margemVal;
+    orderNetProfit += v.lucroLiq;
+    opExpense += (v.meuCustoMerc + v.meuCustoFrete);
 
-    const cliName = (o.cliente || 'Sem Nome').trim();
-    if (!clientMonthMap[cliName]) clientMonthMap[cliName] = { name: cliName, count: 0, profit: 0, fat: 0 };
-    clientMonthMap[cliName].count += 1;
-    clientMonthMap[cliName].profit += v.lucroLiq;
-    clientMonthMap[cliName].fat += v.faturamento;
+    const cname = (o.cliente || 'Cliente não informado').trim();
+    if (!monthClientProfits.has(cname)) {
+      monthClientProfits.set(cname, { name: cname, profit: 0, fat: 0, count: 0 });
+    }
+    const entry = monthClientProfits.get(cname);
+    entry.profit += v.lucroLiq;
+    entry.fat += v.faturamento;
+    entry.count += 1;
   });
 
-  const monthTxs = txs.filter(t => t.date && t.date.startsWith(ym) && t.status !== 'pending');
-  monthTxs.forEach(t => {
-    if (t.type === 'transfer_in' || t.type === 'transfer_out' || t.isAdjustment || t.cat === 'Ajuste') return;
-    if (t.cat === 'Vendas' && t.refId) return;
-    if (t.cat === 'Fornecedores' || t.cat === 'Logística' || t.cat === 'Operação') return;
+  let txIncome = 0;
+  let miscExpense = 0;
 
+  monthTxs.forEach(t => {
+    if (t.isAdjustment || t.type === 'transfer_in' || t.type === 'transfer_out') return;
     if (t.type === 'income') {
-      monthGrossRev += (Number(t.amount) || 0);
+      txIncome += (Number(t.amount) || 0);
     } else if (t.type === 'expense') {
-      monthGeneralExpense += (Number(t.amount) || 0);
+      if (t.cat === 'Fornecedores' || t.cat === 'Logística') {
+        opExpense += (Number(t.amount) || 0);
+      } else {
+        miscExpense += (Number(t.amount) || 0);
+      }
     }
   });
 
-  const totalMonthExpense = monthOpExpense + monthGeneralExpense;
-  const monthNetProfit = monthOrdersProfit - monthGeneralExpense;
+  const totalGrossRev = grossRev + txIncome;
+  const totalExpenses = opExpense + miscExpense;
+  const monthNetProfit = orderNetProfit + txIncome - miscExpense;
 
-  document.getElementById('chart-month-gross-rev').textContent = money(monthGrossRev);
-  document.getElementById('chart-month-gross-profit').textContent = money(monthGrossProfit);
+  document.getElementById('chart-month-gross-rev').textContent = money(totalGrossRev);
+  document.getElementById('chart-month-investment').textContent = money(investmentSum);
+  document.getElementById('chart-month-gross-profit').textContent = money(grossProfit);
   document.getElementById('chart-month-income').textContent = money(monthNetProfit);
-  document.getElementById('chart-month-forecast-rev').textContent = money(monthOpExpense);
-  document.getElementById('chart-month-balance').textContent = money(monthGeneralExpense);
-  document.getElementById('chart-month-expense').textContent = money(totalMonthExpense);
+  document.getElementById('chart-month-forecast-rev').textContent = money(opExpense);
+  document.getElementById('chart-month-balance').textContent = money(miscExpense);
+  document.getElementById('chart-month-expense').textContent = money(totalExpenses);
 
   const clientsListEl = document.getElementById('chart-month-clients-list');
-  const continuativeBox = document.getElementById('chart-client-continuative-box');
-  const sortedMonthClients = Object.values(clientMonthMap).sort((a, b) => b.profit - a.profit);
+  const clientEntries = Array.from(monthClientProfits.values()).sort((a, b) => b.profit - a.profit);
+  const contBox = document.getElementById('chart-client-continuative-box');
 
-  if (!sortedMonthClients.length) {
+  if (!clientEntries.length) {
     clientsListEl.innerHTML = '<p class="py-2 text-center text-slate-400">Nenhum pedido registrado neste mês.</p>';
-    continuativeBox.classList.add('hidden');
+    contBox.classList.add('hidden');
   } else {
-    clientsListEl.innerHTML = sortedMonthClients.map(c => {
-      const active = selectedClosingClientKey === c.name;
+    clientsListEl.innerHTML = clientEntries.map(c => {
+      const isActive = selectedClosingClientKey === c.name;
+      const safeName = escapeHtml(c.name.replace(/'/g, "\\'"));
       return `
-        <button type="button" onclick="toggleClosingClientContinuative('${escapeHtml(c.name.replace(/'/g, "\\'"))}')" class="w-full py-2 flex items-center justify-between gap-2 text-left hover:bg-slate-100/70 dark:hover:bg-slate-800/60 px-1.5 rounded-lg cursor-pointer transition ${active ? 'bg-brand-500/10' : ''}">
+        <button type="button" onclick="toggleClosingClientContinuative('${safeName}')" class="w-full py-2 flex items-center justify-between gap-2 text-left cursor-pointer hover:bg-slate-100/70 dark:hover:bg-slate-800/70 px-1.5 rounded-lg transition ${isActive ? 'bg-brand-500/15' : ''}">
           <div class="min-w-0">
-            <span class="font-bold text-slate-800 dark:text-slate-100">${escapeHtml(c.name)}</span>
-            <span class="text-[10px] text-slate-500 ml-1.5">(${c.count} pedido${c.count > 1 ? 's' : ''})</span>
+            <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${escapeHtml(c.name)}</p>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">${c.count} pedido(s) no mês · Fat: ${money(c.fat)}</p>
           </div>
           <span class="font-black text-emerald-600 dark:text-emerald-400 shrink-0">${money(c.profit)}</span>
         </button>`;
     }).join('');
 
-    if (selectedClosingClientKey && clientMonthMap[selectedClosingClientKey]) {
-      const cliHistoryMonths = {};
-      orders
-        .filter(o => (o.cliente || 'Sem Nome').trim() === selectedClosingClientKey)
-        .forEach(o => {
-          const mKey = getOrderCompetencyYM(o);
-          const v = calcValores(o);
-          if (!cliHistoryMonths[mKey]) cliHistoryMonths[mKey] = { ym: mKey, count: 0, profit: 0, fat: 0 };
-          cliHistoryMonths[mKey].count += 1;
-          cliHistoryMonths[mKey].profit += v.lucroLiq;
-          cliHistoryMonths[mKey].fat += v.faturamento;
-        });
-
-      const orderedMonths = Object.values(cliHistoryMonths).sort((a, b) => b.ym.localeCompare(a.ym));
-      continuativeBox.innerHTML = `
-        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">Histórico Continuativo · ${escapeHtml(selectedClosingClientKey)}</p>
-        ${orderedMonths.map(item => `
-          <div class="flex items-center justify-between text-[11px] py-0.5">
-            <span class="font-semibold text-slate-700 dark:text-slate-300">${fmtMonthYearLabel(item.ym)} (${item.count} ped.)</span>
-            <span class="font-extrabold text-emerald-600 dark:text-emerald-400">${money(item.profit)}</span>
-          </div>
-        `).join('')}`;
-      continuativeBox.classList.remove('hidden');
+    if (selectedClosingClientKey) {
+      renderClosingClientContinuative(selectedClosingClientKey);
     } else {
-      continuativeBox.classList.add('hidden');
+      contBox.classList.add('hidden');
     }
   }
 
-  const maxBar = Math.max(monthGrossRev, monthGrossProfit, monthNetProfit, totalMonthExpense, 1);
+  const maxVal = Math.max(totalGrossRev, investmentSum, grossProfit, Math.abs(monthNetProfit), totalExpenses, 1);
   const bars = [
-    { label: 'Receitas', val: monthGrossRev, color: 'bg-indigo-500' },
-    { label: 'Lucro Bruto', val: monthGrossProfit, color: 'bg-blue-500' },
-    { label: 'Lucro Líquido', val: Math.max(0, monthNetProfit), color: 'bg-emerald-500' },
-    { label: 'Despesas', val: totalMonthExpense, color: 'bg-rose-500' }
+    { label: 'Receitas / Entradas', val: totalGrossRev, cls: 'bg-brand-600' },
+    { label: 'Investimento', val: investmentSum, cls: 'bg-cyan-500' },
+    { label: 'Lucro Bruto', val: grossProfit, cls: 'bg-blue-500' },
+    { label: 'Lucro Líquido', val: Math.max(0, monthNetProfit), cls: 'bg-emerald-500' },
+    { label: 'Despesas Totais', val: totalExpenses, cls: 'bg-rose-500' }
   ];
 
   document.getElementById('column-charts-container').innerHTML = `
-    <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2.5">
-      <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Comparativo Visual (${fmtMonthYearLabel(ym)})</p>
+    <div class="rounded-xl p-3.5 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 space-y-2.5 text-xs">
+      <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Comparativo Visual do Mês (${fmtMonthYearLabel(ym)})</p>
       ${bars.map(b => {
-        const pct = Math.min(100, Math.max(0, (b.val / maxBar) * 100));
+        const pct = Math.min(100, Math.max(2, (b.val / maxVal) * 100));
         return `
-          <div class="space-y-1 text-xs">
-            <div class="flex justify-between items-center"><span class="font-semibold text-slate-700 dark:text-slate-300">${b.label}</span><strong class="font-bold text-slate-900 dark:text-white">${money(b.val)}</strong></div>
-            <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><div class="h-full ${b.color} rounded-full transition-all duration-300" style="width:${pct.toFixed(1)}%"></div></div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-[11px]"><span class="font-semibold text-slate-700 dark:text-slate-300">${b.label}</span><strong class="font-bold">${money(b.val)}</strong></div>
+            <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><div class="h-full rounded-full ${b.cls}" style="width:${pct.toFixed(1)}%"></div></div>
           </div>`;
       }).join('')}
     </div>`;
@@ -3357,156 +3563,67 @@ function toggleClosingClientContinuative(clientName) {
   renderMonthlyClosingContent();
 }
 
-function renderOrderFreightInstallmentBox() {
-  const box = document.getElementById('orderFreightInstallmentBox');
-  const statusSel = document.getElementById('oFreightStatus');
-  if (!box || !statusSel) return;
-
-  const isPending = statusSel.value === 'pending';
-  if (!isPending) {
-    box.classList.add('hidden');
+function renderClosingClientContinuative(clientName) {
+  const contBox = document.getElementById('chart-client-continuative-box');
+  const allClients = buildClientContinuativeData();
+  const found = allClients.find(c => c.name === clientName);
+  if (!found) {
+    contBox.classList.add('hidden');
     return;
   }
-
-  box.classList.remove('hidden');
-  const estFrete = parseMoney(document.getElementById('oFrete').value);
-  const paidTotal = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  const remaining = estFrete - paidTotal;
-
-  document.getElementById('ordFreteTotalSummary').textContent = money(estFrete);
-  document.getElementById('ordFretePaidSummary').textContent = money(paidTotal);
-
-  const dueSummaryEl = document.getElementById('ordFreteDueSummary');
-  const badgeEl = document.getElementById('ordFreteRemainingBadge');
-  if (remaining < -0.009) {
-    const excess = Math.abs(remaining);
-    dueSummaryEl.textContent = `+${money(excess)} (Exc.)`;
-    dueSummaryEl.className = 'text-rose-600 dark:text-rose-400 font-black';
-    badgeEl.textContent = `Excedente: +${money(excess)}`;
-    badgeEl.className = 'text-[11px] font-black text-rose-600 dark:text-rose-400';
-  } else {
-    dueSummaryEl.textContent = money(Math.max(0, remaining));
-    dueSummaryEl.className = remaining <= 0.009 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-    badgeEl.textContent = remaining <= 0.009 ? 'Quitado' : `Falta: ${money(remaining)}`;
-    badgeEl.className = remaining <= 0.009 ? 'text-[11px] font-black text-emerald-600 dark:text-emerald-400' : 'text-[11px] font-black text-rose-600 dark:text-rose-400';
-  }
-
-  const histEl = document.getElementById('ordFreteInstallmentsHistory');
-  if (!activeOrderFreightPayments.length) {
-    histEl.innerHTML = '<p class="text-[10px] text-slate-500">Nenhuma parcela paga ainda.</p>';
-  } else {
-    let runningPaid = 0;
-    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
-      runningPaid += (Number(p.amount) || 0);
-      const isOverEstimated = estFrete > 0 && runningPaid > estFrete + 0.009;
-      const accName = ACCOUNTS.find(a => a.id === p.accountId)?.name || 'Conta';
-      return `
-        <div class="flex items-center justify-between gap-2 bg-white/90 dark:bg-slate-900/80 px-2.5 py-1.5 rounded-lg border ${isOverEstimated ? 'border-rose-400/70' : 'border-amber-200/60 dark:border-amber-800/40'}">
-          <div class="min-w-0">
-            <span class="font-bold text-slate-800 dark:text-slate-200">Parcela ${idx + 1}: ${money(p.amount)}</span>
-            ${isOverEstimated ? '<span class="ml-1 text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400">Acima do estimado</span>' : ''}
-            <span class="block text-[10px] text-slate-500">${escapeHtml(accName)} · ${(p.date || todayISO()).split('-').reverse().join('/')}</span>
-          </div>
-          <button type="button" onclick="removeOrderFreightInstallment('${p.id}')" title="Remover parcela" class="px-2 py-1 rounded-md bg-rose-500/15 hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 text-[10px] font-extrabold cursor-pointer shrink-0">✕</button>
-        </div>`;
-    }).join('');
-  }
+  const monthsSorted = Array.from(found.months.values()).sort((a, b) => b.ym.localeCompare(a.ym));
+  contBox.classList.remove('hidden');
+  contBox.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-indigo-400">Histórico Continuativo · ${escapeHtml(found.name)}</p>
+      <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Acumulado: ${money(found.profit)}</span>
+    </div>
+    <div class="space-y-1">
+      ${monthsSorted.map(m => `
+        <div class="flex justify-between items-center text-[11px] bg-white/80 dark:bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
+          <span class="font-semibold">${fmtMonthYearLabel(m.ym)} (${m.ordersCount} ped.)</span>
+          <strong class="text-emerald-600 dark:text-emerald-400">${money(m.profit)}</strong>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
-function applyOrderFreightInstallment() {
-  const estFrete = parseMoney(document.getElementById('oFrete').value);
-  const payAmt = parseMoney(document.getElementById('ordFretePayAmt').value);
-  const accId = document.getElementById('ordFretePayAcc').value || 'cash';
-  const currentPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-
-  if (payAmt <= 0) return showAppToast('Informe o valor pago agora/parcela do frete.', 'error');
-
-  if (estFrete > 0 && currentPaid + payAmt > estFrete + 0.009) {
-    const allowedRemaining = Math.max(0, Number((estFrete - currentPaid).toFixed(2)));
-    return showAppToast(`Bloqueado: o pagamento (${money(payAmt)}) ultrapassa o valor estimado do frete (${money(estFrete)}). Restante estimado: ${money(allowedRemaining)}.`, 'error');
-  }
-
-  activeOrderFreightPayments.push({
-    id: genId(),
-    amount: payAmt,
-    accountId: accId,
-    date: todayISO()
-  });
-
-  document.getElementById('ordFretePayAmt').value = '';
-  document.getElementById('oPagoFrete').checked = true;
-  if (estFrete > 0 && (currentPaid + payAmt) >= estFrete - 0.009) {
-    document.getElementById('oFreightStatus').value = 'paid';
-  }
-  togglePaymentOptions();
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-  showAppToast(`Parcela de ${money(payAmt)} lançada no frete!`);
-}
-
-function removeOrderFreightInstallment(payId) {
-  const idx = activeOrderFreightPayments.findIndex(p => p.id === payId);
-  if (idx < 0) return;
-  const removed = activeOrderFreightPayments[idx];
-  activeOrderFreightPayments.splice(idx, 1);
-
-  const estFrete = parseMoney(document.getElementById('oFrete').value);
-  const newPaid = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  if (estFrete > 0 && newPaid < estFrete - 0.009) {
-    document.getElementById('oFreightStatus').value = 'pending';
-  }
-
-  togglePaymentOptions();
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-  showAppToast(`Parcela de ${money(removed.amount)} removida e totais recalculados.`);
-}
-
-function handleFreightStatusChange() {
-  const status = document.getElementById('oFreightStatus').value;
-  if (status === 'paid') {
-    document.getElementById('oPagoFrete').checked = true;
-  }
-  togglePaymentOptions();
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-}
-
-function handlePagoFreteCheckboxChange() {
-  const checked = document.getElementById('oPagoFrete').checked;
-  if (checked) {
-    document.getElementById('oFreightStatus').value = 'paid';
-  } else {
-    document.getElementById('oFreightStatus').value = 'pending';
-  }
-  togglePaymentOptions();
-  renderOrderFreightInstallmentBox();
-  updatePreview();
-}
-
-function openModal(id = null) {
-  document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('oId').value = id || '';
-  document.getElementById('modalTitle').textContent = id ? 'Editar Pedido' : 'Novo Pedido';
-
+function openModal(id) {
+  activeOrderFreightPayments = [];
   if (id) {
     const o = orders.find(x => x.id === id);
     if (!o) return;
+    document.getElementById('modalTitle').textContent = 'Editar Pedido';
+    document.getElementById('oId').value = o.id;
+    document.getElementById('oDriveLink').value = o.driveLink || '';
     document.getElementById('oPedido').value = o.pedido || '';
     document.getElementById('oCliente').value = o.cliente || '';
-    document.getElementById('oDriveLink').value = o.driveLink || '';
     document.getElementById('oUSD').value = o.valorUSD || '';
     document.getElementById('oCot').value = o.cotacao || '';
     document.getElementById('oMargem').value = o.margem || '';
     document.getElementById('oFrete').value = o.frete || '';
     document.getElementById('oPaymentMethod').value = o.paymentMethod || 'Pix';
     document.getElementById('oFreightStatus').value = o.freightStatus || (o.pagoFrete ? 'paid' : 'pending');
-    document.getElementById('oPagoMerc').checked = Boolean(o.pagoMerc);
-    document.getElementById('oPagoFrete').checked = Boolean(o.pagoFrete);
-    document.getElementById('oSyncFin').checked = Boolean(o.syncFin !== false);
-    if (o.accOutMerc) document.getElementById('oAccOutMerc').value = o.accOutMerc;
-    if (o.accOutFrete) document.getElementById('oAccOutFrete').value = o.accOutFrete;
-    if (o.accIn) document.getElementById('oAccIn').value = o.accIn;
+    document.getElementById('oPagoMerc').checked = o.pagoMerc !== false;
+    document.getElementById('oPagoFrete').checked = o.pagoFrete !== false;
+    document.getElementById('oSyncFin').checked = o.syncFin !== false;
+
+    activeOrderFreightPayments = Array.isArray(o.freightPayments)
+      ? o.freightPayments.map(p => ({ ...p }))
+      : ((Number(o.freightPaid) || 0) > 0
+          ? [{ id: genId(), amount: Number(o.freightPaid), accountId: o.accountId || 'cash', date: (o.saida || todayISO()).split('T')[0] }]
+          : []);
+
+    const linkedMercTx = txs.find(t => t.refId === o.id && t.cat === 'Fornecedores');
+    if (linkedMercTx && linkedMercTx.accountId) document.getElementById('oAccOutMerc').value = linkedMercTx.accountId;
+
+    const linkedFreteTx = txs.find(t => t.refId === o.id && t.cat === 'Logística');
+    if (linkedFreteTx && linkedFreteTx.accountId) document.getElementById('oAccOutFrete').value = linkedFreteTx.accountId;
+
+    const linkedInTx = txs.find(t => t.refId === o.id && t.type === 'income');
+    if (linkedInTx && linkedInTx.accountId) document.getElementById('oAccIn').value = linkedInTx.accountId;
+
     document.getElementById('oOrigem').value = o.cidadeOrigem || '';
     document.getElementById('oSaida').value = o.saida || '';
     document.getElementById('oTransportadora').value = o.transportadora || '';
@@ -3519,23 +3636,12 @@ function openModal(id = null) {
     document.getElementById('oC3H').value = o.cidade3Hora || '';
     document.getElementById('oSP').value = o.desceuSP || '';
     document.getElementById('oRec').value = o.clienteRecebeu || '';
-
-    if (Array.isArray(o.freightPayments) && o.freightPayments.length > 0) {
-      activeOrderFreightPayments = o.freightPayments.map(p => ({ ...p }));
-    } else if ((Number(o.freightPaid) || 0) > 0) {
-      activeOrderFreightPayments = [{
-        id: genId(),
-        amount: Number(o.freightPaid),
-        accountId: o.accOutFrete || 'cash',
-        date: (o.saida || todayISO()).split('T')[0]
-      }];
-    } else {
-      activeOrderFreightPayments = [];
-    }
   } else {
+    document.getElementById('modalTitle').textContent = 'Novo Pedido';
+    document.getElementById('oId').value = '';
+    document.getElementById('oDriveLink').value = '';
     document.getElementById('oPedido').value = '';
     document.getElementById('oCliente').value = '';
-    document.getElementById('oDriveLink').value = '';
     document.getElementById('oUSD').value = '';
     document.getElementById('oCot').value = '';
     document.getElementById('oMargem').value = '';
@@ -3545,6 +3651,9 @@ function openModal(id = null) {
     document.getElementById('oPagoMerc').checked = true;
     document.getElementById('oPagoFrete').checked = true;
     document.getElementById('oSyncFin').checked = true;
+    document.getElementById('oAccOutMerc').value = 'c6';
+    document.getElementById('oAccOutFrete').value = 'cash';
+    document.getElementById('oAccIn').value = 'nubank';
     document.getElementById('oOrigem').value = '';
     document.getElementById('oSaida').value = '';
     document.getElementById('oTransportadora').value = '';
@@ -3557,224 +3666,269 @@ function openModal(id = null) {
     document.getElementById('oC3H').value = '';
     document.getElementById('oSP').value = '';
     document.getElementById('oRec').value = '';
-    activeOrderFreightPayments = [];
   }
 
-  document.getElementById('ordFretePayAmt').value = '';
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+function setNow(id){ document.getElementById(id).value = nowLocal(); }
+
+function handleFreightStatusChange(){
+  const st = document.getElementById('oFreightStatus').value;
+  if (st === 'paid') {
+    document.getElementById('oPagoFrete').checked = true;
+  }
   togglePaymentOptions();
   renderOrderFreightInstallmentBox();
   updatePreview();
 }
 
-function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
-function setNow(id){ document.getElementById(id).value = nowLocal(); updatePreview(); }
-
-function togglePaymentOptions() {
-  document.getElementById('wrapAccOutMerc').style.display = document.getElementById('oPagoMerc').checked ? 'block' : 'none';
-  const isFretePending = document.getElementById('oFreightStatus').value === 'pending';
-  document.getElementById('wrapAccOutFrete').style.display = (!isFretePending && document.getElementById('oPagoFrete').checked) ? 'block' : 'none';
-  document.getElementById('wrapAccIn').style.display = document.getElementById('oSyncFin').checked ? 'block' : 'none';
+function handlePagoFreteCheckboxChange(){
+  const checked = document.getElementById('oPagoFrete').checked;
+  if (checked && document.getElementById('oFreightStatus').value === 'pending') {
+    document.getElementById('oFreightStatus').value = 'paid';
+  } else if (!checked) {
+    document.getElementById('oFreightStatus').value = 'pending';
+  }
+  togglePaymentOptions();
+  renderOrderFreightInstallmentBox();
+  updatePreview();
 }
 
-function updatePreview() {
-  const link = document.getElementById('oDriveLink').value.trim();
-  const btnDrive = document.getElementById('btnTestDrive');
-  if (link) {
-    btnDrive.classList.remove('hidden');
-    btnDrive.href = link;
-  } else {
-    btnDrive.classList.add('hidden');
+function togglePaymentOptions(){
+  document.getElementById('wrapAccOutMerc').classList.toggle('hidden', !document.getElementById('oPagoMerc').checked);
+  const fStatus = document.getElementById('oFreightStatus').value;
+  const pFrete = document.getElementById('oPagoFrete').checked;
+  document.getElementById('wrapAccOutFrete').classList.toggle('hidden', !pFrete || fStatus === 'pending');
+  document.getElementById('wrapAccIn').classList.toggle('hidden', !document.getElementById('oSyncFin').checked);
+}
+
+function renderOrderFreightInstallmentBox() {
+  const fStatus = document.getElementById('oFreightStatus').value;
+  const freteEst = parseMoney(document.getElementById('oFrete').value);
+  const box = document.getElementById('orderFreightInstallmentBox');
+
+  if (fStatus !== 'pending' && activeOrderFreightPayments.length === 0) {
+    box.classList.add('hidden');
+    return;
   }
 
-  const usd = parseMoney(document.getElementById('oUSD').value);
-  const cot = parseMoney(document.getElementById('oCot').value);
-  const margemPct = parseMoney(document.getElementById('oMargem').value);
-  const frete = parseMoney(document.getElementById('oFrete').value);
-  const pagoMerc = document.getElementById('oPagoMerc').checked;
-  const pagoFrete = document.getElementById('oPagoFrete').checked;
+  box.classList.remove('hidden');
+  const paidSum = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const remaining = Math.max(0, freteEst - paidSum);
 
-  const inv = usd * cot;
-  const margemVal = inv * (margemPct / 100);
-  const meuCustoMerc = pagoMerc ? inv : 0;
-  const fretePagoParcelas = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
-  const meuCustoFrete = pagoFrete ? Math.max(frete, fretePagoParcelas) : 0;
-  const faturamento = margemVal + meuCustoMerc;
-  const lucroLiq = faturamento - meuCustoMerc - meuCustoFrete;
+  document.getElementById('ordFreteTotalSummary').textContent = money(freteEst);
+  document.getElementById('ordFretePaidSummary').textContent = money(paidSum);
+  document.getElementById('ordFreteDueSummary').textContent = money(remaining);
+  document.getElementById('ordFreteRemainingBadge').textContent = `Falta: ${money(remaining)}`;
 
-  document.getElementById('prevBRL').textContent = money(inv);
-  document.getElementById('prevMargem').textContent = money(margemVal);
-  document.getElementById('prevFrete').textContent = money(meuCustoFrete);
-  document.getElementById('prevLucro').textContent = money(lucroLiq);
-  document.getElementById('prevFinal').textContent = money(faturamento);
+  const histEl = document.getElementById('ordFreteInstallmentsHistory');
+  if (!activeOrderFreightPayments.length) {
+    histEl.innerHTML = '<p class="text-[10px] text-slate-500">Nenhuma parcela ou abatimento lançado ainda.</p>';
+  } else {
+    histEl.innerHTML = activeOrderFreightPayments.map((p, idx) => {
+      const acc = ACCOUNTS.find(a => a.id === p.accountId);
+      return `<div class="flex justify-between items-center bg-white/70 dark:bg-slate-900/50 px-2.5 py-1 rounded-lg border border-amber-200/50 dark:border-amber-800/30"><span>Parcela #${idx + 1} · ${acc ? escapeHtml(acc.name) : 'Conta'} (${(p.date || todayISO()).split('-').reverse().join('/')})</span><strong class="text-emerald-600 dark:text-emerald-400">${money(p.amount)}</strong></div>`;
+    }).join('');
+  }
 }
 
-function saveOrder(e) {
+function applyOrderFreightInstallment() {
+  const payAmt = parseMoney(document.getElementById('ordFretePayAmt').value);
+  const accId = document.getElementById('ordFretePayAcc').value || 'cash';
+  const freteEst = parseMoney(document.getElementById('oFrete').value);
+  const paidSum = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const remaining = Math.max(0, freteEst - paidSum);
+
+  if (payAmt <= 0) {
+    return showAppToast('Informe o valor da parcela paga agora.', 'error');
+  }
+  if (freteEst > 0 && payAmt > remaining + 0.009) {
+    return showAppToast(`Valor maior que o restante do frete (${money(remaining)}).`, 'error');
+  }
+
+  activeOrderFreightPayments.push({
+    id: genId(),
+    amount: payAmt,
+    accountId: accId,
+    date: todayISO()
+  });
+
+  document.getElementById('ordFretePayAmt').value = '';
+  renderOrderFreightInstallmentBox();
+  updatePreview();
+  showAppToast(`Parcela de ${money(payAmt)} abatida do frete!`);
+}
+
+function updatePreview(){
+  const link = document.getElementById('oDriveLink').value.trim();
+  const btn = document.getElementById('btnTestDrive');
+  if (link) { btn.href = link; btn.classList.remove('hidden'); } else { btn.classList.add('hidden'); }
+
+  const obj = {
+    valorUSD: parseMoney(document.getElementById('oUSD').value),
+    cotacao: parseMoney(document.getElementById('oCot').value),
+    margem: parseMoney(document.getElementById('oMargem').value),
+    frete: parseMoney(document.getElementById('oFrete').value),
+    freightPaid: activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0),
+    freightPayments: activeOrderFreightPayments,
+    pagoMerc: document.getElementById('oPagoMerc').checked,
+    pagoFrete: document.getElementById('oPagoFrete').checked
+  };
+  const v = calcValores(obj);
+  document.getElementById('prevBRL').textContent = money(v.inv);
+  document.getElementById('prevMargem').textContent = money(v.margemVal);
+  document.getElementById('prevFrete').textContent = money(v.meuCustoFrete);
+  document.getElementById('prevLucro').textContent = money(v.lucroLiq);
+  document.getElementById('prevFinal').textContent = money(v.faturamento);
+}
+
+function saveOrder(e){
   e.preventDefault();
   const id = document.getElementById('oId').value;
   const pedido = document.getElementById('oPedido').value.trim();
   const cliente = document.getElementById('oCliente').value.trim();
-  const driveLink = document.getElementById('oDriveLink').value.trim();
-  const valorUSD = parseMoney(document.getElementById('oUSD').value);
-  const cotacao = parseMoney(document.getElementById('oCot').value);
-  const margem = parseMoney(document.getElementById('oMargem').value);
-  const frete = parseMoney(document.getElementById('oFrete').value);
-  const paymentMethod = document.getElementById('oPaymentMethod').value;
-  const freightStatus = document.getElementById('oFreightStatus').value;
-  const pagoMerc = document.getElementById('oPagoMerc').checked;
-  const pagoFrete = document.getElementById('oPagoFrete').checked;
-  const syncFin = document.getElementById('oSyncFin').checked;
-  const accOutMerc = document.getElementById('oAccOutMerc').value;
-  const accOutFrete = document.getElementById('oAccOutFrete').value;
-  const accIn = document.getElementById('oAccIn').value;
-  const cidadeOrigem = document.getElementById('oOrigem').value.trim();
-  const saida = document.getElementById('oSaida').value;
-  const transportadora = document.getElementById('oTransportadora').value.trim();
-  const subiuTransp = document.getElementById('oSubiu').value;
-  const cidade1 = document.getElementById('oC1').value.trim();
-  const cidade1Hora = document.getElementById('oC1H').value;
-  const cidade2 = document.getElementById('oC2').value.trim();
-  const cidade2Hora = document.getElementById('oC2H').value;
-  const cidade3 = document.getElementById('oC3').value.trim();
-  const cidade3Hora = document.getElementById('oC3H').value;
-  const desceuSP = document.getElementById('oSP').value;
-  const clienteRecebeu = document.getElementById('oRec').value;
 
-  const existingOrder = id ? orders.find(o => o.id === id) : null;
-  const orderId = id || genId();
+  if (!pedido && !cliente) return showAppToast('Informe o Nº do Pedido ou o Nome do Cliente.', 'error');
+
+  if (cliente && !historyData.clients.some(c => c.toLowerCase() === cliente.toLowerCase())) historyData.clients.push(cliente);
+  ['oOrigem','oC1','oC2','oC3'].forEach(f => { const v = document.getElementById(f).value.trim(); if(v && !historyData.cities.some(c=>c.toLowerCase()===v.toLowerCase())) historyData.cities.push(v); });
+  const tr = document.getElementById('oTransportadora').value.trim(); if(tr && !historyData.carriers.some(c=>c.toLowerCase()===tr.toLowerCase())) historyData.carriers.push(tr);
+
+  const fStatus = document.getElementById('oFreightStatus').value;
+  const pMerc = document.getElementById('oPagoMerc').checked;
+  const pFrete = document.getElementById('oPagoFrete').checked;
+  const syncFin = document.getElementById('oSyncFin').checked;
+  const recDT = document.getElementById('oRec').value;
+
   const freightPaidTotal = activeOrderFreightPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
 
-  const orderData = {
-    id: orderId,
-    pedido, cliente, driveLink, valorUSD, cotacao, margem, frete,
+  const obj = {
+    id: id || genId(),
+    pedido,
+    cliente,
+    driveLink: document.getElementById('oDriveLink').value.trim(),
+    valorUSD: parseMoney(document.getElementById('oUSD').value),
+    cotacao: parseMoney(document.getElementById('oCot').value),
+    margem: parseMoney(document.getElementById('oMargem').value),
+    frete: parseMoney(document.getElementById('oFrete').value),
     freightPaid: freightPaidTotal,
-    freightPayments: activeOrderFreightPayments.map(p => ({ ...p })),
-    paymentMethod, freightStatus, pagoMerc, pagoFrete, syncFin,
-    accOutMerc, accOutFrete, accIn,
-    cidadeOrigem, saida, transportadora, subiuTransp,
-    cidade1, cidade1Hora, cidade2, cidade2Hora, cidade3, cidade3Hora,
-    desceuSP, clienteRecebeu,
-    isFinalized: existingOrder ? Boolean(existingOrder.isFinalized) : false,
-    finalizedAt: existingOrder ? (existingOrder.finalizedAt || '') : ''
+    freightPayments: activeOrderFreightPayments,
+    paymentMethod: document.getElementById('oPaymentMethod').value,
+    freightStatus: fStatus,
+    pagoMerc: pMerc,
+    pagoFrete: pFrete,
+    syncFin: syncFin,
+    cidadeOrigem: document.getElementById('oOrigem').value.trim(),
+    saida: document.getElementById('oSaida').value,
+    transportadora: tr,
+    subiuTransp: document.getElementById('oSubiu').value,
+    cidade1: document.getElementById('oC1').value.trim(),
+    cidade1Hora: document.getElementById('oC1H').value,
+    cidade2: document.getElementById('oC2').value.trim(),
+    cidade2Hora: document.getElementById('oC2H').value,
+    cidade3: document.getElementById('oC3').value.trim(),
+    cidade3Hora: document.getElementById('oC3H').value,
+    desceuSP: document.getElementById('oSP').value,
+    clienteRecebeu: recDT,
+    isFinalized: Boolean(recDT && syncFin),
+    finalizedAt: (recDT && syncFin) ? nowLocal() : ''
   };
 
-  [cliente].forEach(c => { if(c && !historyData.clients.some(x=>x.toLowerCase()===c.toLowerCase())) historyData.clients.push(c); });
-  [cidadeOrigem, cidade1, cidade2, cidade3].forEach(ct => { if(ct && !historyData.cities.some(x=>x.toLowerCase()===ct.toLowerCase())) historyData.cities.push(ct); });
-  [transportadora].forEach(tr => { if(tr && !historyData.carriers.some(x=>x.toLowerCase()===tr.toLowerCase())) historyData.carriers.push(tr); });
-
   if (id) {
-    const idx = orders.findIndex(o => o.id === id);
-    if (idx >= 0) orders[idx] = orderData;
+    const idx = orders.findIndex(x=>x.id===id);
+    if (idx >= 0) orders[idx] = obj;
     txs = txs.filter(t => t.refId !== id);
   } else {
-    orders.push(orderData);
+    orders.push(obj);
   }
 
+  const v = calcValores(obj);
+  const dt = (obj.saida || todayISO()).split('T')[0];
+
   if (syncFin) {
-    const v = calcValores(orderData);
-    const txDate = (saida || nowLocal()).split('T')[0];
-    const nowIso = new Date().toISOString();
-
-    if (v.faturamento > 0) {
-      const hasPaidIncome = existingOrder && isOrderFinalizedInHistory(existingOrder);
-      txs.unshift({
-        id: genId(),
-        refId: orderId,
-        desc: `Pedido ${pedido || 'S/N'} - ${cliente || 'Cliente'}`,
-        amount: v.faturamento,
-        type: 'income',
-        cat: 'Vendas',
-        date: txDate,
-        createdAt: nowIso,
-        accountId: accIn,
-        paymentMethod: paymentMethod,
-        status: hasPaidIncome ? 'paid' : 'pending'
-      });
+    if (pMerc && v.meuCustoMerc > 0) {
+      txs.unshift({ id: genId(), refId: obj.id, desc: `Mercadoria - Pedido ${obj.pedido || 'S/N'}`, amount: v.meuCustoMerc, type: 'expense', cat: 'Fornecedores', date: dt, createdAt: new Date().toISOString(), accountId: document.getElementById('oAccOutMerc').value, status: 'paid' });
     }
-    if (pagoMerc && v.inv > 0) {
-      txs.unshift({
-        id: genId(),
-        refId: orderId,
-        desc: `Mercadoria - Pedido ${pedido || 'S/N'}`,
-        amount: v.inv,
-        type: 'expense',
-        cat: 'Fornecedores',
-        date: txDate,
-        createdAt: nowIso,
-        accountId: accOutMerc,
-        status: 'paid'
-      });
-    }
-
     if (activeOrderFreightPayments.length > 0) {
       activeOrderFreightPayments.forEach((p, idx) => {
-        if ((Number(p.amount) || 0) > 0) {
-          txs.unshift({
-            id: genId(),
-            refId: orderId,
-            desc: `Frete (Parc. ${idx + 1}) - Pedido ${pedido || 'S/N'}`,
-            amount: Number(p.amount),
-            type: 'expense',
-            cat: 'Logística',
-            date: p.date || txDate,
-            createdAt: nowIso,
-            accountId: p.accountId || accOutFrete || 'cash',
-            status: 'paid'
-          });
-        }
-      });
-      const remFrete = Math.max(0, frete - freightPaidTotal);
-      if (freightStatus === 'pending' && remFrete > 0.009) {
         txs.unshift({
           id: genId(),
-          refId: orderId,
-          desc: `Frete (Restante) - Pedido ${pedido || 'S/N'}`,
+          refId: obj.id,
+          desc: `Frete (Parc. #${idx + 1}) - Pedido ${obj.pedido || 'S/N'}`,
+          amount: Number(p.amount) || 0,
+          type: 'expense',
+          cat: 'Logística',
+          date: p.date || dt,
+          createdAt: new Date().toISOString(),
+          accountId: p.accountId || 'cash',
+          status: 'paid'
+        });
+      });
+      const remFrete = Math.max(0, (Number(obj.frete) || 0) - freightPaidTotal);
+      if (remFrete > 0 && fStatus === 'pending') {
+        txs.unshift({
+          id: genId(),
+          refId: obj.id,
+          desc: `Frete (Restante) - Pedido ${obj.pedido || 'S/N'}`,
           amount: remFrete,
           type: 'expense',
           cat: 'Logística',
-          date: txDate,
-          createdAt: nowIso,
-          accountId: accOutFrete || 'cash',
+          date: dt,
+          createdAt: new Date().toISOString(),
+          accountId: document.getElementById('oAccOutFrete').value || 'cash',
           status: 'pending'
         });
       }
-    } else if (frete > 0) {
+    } else if (obj.frete > 0) {
+      if (fStatus === 'pending' || !pFrete) {
+        txs.unshift({ id: genId(), refId: obj.id, desc: `Frete - Pedido ${obj.pedido || 'S/N'}`, amount: obj.frete, type: 'expense', cat: 'Logística', date: dt, createdAt: new Date().toISOString(), accountId: document.getElementById('oAccOutFrete').value || 'cash', status: 'pending' });
+      } else {
+        txs.unshift({ id: genId(), refId: obj.id, desc: `Frete - Pedido ${obj.pedido || 'S/N'}`, amount: obj.frete, type: 'expense', cat: 'Logística', date: dt, createdAt: new Date().toISOString(), accountId: document.getElementById('oAccOutFrete').value, status: 'paid' });
+      }
+    }
+
+    if (v.faturamento > 0) {
       txs.unshift({
         id: genId(),
-        refId: orderId,
-        desc: `Frete - Pedido ${pedido || 'S/N'}`,
-        amount: frete,
-        type: 'expense',
-        cat: 'Logística',
-        date: txDate,
-        createdAt: nowIso,
-        accountId: accOutFrete || 'cash',
-        status: freightStatus === 'pending' ? 'pending' : 'paid'
+        refId: obj.id,
+        desc: `Pedido ${obj.pedido || 'S/N'} - ${obj.cliente || 'Cliente'}`,
+        amount: v.faturamento,
+        type: 'income',
+        cat: 'Vendas',
+        date: dt,
+        createdAt: new Date().toISOString(),
+        accountId: document.getElementById('oAccIn').value,
+        paymentMethod: obj.paymentMethod,
+        status: recDT ? 'paid' : 'pending'
       });
     }
   }
 
-  closeModal();
   saveAll();
+  closeModal();
+  renderOrders();
   renderDatalists();
-  if (currentTab === 'orders') renderOrders();
-  if (currentTab === 'finance') renderFinance();
-  showAppToast('Pedido salvo! Finalização e recebimento ficam disponíveis em A Receber (Lucros).');
+  showAppToast('Pedido salvo com sucesso!');
 }
 
-function delOrder(id) {
-  askAppConfirm('Excluir Pedido', 'Deseja excluir este pedido e seus lançamentos vinculados?').then(res => {
+function delOrder(id){
+  askAppConfirm('Excluir pedido', 'Deseja excluir este pedido e seus lançamentos financeiros vinculados?').then(res => {
     if (!res) return;
-    orders = orders.filter(o => o.id !== id);
+    orders = orders.filter(x => x.id !== id);
     txs = txs.filter(t => t.refId !== id);
     saveAll();
     renderOrders();
-    if (currentTab === 'finance') renderFinance();
     showAppToast('Pedido excluído.');
   });
 }
 
-function openReceiptFromOrders(id){ openReceipt(id); }
-function openReceipt(id) {
+function openReceiptFromOrders(id){ openReceipt(id, 'client'); }
+function openReceipt(id, defaultMode='client'){
   const o = orders.find(x => x.id === id);
   if (!o) return;
   activeReceiptOrderId = id;
@@ -3783,54 +3937,81 @@ function openReceipt(id) {
   document.getElementById('recPedidoCliente').textContent = o.pedido || 'S/N';
   document.getElementById('recClienteCliente').textContent = o.cliente || 'Sem nome';
 
-  const stops = [
-    { lbl: 'Origem / Saída', val: o.cidadeOrigem, dt: o.saida },
-    { lbl: 'Transportadora', val: o.transportadora, dt: o.subiuTransp },
-    { lbl: '1ª Cidade', val: o.cidade1, dt: o.cidade1Hora },
-    { lbl: '2ª Cidade', val: o.cidade2, dt: o.cidade2Hora },
-    { lbl: '3ª Cidade', val: o.cidade3, dt: o.cidade3Hora },
-    { lbl: 'Desceu SP', val: o.desceuSP ? 'São Paulo / SP' : '', dt: o.desceuSP },
-    { lbl: 'Entrega Cliente', val: o.clienteRecebeu ? (o.cliente || 'Recebido') : '', dt: o.clienteRecebeu }
-  ].filter(s => s.val || s.dt);
+  const trajSteps = [];
+  if (o.cidadeOrigem) trajSteps.push({ loc: `Origem: ${o.cidadeOrigem}`, dt: o.saida });
+  if (o.transportadora) trajSteps.push({ loc: `Transportadora: ${o.transportadora}`, dt: o.subiuTransp });
+  if (o.cidade1) trajSteps.push({ loc: o.cidade1, dt: o.cidade1Hora });
+  if (o.cidade2) trajSteps.push({ loc: o.cidade2, dt: o.cidade2Hora });
+  if (o.cidade3) trajSteps.push({ loc: o.cidade3, dt: o.cidade3Hora });
+  if (o.desceuSP) trajSteps.push({ loc: 'São Paulo (SP)', dt: o.desceuSP });
+  if (o.clienteRecebeu) trajSteps.push({ loc: `Entregue (${o.cliente || 'Cliente'})`, dt: o.clienteRecebeu });
 
-  const firstOrigin = o.cidadeOrigem || stops[0]?.val || 'Origem';
-  const lastDest = o.clienteRecebeu
-    ? (o.cliente || 'Entregue')
-    : (stops.length ? (stops[stops.length - 1].val || 'Em trânsito') : 'Em aberto');
-  document.getElementById('recRotaResumoCliente').textContent = `${firstOrigin} → ${lastDest}`;
+  const startLoc = o.cidadeOrigem || (trajSteps[0]?.loc || 'Origem');
+  const endLoc = o.clienteRecebeu ? `Entregue (${o.cliente || 'Cliente'})` : (trajSteps[trajSteps.length - 1]?.loc || 'Em andamento');
+  document.getElementById('recRotaResumoCliente').textContent = `${startLoc} → ${endLoc}`;
 
-  document.getElementById('recTrajetoCliente').innerHTML = stops.length
-    ? stops.map(s => `<div class="mb-3 pl-4 border-l-2 border-slate-500/60"><p class="text-xs font-bold">${escapeHtml(s.val || '—')} <span class="font-normal opacity-75">(${escapeHtml(s.lbl)})</span></p><p class="text-[10px] opacity-70">${fmtDT(s.dt)}</p></div>`).join('')
-    : '<p class="text-xs opacity-60">Sem atualizações de trajeto.</p>';
+  const clientTrajEl = document.getElementById('recTrajetoCliente');
+  if (!trajSteps.length) {
+    clientTrajEl.innerHTML = '<p class="text-xs opacity-60">Trajeto em atualização.</p>';
+  } else {
+    clientTrajEl.innerHTML = trajSteps.map((s, idx) => {
+      const isLast = idx === trajSteps.length - 1;
+      return `
+        <div class="relative pl-5 pb-3 ${isLast ? '' : 'border-l border-slate-500/50'}">
+          <span class="w-2.5 h-2.5 rounded-full ${isLast ? 'bg-emerald-400' : 'bg-indigo-400'} absolute -left-[5px] top-1"></span>
+          <p class="text-xs font-bold leading-snug">${escapeHtml(s.loc)}</p>
+          <p class="text-[10px] opacity-70">${fmtDT(s.dt)}</p>
+        </div>`;
+    }).join('');
+  }
 
   document.getElementById('recPedido').textContent = o.pedido || 'S/N';
   document.getElementById('recCliente').textContent = o.cliente || 'Sem nome';
-  document.getElementById('recData').textContent = fmtDT(o.saida || nowLocal());
+  document.getElementById('recData').textContent = fmtDT(o.saida);
   document.getElementById('recInv').textContent = money(v.inv);
-  document.getElementById('recMargem').textContent = money(v.margemVal);
+  document.getElementById('recMargem').textContent = `${o.margem || 0}% (${money(v.margemVal)})`;
   document.getElementById('recFreteAdmin').textContent = money(v.meuCustoFrete);
   document.getElementById('recLucro').textContent = money(v.lucroLiq);
   document.getElementById('recFat').textContent = money(v.faturamento);
-  document.getElementById('recTrajetoAdmin').innerHTML = stops.length
-    ? stops.map(s => `<div class="flex justify-between text-[11px] py-1 border-b border-slate-700/60"><span><b>${escapeHtml(s.val || '—')}</b> (${escapeHtml(s.lbl)})</span><span class="opacity-75">${fmtDT(s.dt)}</span></div>`).join('')
-    : '<p class="text-xs opacity-60">Sem registro de trajeto.</p>';
 
-  setReceiptMode('client');
+  const adminTrajEl = document.getElementById('recTrajetoAdmin');
+  if (!trajSteps.length) {
+    adminTrajEl.innerHTML = '<p class="text-xs opacity-60">Nenhum registro de trajeto.</p>';
+  } else {
+    adminTrajEl.innerHTML = trajSteps.map(s => `
+      <div class="flex justify-between items-center text-xs bg-slate-900/40 px-3 py-1.5 rounded-lg border border-slate-700/60">
+        <span class="font-semibold">${escapeHtml(s.loc)}</span>
+        <span class="text-[11px] opacity-75">${fmtDT(s.dt)}</span>
+      </div>`).join('');
+  }
+
+  setReceiptMode(defaultMode);
   document.getElementById('receiptModal').classList.remove('hidden');
 }
 
 function setReceiptMode(mode) {
-  currentReceiptMode = mode;
-  const isClient = mode === 'client';
-  document.getElementById('printClientWrapper').classList.toggle('hidden', !isClient);
-  document.getElementById('printAdminWrapper').classList.toggle('hidden', isClient);
-  document.getElementById('btnModeClientReceipt').className = isClient
-    ? 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition'
-    : 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-  document.getElementById('btnModeAdminReceipt').className = !isClient
-    ? 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition'
-    : 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
-  document.getElementById('btnPrintActiveReceipt').textContent = isClient ? '🖨️ Imprimir Comprovante Cliente' : '🖨️ Imprimir Comprovante Admin';
+  currentReceiptMode = mode === 'admin' ? 'admin' : 'client';
+  const clientWrap = document.getElementById('printClientWrapper');
+  const adminWrap = document.getElementById('printAdminWrapper');
+  const btnClient = document.getElementById('btnModeClientReceipt');
+  const btnAdmin = document.getElementById('btnModeAdminReceipt');
+  const btnPrint = document.getElementById('btnPrintActiveReceipt');
+
+  if (currentReceiptMode === 'admin') {
+    clientWrap.classList.add('hidden');
+    adminWrap.classList.remove('hidden');
+    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
+    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+    btnPrint.textContent = '🖨️ Imprimir Comprovante Admin';
+    btnPrint.setAttribute('onclick', "printReceipt('admin')");
+  } else {
+    adminWrap.classList.add('hidden');
+    clientWrap.classList.remove('hidden');
+    btnClient.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-brand-600 text-white shadow-sm cursor-pointer transition';
+    btnAdmin.className = 'py-2.5 px-3 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700 hover:text-white cursor-pointer transition';
+    btnPrint.textContent = '🖨️ Imprimir Comprovante Cliente';
+    btnPrint.setAttribute('onclick', "printReceipt('client')");
+  }
 }
 
 function printReceipt(mode) {
@@ -3843,87 +4024,85 @@ function printReceipt(mode) {
     document.body.classList.remove('printing-client', 'printing-admin');
   }, 500);
 }
-function closeReceipt(){ document.getElementById('receiptModal').classList.add('hidden'); activeReceiptOrderId = null; }
+function closeReceipt(){
+  document.body.classList.remove('printing-client', 'printing-admin');
+  document.getElementById('receiptModal').classList.add('hidden');
+}
 
-function populateSelects() {
-  const optionsHtml = ACCOUNTS.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'fAccount', 'ordFretePayAcc'].forEach(id => {
+function populateSelects(){
+  const opts = ACCOUNTS.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  ['oAccOutMerc', 'oAccOutFrete', 'oAccIn', 'ordFretePayAcc', 'fAccount', 'payAccountSelect', 'payCardAccount', 'qrOpInstituicaoSelect', 'qrCliInstituicaoSelect', 'qrGastoInstituicaoSelect'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = optionsHtml;
-  });
-  ['qrOpInstituicaoSelect', 'qrCliInstituicaoSelect', 'qrGastoInstituicaoSelect'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.innerHTML = optionsHtml;
-      if ([...el.options].some(o => o.value === 'nubank')) el.value = 'nubank';
-    }
+    if (el) el.innerHTML = opts;
   });
 }
 
-function renderDatalists() {
-  document.getElementById('list-clients').innerHTML = historyData.clients.map(c => `<option value="${escapeHtml(c)}">`).join('');
-  document.getElementById('list-cities').innerHTML = historyData.cities.map(c => `<option value="${escapeHtml(c)}">`).join('');
-  document.getElementById('list-carriers').innerHTML = historyData.carriers.map(c => `<option value="${escapeHtml(c)}">`).join('');
+function renderDatalists(){
+  document.getElementById('list-clients').innerHTML = (historyData.clients||[]).map(c=>`<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-cities').innerHTML = (historyData.cities||[]).map(c=>`<option value="${escapeHtml(c)}">`).join('');
+  document.getElementById('list-carriers').innerHTML = (historyData.carriers||[]).map(c=>`<option value="${escapeHtml(c)}">`).join('');
 }
 
-function exportJSON() {
+function exportJSON(){
   closeMenu();
-  const backup = { orders, txs, historyData, cardsConfig, bensData, teto: getLocal(STORAGE.teto, {limit:3000,cycleExpenses:[]}), closedMonthsMap, exportedAt: new Date().toISOString() };
-  const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `gestao_backup_${todayISO()}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showAppToast('Backup JSON exportado!');
+  const data = { orders, txs, cardsConfig, bensData, historyData, teto: getLocal(STORAGE.teto, { limit: 3000, cycleExpenses: [] }), closedMonthsMap, entityColorsMap, isPatrimonioHidden };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `backup_gestao_${todayISO()}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  showAppToast('Backup exportado!');
 }
 
-function importJSON(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
+function importJSON(e){
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
     try {
-      const data = JSON.parse(ev.target.result);
-      if (data.orders) orders = data.orders;
-      if (data.txs) txs = data.txs;
-      if (data.historyData) historyData = data.historyData;
-      if (data.cardsConfig) cardsConfig = normalizeCardsConfig(data.cardsConfig);
-      if (data.bensData) bensData = data.bensData;
-      if (data.teto) setLocal(STORAGE.teto, data.teto);
-      if (data.closedMonthsMap) closedMonthsMap = data.closedMonthsMap;
+      const d = JSON.parse(ev.target.result);
+      localStorage.removeItem(STORAGE.wipedToZero);
+      if (d.orders) orders = d.orders;
+      if (d.txs) txs = d.txs;
+      if (d.cardsConfig) cardsConfig = normalizeCardsConfig(d.cardsConfig);
+      if (d.bensData) bensData = d.bensData;
+      if (d.historyData) historyData = d.historyData;
+      if (d.teto) setLocal(STORAGE.teto, d.teto);
+      if (d.closedMonthsMap) closedMonthsMap = d.closedMonthsMap;
+      if (d.entityColorsMap) entityColorsMap = d.entityColorsMap;
+      if (typeof d.isPatrimonioHidden === 'boolean') isPatrimonioHidden = d.isPatrimonioHidden;
       saveAll();
       load();
       showAppToast('Backup importado com sucesso!');
-    } catch (err) {
-      showAppToast('Erro ao importar arquivo JSON.', 'error');
-    }
+    } catch (err) { showAppToast('Arquivo de backup inválido.', 'error'); }
   };
-  reader.readAsText(file);
+  r.readAsText(f);
   e.target.value = '';
 }
 
 function exportSystemCode() {
   closeMenu();
-  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `sistema_gestao_definitivo_${todayISO()}.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showAppToast('Arquivo HTML do sistema baixado!');
+  try {
+    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sistema_gestao_definitivo_${todayISO()}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showAppToast('Código do sistema baixado (.html)!');
+  } catch (err) {
+    showAppToast('Não foi possível baixar o arquivo do sistema.', 'error');
+  }
 }
 
-function resetData() {
+function resetData(){
   closeMenu();
-  askAppConfirm('Restaurar Dados Padrão', 'Deseja restaurar os dados padrão de exemplo?').then(res => {
+  askAppConfirm('Restaurar Padrão', 'Deseja restaurar os dados de demonstração iniciais?').then(res => {
     if (!res) return;
     Object.values(STORAGE).forEach(k => localStorage.removeItem(k));
-    orders = []; txs = []; cardsConfig = []; bensData = [];
-    historyData = { clients: [], cities: [], carriers: [] };
-    seenNotifKeys = [];
-    closedMonthsMap = {};
+    selectedAdminClientName = null;
+    selectedClosingClientKey = null;
     load();
     showAppToast('Dados padrão restaurados!');
   });
